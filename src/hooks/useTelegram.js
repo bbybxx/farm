@@ -114,14 +114,21 @@ export function useTelegram() {
   const sendBugReport = async (message, userInfo = null) => {
     try {
       // Отправляем напрямую через Telegram Bot API
-      const BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
-      const CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+      let BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
+      let CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+      
+      // Fallback для случая, когда переменные окружения не настроены на Vercel
+      if (!BOT_TOKEN || !CHAT_ID) {
+        console.warn('Environment variables not found, using fallback values');
+        BOT_TOKEN = '8035311656:AAFB8nrpINRSaREmNRtevET2iOjREohVgGs';
+        CHAT_ID = '592052544';
+      }
       
       // Отладочная информация
       console.log('Environment check:', {
-        BOT_TOKEN: BOT_TOKEN ? 'SET' : 'NOT SET',
-        CHAT_ID: CHAT_ID ? 'SET' : 'NOT SET',
-        env: import.meta.env
+        BOT_TOKEN: BOT_TOKEN ? `${BOT_TOKEN.substring(0, 10)}...` : 'NOT SET',
+        CHAT_ID: CHAT_ID ? CHAT_ID : 'NOT SET',
+        allEnv: Object.keys(import.meta.env)
       });
       
       if (!BOT_TOKEN || !CHAT_ID) {
@@ -156,18 +163,39 @@ export function useTelegram() {
       telegramMessage += `🔗 URL: ${bugReportData.url}\n\n`;
       telegramMessage += `📝 Report:\n${bugReportData.message}`;
       
-      // Отправляем через Telegram Bot API
-      const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          chat_id: CHAT_ID,
-          text: telegramMessage,
-          parse_mode: 'HTML'
-        })
-      });
+      // Отправляем через наш API прокси вместо прямого обращения к Telegram
+      const isProduction = window.location.hostname !== 'localhost';
+      const apiUrl = isProduction 
+        ? '/api/graphql' // Используем наш Vercel прокси
+        : `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`; // Локально напрямую
+      
+      let response;
+      
+      if (isProduction) {
+        // В продакшене используем наш прокси
+        response = await fetch('/api/send-bug-report', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: telegramMessage
+          })
+        });
+      } else {
+        // Локально отправляем напрямую
+        response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: telegramMessage,
+            parse_mode: 'HTML'
+          })
+        });
+      }
       
       console.log('Telegram API response:', response.status, response.statusText);
       

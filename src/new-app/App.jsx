@@ -307,9 +307,6 @@ export default function App() {
   // Cart functions
   const formatQuantity = (quantity) => {
     if (!useThousandsFormat) return quantity.toString();
-    if (quantity >= 1e16) {
-      return quantity.toExponential(2).replace(/e\+/, 'e');
-    }
     return quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   }
 
@@ -1045,7 +1042,9 @@ export default function App() {
               value={amount === null ? '' : formatQuantity(amount)}
               onChange={(e) => {
                 const numericValue = e.target.value.replace(/\s/g, '');
-                setAmount(numericValue === '' ? null : Number(numericValue));
+                if (!isNaN(numericValue) && numericValue !== Infinity) {
+                  setAmount(numericValue === '' ? null : Number(numericValue));
+                }
               }}
             />
           </label>

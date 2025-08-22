@@ -306,12 +306,8 @@ export default function App() {
 
   // Cart functions
   const formatQuantity = (quantity) => {
-    if (!useThousandsFormat) return quantity.toString()
-    if (quantity >= 1000) {
-      const thousands = Math.floor(quantity / 1000)
-      return `${thousands}k`
-    }
-    return quantity.toString()
+    if (!useThousandsFormat) return quantity.toString();
+    return quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   }
 
   const addToCart = (resourceName, quantity) => {
@@ -1187,8 +1183,8 @@ export default function App() {
                   transition={{ duration: 0.2 }}
                 >
                   <div className="totals-row">
-                    <motion.div className="pill">Silver <span>{result.silver}</span></motion.div>
-                    <motion.div className="pill">XP <span>{result.xp}</span></motion.div>
+                    <motion.div className="pill">Silver <span>{formatQuantity(result.silver)}</span></motion.div>
+                    <motion.div className="pill">XP <span>{formatQuantity(result.xp)}</span></motion.div>
                   </div>
                 </motion.section>
               )}
@@ -1229,7 +1225,7 @@ export default function App() {
                                 </span>
                               )}
                             </span>
-                            <span className="v">{v}</span>
+                            <span className="v">{formatQuantity(v)}</span>
                           </div>
                           {isMailable && cartEnabled && (
                             <button

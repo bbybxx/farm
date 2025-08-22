@@ -174,13 +174,18 @@ export function useTelegram() {
       
       if (isProduction) {
         // В продакшене используем наш прокси
-        response = await fetch('/api/send-bug-report', {
+        response = await fetch('/api/bug-report', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            message: telegramMessage
+            type: 'bug_report',
+            message: message,
+            user: userInfo || user,
+            timestamp: bugReportData.timestamp,
+            url: bugReportData.url,
+            userAgent: bugReportData.userAgent
           })
         });
       } else {

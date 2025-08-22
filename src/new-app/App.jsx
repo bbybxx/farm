@@ -365,20 +365,6 @@ export default function App() {
     }
   }, [themeParams, isInTelegram])
 
-  // Close currency dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (openCurrencyDropdown !== null && !event.target.closest('.custom-currency-select')) {
-        setOpenCurrencyDropdown(null)
-      }
-    }
-    
-    if (openCurrencyDropdown !== null) {
-      document.addEventListener('click', handleClickOutside)
-      return () => document.removeEventListener('click', handleClickOutside)
-    }
-  }, [openCurrencyDropdown])
-
   const items = Object.keys(combinedRecipes)
   const togglePerk = (p) => {
     hapticFeedback('light')

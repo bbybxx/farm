@@ -307,7 +307,7 @@ export default function App() {
   // Cart functions
   const formatQuantity = (quantity) => {
     if (!useThousandsFormat) return quantity.toString();
-    if (quantity >= 1e6) {
+    if (quantity >= 1e16) {
       return quantity.toExponential(2).replace(/e\+/, 'e');
     }
     return quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');

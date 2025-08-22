@@ -92,8 +92,9 @@ export default function App() {
   })
   const [craftHistory, setCraftHistory] = useState(() => loadFromStorage('craftCalculator_craftHistory', []))
   const [historyLimit, setHistoryLimit] = useState(() => loadFromStorage('craftCalculator_historyLimit', 50))
-  const [cart, setCart] = useState(() => loadFromStorage('craftCalculator_cart', []))
-  const [isCartOpen, setIsCartOpen] = useState(false)
+  // Pinned resources system (replaces cart)
+  const [pinnedResources, setPinnedResources] = useState(() => loadFromStorage('craftCalculator_pinnedResources', []))
+  const [isPinnedOpen, setIsPinnedOpen] = useState(false)
   const [useThousandsFormat, setUseThousandsFormat] = useState(() => loadFromStorage('craftCalculator_useThousandsFormat', true))
   const [itemCurrencies, setItemCurrencies] = useState(() => loadFromStorage('craftCalculator_itemCurrencies', {}))
   const [itemPrices, setItemPrices] = useState(() => loadFromStorage('craftCalculator_itemPrices', {}))
@@ -106,7 +107,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false)
   
   // Feature toggles
-  const [cartEnabled, setCartEnabled] = useState(() => loadFromStorage('craftCalculator_cartEnabled', true))
+  const [pinnedEnabled, setPinnedEnabled] = useState(() => loadFromStorage('craftCalculator_pinnedEnabled', true))
   const [historyEnabled, setHistoryEnabled] = useState(() => loadFromStorage('craftCalculator_historyEnabled', true))
 
   const result = useMemo(() => {
@@ -295,8 +296,12 @@ export default function App() {
   }, [itemPrices])
 
   useEffect(() => {
-    saveToStorage('craftCalculator_cartEnabled', cartEnabled)
-  }, [cartEnabled])
+    saveToStorage('craftCalculator_pinnedResources', pinnedResources)
+  }, [pinnedResources])
+
+  useEffect(() => {
+    saveToStorage('craftCalculator_pinnedEnabled', pinnedEnabled)
+  }, [pinnedEnabled])
 
   useEffect(() => {
     saveToStorage('craftCalculator_historyEnabled', historyEnabled)
@@ -304,12 +309,12 @@ export default function App() {
 
   // Auto-switch tab if current tab is disabled
   useEffect(() => {
-    if (sidebarActiveTab === 'cart' && !cartEnabled) {
+    if (sidebarActiveTab === 'pinned' && !pinnedEnabled) {
       setSidebarActiveTab('perks')
     } else if (sidebarActiveTab === 'history' && !historyEnabled) {
       setSidebarActiveTab('perks')
     }
-  }, [cartEnabled, historyEnabled, sidebarActiveTab])
+  }, [pinnedEnabled, historyEnabled, sidebarActiveTab])
 
   // Cart functions
   const formatQuantity = (quantity) => {
@@ -317,29 +322,22 @@ export default function App() {
     return formatNumber(quantity)
   }
 
-  const addToCart = (resourceName, quantity) => {
+  // Pinned resources functions
+  const addToPinned = (resourceName, quantity, parentRecipe = null) => {
     hapticFeedback('light')
     
-    // Check if item is mailable by reading mailable.txt data
-    const mailableItems = ['Acorn', 'Apple', 'Apple Cider', 'Aquamarine', 'Arnold Palmer', 'Arrowhead', 'Axe', 'Black Powder', 'Blue Dye', 'Blue Feathers', 'Bone', 'Bouquet of Flowers', 'Bucket', 'Carbon Sphere', 'Caterpillar', 'Coal', 'Eggs', 'Explosive', 'Feathers', 'Fern Leaf', 'Fire Ant', 'Fishing Net', 'Fruit Punch', 'Glass Orb', 'Grapes', 'Green Dye', 'Green Parchment', 'Grubs', 'Hammer', 'Heart Container', 'Hide', 'Horn', 'Iced Tea', 'Iron Cup', 'Ladder', 'Large Net', 'Leather', 'Leather Diary', 'Lemon', 'Lemonade', 'Milk', 'Minnows', 'Mushroom', 'Mushroom Paste', 'Oak', 'Old Boot', 'Orange', 'Orange Juice', 'Peach', 'Peach Juice', 'Potato', 'Purple Dye', 'Purple Flower', 'Purple Parchment', 'Red Dye', 'Rope', 'Scrap Metal', 'Scrap Wire', 'Shimmer Stone', 'Shovel', 'Slimestone', 'Spider', 'Stone', 'Twine', 'Unpolished Shimmer Stone', 'Wood', 'Wooden Box', 'Wooden Button', 'Wooden Table', 'Worms', 'Yarn']
-    
-    if (!mailableItems.includes(resourceName)) {
-      showAlert ? showAlert(`${resourceName} cannot be mailed to other players`) : alert(`${resourceName} cannot be mailed to other players`)
-      return
-    }
-    
-    setCart(prev => {
-      const existingIndex = prev.findIndex(item => item.name === resourceName)
-      if (existingIndex >= 0) {
-        const updated = [...prev]
-        updated[existingIndex].quantity += quantity
-        return updated
+    setPinnedResources(prev => {
+      // Always add as new entry to allow multiple instances with different parent recipes
+      const newEntry = { 
+        name: resourceName, 
+        quantity, 
+        parentRecipe: parentRecipe || item // Use current item as parent if not specified
       }
-      return [...prev, { name: resourceName, quantity, price: itemPrices[resourceName] || '', currency: itemCurrencies[resourceName] || 'g' }]
+      return [...prev, newEntry]
     })
     
     // Show success animation
-    const itemKey = `${resourceName}_${quantity}`
+    const itemKey = `${resourceName}_${quantity}_${parentRecipe || item}`
     setRecentlyAddedItems(prev => new Set([...prev, itemKey]))
     
     // Remove animation after 2 seconds
@@ -352,9 +350,9 @@ export default function App() {
     }, 2000)
   }
 
-  const removeFromCart = (index) => {
+  const removeFromPinned = (index) => {
     hapticFeedback('light')
-    setCart(prev => prev.filter((_, i) => i !== index))
+    setPinnedResources(prev => prev.filter((_, i) => i !== index))
   }
 
   const updateCartItem = (index, field, value) => {
@@ -491,11 +489,11 @@ export default function App() {
         localStorage.removeItem('craftCalculator_craftChain')
         localStorage.removeItem('craftCalculator_craftHistory')
         localStorage.removeItem('craftCalculator_historyLimit')
-        localStorage.removeItem('craftCalculator_cart')
+        localStorage.removeItem('craftCalculator_pinnedResources')
         localStorage.removeItem('craftCalculator_useThousandsFormat')
         localStorage.removeItem('craftCalculator_itemCurrencies')
         localStorage.removeItem('craftCalculator_itemPrices')
-        localStorage.removeItem('craftCalculator_cartEnabled')
+        localStorage.removeItem('craftCalculator_pinnedEnabled')
         localStorage.removeItem('craftCalculator_historyEnabled')
       }
       
@@ -506,11 +504,11 @@ export default function App() {
       setCraftChain([{ name: 'Board', amount: 1 }])
       setCraftHistory([])
       setHistoryLimit(50)
-      setCart([])
+      setPinnedResources([])
       setUseThousandsFormat(true)
       setItemCurrencies({})
       setItemPrices({})
-      setCartEnabled(true)
+      setPinnedEnabled(true)
       setHistoryEnabled(true)
       
       // Reset UI states
@@ -652,13 +650,13 @@ export default function App() {
             >
               Perks
             </button>
-            {cartEnabled && (
+            {pinnedEnabled && (
               <button 
-                className={`tab ${sidebarActiveTab === 'cart' ? 'active' : ''}`}
-                onClick={() => setSidebarActiveTab('cart')}
+                className={`tab ${sidebarActiveTab === 'pinned' ? 'active' : ''}`}
+                onClick={() => setSidebarActiveTab('pinned')}
                 type="button"
               >
-                Cart {cart.length > 0 && `(${cart.length})`}
+                Pinned {pinnedResources.length > 0 && `(${pinnedResources.length})`}
               </button>
             )}
             {historyEnabled && (
@@ -751,119 +749,54 @@ export default function App() {
             </div>
           )}
           
-          {sidebarActiveTab === 'cart' && cartEnabled && (
-            <div className="cart-section">
+          {sidebarActiveTab === 'pinned' && pinnedEnabled && (
+            <div className="pinned-section">
               <div className="section-header">
-                <h3>Shopping Cart ({cart.length})</h3>
-                {cart.length > 0 && (
+                <h3>Pinned Resources ({pinnedResources.length})</h3>
+                {pinnedResources.length > 0 && (
                   <button 
                     className="chip danger"
-                    onClick={clearCart}
+                    onClick={() => {
+                      hapticFeedback('medium')
+                      setPinnedResources([])
+                    }}
                     type="button"
-                    title="Clear cart"
+                    title="Clear all pinned resources"
                   >
                     Clear
                   </button>
                 )}
               </div>
               
-              {cart.length === 0 ? (
+              {pinnedResources.length === 0 ? (
                 <div className="empty-state">
-                  <p>Cart is empty.</p>
-                  <p>Add resources from the main calculator by clicking the "+" button next to any mailable resource.</p>
+                  <p>No pinned resources.</p>
+                  <p>Pin resources from any recipe by clicking the "+" button next to them.</p>
                 </div>
               ) : (
-                <>
-                  <div className="cart-items">
-                    {cart.map((cartItem, index) => (
-                      <div key={index} className="cart-item">
-                        <div className="cart-item-header">
-                          <span className="cart-item-name">{cartItem.name}</span>
-                          <span className="cart-item-quantity">×{formatQuantity(cartItem.quantity)}</span>
-                          <button
-                            className="cart-remove-btn"
-                            onClick={() => removeFromCart(index)}
-                            type="button"
-                            title="Remove from cart"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                        <div className="cart-item-controls">
-                          <input
-                            type="text"
-                            placeholder="Price"
-                            value={cartItem.price}
-                            onChange={(e) => updateCartItem(index, 'price', e.target.value)}
-                            className="cart-price-input"
-                          />
-                          <div className="custom-currency-select">
-                            <button
-                              className="currency-button"
-                              onClick={() => setOpenCurrencyDropdown(openCurrencyDropdown === index ? null : index)}
-                              aria-expanded={openCurrencyDropdown === index}
-                              type="button"
-                            >
-                              {cartItem.currency}
-                              <svg width="12" height="12" viewBox="0 0 12 12" className="dropdown-arrow">
-                                <path 
-                                  d="M3 4.5L6 7.5L9 4.5" 
-                                  stroke="currentColor" 
-                                  strokeWidth="1.5" 
-                                  strokeLinecap="round" 
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
-                            </button>
-                            {openCurrencyDropdown === index && (
-                              <div className="currency-dropdown">
-                                {['g', 'OJ', 'AP', 'AC', 'LN'].map(currency => (
-                                  <button
-                                    key={currency}
-                                    className={`currency-option ${cartItem.currency === currency ? 'active' : ''}`}
-                                    onClick={() => {
-                                      updateCartItem(index, 'currency', currency)
-                                      setOpenCurrencyDropdown(null)
-                                    }}
-                                    type="button"
-                                  >
-                                    {currency}
-                                  </button>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
+                <div className="pinned-items">
+                  {pinnedResources.map((pinnedItem, index) => (
+                    <div key={index} className="pinned-item">
+                      <div className="pinned-item-header">
+                        <span className="pinned-item-name">
+                          {pinnedItem.name}
+                          {pinnedItem.parentRecipe && (
+                            <span className="parent-recipe"> ({pinnedItem.parentRecipe})</span>
+                          )}
+                        </span>
+                        <span className="pinned-item-quantity">×{formatNumber(pinnedItem.quantity)}</span>
+                        <button
+                          className="pinned-remove-btn"
+                          onClick={() => removeFromPinned(index)}
+                          type="button"
+                          title="Remove from pinned"
+                        >
+                          ✕
+                        </button>
                       </div>
-                    ))}
-                  </div>
-                  
-                  <div className="cart-output">
-                    <h4>WTB Text:</h4>
-                    <div className="output-text">
-                      <pre>{generateWTBText()}</pre>
-                      <button
-                        className={`chip copy-btn ${recentlyCopiedButtons.has('wtb') ? 'copied' : ''}`}
-                        onClick={() => handleCopyText(generateWTBText(), 'wtb')}
-                        type="button"
-                      >
-                        {recentlyCopiedButtons.has('wtb') ? 'Copied!' : 'Copy'}
-                      </button>
                     </div>
-                    
-                    <h4>LF Text:</h4>
-                    <div className="output-text">
-                      <pre>{generateLFText()}</pre>
-                      <button
-                        className={`chip copy-btn ${recentlyCopiedButtons.has('lf') ? 'copied' : ''}`}
-                        onClick={() => handleCopyText(generateLFText(), 'lf')}
-                        type="button"
-                      >
-                        {recentlyCopiedButtons.has('lf') ? 'Copied!' : 'Copy'}
-                      </button>
-                    </div>
-                  </div>
-                </>
+                  ))}
+                </div>
               )}
             </div>
           )}
@@ -878,14 +811,14 @@ export default function App() {
                 <label className="setting-label">
                   <input
                     type="checkbox"
-                    checked={cartEnabled}
-                    onChange={(e) => setCartEnabled(e.target.checked)}
+                    checked={pinnedEnabled}
+                    onChange={(e) => setPinnedEnabled(e.target.checked)}
                     className="setting-checkbox"
                   />
-                  Enable Cart functionality
+                  Enable Resource Pinning
                 </label>
                 <p className="setting-description">
-                  Show cart tab and add-to-cart buttons
+                  Show pinned tab and pin buttons for resources
                 </p>
               </div>
               
@@ -1229,17 +1162,17 @@ export default function App() {
                             </span>
                             <span className="v">{formatNumber(v)}</span>
                           </div>
-                          {isMailable && cartEnabled && (
+                          {pinnedEnabled && (
                             <button
-                              className={`add-to-cart-btn ${recentlyAddedItems.has(`${k}_${v}`) ? 'success' : ''}`}
+                              className={`add-to-cart-btn ${recentlyAddedItems.has(`${k}_${v}_${item}`) ? 'success' : ''}`}
                               onClick={(e) => {
                                 e.stopPropagation()
-                                addToCart(k, v)
+                                addToPinned(k, v, item)
                               }}
                               type="button"
-                              title={`Add ${k} to cart`}
+                              title={`Pin ${k} from ${item}`}
                             >
-                              {recentlyAddedItems.has(`${k}_${v}`) ? (
+                              {recentlyAddedItems.has(`${k}_${v}_${item}`) ? (
                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                                   <path 
                                     d="M11.67 3.5L5.25 9.92L2.33 7" 

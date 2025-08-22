@@ -1,6 +1,7 @@
 // Утилиты для работы с API рецептами
 import recipesAPI from '../data/recipes-api.json' with { type: 'json' };
 import itemsAPI from '../data/items-api.json' with { type: 'json' };
+import localRecipes from '../data/recipes.json' with { type: 'json' };
 import RecipeUpdateService from '../services/RecipeUpdateService.js';
 import { sortItemsAlphabetically } from './sortingUtils.js';
 

@@ -29,6 +29,16 @@ const saveToStorage = (key, data) => {
   }
 }
 
+// Format numbers with spaces for better readability
+const formatNumber = (num) => {
+  if (num === null || num === undefined || num === '') return ''
+  const number = typeof num === 'string' ? parseFloat(num) : num
+  if (isNaN(number)) return num
+  // Handle zero specifically
+  if (number === 0) return '0'
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+}
+
 const loadFromStorage = (key, defaultValue) => {
   try {
     if (!isStorageAvailable()) return defaultValue
@@ -82,7 +92,6 @@ export default function App() {
   })
   const [craftHistory, setCraftHistory] = useState(() => loadFromStorage('craftCalculator_craftHistory', []))
   const [historyLimit, setHistoryLimit] = useState(() => loadFromStorage('craftCalculator_historyLimit', 50))
-  const [showTotalsCard, setShowTotalsCard] = useState(() => loadFromStorage('craftCalculator_showTotalsCard', true))
   const [cart, setCart] = useState(() => loadFromStorage('craftCalculator_cart', []))
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [useThousandsFormat, setUseThousandsFormat] = useState(() => loadFromStorage('craftCalculator_useThousandsFormat', true))
@@ -102,7 +111,9 @@ export default function App() {
 
   const result = useMemo(() => {
     if (!item || !combinedRecipes[item]) return null
-    const fullResult = calculateAllResources(item, Number(amount) || 1, activePerks, combinedRecipes)
+    // Clean amount from spaces before converting to number
+    const cleanAmount = typeof amount === 'string' ? amount.replace(/\s/g, '') : amount
+    const fullResult = calculateAllResources(item, Number(cleanAmount) || 1, activePerks, combinedRecipes)
     
     // Get original recipe ingredients
     const originalRecipe = combinedRecipes[item]
@@ -187,14 +198,14 @@ export default function App() {
     if (!result) return ''
     
     const resourcesText = Object.entries(result.filteredResources)
-      .map(([name, qty]) => `• ${name}: ${qty}`)
+      .map(([name, qty]) => `• ${name}: ${formatNumber(qty)}`)
       .join('\n')
     
     const perksText = activePerks.length > 0 
       ? `\n\nPerks:\n${activePerks.map(p => `• ${p}`).join('\n')}` 
       : ''
     
-    return `🔨 Craft Calculator Results\n\n📦 Item: ${item} (×${amount})\n💰 Silver: ${result.silver}\n⭐ XP: ${result.xp}\n\n📋 Resources needed:\n${resourcesText}${perksText}\n\n🔗 Calculate your own: [Open Craft Calculator]`
+    return `🔨 Craft Calculator Results\n\n📦 Item: ${item} (×${formatNumber(typeof amount === 'string' ? amount.replace(/\s/g, '') : amount)})\n\n📋 Resources needed:\n${resourcesText}${perksText}\n\n🔗 Calculate your own: [Open Craft Calculator]`
   }
 
   // Function to handle main button click (share results)
@@ -258,10 +269,6 @@ export default function App() {
     saveToStorage('craftCalculator_historyLimit', historyLimit)
   }, [historyLimit])
 
-  useEffect(() => {
-    saveToStorage('craftCalculator_showTotalsCard', showTotalsCard)
-  }, [showTotalsCard])
-
   // Запуск автообновления рецептов при загрузке приложения
   useEffect(() => {
     // Запускаем автообновление
@@ -306,8 +313,8 @@ export default function App() {
 
   // Cart functions
   const formatQuantity = (quantity) => {
-    if (!useThousandsFormat || !isFinite(quantity) || quantity < 0) return quantity.toString();
-    return quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    if (!useThousandsFormat) return quantity.toString()
+    return formatNumber(quantity)
   }
 
   const addToCart = (resourceName, quantity) => {
@@ -484,7 +491,6 @@ export default function App() {
         localStorage.removeItem('craftCalculator_craftChain')
         localStorage.removeItem('craftCalculator_craftHistory')
         localStorage.removeItem('craftCalculator_historyLimit')
-        localStorage.removeItem('craftCalculator_showTotalsCard')
         localStorage.removeItem('craftCalculator_cart')
         localStorage.removeItem('craftCalculator_useThousandsFormat')
         localStorage.removeItem('craftCalculator_itemCurrencies')
@@ -500,7 +506,6 @@ export default function App() {
       setCraftChain([{ name: 'Board', amount: 1 }])
       setCraftHistory([])
       setHistoryLimit(50)
-      setShowTotalsCard(true)
       setCart([])
       setUseThousandsFormat(true)
       setItemCurrencies({})
@@ -867,18 +872,6 @@ export default function App() {
             <div className="settings-section">
               <h3 className="section-title">Display Settings</h3>
               
-              <div className="setting-item">
-                <label className="setting-label">
-                  <input
-                    type="checkbox"
-                    checked={showTotalsCard}
-                    onChange={(e) => setShowTotalsCard(e.target.checked)}
-                    className="setting-checkbox"
-                  />
-                  Show XP and Silver card
-                </label>
-              </div>
-              
               <h3 className="section-title">Features</h3>
               
               <div className="setting-item">
@@ -1038,19 +1031,42 @@ export default function App() {
             <span className="label">Amount</span>
             <input 
               className="input" 
-              type="text"
-              value={amount === null || amount === 0 ? '' : formatQuantity(amount)}
-              onChange={(e) => {
-                const numericValue = e.target.value.replace(/\s/g, '');
-                if (numericValue === '') {
-                  setAmount(null);
-                } else if (!isNaN(numericValue) && isFinite(numericValue)) {
-                  const num = Number(numericValue);
-                  if (num >= 0 && num <= Number.MAX_SAFE_INTEGER) {
-                    setAmount(num);
-                  }
+              type="text" 
+              min={1} 
+              max={9999999999999999}
+              value={formatNumber(amount)} 
+              placeholder="Enter amount (e.g., 1 000)"
+              onChange={e => {
+                const inputValue = e.target.value
+                
+                // Remove spaces and keep only digits
+                const cleanValue = inputValue.replace(/\D/g, '')
+                
+                // Check if empty or if number is within limit
+                if (cleanValue === '') {
+                  setAmount('')
+                  setCraftChain(prev => {
+                    const updated = [...prev]
+                    updated[updated.length - 1] = { ...updated[updated.length - 1], amount: 1 }
+                    return updated
+                  })
+                  return
                 }
-              }}
+                
+                // Convert to number and check limit
+                const numericValue = parseInt(cleanValue)
+                if (numericValue > 9999999999999999) {
+                  return // Don't update if exceeds limit
+                }
+                
+                setAmount(cleanValue)
+                // Update the last item in chain with new amount
+                setCraftChain(prev => {
+                  const updated = [...prev]
+                  updated[updated.length - 1] = { ...updated[updated.length - 1], amount: numericValue || 1 }
+                  return updated
+                })
+              }} 
             />
           </label>
         </section>
@@ -1168,27 +1184,13 @@ export default function App() {
           )}
           {result && (
             <motion.div
-              key={`${item}-${amount}-${activePerks.join(',')}-${showTotalsCard}`}
+              key={`${item}-${amount}-${activePerks.join(',')}`}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
               className="stack"
             >
-              {showTotalsCard && (
-                <motion.section 
-                  className="glass card compact"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="totals-row">
-                    <motion.div className="pill">Silver <span>{result.silver && isFinite(result.silver) ? formatQuantity(result.silver) : '0'}</span></motion.div>
-                    <motion.div className="pill">XP <span>{result.xp && isFinite(result.xp) ? formatQuantity(result.xp) : '0'}</span></motion.div>
-                  </div>
-                </motion.section>
-              )}
-
               {Object.keys(result.filteredResources).length > 0 && (
                 <motion.section className="glass card">
                   <h2>Resources</h2>
@@ -1225,7 +1227,7 @@ export default function App() {
                                 </span>
                               )}
                             </span>
-                            <span className="v">{formatQuantity(v)}</span>
+                            <span className="v">{formatNumber(v)}</span>
                           </div>
                           {isMailable && cartEnabled && (
                             <button

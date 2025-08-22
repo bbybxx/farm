@@ -1038,19 +1038,14 @@ export default function App() {
             <span className="label">Amount</span>
             <input 
               className="input" 
-              type="number" 
-              min={1} 
-              value={amount} 
-              onChange={e => {
-                const newAmount = e.target.value
-                setAmount(newAmount)
-                // Update the last item in chain with new amount
-                setCraftChain(prev => {
-                  const updated = [...prev]
-                  updated[updated.length - 1] = { ...updated[updated.length - 1], amount: parseInt(newAmount) || 1 }
-                  return updated
-                })
-              }} 
+              type="text"
+              value={formatQuantity(amount)}
+              onChange={(e) => {
+                const numericValue = e.target.value.replace(/\s/g, '');
+                if (!isNaN(numericValue)) {
+                  setAmount(Number(numericValue));
+                }
+              }}
             />
           </label>
         </section>

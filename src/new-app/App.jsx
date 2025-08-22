@@ -669,23 +669,28 @@ export default function App() {
               ) : (
                 <div className="pinned-items">
                   {pinnedResources.map((pinnedItem, index) => (
-                    <div key={index} className="pinned-item">
-                      <div className="pinned-item-header">
-                        <span className="pinned-item-name">
+                    <div key={index} className="pinned-card">
+                      <button
+                        className="pinned-close-btn"
+                        onClick={() => removeFromPinned(index)}
+                        type="button"
+                        title="Remove from pinned"
+                      >
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="18" y1="6" x2="6" y2="18"></line>
+                          <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                      </button>
+                      <div className="pinned-card-content">
+                        <div className="pinned-item-name">
                           {pinnedItem.name}
+                        </div>
+                        <div className="pinned-item-details">
+                          <span className="pinned-item-quantity">×{formatNumber(pinnedItem.quantity)}</span>
                           {pinnedItem.parentRecipe && (
-                            <span className="parent-recipe"> ({pinnedItem.parentRecipe})</span>
+                            <span className="parent-recipe">from {pinnedItem.parentRecipe}</span>
                           )}
-                        </span>
-                        <span className="pinned-item-quantity">×{formatNumber(pinnedItem.quantity)}</span>
-                        <button
-                          className="pinned-remove-btn"
-                          onClick={() => removeFromPinned(index)}
-                          type="button"
-                          title="Remove from pinned"
-                        >
-                          ✕
-                        </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -1039,27 +1044,22 @@ export default function App() {
                           </div>
                           {pinnedEnabled && (
                             <button
-                              className={`pin-btn ${recentlyAddedItems.has(`${k}_${v}_${item}`) ? 'success' : ''}`}
+                              className={`pin-btn ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'success' : ''}`}
                               onClick={(e) => {
                                 e.stopPropagation()
-                                addToPinned(k, v, item)
+                                addToPinned(k, v, craftChain.length > 0 ? craftChain[0].name : item)
                               }}
                               type="button"
                               title={`Pin ${k} from ${item}`}
                             >
-                              {recentlyAddedItems.has(`${k}_${v}_${item}`) ? (
-                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                  <path 
-                                    d="M11.67 3.5L5.25 9.92L2.33 7" 
-                                    stroke="currentColor" 
-                                    strokeWidth="2" 
-                                    strokeLinecap="round" 
-                                    strokeLinejoin="round"
-                                  />
-                                </svg>
-                              ) : (
-                                '+'
-                              )}
+                              <div className="pin-icon">
+                                <div 
+                                  className={`pin-line pin-line-horizontal ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'checked' : ''}`}
+                                ></div>
+                                <div 
+                                  className={`pin-line pin-line-vertical ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'checked' : ''}`}
+                                ></div>
+                              </div>
                             </button>
                           )}
                         </motion.li>

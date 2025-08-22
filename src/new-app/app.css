@@ -892,6 +892,92 @@ select.input option {
   flex-shrink: 0;
 }
 
+/* Pin button for new system */
+.pin-btn {
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.pin-btn svg {
+  stroke: currentColor;
+}
+
+/* Animated pin icon */
+.pin-icon {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pin-line {
+  position: absolute;
+  background: var(--accent);
+  border-radius: 1px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pin-line-horizontal {
+  width: 10px;
+  height: 2px;
+  transform: translateX(0) translateY(0) rotate(0deg);
+}
+
+.pin-line-vertical {
+  width: 2px;
+  height: 10px;
+  transform: translateX(0) translateY(0) rotate(0deg);
+}
+
+/* Animation to checkmark */
+.pin-line-horizontal.checked {
+  width: 6px;
+  transform: translateX(-1px) translateY(1px) rotate(-45deg);
+}
+
+.pin-line-vertical.checked {
+  width: 2px;
+  height: 4px;
+  transform: translateX(1px) translateY(-1px) rotate(45deg);
+}
+
+.pin-btn:hover {
+  background: color-mix(in oklab, var(--accent) 15%, transparent);
+  transform: scale(1.05);
+}
+
+.pin-btn:hover .pin-line {
+  background: var(--accent);
+}
+
+.pin-btn:active {
+  transform: scale(0.95);
+}
+
+.pin-btn.success {
+  background: color-mix(in oklab, #22c55e 15%, transparent);
+}
+
+.pin-btn.success .pin-line {
+  background: #22c55e;
+}
+
+.pin-btn.success:hover {
+  background: color-mix(in oklab, #22c55e 25%, transparent);
+}
+
 .add-to-cart-btn:hover {
   background: color-mix(in oklab, var(--accent) 80%, white);
   transform: scale(1.05);
@@ -966,6 +1052,115 @@ select.input option {
   font-size: 12px;
   cursor: pointer;
   transition: all 0.15s ease;
+}
+
+/* Pinned items styles */
+.pinned-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pinned-card {
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-stroke);
+  border-radius: 12px;
+  padding: 12px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.pinned-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  z-index: 1;
+}
+
+.pinned-close-btn svg {
+  stroke: currentColor;
+}
+
+.pinned-close-btn:hover {
+  background: #ff4444;
+  color: white;
+}
+
+.pinned-close-btn:active {
+  transform: scale(0.95);
+}
+
+.pinned-card-content {
+  padding-right: 24px;
+}
+
+.pinned-item-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.pinned-item-details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pinned-item-quantity {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 15%, transparent);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.parent-recipe {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* Legacy pinned button styles */
+.pinned-remove-btn {
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  border-radius: 4px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pinned-remove-btn svg {
+  stroke: currentColor;
+}
+
+.pinned-remove-btn:hover {
+  background: #ff4444;
+  color: white;
+}
+
+.pinned-remove-btn:active {
+  transform: scale(0.95);
 }
 
 .cart-remove-btn:hover {

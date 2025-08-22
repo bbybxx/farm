@@ -113,8 +113,6 @@ export function useTelegram() {
 
   const sendBugReport = async (message, userInfo = null) => {
     try {
-      console.log('Bug report v2.0 - using API endpoint');
-      
       // Отправляем напрямую через Telegram Bot API
       let BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
       let CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
@@ -126,29 +124,26 @@ export function useTelegram() {
         CHAT_ID = '592052544';
       }
       
-      // Отладочная информация
-      console.log('Environment check:', {
-        BOT_TOKEN: BOT_TOKEN ? `${BOT_TOKEN.substring(0, 10)}...` : 'NOT SET',
-        CHAT_ID: CHAT_ID ? CHAT_ID : 'NOT SET',
-        allEnv: Object.keys(import.meta.env)
-      });
-      
-      if (!BOT_TOKEN || !CHAT_ID) {
-        console.error('Bot token or chat ID not configured');
-        if (isInTelegram) {
-          showAlert('Bug report feature is not available');
-        } else {
-          alert('Bug report feature is not available');
-        }
-        return;
-      }
-      
+      // Собираем расширенную информацию о пользователе и системе
       const bugReportData = {
         message: message,
         user: userInfo || user,
         timestamp: new Date().toISOString(),
         url: window.location.href,
-        userAgent: navigator.userAgent
+        userAgent: navigator.userAgent,
+        // Дополнительная информация для диагностики
+        viewport: `${window.innerWidth}x${window.innerHeight}`,
+        screen: `${screen.width}x${screen.height}`,
+        language: navigator.language,
+        platform: navigator.platform,
+        onLine: navigator.onLine,
+        // Информация о браузере
+        cookieEnabled: navigator.cookieEnabled,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        // Telegram Web App информация
+        isInTelegram: !!tg,
+        telegramVersion: tg?.version || 'N/A',
+        telegramPlatform: tg?.platform || 'N/A'
       };
       
       // Форматируем сообщение для Telegram
@@ -168,8 +163,6 @@ export function useTelegram() {
       // В продакшене всегда используем наш API endpoint
       const isProduction = import.meta.env.PROD || window.location.hostname !== 'localhost';
       
-      console.log('Sending bug report via:', isProduction ? 'API endpoint' : 'direct Telegram API');
-      
       let response;
       
       if (isProduction) {
@@ -182,10 +175,20 @@ export function useTelegram() {
           body: JSON.stringify({
             type: 'bug_report',
             message: message,
-            user: userInfo || user,
+            user: bugReportData.user,
             timestamp: bugReportData.timestamp,
             url: bugReportData.url,
-            userAgent: bugReportData.userAgent
+            userAgent: bugReportData.userAgent,
+            viewport: bugReportData.viewport,
+            screen: bugReportData.screen,
+            language: bugReportData.language,
+            platform: bugReportData.platform,
+            onLine: bugReportData.onLine,
+            cookieEnabled: bugReportData.cookieEnabled,
+            timezone: bugReportData.timezone,
+            isInTelegram: bugReportData.isInTelegram,
+            telegramVersion: bugReportData.telegramVersion,
+            telegramPlatform: bugReportData.telegramPlatform
           })
         });
       } else {
@@ -203,15 +206,11 @@ export function useTelegram() {
         });
       }
       
-      console.log('Telegram API response:', response.status, response.statusText);
-      
       if (response.ok) {
-        console.log('Bug report sent successfully');
-        return { success: true, method: 'direct-api' };
+        return { success: true, method: isProduction ? 'api-endpoint' : 'direct-api' };
       } else {
         const errorData = await response.json();
-        console.error('Telegram API error:', errorData);
-        throw new Error(`Telegram API error: ${errorData.description}`);
+        throw new Error(`API error: ${errorData.description || errorData.error}`);
       }
       
     } catch (error) {

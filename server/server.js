@@ -63,7 +63,11 @@ async function sendTelegramMessage(chatId, message, parseMode = 'HTML') {
 
 // Format bug report message for Telegram
 function formatBugReport(data) {
-  const { message, user, timestamp, url, userAgent } = data;
+  const { 
+    message, user, timestamp, url, userAgent, 
+    viewport, screen, language, platform, onLine, 
+    cookieEnabled, timezone, isInTelegram, telegramVersion, telegramPlatform 
+  } = data;
   
   let formattedMessage = `🐛 <b>Bug Report</b>\n\n`;
   
@@ -74,9 +78,10 @@ function formatBugReport(data) {
     if (user.username) formattedMessage += ` (@${user.username})`;
     formattedMessage += `\n`;
     if (user.id) formattedMessage += `🆔 <b>User ID:</b> <code>${user.id}</code>\n`;
+    if (user.language_code) formattedMessage += `🌍 <b>User Language:</b> ${user.language_code}\n`;
   }
   
-  // Timestamp
+  // Timestamp and timezone
   if (timestamp) {
     const date = new Date(timestamp);
     formattedMessage += `⏰ <b>Time:</b> ${date.toLocaleString('en-US', { 
@@ -87,7 +92,9 @@ function formatBugReport(data) {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit'
-    })} UTC\n`;
+    })} UTC`;
+    if (timezone) formattedMessage += ` (${timezone})`;
+    formattedMessage += `\n`;
   }
   
   // URL
@@ -95,11 +102,29 @@ function formatBugReport(data) {
     formattedMessage += `🔗 <b>URL:</b> <code>${url}</code>\n`;
   }
   
+  // Platform and environment info
+  formattedMessage += `\n� <b>Environment:</b>\n`;
+  if (isInTelegram) {
+    formattedMessage += `📱 <b>Platform:</b> Telegram Web App`;
+    if (telegramVersion && telegramVersion !== 'N/A') formattedMessage += ` v${telegramVersion}`;
+    if (telegramPlatform && telegramPlatform !== 'N/A') formattedMessage += ` (${telegramPlatform})`;
+    formattedMessage += `\n`;
+  } else {
+    formattedMessage += `🌐 <b>Platform:</b> Web Browser\n`;
+  }
+  
+  if (platform) formattedMessage += `🖥️ <b>OS:</b> ${platform}\n`;
+  if (language) formattedMessage += `🌍 <b>Browser Language:</b> ${language}\n`;
+  if (viewport) formattedMessage += `📐 <b>Viewport:</b> ${viewport}\n`;
+  if (screen) formattedMessage += `🖼️ <b>Screen:</b> ${screen}\n`;
+  if (typeof onLine === 'boolean') formattedMessage += `📶 <b>Online:</b> ${onLine ? 'Yes' : 'No'}\n`;
+  if (typeof cookieEnabled === 'boolean') formattedMessage += `🍪 <b>Cookies:</b> ${cookieEnabled ? 'Enabled' : 'Disabled'}\n`;
+  
   formattedMessage += `\n📝 <b>Report:</b>\n${message}`;
   
-  // User agent (simplified format since Telegram doesn't support details tag)
+  // User agent (collapsed for readability)
   if (userAgent) {
-    formattedMessage += `\n\n🖥️ <b>Browser:</b> <code>${userAgent}</code>`;
+    formattedMessage += `\n\n� <b>User Agent:</b>\n<code>${userAgent}</code>`;
   }
   
   return formattedMessage;
@@ -137,7 +162,11 @@ app.get('/health', (req, res) => {
 // Bug report endpoint
 app.post('/api/bug-report', async (req, res) => {
   try {
-    const { type, message, user, timestamp, url, userAgent } = req.body;
+    const { 
+      type, message, user, timestamp, url, userAgent,
+      viewport, screen, language, platform, onLine, 
+      cookieEnabled, timezone, isInTelegram, telegramVersion, telegramPlatform
+    } = req.body;
     
     // Validate required fields
     if (!message || !message.trim()) {
@@ -172,13 +201,23 @@ app.post('/api/bug-report', async (req, res) => {
       });
     }
     
-    // Format and send message
+    // Format and send message with all available data
     const formattedMessage = formatBugReport({
       message: message.trim(),
       user,
       timestamp,
       url,
-      userAgent
+      userAgent,
+      viewport,
+      screen,
+      language,
+      platform,
+      onLine,
+      cookieEnabled,
+      timezone,
+      isInTelegram,
+      telegramVersion,
+      telegramPlatform
     });
     
     const result = await sendTelegramMessage(CHAT_ID, formattedMessage);

@@ -306,7 +306,7 @@ export default function App() {
 
   // Cart functions
   const formatQuantity = (quantity) => {
-    if (!useThousandsFormat) return quantity.toString();
+    if (!useThousandsFormat || !isFinite(quantity) || quantity < 0) return quantity.toString();
     return quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   }
 
@@ -1039,11 +1039,16 @@ export default function App() {
             <input 
               className="input" 
               type="text"
-              value={amount === null ? '' : formatQuantity(amount)}
+              value={amount === null || amount === 0 ? '' : formatQuantity(amount)}
               onChange={(e) => {
                 const numericValue = e.target.value.replace(/\s/g, '');
-                if (!isNaN(numericValue) && numericValue !== Infinity) {
-                  setAmount(numericValue === '' ? null : Number(numericValue));
+                if (numericValue === '') {
+                  setAmount(null);
+                } else if (!isNaN(numericValue) && isFinite(numericValue)) {
+                  const num = Number(numericValue);
+                  if (num >= 0 && num <= Number.MAX_SAFE_INTEGER) {
+                    setAmount(num);
+                  }
                 }
               }}
             />
@@ -1178,8 +1183,8 @@ export default function App() {
                   transition={{ duration: 0.2 }}
                 >
                   <div className="totals-row">
-                    <motion.div className="pill">Silver <span>{formatQuantity(result.silver)}</span></motion.div>
-                    <motion.div className="pill">XP <span>{formatQuantity(result.xp)}</span></motion.div>
+                    <motion.div className="pill">Silver <span>{result.silver && isFinite(result.silver) ? formatQuantity(result.silver) : '0'}</span></motion.div>
+                    <motion.div className="pill">XP <span>{result.xp && isFinite(result.xp) ? formatQuantity(result.xp) : '0'}</span></motion.div>
                   </div>
                 </motion.section>
               )}

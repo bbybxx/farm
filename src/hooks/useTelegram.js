@@ -113,6 +113,8 @@ export function useTelegram() {
 
   const sendBugReport = async (message, userInfo = null) => {
     try {
+      console.log('Bug report v2.0 - using API endpoint');
+      
       // Отправляем напрямую через Telegram Bot API
       let BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
       let CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
@@ -163,11 +165,10 @@ export function useTelegram() {
       telegramMessage += `🔗 URL: ${bugReportData.url}\n\n`;
       telegramMessage += `📝 Report:\n${bugReportData.message}`;
       
-      // Отправляем через наш API прокси вместо прямого обращения к Telegram
-      const isProduction = window.location.hostname !== 'localhost';
-      const apiUrl = isProduction 
-        ? '/api/graphql' // Используем наш Vercel прокси
-        : `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`; // Локально напрямую
+      // В продакшене всегда используем наш API endpoint
+      const isProduction = import.meta.env.PROD || window.location.hostname !== 'localhost';
+      
+      console.log('Sending bug report via:', isProduction ? 'API endpoint' : 'direct Telegram API');
       
       let response;
       

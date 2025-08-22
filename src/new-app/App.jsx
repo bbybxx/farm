@@ -307,6 +307,9 @@ export default function App() {
   // Cart functions
   const formatQuantity = (quantity) => {
     if (!useThousandsFormat) return quantity.toString();
+    if (quantity >= 1e6) {
+      return quantity.toExponential(2).replace(/e\+/, 'e');
+    }
     return quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   }
 
@@ -1039,12 +1042,10 @@ export default function App() {
             <input 
               className="input" 
               type="text"
-              value={formatQuantity(amount)}
+              value={amount === null ? '' : formatQuantity(amount)}
               onChange={(e) => {
                 const numericValue = e.target.value.replace(/\s/g, '');
-                if (!isNaN(numericValue)) {
-                  setAmount(Number(numericValue));
-                }
+                setAmount(numericValue === '' ? null : Number(numericValue));
               }}
             />
           </label>

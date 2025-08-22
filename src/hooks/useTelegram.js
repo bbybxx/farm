@@ -117,6 +117,13 @@ export function useTelegram() {
       const BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
       const CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
       
+      // Отладочная информация
+      console.log('Environment check:', {
+        BOT_TOKEN: BOT_TOKEN ? 'SET' : 'NOT SET',
+        CHAT_ID: CHAT_ID ? 'SET' : 'NOT SET',
+        env: import.meta.env
+      });
+      
       if (!BOT_TOKEN || !CHAT_ID) {
         console.error('Bot token or chat ID not configured');
         if (isInTelegram) {
@@ -162,10 +169,14 @@ export function useTelegram() {
         })
       });
       
+      console.log('Telegram API response:', response.status, response.statusText);
+      
       if (response.ok) {
+        console.log('Bug report sent successfully');
         return { success: true, method: 'direct-api' };
       } else {
         const errorData = await response.json();
+        console.error('Telegram API error:', errorData);
         throw new Error(`Telegram API error: ${errorData.description}`);
       }
       

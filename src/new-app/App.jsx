@@ -96,11 +96,7 @@ export default function App() {
   const [pinnedResources, setPinnedResources] = useState(() => loadFromStorage('craftCalculator_pinnedResources', []))
   const [isPinnedOpen, setIsPinnedOpen] = useState(false)
   const [useThousandsFormat, setUseThousandsFormat] = useState(() => loadFromStorage('craftCalculator_useThousandsFormat', true))
-  const [itemCurrencies, setItemCurrencies] = useState(() => loadFromStorage('craftCalculator_itemCurrencies', {}))
-  const [itemPrices, setItemPrices] = useState(() => loadFromStorage('craftCalculator_itemPrices', {}))
-  const [openCurrencyDropdown, setOpenCurrencyDropdown] = useState(null)
   const [recentlyAddedItems, setRecentlyAddedItems] = useState(new Set())
-  const [recentlyCopiedButtons, setRecentlyCopiedButtons] = useState(new Set())
   const [showClearConfirm, setShowClearConfirm] = useState(false)
   const [showClearSuccess, setShowClearSuccess] = useState(false)
   const [isBugReportOpen, setIsBugReportOpen] = useState(false)
@@ -280,20 +276,12 @@ export default function App() {
   }, [updateService])
 
   useEffect(() => {
-    saveToStorage('craftCalculator_cart', cart)
-  }, [cart])
+    saveToStorage('craftCalculator_pinnedResources', pinnedResources)
+  }, [pinnedResources])
 
   useEffect(() => {
     saveToStorage('craftCalculator_useThousandsFormat', useThousandsFormat)
   }, [useThousandsFormat])
-
-  useEffect(() => {
-    saveToStorage('craftCalculator_itemCurrencies', itemCurrencies)
-  }, [itemCurrencies])
-
-  useEffect(() => {
-    saveToStorage('craftCalculator_itemPrices', itemPrices)
-  }, [itemPrices])
 
   useEffect(() => {
     saveToStorage('craftCalculator_pinnedResources', pinnedResources)
@@ -315,12 +303,6 @@ export default function App() {
       setSidebarActiveTab('perks')
     }
   }, [pinnedEnabled, historyEnabled, sidebarActiveTab])
-
-  // Cart functions
-  const formatQuantity = (quantity) => {
-    if (!useThousandsFormat) return quantity.toString()
-    return formatNumber(quantity)
-  }
 
   // Pinned resources functions
   const addToPinned = (resourceName, quantity, parentRecipe = null) => {
@@ -355,78 +337,9 @@ export default function App() {
     setPinnedResources(prev => prev.filter((_, i) => i !== index))
   }
 
-  const updateCartItem = (index, field, value) => {
-    setCart(prev => {
-      const updated = [...prev]
-      updated[index][field] = value
-      
-      const itemName = updated[index].name
-      
-      // Save currency and price for this item
-      if (field === 'currency') {
-        setItemCurrencies(prevCurrencies => ({
-          ...prevCurrencies,
-          [itemName]: value
-        }))
-      } else if (field === 'price') {
-        setItemPrices(prevPrices => ({
-          ...prevPrices,
-          [itemName]: value
-        }))
-      }
-      
-      return updated
-    })
-  }
+  // Save pinned resources to localStorage
 
-  const clearCart = () => {
-    hapticFeedback('medium')
-    setCart([])
-  }
-
-  const generateWTBText = () => {
-    if (cart.length === 0) return ''
-    
-    const wtbItems = cart.map(item => {
-      const formattedQty = formatQuantity(item.quantity)
-      const price = item.price || '?'
-      const currency = item.currency
-      const formattedCurrency = currency === 'g' ? currency : ` ${currency}`
-      return `${formattedQty}((${item.name})) ${price}${formattedCurrency}/${useThousandsFormat && item.quantity >= 1000 ? 'k' : '1'}`
-    }).join(', ')
-    
-    return `Wtb ${wtbItems}`
-  }
-
-  const generateLFText = () => {
-    if (cart.length === 0) return ''
-    
-    const lfItems = cart.map(item => {
-      const formattedQty = formatQuantity(item.quantity)
-      return `${formattedQty}((${item.name}))`
-    }).join(', ')
-    
-    return `LF ${lfItems}`
-  }
-
-  const handleCopyText = (text, buttonKey) => {
-    navigator.clipboard?.writeText(text).then(() => {
-      // Show success animation
-      setRecentlyCopiedButtons(prev => new Set([...prev, buttonKey]))
-      
-      // Remove animation after 2 seconds
-      setTimeout(() => {
-        setRecentlyCopiedButtons(prev => {
-          const newSet = new Set(prev)
-          newSet.delete(buttonKey)
-          return newSet
-        })
-      }, 2000)
-    }).catch(() => {
-      // Fallback if clipboard API fails
-      showAlert ? showAlert(text) : alert(text)
-    })
-  }
+  // Save pinned resources to localStorage
 
   // Telegram integration effects
   useEffect(() => {
@@ -491,8 +404,6 @@ export default function App() {
         localStorage.removeItem('craftCalculator_historyLimit')
         localStorage.removeItem('craftCalculator_pinnedResources')
         localStorage.removeItem('craftCalculator_useThousandsFormat')
-        localStorage.removeItem('craftCalculator_itemCurrencies')
-        localStorage.removeItem('craftCalculator_itemPrices')
         localStorage.removeItem('craftCalculator_pinnedEnabled')
         localStorage.removeItem('craftCalculator_historyEnabled')
       }
@@ -506,8 +417,6 @@ export default function App() {
       setHistoryLimit(50)
       setPinnedResources([])
       setUseThousandsFormat(true)
-      setItemCurrencies({})
-      setItemPrices({})
       setPinnedEnabled(true)
       setHistoryEnabled(true)
       
@@ -517,9 +426,7 @@ export default function App() {
       setSidebarActiveTab('perks')
       setIsItemSelectOpen(false)
       setIsHistoryOpen(false)
-      setOpenCurrencyDropdown(null)
       setRecentlyAddedItems(new Set())
-      setRecentlyCopiedButtons(new Set())
       
       // Show confirmation
       hapticFeedback('heavy')
@@ -837,24 +744,6 @@ export default function App() {
                 </p>
               </div>
               
-              {cartEnabled && (
-                <>
-                  <h3 className="section-title">Cart Settings</h3>
-                  
-                  <div className="setting-item">
-                    <label className="setting-label">
-                      <input
-                        type="checkbox"
-                        checked={useThousandsFormat}
-                        onChange={(e) => setUseThousandsFormat(e.target.checked)}
-                        className="setting-checkbox"
-                      />
-                      Round to thousands
-                    </label>
-                  </div>
-                </>
-              )}
-              
               {historyEnabled && (
                 <>
                   <h3 className="section-title">History Settings</h3>
@@ -1164,7 +1053,7 @@ export default function App() {
                           </div>
                           {pinnedEnabled && (
                             <button
-                              className={`add-to-cart-btn ${recentlyAddedItems.has(`${k}_${v}_${item}`) ? 'success' : ''}`}
+                              className={`pin-btn ${recentlyAddedItems.has(`${k}_${v}_${item}`) ? 'success' : ''}`}
                               onClick={(e) => {
                                 e.stopPropagation()
                                 addToPinned(k, v, item)

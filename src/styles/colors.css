@@ -1,0 +1,66 @@
+:root {
+  /* Background Colors */
+  --bg-primary: #1E1E1E;           /* Main background */
+  --bg-secondary: #2C2C2C;         /* Card/section background */
+  --bg-tertiary: #3A3A3A;          /* Interactive elements */
+  --bg-hover: #4A4A4A;            /* Hover state */
+  --bg-active: #5A5A5A;           /* Active/pressed state */
+
+  /* Text Colors */
+  --text-primary: #D4D4D4;          /* Main text */
+  --text-secondary: #A9A9A9;        /* Secondary text */
+  --text-disabled: #636363;        /* Disabled text */
+  --text-link: #64B5F6;            /* Link text */
+
+  /* Border Colors */
+  --border-primary: #505050;        /* Main borders */
+  --border-secondary: #636363;      /* Secondary borders */
+  --border-focus: #64B5F6;          /* Focus state borders */
+
+  /* Button Colors */
+  --button-primary-bg: #64B5F6;      /* Primary button background */
+  --button-primary-hover: #42A5F5;  /* Primary button hover */
+  --button-secondary-bg: #3A3A3A;    /* Secondary button background */
+  --button-secondary-hover: #4A4A4A; /* Secondary button hover */
+  --button-disabled: #636363;       /* Disabled button */
+
+  /* Form Elements */
+  --input-bg: #2C2C2C;            /* Input background */
+  --input-border: #505050;          /* Input border */
+  --input-focus-border: #64B5F6;    /* Input focus border */
+  --input-hover-border: #A9A9A9;    /* Input hover border */
+  --input-placeholder: #A9A9A9;      /* Placeholder text */
+
+  /* Resource Tree Colors */
+  --resource-header-bg: #2C2C2C;    /* Resource header background */
+  --resource-header-hover: #3A3A3A; /* Resource header hover */
+  --resource-craftable: #37474F;    /* Craftable resource background */
+  --resource-craftable-text: #81D4FA; /* Craftable resource text */
+  --resource-quantity: #81D4FA;      /* Resource quantity text */
+  --resource-bonus: #8BC34A;         /* Resource bonus text */
+
+  /* Pin Button Colors */
+  --pin-default: #A9A9A9;          /* Default pin color */
+  --pin-active: #FFB300;           /* Active pin color */
+
+  /* Cost Section Colors */
+  --cost-item-bg: #2C2C2C;         /* Cost item background */
+  --cost-value: #81D4FA;           /* Cost value text */
+  --cost-bonus: #8BC34A;           /* Cost bonus text */
+
+  /* Perks Section Colors */
+  --perk-item-bg: #2C2C2C;         /* Perk item background */
+  --perk-item-hover: #3A3A3A;       /* Perk item hover */
+
+  /* Shadow Colors */
+  --shadow-color: rgba(0, 0, 0, 0.3); /* Box shadows */
+
+  /* Overlay Colors */
+  --overlay-bg: rgba(0, 0, 0, 0.7); /* Modal/dropdown overlay */
+
+  /* Status Colors */
+  --success: #8BC34A;             /* Success state */
+  --warning: #FFB300;             /* Warning state */
+  --error: #F44336;               /* Error state */
+  --info: #64B5F6;                /* Info state */
+}

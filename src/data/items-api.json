@@ -1,0 +1,2137 @@
+{
+  "Wooden Barrel": {
+    "name": "Wooden Barrel",
+    "type": "item",
+    "image": "/img/items/5829.PNG",
+    "canCraft": true,
+    "craftingLevel": 10
+  },
+  "Wooden Plank": {
+    "name": "Wooden Plank",
+    "type": "item",
+    "image": "/img/items/5733.PNG",
+    "canCraft": true,
+    "craftingLevel": 1
+  },
+  "Board": {
+    "name": "Board",
+    "type": "item",
+    "image": "/img/items/5885.png",
+    "canCraft": true,
+    "craftingLevel": 1
+  },
+  "Corn Oil": {
+    "name": "Corn Oil",
+    "type": "item",
+    "image": "/img/items/cornoil.png",
+    "canCraft": true,
+    "craftingLevel": 81
+  },
+  "Black Powder": {
+    "name": "Black Powder",
+    "type": "item",
+    "image": "/img/items/powder.png",
+    "canCraft": true,
+    "craftingLevel": 12
+  },
+  "Glass Bottle": {
+    "name": "Glass Bottle",
+    "type": "item",
+    "image": "/img/items/7727.PNG?1",
+    "canCraft": true,
+    "craftingLevel": 5
+  },
+  "White Parchment": {
+    "name": "White Parchment",
+    "type": "item",
+    "image": "/img/items/whiteparchment.png",
+    "canCraft": true,
+    "craftingLevel": 2
+  },
+  "Purple Diary": {
+    "name": "Purple Diary",
+    "type": "item",
+    "image": "/img/items/purplebook.png",
+    "canCraft": true,
+    "craftingLevel": 6
+  },
+  "Mushroom Paste": {
+    "name": "Mushroom Paste",
+    "type": "item",
+    "image": "/img/items/5691.png",
+    "canCraft": true,
+    "craftingLevel": 3
+  },
+  "Belt Drive": {
+    "name": "Belt Drive",
+    "type": "item",
+    "image": "/img/items/9347.png",
+    "canCraft": true,
+    "craftingLevel": 83
+  },
+  "Purple Parchment": {
+    "name": "Purple Parchment",
+    "type": "item",
+    "image": "/img/items/5755.PNG",
+    "canCraft": true,
+    "craftingLevel": 2
+  },
+  "Glass Orb": {
+    "name": "Glass Orb",
+    "type": "item",
+    "image": "/img/items/5708.PNG",
+    "canCraft": true,
+    "craftingLevel": 5
+  },
+  "Looking Glass": {
+    "name": "Looking Glass",
+    "type": "item",
+    "image": "/img/items/5865.png",
+    "canCraft": true,
+    "craftingLevel": 8
+  },
+  "Lemonade": {
+    "name": "Lemonade",
+    "type": "item",
+    "image": "/img/items/lemonade.png",
+    "canCraft": true,
+    "craftingLevel": 5
+  },
+  "Grape Juice": {
+    "name": "Grape Juice",
+    "type": "item",
+    "image": "/img/items/grapejuice.png",
+    "canCraft": true,
+    "craftingLevel": 1
+  },
+  "Lava Sphere": {
+    "name": "Lava Sphere",
+    "type": "item",
+    "image": "/img/items/5249.png",
+    "canCraft": true,
+    "craftingLevel": 35
+  },
+  "Horn Canteen": {
+    "name": "Horn Canteen",
+    "type": "item",
+    "image": "/img/items/5969.PNG",
+    "canCraft": true,
+    "craftingLevel": 16
+  },
+  "Leather Bag": {
+    "name": "Leather Bag",
+    "type": "item",
+    "image": "/img/items/6175.PNG",
+    "canCraft": true,
+    "craftingLevel": 17
+  },
+  "Coin Purse": {
+    "name": "Coin Purse",
+    "type": "item",
+    "image": "/img/items/5945.PNG",
+    "canCraft": true,
+    "craftingLevel": 8
+  },
+  "Fishing Net": {
+    "name": "Fishing Net",
+    "type": "item",
+    "image": "/img/items/7748.png",
+    "canCraft": true,
+    "craftingLevel": 19
+  },
+  "Magnifying Glass": {
+    "name": "Magnifying Glass",
+    "type": "item",
+    "image": "/img/items/7210.png",
+    "canCraft": true,
+    "craftingLevel": 25
+  },
+  "Spoon": {
+    "name": "Spoon",
+    "type": "item",
+    "image": "/img/items/2473.png",
+    "canCraft": true,
+    "craftingLevel": 76
+  },
+  "Magicite": {
+    "name": "Magicite",
+    "type": "item",
+    "image": "/img/items/7963.png",
+    "canCraft": true,
+    "craftingLevel": 21
+  },
+  "Rope": {
+    "name": "Rope",
+    "type": "item",
+    "image": "/img/items/5624.png",
+    "canCraft": true,
+    "craftingLevel": 18
+  },
+  "Shimmer Topaz": {
+    "name": "Shimmer Topaz",
+    "type": "item",
+    "image": "/img/items/8055.png",
+    "canCraft": true,
+    "craftingLevel": 19
+  },
+  "Iron Cup": {
+    "name": "Iron Cup",
+    "type": "item",
+    "image": "/img/items/ironcup.png",
+    "canCraft": true,
+    "craftingLevel": 1
+  },
+  "Iced Tea": {
+    "name": "Iced Tea",
+    "type": "item",
+    "image": "/img/items/tea.png",
+    "canCraft": true,
+    "craftingLevel": 34
+  },
+  "Mystic Ring": {
+    "name": "Mystic Ring",
+    "type": "item",
+    "image": "/img/items/8038.png",
+    "canCraft": true,
+    "craftingLevel": 23
+  },
+  "Green Dye": {
+    "name": "Green Dye",
+    "type": "item",
+    "image": "/img/items/greendye.png",
+    "canCraft": true,
+    "craftingLevel": 5
+  },
+  "Jade": {
+    "name": "Jade",
+    "type": "item",
+    "image": "/img/items/jade.png",
+    "canCraft": true,
+    "craftingLevel": 33
+  },
+  "Jade Charm": {
+    "name": "Jade Charm",
+    "type": "item",
+    "image": "/img/items/jadecharm.png",
+    "canCraft": true,
+    "craftingLevel": 42
+  },
+  "Shovel": {
+    "name": "Shovel",
+    "type": "item",
+    "image": "/img/items/5853.png?1",
+    "canCraft": true,
+    "craftingLevel": 4
+  },
+  "Wizard Hat": {
+    "name": "Wizard Hat",
+    "type": "item",
+    "image": "/img/items/4798.png",
+    "canCraft": true,
+    "craftingLevel": 17
+  },
+  "Hammer": {
+    "name": "Hammer",
+    "type": "item",
+    "image": "/img/items/hammer.png?2",
+    "canCraft": true,
+    "craftingLevel": 2
+  },
+  "Flarite": {
+    "name": "Flarite",
+    "type": "item",
+    "image": "/img/items/flarite.png",
+    "canCraft": true,
+    "craftingLevel": 38
+  },
+  "Linked Lantern": {
+    "name": "Linked Lantern",
+    "type": "item",
+    "image": "/img/items/mlantern.png?1",
+    "canCraft": true,
+    "craftingLevel": 80
+  },
+  "Hourglass": {
+    "name": "Hourglass",
+    "type": "item",
+    "image": "/img/items/4241.png",
+    "canCraft": true,
+    "craftingLevel": 59
+  },
+  "Fancy Pipe": {
+    "name": "Fancy Pipe",
+    "type": "item",
+    "image": "/img/items/7275.png?1",
+    "canCraft": true,
+    "craftingLevel": 46
+  },
+  "Sturdy Sword": {
+    "name": "Sturdy Sword",
+    "type": "item",
+    "image": "/img/items/8927.png?1",
+    "canCraft": true,
+    "craftingLevel": 45
+  },
+  "Compass": {
+    "name": "Compass",
+    "type": "item",
+    "image": "/img/items/4919.png",
+    "canCraft": true,
+    "craftingLevel": 70
+  },
+  "Scissors": {
+    "name": "Scissors",
+    "type": "item",
+    "image": "/img/items/scissors.png",
+    "canCraft": true,
+    "craftingLevel": 37
+  },
+  "Fancy Guitar": {
+    "name": "Fancy Guitar",
+    "type": "item",
+    "image": "/img/items/3857.png?1",
+    "canCraft": true,
+    "craftingLevel": 80
+  },
+  "Lantern": {
+    "name": "Lantern",
+    "type": "item",
+    "image": "/img/items/lantern.png?1",
+    "canCraft": true,
+    "craftingLevel": 70
+  },
+  "Wooden Bow": {
+    "name": "Wooden Bow",
+    "type": "item",
+    "image": "/img/items/4764.png",
+    "canCraft": true,
+    "craftingLevel": 30
+  },
+  "Green Scarf": {
+    "name": "Green Scarf",
+    "type": "item",
+    "image": "/img/items/scarf.png",
+    "canCraft": true,
+    "craftingLevel": 30
+  },
+  "Large Net": {
+    "name": "Large Net",
+    "type": "item",
+    "image": "/img/items/lnet.png?3",
+    "canCraft": true,
+    "craftingLevel": 92
+  },
+  "Glass Jar": {
+    "name": "Glass Jar",
+    "type": "item",
+    "image": "/img/items/glassjar.png",
+    "canCraft": true,
+    "craftingLevel": 47
+  },
+  "Mayonnaise": {
+    "name": "Mayonnaise",
+    "type": "item",
+    "image": "/img/items/mayo.png",
+    "canCraft": true,
+    "craftingLevel": 82
+  },
+  "Bucket": {
+    "name": "Bucket",
+    "type": "item",
+    "image": "/img/items/8263.PNG",
+    "canCraft": true,
+    "craftingLevel": 1
+  },
+  "Sand": {
+    "name": "Sand",
+    "type": "item",
+    "image": "/img/items/am_t_01.png",
+    "canCraft": true,
+    "craftingLevel": 44
+  },
+  "Arnold Palmer": {
+    "name": "Arnold Palmer",
+    "type": "item",
+    "image": "/img/items/ap.png",
+    "canCraft": true,
+    "craftingLevel": 92
+  },
+  "Sturdy Bow": {
+    "name": "Sturdy Bow",
+    "type": "item",
+    "image": "/img/items/4765.png",
+    "canCraft": true,
+    "craftingLevel": 60
+  },
+  "Bottle Rocket": {
+    "name": "Bottle Rocket",
+    "type": "item",
+    "image": "/img/items/6123.png",
+    "canCraft": true,
+    "craftingLevel": 12
+  },
+  "Lemon Quartz Ring": {
+    "name": "Lemon Quartz Ring",
+    "type": "item",
+    "image": "/img/items/lemonring.png",
+    "canCraft": true,
+    "craftingLevel": 7
+  },
+  "Fancy Drum": {
+    "name": "Fancy Drum",
+    "type": "item",
+    "image": "/img/items/drum.png",
+    "canCraft": true,
+    "craftingLevel": 90
+  },
+  "Chum": {
+    "name": "Chum",
+    "type": "item",
+    "image": "/img/items/chumbucket.png",
+    "canCraft": true,
+    "craftingLevel": 52
+  },
+  "Broom": {
+    "name": "Broom",
+    "type": "item",
+    "image": "/img/items/5717.PNG",
+    "canCraft": true,
+    "craftingLevel": 3
+  },
+  "Blue Dye": {
+    "name": "Blue Dye",
+    "type": "item",
+    "image": "/img/items/bluedye.png",
+    "canCraft": true,
+    "craftingLevel": 73
+  },
+  "Twine": {
+    "name": "Twine",
+    "type": "item",
+    "image": "/img/items/6172-1.png",
+    "canCraft": true,
+    "craftingLevel": 5
+  },
+  "Garnet": {
+    "name": "Garnet",
+    "type": "item",
+    "image": "/img/items/8008.png",
+    "canCraft": true,
+    "craftingLevel": 43
+  },
+  "Purple Dye": {
+    "name": "Purple Dye",
+    "type": "item",
+    "image": "/img/items/purpledye.png",
+    "canCraft": true,
+    "craftingLevel": 73
+  },
+  "Purple Bag": {
+    "name": "Purple Bag",
+    "type": "item",
+    "image": "/img/items/purplebag.png",
+    "canCraft": true,
+    "craftingLevel": 95
+  },
+  "Blue Purse": {
+    "name": "Blue Purse",
+    "type": "item",
+    "image": "/img/items/bluepurse.png",
+    "canCraft": true,
+    "craftingLevel": 95
+  },
+  "Crossbow": {
+    "name": "Crossbow",
+    "type": "item",
+    "image": "/img/items/8976.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Blue Parchment": {
+    "name": "Blue Parchment",
+    "type": "item",
+    "image": "/img/items/blueparchment.png",
+    "canCraft": true,
+    "craftingLevel": 74
+  },
+  "Block of Wood": {
+    "name": "Block of Wood",
+    "type": "item",
+    "image": "/img/items/wood_block.png",
+    "canCraft": true,
+    "craftingLevel": 75
+  },
+  "Handsaw": {
+    "name": "Handsaw",
+    "type": "item",
+    "image": "/img/items/3149.png",
+    "canCraft": true,
+    "craftingLevel": 75
+  },
+  "Pair of Gold Boots": {
+    "name": "Pair of Gold Boots",
+    "type": "item",
+    "image": "/img/items/gboots.png?2",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Blue Diary": {
+    "name": "Blue Diary",
+    "type": "item",
+    "image": "/img/items/bluediary.png",
+    "canCraft": true,
+    "craftingLevel": 74
+  },
+  "Red Parchment": {
+    "name": "Red Parchment",
+    "type": "item",
+    "image": "/img/items/redparchment.png",
+    "canCraft": true,
+    "craftingLevel": 74
+  },
+  "Fire Ant Farm": {
+    "name": "Fire Ant Farm",
+    "type": "item",
+    "image": "/img/items/antfarm.png?1",
+    "canCraft": true,
+    "craftingLevel": 40
+  },
+  "Y73841 Detector": {
+    "name": "Y73841 Detector",
+    "type": "item",
+    "image": "/img/items/9304.png",
+    "canCraft": true,
+    "craftingLevel": 80
+  },
+  "Energy Coil": {
+    "name": "Energy Coil",
+    "type": "item",
+    "image": "/img/items/9379b.png",
+    "canCraft": true,
+    "craftingLevel": 84
+  },
+  "Pear Grease": {
+    "name": "Pear Grease",
+    "type": "item",
+    "image": "/img/items/8957.png",
+    "canCraft": true,
+    "craftingLevel": 84
+  },
+  "Ship in a Bottle": {
+    "name": "Ship in a Bottle",
+    "type": "item",
+    "image": "/img/items/shipinabottle.png?3",
+    "canCraft": true,
+    "craftingLevel": 98
+  },
+  "Red Diary": {
+    "name": "Red Diary",
+    "type": "item",
+    "image": "/img/items/reddiary.png",
+    "canCraft": true,
+    "craftingLevel": 74
+  },
+  "Heart Container": {
+    "name": "Heart Container",
+    "type": "item",
+    "image": "/img/items/heartcontainer.png?1",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Power Monitor": {
+    "name": "Power Monitor",
+    "type": "item",
+    "image": "/img/items/9314.png",
+    "canCraft": true,
+    "craftingLevel": 85
+  },
+  "Pair of Boots": {
+    "name": "Pair of Boots",
+    "type": "item",
+    "image": "/img/items/pboot2.png",
+    "canCraft": true,
+    "craftingLevel": 94
+  },
+  "Pie Pan": {
+    "name": "Pie Pan",
+    "type": "item",
+    "image": "/img/items/piepan.png",
+    "canCraft": true,
+    "craftingLevel": 77
+  },
+  "Fancy Pan Flute": {
+    "name": "Fancy Pan Flute",
+    "type": "item",
+    "image": "/img/items/1240.png",
+    "canCraft": true,
+    "craftingLevel": 96
+  },
+  "Leather Waterskin": {
+    "name": "Leather Waterskin",
+    "type": "item",
+    "image": "/img/items/5563.png",
+    "canCraft": true,
+    "craftingLevel": 18
+  },
+  "Spool of Copper": {
+    "name": "Spool of Copper",
+    "type": "item",
+    "image": "/img/items/9324.png",
+    "canCraft": true,
+    "craftingLevel": 83
+  },
+  "Wooden Table": {
+    "name": "Wooden Table",
+    "type": "item",
+    "image": "/img/items/3826.png",
+    "canCraft": true,
+    "craftingLevel": 8
+  },
+  "Blue Twine": {
+    "name": "Blue Twine",
+    "type": "item",
+    "image": "/img/items/bluetwine.png",
+    "canCraft": true,
+    "craftingLevel": 74
+  },
+  "Kill Switch": {
+    "name": "Kill Switch",
+    "type": "item",
+    "image": "/img/items/9311.png",
+    "canCraft": true,
+    "craftingLevel": 84
+  },
+  "Polished Boot": {
+    "name": "Polished Boot",
+    "type": "item",
+    "image": "/img/items/pboot.png",
+    "canCraft": true,
+    "craftingLevel": 93
+  },
+  "Frost Shield": {
+    "name": "Frost Shield",
+    "type": "item",
+    "image": "/img/items/frostshield.png?1",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Engine": {
+    "name": "Engine",
+    "type": "item",
+    "image": "/img/items/engine.png?1",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Steel Plate": {
+    "name": "Steel Plate",
+    "type": "item",
+    "image": "/img/items/9313.png",
+    "canCraft": true,
+    "craftingLevel": 75
+  },
+  "Step Ladder": {
+    "name": "Step Ladder",
+    "type": "item",
+    "image": "/img/items/211.png",
+    "canCraft": true,
+    "craftingLevel": 78
+  },
+  "Potato Battery": {
+    "name": "Potato Battery",
+    "type": "item",
+    "image": "/img/items/potatobattery.png",
+    "canCraft": true,
+    "craftingLevel": 97
+  },
+  "Control Box": {
+    "name": "Control Box",
+    "type": "item",
+    "image": "/img/items/9306b32.png",
+    "canCraft": true,
+    "craftingLevel": 84
+  },
+  "Explosive": {
+    "name": "Explosive",
+    "type": "item",
+    "image": "/img/items/6124.png",
+    "canCraft": true,
+    "craftingLevel": 14
+  },
+  "Horseshoe": {
+    "name": "Horseshoe",
+    "type": "item",
+    "image": "/img/items/6956.png",
+    "canCraft": true,
+    "craftingLevel": 24
+  },
+  "Garnet Ring": {
+    "name": "Garnet Ring",
+    "type": "item",
+    "image": "/img/items/garnetring.png",
+    "canCraft": true,
+    "craftingLevel": 51
+  },
+  "Axe": {
+    "name": "Axe",
+    "type": "item",
+    "image": "/img/items/5875.png?1",
+    "canCraft": true,
+    "craftingLevel": 3
+  },
+  "Emerald Ring": {
+    "name": "Emerald Ring",
+    "type": "item",
+    "image": "/img/items/greenring.png",
+    "canCraft": true,
+    "craftingLevel": 15
+  },
+  "Wine": {
+    "name": "Wine",
+    "type": "item",
+    "image": "/img/items/wine.png",
+    "canCraft": true,
+    "craftingLevel": 1
+  },
+  "Pitchfork": {
+    "name": "Pitchfork",
+    "type": "item",
+    "image": "/img/items/8322.PNG?1",
+    "canCraft": true,
+    "craftingLevel": 25
+  },
+  "Ladder": {
+    "name": "Ladder",
+    "type": "item",
+    "image": "/img/items/5629.png",
+    "canCraft": true,
+    "craftingLevel": 9
+  },
+  "Shimmer Stone": {
+    "name": "Shimmer Stone",
+    "type": "item",
+    "image": "/img/items/5711.PNG",
+    "canCraft": true,
+    "craftingLevel": 4
+  },
+  "Wooden Shield": {
+    "name": "Wooden Shield",
+    "type": "item",
+    "image": "/img/items/5822.PNG",
+    "canCraft": true,
+    "craftingLevel": 13
+  },
+  "Treasure Chest": {
+    "name": "Treasure Chest",
+    "type": "item",
+    "image": "/img/items/4917.png",
+    "canCraft": true,
+    "craftingLevel": 32
+  },
+  "Green Cloak": {
+    "name": "Green Cloak",
+    "type": "item",
+    "image": "/img/items/ForestIcons_54_t.png",
+    "canCraft": true,
+    "craftingLevel": 55
+  },
+  "Metal Spool": {
+    "name": "Metal Spool",
+    "type": "item",
+    "image": "/img/items/9325.png",
+    "canCraft": true,
+    "craftingLevel": 83
+  },
+  "Green Diary": {
+    "name": "Green Diary",
+    "type": "item",
+    "image": "/img/items/greenbook.png",
+    "canCraft": true,
+    "craftingLevel": 6
+  },
+  "Flywheel": {
+    "name": "Flywheel",
+    "type": "item",
+    "image": "/img/items/9387.png",
+    "canCraft": true,
+    "craftingLevel": 50
+  },
+  "Inferno Sphere": {
+    "name": "Inferno Sphere",
+    "type": "item",
+    "image": "/img/items/6017.png",
+    "canCraft": true,
+    "craftingLevel": 22
+  },
+  "Wooden Sword": {
+    "name": "Wooden Sword",
+    "type": "item",
+    "image": "/img/items/sword2.png",
+    "canCraft": true,
+    "craftingLevel": 27
+  },
+  "Red Dye": {
+    "name": "Red Dye",
+    "type": "item",
+    "image": "/img/items/reddye.png",
+    "canCraft": true,
+    "craftingLevel": 73
+  },
+  "Shimmer Ring": {
+    "name": "Shimmer Ring",
+    "type": "item",
+    "image": "/img/items/shimmertopazring.png",
+    "canCraft": true,
+    "craftingLevel": 26
+  },
+  "Amethyst Necklace": {
+    "name": "Amethyst Necklace",
+    "type": "item",
+    "image": "/img/items/8016.png",
+    "canCraft": true,
+    "craftingLevel": 5
+  },
+  "Yarn": {
+    "name": "Yarn",
+    "type": "item",
+    "image": "/img/items/pt_t_07.png",
+    "canCraft": true,
+    "craftingLevel": 50
+  },
+  "Acorn Butter": {
+    "name": "Acorn Butter",
+    "type": "item",
+    "image": "/img/items/acornbutter.png?1",
+    "canCraft": true,
+    "craftingLevel": 36
+  },
+  "Green Twine": {
+    "name": "Green Twine",
+    "type": "item",
+    "image": "/img/items/greentwine.png",
+    "canCraft": true,
+    "craftingLevel": 74
+  },
+  "Bouquet of Flowers": {
+    "name": "Bouquet of Flowers",
+    "type": "item",
+    "image": "/img/items/bouquet.png?1",
+    "canCraft": true,
+    "craftingLevel": 10
+  },
+  "Steel Wire": {
+    "name": "Steel Wire",
+    "type": "item",
+    "image": "/img/items/wire.png",
+    "canCraft": true,
+    "craftingLevel": 50
+  },
+  "Pearl Necklace": {
+    "name": "Pearl Necklace",
+    "type": "item",
+    "image": "/img/items/pearlnecklace.png",
+    "canCraft": true,
+    "craftingLevel": 16
+  },
+  "Sturdy Shield": {
+    "name": "Sturdy Shield",
+    "type": "item",
+    "image": "/img/items/5847.png",
+    "canCraft": true,
+    "craftingLevel": 20
+  },
+  "Purple Twine": {
+    "name": "Purple Twine",
+    "type": "item",
+    "image": "/img/items/purpletwine.png",
+    "canCraft": true,
+    "craftingLevel": 74
+  },
+  "Red Twine": {
+    "name": "Red Twine",
+    "type": "item",
+    "image": "/img/items/1621.png",
+    "canCraft": true,
+    "craftingLevel": 74
+  },
+  "Orange Juice": {
+    "name": "Orange Juice",
+    "type": "item",
+    "image": "/img/items/orangejuice.png",
+    "canCraft": true,
+    "craftingLevel": 5
+  },
+  "Amber Cane": {
+    "name": "Amber Cane",
+    "type": "item",
+    "image": "/img/items/ambercane.png?2",
+    "canCraft": true,
+    "craftingLevel": 98
+  },
+  "Fancy Clock": {
+    "name": "Fancy Clock",
+    "type": "item",
+    "image": "/img/items/viri_4696.png",
+    "canCraft": true,
+    "craftingLevel": 86
+  },
+  "Red Butterfly": {
+    "name": "Red Butterfly",
+    "type": "item",
+    "image": "/img/items/afk_8578r.png",
+    "canCraft": true,
+    "craftingLevel": 85
+  },
+  "Essence of Slime": {
+    "name": "Essence of Slime",
+    "type": "item",
+    "image": "/img/items/essense.png",
+    "canCraft": true,
+    "craftingLevel": 62
+  },
+  "Magna Core": {
+    "name": "Magna Core",
+    "type": "item",
+    "image": "/img/items/9376.png",
+    "canCraft": true,
+    "craftingLevel": 60
+  },
+  "Red Trunk": {
+    "name": "Red Trunk",
+    "type": "item",
+    "image": "/img/items/1026.png",
+    "canCraft": true,
+    "craftingLevel": 97
+  },
+  "Wagon Wheel": {
+    "name": "Wagon Wheel",
+    "type": "item",
+    "image": "/img/items/wheel.png",
+    "canCraft": true,
+    "craftingLevel": 31
+  },
+  "Apple Cider": {
+    "name": "Apple Cider",
+    "type": "item",
+    "image": "/img/items/8984.png",
+    "canCraft": true,
+    "craftingLevel": 30
+  },
+  "Sewing Needle": {
+    "name": "Sewing Needle",
+    "type": "item",
+    "image": "/img/items/needle.png",
+    "canCraft": true,
+    "craftingLevel": 29
+  },
+  "Leather Diary": {
+    "name": "Leather Diary",
+    "type": "item",
+    "image": "/img/items/5754.PNG",
+    "canCraft": true,
+    "craftingLevel": 8
+  },
+  "Red Shield": {
+    "name": "Red Shield",
+    "type": "item",
+    "image": "/img/items/redshield.png",
+    "canCraft": true,
+    "craftingLevel": 95
+  },
+  "Nailed Board": {
+    "name": "Nailed Board",
+    "type": "item",
+    "image": "/img/items/finp_607.png",
+    "canCraft": true,
+    "craftingLevel": 1
+  },
+  "Leather": {
+    "name": "Leather",
+    "type": "item",
+    "image": "/img/items/5987.PNG",
+    "canCraft": true,
+    "craftingLevel": 1
+  },
+  "Leather Belt": {
+    "name": "Leather Belt",
+    "type": "item",
+    "image": "/img/items/finp_705.png",
+    "canCraft": true,
+    "craftingLevel": 25
+  },
+  "Peach Juice": {
+    "name": "Peach Juice",
+    "type": "item",
+    "image": "/img/items/peachjuice.png",
+    "canCraft": true,
+    "craftingLevel": 61
+  },
+  "Awl": {
+    "name": "Awl",
+    "type": "item",
+    "image": "/img/items/2451.png",
+    "canCraft": true,
+    "craftingLevel": 11
+  },
+  "Ruby": {
+    "name": "Ruby",
+    "type": "item",
+    "image": "/img/items/6071.PNG",
+    "canCraft": true,
+    "craftingLevel": 8
+  },
+  "Iron Ring": {
+    "name": "Iron Ring",
+    "type": "item",
+    "image": "/img/items/ironring.png",
+    "canCraft": true,
+    "craftingLevel": 4
+  },
+  "Ruby Ring": {
+    "name": "Ruby Ring",
+    "type": "item",
+    "image": "/img/items/rubyring.png",
+    "canCraft": true,
+    "craftingLevel": 10
+  },
+  "Emerald": {
+    "name": "Emerald",
+    "type": "item",
+    "image": "/img/items/emerald.png",
+    "canCraft": true,
+    "craftingLevel": 10
+  },
+  "Salt": {
+    "name": "Salt",
+    "type": "item",
+    "image": "/img/items/salt.png",
+    "canCraft": true,
+    "craftingLevel": 70
+  },
+  "Flying Machine": {
+    "name": "Flying Machine",
+    "type": "item",
+    "image": "/img/items/147.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Fancy Violin": {
+    "name": "Fancy Violin",
+    "type": "item",
+    "image": "/img/items/finp_618.png?1",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Wooden Spear": {
+    "name": "Wooden Spear",
+    "type": "item",
+    "image": "/img/items/spear.png",
+    "canCraft": true,
+    "craftingLevel": 28
+  },
+  "Fancy Chair": {
+    "name": "Fancy Chair",
+    "type": "item",
+    "image": "/img/items/195.png",
+    "canCraft": true,
+    "craftingLevel": 96
+  },
+  "Wooden Button": {
+    "name": "Wooden Button",
+    "type": "item",
+    "image": "/img/items/707.png",
+    "canCraft": true,
+    "craftingLevel": 11
+  },
+  "Cannon": {
+    "name": "Cannon",
+    "type": "item",
+    "image": "/img/items/1096.png",
+    "canCraft": true,
+    "craftingLevel": 79
+  },
+  "Sunflower Oil": {
+    "name": "Sunflower Oil",
+    "type": "item",
+    "image": "/img/items/nj_985.png",
+    "canCraft": true,
+    "craftingLevel": 82
+  },
+  "Steel Buckle": {
+    "name": "Steel Buckle",
+    "type": "item",
+    "image": "/img/items/buckle.png?2",
+    "canCraft": true,
+    "craftingLevel": 25
+  },
+  "Red Brick": {
+    "name": "Red Brick",
+    "type": "item",
+    "image": "/img/items/redbrick2.png",
+    "canCraft": true,
+    "craftingLevel": 77
+  },
+  "Steel Pickaxe": {
+    "name": "Steel Pickaxe",
+    "type": "item",
+    "image": "/img/items/5296b.png",
+    "canCraft": true,
+    "craftingLevel": 45
+  },
+  "Pyrite": {
+    "name": "Pyrite",
+    "type": "item",
+    "image": "/img/items/pyrite.png",
+    "canCraft": true,
+    "craftingLevel": 44
+  },
+  "Rucksack": {
+    "name": "Rucksack",
+    "type": "item",
+    "image": "/img/items/rucksack2.png",
+    "canCraft": true,
+    "craftingLevel": 75
+  },
+  "Corn Husk Doll": {
+    "name": "Corn Husk Doll",
+    "type": "item",
+    "image": "/img/items/856.png",
+    "canCraft": true,
+    "craftingLevel": 76
+  },
+  "Bone Pickaxe": {
+    "name": "Bone Pickaxe",
+    "type": "item",
+    "image": "/img/items/boneaxe.png?2",
+    "canCraft": true,
+    "craftingLevel": 15
+  },
+  "Aquacite": {
+    "name": "Aquacite",
+    "type": "item",
+    "image": "/img/items/aquacite.png",
+    "canCraft": true,
+    "craftingLevel": 38
+  },
+  "Fancy Table": {
+    "name": "Fancy Table",
+    "type": "item",
+    "image": "/img/items/193.png?1",
+    "canCraft": true,
+    "craftingLevel": 98
+  },
+  "Pickaxe": {
+    "name": "Pickaxe",
+    "type": "item",
+    "image": "/img/items/6687.png?2",
+    "canCraft": true,
+    "craftingLevel": 3
+  },
+  "Steel Vise": {
+    "name": "Steel Vise",
+    "type": "item",
+    "image": "/img/items/199.png",
+    "canCraft": true,
+    "craftingLevel": 97
+  },
+  "Green Parchment": {
+    "name": "Green Parchment",
+    "type": "item",
+    "image": "/img/items/greenparchment.png",
+    "canCraft": true,
+    "craftingLevel": 2
+  },
+  "Unpolished Shimmer Stone": {
+    "name": "Unpolished Shimmer Stone",
+    "type": "item",
+    "image": "/img/items/5782.PNG",
+    "canCraft": true,
+    "craftingLevel": 65
+  },
+  "Fruit Punch": {
+    "name": "Fruit Punch",
+    "type": "item",
+    "image": "/img/items/fruitpunch.png",
+    "canCraft": true,
+    "craftingLevel": 75
+  },
+  "Canoe": {
+    "name": "Canoe",
+    "type": "item",
+    "image": "/img/items/554.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Crystal Pickaxe": {
+    "name": "Crystal Pickaxe",
+    "type": "item",
+    "image": "/img/items/crystalpickaxe.png",
+    "canCraft": true,
+    "craftingLevel": 25
+  },
+  "Sturdy Pickaxe": {
+    "name": "Sturdy Pickaxe",
+    "type": "item",
+    "image": "/img/items/sturdypickaxe.png",
+    "canCraft": true,
+    "craftingLevel": 35
+  },
+  "Steel": {
+    "name": "Steel",
+    "type": "item",
+    "image": "/img/items/6150.png",
+    "canCraft": true,
+    "craftingLevel": 15
+  },
+  "Snow Shoes": {
+    "name": "Snow Shoes",
+    "type": "item",
+    "image": "/img/items/snowshoes.png",
+    "canCraft": true,
+    "craftingLevel": 78
+  },
+  "Sail Cloth": {
+    "name": "Sail Cloth",
+    "type": "item",
+    "image": "/img/items/2453.png",
+    "canCraft": true,
+    "craftingLevel": 71
+  },
+  "Silk": {
+    "name": "Silk",
+    "type": "item",
+    "image": "/img/items/silk.png",
+    "canCraft": true,
+    "craftingLevel": 82
+  },
+  "Pine Shelf": {
+    "name": "Pine Shelf",
+    "type": "item",
+    "image": "/img/items/pineshelf.png",
+    "canCraft": true,
+    "craftingLevel": 77
+  },
+  "Purple Butterfly": {
+    "name": "Purple Butterfly",
+    "type": "item",
+    "image": "/img/items/afk_8578.png",
+    "canCraft": true,
+    "craftingLevel": 85
+  },
+  "Green Butterfly": {
+    "name": "Green Butterfly",
+    "type": "item",
+    "image": "/img/items/afk_8578g.png",
+    "canCraft": true,
+    "craftingLevel": 85
+  },
+  "Wooden Box": {
+    "name": "Wooden Box",
+    "type": "item",
+    "image": "/img/items/5736.PNG",
+    "canCraft": true,
+    "craftingLevel": 1
+  },
+  "Sturdy Box": {
+    "name": "Sturdy Box",
+    "type": "item",
+    "image": "/img/items/5812.PNG",
+    "canCraft": true,
+    "craftingLevel": 7
+  },
+  "Green Shield": {
+    "name": "Green Shield",
+    "type": "item",
+    "image": "/img/items/greenshield.png",
+    "canCraft": true,
+    "craftingLevel": 30
+  },
+  "Wrench": {
+    "name": "Wrench",
+    "type": "item",
+    "image": "/img/items/9310.png",
+    "canCraft": true,
+    "craftingLevel": 75
+  },
+  "Milk Carton": {
+    "name": "Milk Carton",
+    "type": "item",
+    "image": "/img/items/packaging_t_01.PNG",
+    "canCraft": true,
+    "craftingLevel": 74
+  },
+  "Gainite": {
+    "name": "Gainite",
+    "type": "item",
+    "image": "/img/items/gainite.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Blue Butterfly": {
+    "name": "Blue Butterfly",
+    "type": "item",
+    "image": "/img/items/afk_8578b.png",
+    "canCraft": true,
+    "craftingLevel": 85
+  },
+  "Aquamarine Ring": {
+    "name": "Aquamarine Ring",
+    "type": "item",
+    "image": "/img/items/aquaring.png",
+    "canCraft": true,
+    "craftingLevel": 5
+  },
+  "Barbed Wire": {
+    "name": "Barbed Wire",
+    "type": "item",
+    "image": "/img/items/barbedwire.png",
+    "canCraft": true,
+    "craftingLevel": 70
+  },
+  "Grand Piano": {
+    "name": "Grand Piano",
+    "type": "item",
+    "image": "/img/items/piano.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Machine Press": {
+    "name": "Machine Press",
+    "type": "item",
+    "image": "/img/items/press.png",
+    "canCraft": true,
+    "craftingLevel": 81
+  },
+  "Toilet Paper": {
+    "name": "Toilet Paper",
+    "type": "item",
+    "image": "/img/items/bandages_t_01.png",
+    "canCraft": true,
+    "craftingLevel": 3
+  },
+  "Cooking Pot": {
+    "name": "Cooking Pot",
+    "type": "item",
+    "image": "/img/items/2364.png?1",
+    "canCraft": true,
+    "craftingLevel": 75
+  },
+  "Magus Hat": {
+    "name": "Magus Hat",
+    "type": "item",
+    "image": "/img/items/5404.png",
+    "canCraft": true,
+    "craftingLevel": 39
+  },
+  "Butter Churn": {
+    "name": "Butter Churn",
+    "type": "item",
+    "image": "/img/items/churn.png",
+    "canCraft": true,
+    "craftingLevel": 53
+  },
+  "Butter": {
+    "name": "Butter",
+    "type": "item",
+    "image": "/img/items/4431.png",
+    "canCraft": true,
+    "craftingLevel": 82
+  },
+  "Aquamarine": {
+    "name": "Aquamarine",
+    "type": "item",
+    "image": "/img/items/6146.PNG",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Iron": {
+    "name": "Iron",
+    "type": "item",
+    "image": "/img/items/5779.PNG",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Feathers": {
+    "name": "Feathers",
+    "type": "item",
+    "image": "/img/items/feathers.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Mushroom": {
+    "name": "Mushroom",
+    "type": "item",
+    "image": "/img/items/mushroom.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Worms": {
+    "name": "Worms",
+    "type": "bait",
+    "image": "/img/items/7758.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Nails": {
+    "name": "Nails",
+    "type": "item",
+    "image": "/img/items/5860.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Stone": {
+    "name": "Stone",
+    "type": "item",
+    "image": "/img/items/6174.PNG",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Apple": {
+    "name": "Apple",
+    "type": "item",
+    "image": "/img/items/8297.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Orange": {
+    "name": "Orange",
+    "type": "item",
+    "image": "/img/items/orange.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Pearl": {
+    "name": "Pearl",
+    "type": "fish",
+    "image": "/img/items/7876.PNG",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Shimmer Quartz": {
+    "name": "Shimmer Quartz",
+    "type": "item",
+    "image": "/img/items/5707.PNG",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Lemon Quartz": {
+    "name": "Lemon Quartz",
+    "type": "item",
+    "image": "/img/items/5798.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Amethyst": {
+    "name": "Amethyst",
+    "type": "item",
+    "image": "/img/items/amethyst.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Lemon": {
+    "name": "Lemon",
+    "type": "item",
+    "image": "/img/items/8251.PNG",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Milk": {
+    "name": "Milk",
+    "type": "item",
+    "image": "/img/items/8382.PNG",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Bone": {
+    "name": "Bone",
+    "type": "item",
+    "image": "/img/items/6033.PNG",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Pine Board": {
+    "name": "Pine Board",
+    "type": "item",
+    "image": "/img/items/pineboard.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Fern Leaf": {
+    "name": "Fern Leaf",
+    "type": "item",
+    "image": "/img/items/fern.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Model Ship": {
+    "name": "Model Ship",
+    "type": "item",
+    "image": "/img/items/4925.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Runestone 04": {
+    "name": "Runestone 04",
+    "type": "item",
+    "image": "/img/items/rs4.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Straw": {
+    "name": "Straw",
+    "type": "item",
+    "image": "/img/items/5908.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Runestone 05": {
+    "name": "Runestone 05",
+    "type": "item",
+    "image": "/img/items/rs5.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Hide": {
+    "name": "Hide",
+    "type": "item",
+    "image": "/img/items/5986.PNG",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Runestone 09": {
+    "name": "Runestone 09",
+    "type": "item",
+    "image": "/img/items/rs9.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Scrap Wire": {
+    "name": "Scrap Wire",
+    "type": "item",
+    "image": "/img/items/9398.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Grapes": {
+    "name": "Grapes",
+    "type": "item",
+    "image": "/img/items/8272.PNG",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Blue Feathers": {
+    "name": "Blue Feathers",
+    "type": "item",
+    "image": "/img/items/5963.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Cotton": {
+    "name": "Cotton",
+    "type": "crop",
+    "image": "/img/items/8311.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Moonstone": {
+    "name": "Moonstone",
+    "type": "item",
+    "image": "/img/items/8014.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Lapis Lazuli": {
+    "name": "Lapis Lazuli",
+    "type": "item",
+    "image": "/img/items/lapislazuli.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Grubs": {
+    "name": "Grubs",
+    "type": "bait",
+    "image": "/img/items/7745.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Sandstone": {
+    "name": "Sandstone",
+    "type": "item",
+    "image": "/img/items/5197.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Minnows": {
+    "name": "Minnows",
+    "type": "bait",
+    "image": "/img/items/7749.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Runestone 17": {
+    "name": "Runestone 17",
+    "type": "item",
+    "image": "/img/items/rs17.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Seeing Stone": {
+    "name": "Seeing Stone",
+    "type": "item",
+    "image": "/img/items/5557.png?4",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Piece of Heart": {
+    "name": "Piece of Heart",
+    "type": "item",
+    "image": "/img/items/poh.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Unpolished Jade": {
+    "name": "Unpolished Jade",
+    "type": "item",
+    "image": "/img/items/ujade.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Slimestone": {
+    "name": "Slimestone",
+    "type": "item",
+    "image": "/img/items/5655.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Thorns": {
+    "name": "Thorns",
+    "type": "item",
+    "image": "/img/items/ForestIcons_15_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Runestone 16": {
+    "name": "Runestone 16",
+    "type": "item",
+    "image": "/img/items/rs16.png?1",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Antler": {
+    "name": "Antler",
+    "type": "item",
+    "image": "/img/items/5922.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Small Screw": {
+    "name": "Small Screw",
+    "type": "item",
+    "image": "/img/items/9380.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Spider": {
+    "name": "Spider",
+    "type": "item",
+    "image": "/img/items/spiderbutcutererr.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Red Flowers": {
+    "name": "Red Flowers",
+    "type": "item",
+    "image": "/img/items/rflowers.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Arrowhead": {
+    "name": "Arrowhead",
+    "type": "item",
+    "image": "/img/items/5910.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Runestone 11": {
+    "name": "Runestone 11",
+    "type": "item",
+    "image": "/img/items/rs11.png?1",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Pulley": {
+    "name": "Pulley",
+    "type": "item",
+    "image": "/img/items/pulley.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Peach": {
+    "name": "Peach",
+    "type": "item",
+    "image": "/img/items/peach.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Broken Pipe": {
+    "name": "Broken Pipe",
+    "type": "item",
+    "image": "/img/items/9389.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Small Bolt": {
+    "name": "Small Bolt",
+    "type": "item",
+    "image": "/img/items/9374.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Emberstone": {
+    "name": "Emberstone",
+    "type": "item",
+    "image": "/img/items/8166.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pine Tree": {
+    "name": "Pine Tree",
+    "type": "crop",
+    "image": "/img/items/cr_t_06.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Prickly Pear": {
+    "name": "Prickly Pear",
+    "type": "item",
+    "image": "/img/items/pricklypear.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Yellow Flowers": {
+    "name": "Yellow Flowers",
+    "type": "item",
+    "image": "/img/items/yflowers.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Blue Flowers": {
+    "name": "Blue Flowers",
+    "type": "item",
+    "image": "/img/items/bflowers.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Orange Flowers": {
+    "name": "Orange Flowers",
+    "type": "item",
+    "image": "/img/items/oflowers.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "White Flowers": {
+    "name": "White Flowers",
+    "type": "item",
+    "image": "/img/items/wflowers.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Runestone 10": {
+    "name": "Runestone 10",
+    "type": "item",
+    "image": "/img/items/rs10.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Horn": {
+    "name": "Horn",
+    "type": "item",
+    "image": "/img/items/6111.PNG",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Wood": {
+    "name": "Wood",
+    "type": "item",
+    "image": "/img/items/6143.PNG",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Gold Leaf": {
+    "name": "Gold Leaf",
+    "type": "item",
+    "image": "/img/items/8774.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Runestone 14": {
+    "name": "Runestone 14",
+    "type": "item",
+    "image": "/img/items/rs14.png?1",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Fire Ant": {
+    "name": "Fire Ant",
+    "type": "item",
+    "image": "/img/items/fireant.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Amber": {
+    "name": "Amber",
+    "type": "item",
+    "image": "/img/items/6675.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Oak": {
+    "name": "Oak",
+    "type": "item",
+    "image": "/img/items/6695.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Gold Boot": {
+    "name": "Gold Boot",
+    "type": "item",
+    "image": "/img/items/gboot.png?1",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Runestone 18": {
+    "name": "Runestone 18",
+    "type": "item",
+    "image": "/img/items/rs18.png?1",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Pocket Watch": {
+    "name": "Pocket Watch",
+    "type": "item",
+    "image": "/img/items/4887.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Magna Quartz": {
+    "name": "Magna Quartz",
+    "type": "item",
+    "image": "/img/items/magnaquartz.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Coal": {
+    "name": "Coal",
+    "type": "item",
+    "image": "/img/items/coal.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Old Boot": {
+    "name": "Old Boot",
+    "type": "item",
+    "image": "/img/items/7848.PNG",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Runestone 08": {
+    "name": "Runestone 08",
+    "type": "item",
+    "image": "/img/items/rs8.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Tea Leaves": {
+    "name": "Tea Leaves",
+    "type": "item",
+    "image": "/img/items/5600.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Runestone 13": {
+    "name": "Runestone 13",
+    "type": "item",
+    "image": "/img/items/rs13.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Runestone 07": {
+    "name": "Runestone 07",
+    "type": "item",
+    "image": "/img/items/rs7.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Frost Snapper Shell": {
+    "name": "Frost Snapper Shell",
+    "type": "item",
+    "image": "/img/items/iceshell.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Runestone 12": {
+    "name": "Runestone 12",
+    "type": "item",
+    "image": "/img/items/rs12.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Corn": {
+    "name": "Corn",
+    "type": "crop",
+    "image": "/img/items/8288.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Runestone 15": {
+    "name": "Runestone 15",
+    "type": "item",
+    "image": "/img/items/rs15.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Runestone 01": {
+    "name": "Runestone 01",
+    "type": "item",
+    "image": "/img/items/rs1.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Runestone 19": {
+    "name": "Runestone 19",
+    "type": "item",
+    "image": "/img/items/rs19.png?1",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Small Gear": {
+    "name": "Small Gear",
+    "type": "item",
+    "image": "/img/items/9388.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Purple Flower": {
+    "name": "Purple Flower",
+    "type": "item",
+    "image": "/img/items/flower.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Copper Wire": {
+    "name": "Copper Wire",
+    "type": "item",
+    "image": "/img/items/9327.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Eggs": {
+    "name": "Eggs",
+    "type": "item",
+    "image": "/img/items/5720.PNG",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Transistor": {
+    "name": "Transistor",
+    "type": "item",
+    "image": "/img/items/9319.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Unpolished Garnet": {
+    "name": "Unpolished Garnet",
+    "type": "item",
+    "image": "/img/items/8030.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sour Root": {
+    "name": "Sour Root",
+    "type": "item",
+    "image": "/img/items/ForestIcons_11_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cogwheel": {
+    "name": "Cogwheel",
+    "type": "item",
+    "image": "/img/items/7211.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Runestone 06": {
+    "name": "Runestone 06",
+    "type": "item",
+    "image": "/img/items/rs6.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Unpolished Emerald": {
+    "name": "Unpolished Emerald",
+    "type": "item",
+    "image": "/img/items/uemerald.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Sunflower": {
+    "name": "Sunflower",
+    "type": "crop",
+    "image": "/img/items/sunflower.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Blue Gel": {
+    "name": "Blue Gel",
+    "type": "item",
+    "image": "/img/items/ForestIcons_34_t.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Salt Rock": {
+    "name": "Salt Rock",
+    "type": "item",
+    "image": "/img/items/saltrock.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Carbon Sphere": {
+    "name": "Carbon Sphere",
+    "type": "item",
+    "image": "/img/items/carbonsphere.png",
+    "canCraft": false,
+    "craftingLevel": 8
+  },
+  "Runestone 02": {
+    "name": "Runestone 02",
+    "type": "item",
+    "image": "/img/items/rs2.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Runestone 03": {
+    "name": "Runestone 03",
+    "type": "item",
+    "image": "/img/items/rs3.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Unpolished Ruby": {
+    "name": "Unpolished Ruby",
+    "type": "item",
+    "image": "/img/items/5992.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Painite": {
+    "name": "Painite",
+    "type": "item",
+    "image": "/img/items/painite.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Prism Shard": {
+    "name": "Prism Shard",
+    "type": "item",
+    "image": "/img/items/8072.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Unpolished Aquacite": {
+    "name": "Unpolished Aquacite",
+    "type": "item",
+    "image": "/img/items/1525.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fairy Crystal": {
+    "name": "Fairy Crystal",
+    "type": "item",
+    "image": "/img/items/fairycrystal.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Caterpillar": {
+    "name": "Caterpillar",
+    "type": "item",
+    "image": "/img/items/caterpillar.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Y73841 Blueprint": {
+    "name": "Y73841 Blueprint",
+    "type": "item",
+    "image": "/img/items/7793.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Machine Part": {
+    "name": "Machine Part",
+    "type": "item",
+    "image": "/img/items/9331.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Potato": {
+    "name": "Potato",
+    "type": "crop",
+    "image": "/img/items/potato.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Stone Shell": {
+    "name": "Stone Shell",
+    "type": "item",
+    "image": "/img/items/stoneshell.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Small Spring": {
+    "name": "Small Spring",
+    "type": "item",
+    "image": "/img/items/5633.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Striped Feather": {
+    "name": "Striped Feather",
+    "type": "item",
+    "image": "/img/items/6005.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Scrap Metal": {
+    "name": "Scrap Metal",
+    "type": "item",
+    "image": "/img/items/9383.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Acorn": {
+    "name": "Acorn",
+    "type": "item",
+    "image": "/img/items/5759.PNG",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Runestone 20": {
+    "name": "Runestone 20",
+    "type": "item",
+    "image": "/img/items/rs20.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Unpolished Pyrite": {
+    "name": "Unpolished Pyrite",
+    "type": "item",
+    "image": "/img/items/upyrite.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Unpolished Flarite": {
+    "name": "Unpolished Flarite",
+    "type": "item",
+    "image": "/img/items/uflarite.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  }
+}

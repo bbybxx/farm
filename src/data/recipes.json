@@ -1,0 +1,1989 @@
+{
+  "Board": {
+    "из": {
+      "Wood": 5
+    },
+    "Silver": 1,
+    "XP": 25,
+    "Level": 1
+  },
+  "Bucket": {
+    "из": {
+      "Board": 5,
+      "Iron": 1
+    },
+    "Silver": 5,
+    "XP": 250,
+    "Level": 1
+  },
+  "Grape Juice": {
+    "из": {
+      "Glass Bottle": 1,
+      "Grapes": 200
+    },
+    "Silver": 500,
+    "XP": 100,
+    "Level": 1
+  },
+  "Iron Cup": {
+    "из": {
+      "Iron": 3,
+      "Stone": 1
+    },
+    "Silver": 15,
+    "XP": 100,
+    "Level": 1
+  },
+  "Leather": {
+    "из": {
+      "Hide": 2
+    },
+    "Silver": 25,
+    "XP": 250,
+    "Level": 1
+  },
+  "Nailed Board": {
+    "из": {
+      "Board": 1,
+      "Nails": 1
+    },
+    "Silver": 1,
+    "XP": 1,
+    "Level": 1
+  },
+  "Wine": {
+    "из": {
+      "Glass Bottle": 1,
+      "Grapes": 100
+    },
+    "Silver": 250,
+    "XP": 2000,
+    "Level": 1
+  },
+  "Wooden Box": {
+    "из": {
+      "Nails": 6,
+      "Wooden Plank": 6
+    },
+    "Silver": 10,
+    "XP": 200,
+    "Level": 1
+  },
+  "Wooden Plank": {
+    "из": {
+      "Board": 4,
+      "Nails": 4
+    },
+    "Silver": 2,
+    "XP": 50,
+    "Level": 1
+  },
+  "Green Parchment": {
+    "из": {
+      "Fern Leaf": 3
+    },
+    "Silver": 2,
+    "XP": 100,
+    "Level": 2
+  },
+  "Hammer": {
+    "из": {
+      "Board": 1,
+      "Iron": 1,
+      "Mushroom Paste": 1
+    },
+    "Silver": 10,
+    "XP": 350,
+    "Level": 2
+  },
+  "Purple Parchment": {
+    "из": {
+      "Purple Flower": 3
+    },
+    "Silver": 2,
+    "XP": 100,
+    "Level": 2
+  },
+  "White Parchment": {
+    "из": {
+      "Feathers": 3
+    },
+    "Silver": 2,
+    "XP": 100,
+    "Level": 2
+  },
+  "Axe": {
+    "из": {
+      "Board": 1,
+      "Iron": 1,
+      "Mushroom Paste": 1,
+      "Nails": 2,
+      "Stone": 1
+    },
+    "Silver": 25,
+    "XP": 450,
+    "Level": 3
+  },
+  "Broom": {
+    "из": {
+      "Board": 1,
+      "Straw": 1
+    },
+    "Silver": 15,
+    "XP": 250,
+    "Level": 3
+  },
+  "Mushroom Paste": {
+    "из": {
+      "Mushroom": 3
+    },
+    "Silver": 2,
+    "XP": 25,
+    "Level": 3
+  },
+  "Pickaxe": {
+    "из": {
+      "Board": 1,
+      "Iron": 2,
+      "Mushroom Paste": 1,
+      "Stone": 1
+    },
+    "Silver": 15,
+    "XP": 350,
+    "Level": 3
+  },
+  "Iron Ring": {
+    "из": {
+      "Iron": 2,
+      "Stone": 1
+    },
+    "Silver": 10,
+    "XP": 25,
+    "Level": 4
+  },
+  "Shimmer Stone": {
+    "из": {
+      "Unpolished Shimmer Stone": 2
+    },
+    "Silver": 5,
+    "XP": 250,
+    "Level": 4
+  },
+  "Shovel": {
+    "из": {
+      "Board": 1,
+      "Iron": 2,
+      "Mushroom Paste": 1,
+      "Stone": 1
+    },
+    "Silver": 45,
+    "XP": 550,
+    "Level": 4
+  },
+  "Amethyst Necklace": {
+    "из": {
+      "Amethyst": 1,
+      "Iron Ring": 2
+    },
+    "Silver": 50,
+    "XP": 1000,
+    "Level": 5
+  },
+  "Aquamarine Ring": {
+    "из": {
+      "Aquamarine": 1,
+      "Iron Ring": 1,
+      "Mushroom Paste": 1
+    },
+    "Silver": 50,
+    "XP": 1000,
+    "Level": 5
+  },
+  "Glass Bottle": {
+    "из": {
+      "Glass Orb": 1,
+      "Stone": 1
+    },
+    "Silver": 25,
+    "XP": 150,
+    "Level": 5
+  },
+  "Glass Orb": {
+    "из": {
+      "Shimmer Stone": 2,
+      "Stone": 1
+    },
+    "Silver": 10,
+    "XP": 300,
+    "Level": 5
+  },
+  "Green Dye": {
+    "из": {
+      "Fern Leaf": 6,
+      "Glass Bottle": 1
+    },
+    "Silver": 2,
+    "XP": 500,
+    "Level": 5
+  },
+  "Lemonade": {
+    "из": {
+      "Glass Bottle": 1,
+      "Lemon": 6
+    },
+    "Silver": 2,
+    "XP": 500,
+    "Level": 5
+  },
+  "Orange Juice": {
+    "из": {
+      "Glass Bottle": 1,
+      "Orange": 6
+    },
+    "Silver": 2,
+    "XP": 500,
+    "Level": 5
+  },
+  "Twine": {
+    "из": {
+      "Straw": 2,
+      "Wood": 1
+    },
+    "Silver": 10,
+    "XP": 250,
+    "Level": 5
+  },
+  "Green Diary": {
+    "из": {
+      "Green Parchment": 1,
+      "Mushroom Paste": 1,
+      "White Parchment": 1
+    },
+    "Silver": 10,
+    "XP": 200,
+    "Level": 6
+  },
+  "Purple Diary": {
+    "из": {
+      "Mushroom Paste": 1,
+      "Purple Parchment": 1,
+      "White Parchment": 1
+    },
+    "Silver": 10,
+    "XP": 200,
+    "Level": 6
+  },
+  "Lemon Quartz Ring": {
+    "из": {
+      "Iron Ring": 1,
+      "Lemon Quartz": 1,
+      "Mushroom Paste": 1
+    },
+    "Silver": 75,
+    "XP": 1000,
+    "Level": 7
+  },
+  "Sturdy Box": {
+    "из": {
+      "Iron": 2,
+      "Nails": 6,
+      "Wooden Plank": 6
+    },
+    "Silver": 15,
+    "XP": 500,
+    "Level": 7
+  },
+  "Coin Purse": {
+    "из": {
+      "Iron Ring": 1,
+      "Leather": 2
+    },
+    "Silver": 25,
+    "XP": 750,
+    "Level": 8
+  },
+  "Leather Diary": {
+    "из": {
+      "Leather": 1,
+      "Mushroom Paste": 1,
+      "White Parchment": 1
+    },
+    "Silver": 25,
+    "XP": 250,
+    "Level": 8
+  },
+  "Looking Glass": {
+    "из": {
+      "Board": 3,
+      "Glass Orb": 1,
+      "Iron": 1
+    },
+    "Silver": 50,
+    "XP": 2500,
+    "Level": 8
+  },
+  "Ruby": {
+    "из": {
+      "Stone": 1,
+      "Unpolished Ruby": 2
+    },
+    "Silver": 50,
+    "XP": 350,
+    "Level": 8
+  },
+  "Wooden Table": {
+    "из": {
+      "Board": 8,
+      "Nails": 12,
+      "Wooden Plank": 1
+    },
+    "Silver": 10,
+    "XP": 225,
+    "Level": 8
+  },
+  "Ladder": {
+    "из": {
+      "Board": 6,
+      "Nails": 8
+    },
+    "Silver": 10,
+    "XP": 500,
+    "Level": 9
+  },
+  "Bouquet of Flowers": {
+    "из": {
+      "Blue Flowers": 2,
+      "Orange Flowers": 2,
+      "Red Flowers": 2,
+      "Twine": 1,
+      "White Flowers": 2,
+      "White Parchment": 1,
+      "Yellow Flowers": 2
+    },
+    "Silver": 25,
+    "XP": 225,
+    "Level": 10
+  },
+  "Emerald": {
+    "из": {
+      "Stone": 2,
+      "Unpolished Emerald": 2
+    },
+    "Silver": 100,
+    "XP": 450,
+    "Level": 10
+  },
+  "Ruby Ring": {
+    "из": {
+      "Iron Ring": 1,
+      "Mushroom Paste": 1,
+      "Ruby": 1
+    },
+    "Silver": 100,
+    "XP": 1500,
+    "Level": 10
+  },
+  "Wooden Barrel": {
+    "из": {
+      "Board": 10,
+      "Iron": 4,
+      "Nails": 10
+    },
+    "Silver": 25,
+    "XP": 350,
+    "Level": 10
+  },
+  "Awl": {
+    "из": {
+      "Iron": 1,
+      "Iron Ring": 2,
+      "Wood": 1
+    },
+    "Silver": 50,
+    "XP": 500,
+    "Level": 11
+  },
+  "Wooden Button": {
+    "из": {
+      "Awl": 1,
+      "Wood": 1
+    },
+    "Silver": 10,
+    "XP": 250,
+    "Level": 11
+  },
+  "Black Powder": {
+    "из": {
+      "Coal": 3
+    },
+    "Silver": 50,
+    "XP": 1500,
+    "Level": 12
+  },
+  "Bottle Rocket": {
+    "из": {
+      "Black Powder": 1,
+      "Feathers": 2,
+      "Wood": 3
+    },
+    "Silver": 100,
+    "XP": 300,
+    "Level": 12
+  },
+  "Wooden Shield": {
+    "из": {
+      "Iron": 1,
+      "Nails": 4,
+      "Wooden Plank": 1
+    },
+    "Silver": 75,
+    "XP": 450,
+    "Level": 13
+  },
+  "Explosive": {
+    "из": {
+      "Black Powder": 2,
+      "Board": 3,
+      "Feathers": 1,
+      "Nails": 6
+    },
+    "Silver": 100,
+    "XP": 350,
+    "Level": 14
+  },
+  "Bone Pickaxe": {
+    "из": {
+      "Bone": 1,
+      "Mushroom Paste": 1,
+      "Pickaxe": 1
+    },
+    "Silver": 150,
+    "XP": 350,
+    "Level": 15
+  },
+  "Emerald Ring": {
+    "из": {
+      "Emerald": 1,
+      "Iron Ring": 1,
+      "Mushroom Paste": 1
+    },
+    "Silver": 300,
+    "XP": 2500,
+    "Level": 15
+  },
+  "Steel": {
+    "из": {
+      "Carbon Sphere": 1,
+      "Glass Orb": 1,
+      "Iron": 10
+    },
+    "Silver": 250,
+    "XP": 100,
+    "Level": 15
+  },
+  "Horn Canteen": {
+    "из": {
+      "Horn": 1,
+      "Iron Ring": 2,
+      "Twine": 1,
+      "Wood": 1
+    },
+    "Silver": 150,
+    "XP": 2500,
+    "Level": 16
+  },
+  "Pearl Necklace": {
+    "из": {
+      "Iron Ring": 1,
+      "Pearl": 1,
+      "Twine": 1
+    },
+    "Silver": 100,
+    "XP": 1000,
+    "Level": 16
+  },
+  "Leather Bag": {
+    "из": {
+      "Iron Ring": 4,
+      "Leather": 2,
+      "Twine": 2
+    },
+    "Silver": 250,
+    "XP": 3000,
+    "Level": 17
+  },
+  "Wizard Hat": {
+    "из": {
+      "Leather": 2,
+      "Purple Flower": 10,
+      "Twine": 3
+    },
+    "Silver": 300,
+    "XP": 3300,
+    "Level": 17
+  },
+  "Leather Waterskin": {
+    "из": {
+      "Iron Ring": 1,
+      "Leather": 2,
+      "Twine": 2
+    },
+    "Silver": 275,
+    "XP": 3250,
+    "Level": 18
+  },
+  "Rope": {
+    "из": {
+      "Twine": 3
+    },
+    "Silver": 50,
+    "XP": 1500,
+    "Level": 18
+  },
+  "Fishing Net": {
+    "из": {
+      "Antler": 1,
+      "Iron": 4,
+      "Rope": 2
+    },
+    "Silver": 100,
+    "XP": 1500,
+    "Level": 19
+  },
+  "Shimmer Topaz": {
+    "из": {
+      "Shimmer Quartz": 3
+    },
+    "Silver": 500,
+    "XP": 2500,
+    "Level": 19
+  },
+  "Sturdy Shield": {
+    "из": {
+      "Iron": 6,
+      "Nails": 6,
+      "Wooden Plank": 1
+    },
+    "Silver": 500,
+    "XP": 4000,
+    "Level": 20
+  },
+  "Magicite": {
+    "из": {
+      "Prism Shard": 3
+    },
+    "Silver": 5000,
+    "XP": 3000,
+    "Level": 21
+  },
+  "Inferno Sphere": {
+    "из": {
+      "Runestone 01": 1,
+      "Runestone 02": 1,
+      "Runestone 03": 1,
+      "Runestone 04": 1,
+      "Runestone 05": 1,
+      "Runestone 06": 1,
+      "Runestone 07": 1,
+      "Runestone 08": 1,
+      "Runestone 09": 1,
+      "Runestone 10": 1
+    },
+    "Silver": 1000000,
+    "XP": 50000,
+    "Level": 22
+  },
+  "Mystic Ring": {
+    "из": {
+      "Aquamarine": 1,
+      "Emerald": 2,
+      "Iron Ring": 1,
+      "Mushroom Paste": 3,
+      "Stone": 1
+    },
+    "Silver": 600,
+    "XP": 5000,
+    "Level": 23
+  },
+  "Horseshoe": {
+    "из": {
+      "Iron": 5,
+      "Nails": 7,
+      "Stone": 2
+    },
+    "Silver": 100,
+    "XP": 1000,
+    "Level": 24
+  },
+  "Crystal Pickaxe": {
+    "из": {
+      "Fairy Crystal": 1,
+      "Lapis Lazuli": 1,
+      "Mushroom Paste": 1,
+      "Pickaxe": 1,
+      "Stone": 1
+    },
+    "Silver": 300,
+    "XP": 750,
+    "Level": 25
+  },
+  "Leather Belt": {
+    "из": {
+      "Awl": 1,
+      "Leather": 3,
+      "Steel Buckle": 1
+    },
+    "Silver": 150,
+    "XP": 4000,
+    "Level": 25
+  },
+  "Magnifying Glass": {
+    "из": {
+      "Board": 1,
+      "Glass Orb": 1,
+      "Iron": 3,
+      "Iron Ring": 1
+    },
+    "Silver": 300,
+    "XP": 5250,
+    "Level": 25
+  },
+  "Pitchfork": {
+    "из": {
+      "Board": 1,
+      "Emberstone": 1,
+      "Iron Ring": 1,
+      "Mushroom Paste": 1,
+      "Steel": 2
+    },
+    "Silver": 500,
+    "XP": 450,
+    "Level": 25
+  },
+  "Steel Buckle": {
+    "из": {
+      "Emberstone": 2,
+      "Hammer": 1,
+      "Steel": 1
+    },
+    "Silver": 100,
+    "XP": 500,
+    "Level": 25
+  },
+  "Shimmer Ring": {
+    "из": {
+      "Iron Ring": 1,
+      "Mushroom Paste": 1,
+      "Shimmer Topaz": 1
+    },
+    "Silver": 1000,
+    "XP": 5000,
+    "Level": 26
+  },
+  "Wooden Sword": {
+    "из": {
+      "Board": 1,
+      "Iron": 2,
+      "Twine": 4
+    },
+    "Silver": 250,
+    "XP": 1750,
+    "Level": 27
+  },
+  "Wooden Spear": {
+    "из": {
+      "Arrowhead": 1,
+      "Twine": 2,
+      "Wood": 1
+    },
+    "Silver": 100,
+    "XP": 1750,
+    "Level": 28
+  },
+  "Sewing Needle": {
+    "из": {
+      "Awl": 1,
+      "Bone": 1,
+      "Twine": 1
+    },
+    "Silver": 500,
+    "XP": 1750,
+    "Level": 29
+  },
+  "Apple Cider": {
+    "из": {
+      "Apple": 40,
+      "Glass Bottle": 1,
+      "Orange": 1
+    },
+    "Silver": 5000,
+    "XP": 100,
+    "Level": 30
+  },
+  "Green Scarf": {
+    "из": {
+      "Green Dye": 1,
+      "Yarn": 2
+    },
+    "Silver": 1000,
+    "XP": 1750,
+    "Level": 30
+  },
+  "Green Shield": {
+    "из": {
+      "Green Dye": 1,
+      "Iron": 3,
+      "Wooden Shield": 1
+    },
+    "Silver": 500,
+    "XP": 5500,
+    "Level": 30
+  },
+  "Wooden Bow": {
+    "из": {
+      "Fern Leaf": 1,
+      "Iron": 2,
+      "Twine": 2,
+      "Wood": 4
+    },
+    "Silver": 400,
+    "XP": 2500,
+    "Level": 30
+  },
+  "Wagon Wheel": {
+    "из": {
+      "Board": 12,
+      "Nails": 14
+    },
+    "Silver": 250,
+    "XP": 1750,
+    "Level": 31
+  },
+  "Treasure Chest": {
+    "из": {
+      "Iron": 12,
+      "Nails": 22,
+      "Wooden Plank": 6
+    },
+    "Silver": 1000,
+    "XP": 7500,
+    "Level": 32
+  },
+  "Jade": {
+    "из": {
+      "Stone": 1,
+      "Unpolished Jade": 2
+    },
+    "Silver": 500,
+    "XP": 3000,
+    "Level": 33
+  },
+  "Iced Tea": {
+    "из": {
+      "Glass Bottle": 1,
+      "Tea Leaves": 3
+    },
+    "Silver": 2500,
+    "XP": 100,
+    "Level": 34
+  },
+  "Lava Sphere": {
+    "из": {
+      "Runestone 11": 1,
+      "Runestone 12": 1,
+      "Runestone 13": 1,
+      "Runestone 14": 1,
+      "Runestone 15": 1,
+      "Runestone 16": 1,
+      "Runestone 17": 1,
+      "Runestone 18": 1,
+      "Runestone 19": 1,
+      "Runestone 20": 1
+    },
+    "Silver": 2000000,
+    "XP": 150000,
+    "Level": 35
+  },
+  "Sturdy Pickaxe": {
+    "из": {
+      "Oak": 1,
+      "Pickaxe": 1,
+      "Small Bolt": 1,
+      "Stone Shell": 1
+    },
+    "Silver": 500,
+    "XP": 1250,
+    "Level": 35
+  },
+  "Acorn Butter": {
+    "из": {
+      "Acorn": 75,
+      "Glass Bottle": 1
+    },
+    "Silver": 100,
+    "XP": 1500,
+    "Level": 36
+  },
+  "Scissors": {
+    "из": {
+      "Iron Ring": 1,
+      "Nails": 1,
+      "Steel": 2,
+      "Stone": 1,
+      "Wood": 2
+    },
+    "Silver": 250,
+    "XP": 1750,
+    "Level": 37
+  },
+  "Aquacite": {
+    "из": {
+      "Unpolished Aquacite": 2
+    },
+    "Silver": 50,
+    "XP": 275,
+    "Level": 38
+  },
+  "Flarite": {
+    "из": {
+      "Unpolished Flarite": 2
+    },
+    "Silver": 50,
+    "XP": 275,
+    "Level": 38
+  },
+  "Fire Ant Farm": {
+    "из": {
+      "Board": 4,
+      "Fire Ant": 25,
+      "Glass Orb": 3,
+      "Nails": 4,
+      "Sand": 5
+    },
+    "Silver": 750,
+    "XP": 3000,
+    "Level": 40
+  },
+  "Jade Charm": {
+    "из": {
+      "Iron Ring": 1,
+      "Jade": 1,
+      "Steel": 2,
+      "Stone": 6
+    },
+    "Silver": 1000,
+    "XP": 8000,
+    "Level": 42
+  },
+  "Garnet": {
+    "из": {
+      "Stone": 1,
+      "Unpolished Garnet": 2
+    },
+    "Silver": 750,
+    "XP": 15000,
+    "Level": 43
+  },
+  "Pyrite": {
+    "из": {
+      "Unpolished Pyrite": 2
+    },
+    "Silver": 100,
+    "XP": 750,
+    "Level": 44
+  },
+  "Sand": {
+    "из": {
+      "Leather": 1,
+      "Sandstone": 5
+    },
+    "Silver": 750,
+    "XP": 250,
+    "Level": 44
+  },
+  "Steel Pickaxe": {
+    "из": {
+      "Flarite": 1,
+      "Mushroom Paste": 2,
+      "Pickaxe": 1,
+      "Steel": 5
+    },
+    "Silver": 1500,
+    "XP": 2500,
+    "Level": 45
+  },
+  "Sturdy Sword": {
+    "из": {
+      "Iron": 2,
+      "Leather": 1,
+      "Mushroom Paste": 1,
+      "Steel": 1
+    },
+    "Silver": 1500,
+    "XP": 11000,
+    "Level": 45
+  },
+  "Fancy Pipe": {
+    "из": {
+      "Iron": 1,
+      "Iron Ring": 3,
+      "Wood": 2
+    },
+    "Silver": 150,
+    "XP": 5000,
+    "Level": 46
+  },
+  "Glass Jar": {
+    "из": {
+      "Glass Orb": 3,
+      "Shimmer Quartz": 1,
+      "Steel": 1
+    },
+    "Silver": 50,
+    "XP": 2800,
+    "Level": 47
+  },
+  "Flywheel": {
+    "из": {
+      "Small Gear": 1,
+      "Small Screw": 7,
+      "Steel": 20
+    },
+    "Silver": 50000,
+    "XP": 2500,
+    "Level": 50
+  },
+  "Steel Wire": {
+    "из": {
+      "Carbon Sphere": 1,
+      "Iron": 10,
+      "Stone": 1
+    },
+    "Silver": 100,
+    "XP": 1000,
+    "Level": 50
+  },
+  "Yarn": {
+    "из": {
+      "Twine": 4
+    },
+    "Silver": 100,
+    "XP": 1750,
+    "Level": 50
+  },
+  "Garnet Ring": {
+    "из": {
+      "Garnet": 1,
+      "Iron Ring": 1,
+      "Mushroom Paste": 1
+    },
+    "Silver": 1500,
+    "XP": 30000,
+    "Level": 51
+  },
+  "Chum": {
+    "из": {
+      "Bucket": 1,
+      "Grubs": 7,
+      "Minnows": 4,
+      "Worms": 10
+    },
+    "Silver": 50,
+    "XP": 25,
+    "Level": 52
+  },
+  "Butter Churn": {
+    "из": {
+      "Board": 1,
+      "Wooden Barrel": 1
+    },
+    "Silver": 10,
+    "XP": 500,
+    "Level": 53
+  },
+  "Green Cloak": {
+    "из": {
+      "Cotton": 1,
+      "Green Dye": 10,
+      "Leather": 5,
+      "Twine": 10
+    },
+    "Silver": 2500,
+    "XP": 125000,
+    "Level": 55
+  },
+  "Hourglass": {
+    "из": {
+      "Glass Bottle": 2,
+      "Mushroom Paste": 2,
+      "Sand": 1,
+      "Wood": 6
+    },
+    "Silver": 2000,
+    "XP": 25000,
+    "Level": 59
+  },
+  "Magna Core": {
+    "из": {
+      "Cogwheel": 3,
+      "Flywheel": 2,
+      "Magna Quartz": 25,
+      "Seeing Stone": 1,
+      "Small Screw": 10,
+      "Small Spring": 5,
+      "Steel": 40
+    },
+    "Silver": 500000,
+    "XP": 50000,
+    "Level": 60
+  },
+  "Sturdy Bow": {
+    "из": {
+      "Mushroom Paste": 2,
+      "Oak": 4,
+      "Steel": 1,
+      "Stone": 2,
+      "Twine": 2
+    },
+    "Silver": 25000,
+    "XP": 40000,
+    "Level": 60
+  },
+  "Peach Juice": {
+    "из": {
+      "Glass Bottle": 1,
+      "Peach": 10
+    },
+    "Silver": 200,
+    "XP": 500,
+    "Level": 61
+  },
+  "Essence of Slime": {
+    "из": {
+      "Glass Orb": 1,
+      "Hammer": 1,
+      "Iron Ring": 1,
+      "Slimestone": 2
+    },
+    "Silver": 1500,
+    "XP": 500,
+    "Level": 62
+  },
+  "Unpolished Shimmer Stone": {
+    "из": {
+      "Emberstone": 1,
+      "Sandstone": 1
+    },
+    "Silver": 10,
+    "XP": 50,
+    "Level": 65
+  },
+  "Barbed Wire": {
+    "из": {
+      "Steel Wire": 1,
+      "Thorns": 5
+    },
+    "Silver": 250,
+    "XP": 1000,
+    "Level": 70
+  },
+  
+  "Compass": {
+    "из": {
+      "Aquamarine": 1,
+      "Glass Orb": 1,
+      "Iron Ring": 1,
+      "Magna Core": 1,
+      "Ruby": 1,
+      "Small Screw": 4,
+      "Twine": 1,
+      "Wood": 2
+    },
+    "Silver": 250000,
+    "Crafting XP": 50000,
+    "Crafting Lv": 70
+  },
+  "Lantern": {
+    "из": {
+      "Coal": 1,
+      "Glass Bottle": 1,
+      "Iron": 3,
+      "Iron Ring": 1,
+      "Twine": 2
+    },
+    "Silver": 4000,
+    "Crafting XP": 40000,
+    "Crafting Lv": 70
+  },
+  "Salt": {
+    "из": {
+      "Hammer": 1,
+      "Salt Rock": 50
+    },
+    "Silver": 10000,
+    "Crafting XP": 5000,
+    "Crafting Lv": 70
+  },
+  "Sail Cloth": {
+    "из": {
+      "Cotton": 5,
+      "Sewing Needle": 3
+    },
+    "Silver": 7500,
+    "Crafting XP": 10000,
+    "Crafting Lv": 71
+  },
+  "Blue Dye": {
+    "из": {
+      "Blue Feathers": 3,
+      "Glass Bottle": 1
+    },
+    "Silver": 250,
+    "Crafting XP": 4000,
+    "Crafting Lv": 73
+  },
+  "Purple Dye": {
+    "из": {
+      "Glass Bottle": 1,
+      "Purple Flower": 10
+    },
+    "Silver": 250,
+    "Crafting XP": 4000,
+    "Crafting Lv": 73
+  },
+  "Red Dye": {
+    "из": {
+      "Glass Bottle": 1,
+      "Striped Feather": 2
+    },
+    "Silver": 250,
+    "Crafting XP": 4000,
+    "Crafting Lv": 73
+  },
+  "Blue Diary": {
+    "из": {
+      "Blue Parchment": 1,
+      "Mushroom Paste": 1,
+      "White Parchment": 1
+    },
+    "Silver": 250,
+    "Crafting XP": 3000,
+    "Crafting Lv": 74
+  },
+  "Blue Parchment": {
+    "из": {
+      "Blue Feathers": 3
+    },
+    "Silver": 75,
+    "Crafting XP": 2750,
+    "Crafting Lv": 74
+  },
+  "Blue Twine": {
+    "из": {
+      "Blue Dye": 1,
+      "Twine": 1
+    },
+    "Silver": 10,
+    "Crafting XP": 2500,
+    "Crafting Lv": 74
+  },
+  "Green Twine": {
+    "из": {
+      "Green Dye": 1,
+      "Twine": 1
+    },
+    "Silver": 10,
+    "Crafting XP": 2500,
+    "Crafting Lv": 74
+  },
+  "Purple Twine": {
+    "из": {
+      "Purple Dye": 1,
+      "Twine": 1
+    },
+    "Silver": 10,
+    "Crafting XP": 2500,
+    "Crafting Lv": 74
+  },
+  "Red Diary": {
+    "из": {
+      "Mushroom Paste": 1,
+      "Red Parchment": 1,
+      "White Parchment": 1
+    },
+    "Silver": 250,
+    "Crafting XP": 3000,
+    "Crafting Lv": 74
+  },
+  "Red Parchment": {
+    "из": {
+      "Striped Feather": 3
+    },
+    "Silver": 75,
+    "Crafting XP": 2750,
+    "Crafting Lv": 74
+  },
+  "Red Twine": {
+    "из": {
+      "Red Dye": 1,
+      "Twine": 1
+    },
+    "Silver": 10,
+    "Crafting XP": 2500,
+    "Crafting Lv": 74
+  },
+  "Block of Wood": {
+    "из": {
+      "Axe": 1,
+      "Handsaw": 1,
+      "Pine Tree": 1
+    },
+    "Silver": 10000,
+    "Crafting XP": 10000,
+    "Crafting Lv": 75
+  },
+  "Cooking Pot": {
+    "из": {
+      "Emberstone": 25,
+      "Iron": 25,
+      "Moonstone": 1
+    },
+    "Silver": 15000,
+    "Crafting XP": 25000,
+    "Crafting Lv": 75
+  },
+  "Fruit Punch": {
+    "из": {
+      "Apple": 25,
+      "Glass Bottle": 1,
+      "Grapes": 25,
+      "Lemon": 25,
+      "Orange": 25,
+      "Peach": 5
+    },
+    "Silver": 500,
+    "Crafting XP": 500,
+    "Crafting Lv": 75
+  },
+  "Handsaw": {
+    "из": {
+      "Awl": 1,
+      "Hammer": 1,
+      "Mushroom Paste": 2,
+      "Steel": 2,
+      "Wooden Plank": 1
+    },
+    "Silver": 2300,
+    "Crafting XP": 10000,
+    "Crafting Lv": 75
+  },
+  "Rucksack": {
+    "из": {
+      "Awl": 2,
+      "Blue Twine": 4,
+      "Glass Jar": 3,
+      "Green Twine": 4,
+      "Horn Canteen": 2,
+      "Leather": 8,
+      "Red Twine": 4,
+      "Scissors": 1,
+      "Steel Buckle": 1,
+      "Wooden Button": 4
+    },
+    "Silver": 27500,
+    "Crafting XP": 2500,
+    "Crafting Lv": 75
+  },
+  "Steel Plate": {
+    "из": {
+      "Emberstone": 2,
+      "Small Bolt": 4,
+      "Steel": 2
+    },
+    "Silver": 1000,
+    "Crafting XP": 5000,
+    "Crafting Lv": 75
+  },
+  "Wrench": {
+    "из": {
+      "Emberstone": 5,
+      "Steel": 1
+    },
+    "Silver": 1000,
+    "Crafting XP": 5000,
+    "Crafting Lv": 75
+  },
+  "Corn Husk Doll": {
+    "из": {
+      "Corn": 3,
+      "Red Twine": 5,
+      "Wooden Button": 2
+    },
+    "Silver": 50,
+    "Crafting XP": 2500,
+    "Crafting Lv": 76
+  },
+  "Spoon": {
+    "из": {
+      "Axe": 1,
+      "Bone": 1,
+      "Twine": 1
+    },
+    "Silver": 750,
+    "Crafting XP": 5500,
+    "Crafting Lv": 76
+  },
+  "Pie Pan": {
+    "из": {
+      "Emberstone": 25,
+      "Moonstone": 2,
+      "Steel": 10
+    },
+    "Silver": 5000,
+    "Crafting XP": 25000,
+    "Crafting Lv": 77
+  },
+  "Pine Shelf": {
+    "из": {
+      "Pine Board": 1,
+      "Small Bolt": 4,
+      "Steel": 2
+    },
+    "Silver": 2500,
+    "Crafting XP": 3500,
+    "Crafting Lv": 77
+  },
+  "Red Brick": {
+    "из": {
+      "Bucket": 5,
+      "Mushroom Paste": 3,
+      "Red Dye": 5,
+      "Sand": 50,
+      "Straw": 50
+    },
+    "Silver": 1500,
+    "Crafting XP": 7500,
+    "Crafting Lv": 77
+  },
+  "Snow Shoes": {
+    "из": {
+      "Handsaw": 1,
+      "Leather": 5,
+      "Oak": 20,
+      "Straw": 24,
+      "Yarn": 32
+    },
+    "Silver": 2700,
+    "Crafting XP": 5200,
+    "Crafting Lv": 78
+  },
+  "Step Ladder": {
+    "из": {
+      "Ladder": 2,
+      "Small Bolt": 2,
+      "Steel Plate": 2
+    },
+    "Silver": 100,
+    "Crafting XP": 5000,
+    "Crafting Lv": 78
+  },
+  "Cannon": {
+    "из": {
+      "Black Powder": 10,
+      "Board": 12,
+      "Emberstone": 10,
+      "Machine Part": 6,
+      "Scrap Metal": 25,
+      "Steel": 25,
+      "Wagon Wheel": 4
+    },
+    "Silver": 8900,
+    "Crafting XP": 27000,
+    "Crafting Lv": 79
+  },
+  "Fancy Guitar": {
+    "из": {
+      "Iron": 4,
+      "Mushroom Paste": 3,
+      "Oak": 5,
+      "Steel Wire": 6
+    },
+    "Silver": 8550,
+    "Crafting XP": 55000,
+    "Crafting Lv": 80
+  },
+  "Linked Lantern": {
+    "из": {
+      "Amethyst": 1,
+      "Aquamarine": 1,
+      "Lantern": 1,
+      "Magicite": 1,
+      "Ruby": 1
+    },
+    "Silver": 8000,
+    "Crafting XP": 5750,
+    "Crafting Lv": 80
+  },
+  "Y73841 Detector": {
+    "из": {
+      "Compass": 1,
+      "Pocket Watch": 1,
+      "Runestone 17": 1,
+      "Scrap Wire": 50,
+      "Small Gear": 3,
+      "Transistor": 50,
+      "Y73841 Blueprint": 1
+    },
+    "Silver": 250000000,
+    "Crafting XP": 50000,
+    "Crafting Lv": 80
+  },
+  "Corn Oil": {
+    "из": {
+      "Corn": 8,
+      "Glass Bottle": 1,
+      "Machine Press": 1
+    },
+    "Silver": 1500,
+    "Crafting XP": 25000,
+    "Crafting Lv": 81
+  },
+  "Machine Press": {
+    "из": {
+      "Board": 10,
+      "Bucket": 1,
+      "Machine Part": 6,
+      "Nails": 5,
+      "Steel Plate": 1
+    },
+    "Silver": 5000,
+    "Crafting XP": 60000,
+    "Crafting Lv": 81
+  },
+  "Butter": {
+    "из": {
+      "Butter Churn": 1,
+      "Milk": 25,
+      "Salt": 1
+    },
+    "Silver": 100,
+    "Crafting XP": 3000,
+    "Crafting Lv": 82
+  },
+  "Glass Eyes": {
+    "из": {
+      "Blue Catfish": 1,
+      "Glass Orb": 2,
+      "Machine Press": 1
+    },
+    "Silver": 5,
+    "Crafting XP": 1750,
+    "Crafting Lv": 82
+  },
+  "Mayonnaise": {
+    "из": {
+      "Corn Oil": 1,
+      "Eggs": 25,
+      "Glass Jar": 1,
+      "Sour Root": 1
+    },
+    "Silver": 50,
+    "Crafting XP": 3000,
+    "Crafting Lv": 82
+  },
+  "Silk": {
+    "из": {
+      "Caterpillar": 3,
+      "Machine Press": 1,
+      "Spider": 2
+    },
+    "Silver": 500,
+    "Crafting XP": 2500,
+    "Crafting Lv": 82
+  },
+  "Sunflower Oil": {
+    "из": {
+      "Glass Bottle": 1,
+      "Sunflower": 6,
+      "Twine": 1
+    },
+    "Silver": 125000,
+    "Crafting XP": 50000,
+    "Crafting Lv": 82
+  },
+  "Belt Drive": {
+    "из": {
+      "Pulley": 2,
+      "Purple Dye": 1,
+      "Rope": 1
+    },
+    "Silver": 100,
+    "Crafting XP": 6000,
+    "Crafting Lv": 83
+  },
+  "Metal Spool": {
+    "из": {
+      "Broken Pipe": 1,
+      "Coal": 5,
+      "Nails": 2,
+      "Scrap Metal": 12
+    },
+    "Silver": 100,
+    "Crafting XP": 6500,
+    "Crafting Lv": 83
+  },
+  "Spool of Copper": {
+    "из": {
+      "Copper Wire": 10,
+      "Metal Spool": 1
+    },
+    "Silver": 10,
+    "Crafting XP": 6500,
+    "Crafting Lv": 83
+  },
+  "Control Box": {
+    "из": {
+      "Broken Pipe": 3,
+      "Machine Part": 10,
+      "Moonstone": 3,
+      "Small Screw": 2,
+      "Small Spring": 3,
+      "Steel Plate": 2
+    },
+    "Silver": 800,
+    "Crafting XP": 10000,
+    "Crafting Lv": 84
+  },
+  "Energy Coil": {
+    "из": {
+      "Glass Orb": 1,
+      "Scrap Wire": 8,
+      "Spool of Copper": 1,
+      "Steel": 2,
+      "Transistor": 25,
+      "Wrench": 1
+    },
+    "Silver": 5000,
+    "Crafting XP": 10000,
+    "Crafting Lv": 84
+  },
+  "Kill Switch": {
+    "из": {
+      "Broken Pipe": 1,
+      "Emberstone": 3,
+      "Red Dye": 1,
+      "Scrap Metal": 5,
+      "Scrap Wire": 2
+    },
+    "Silver": 250,
+    "Crafting XP": 3000,
+    "Crafting Lv": 84
+  },
+  "Pear Grease": {
+    "из": {
+      "Blue Gel": 5,
+      "Glass Bottle": 1,
+      "Prickly Pear": 30
+    },
+    "Silver": 500,
+    "Crafting XP": 3000,
+    "Crafting Lv": 84
+  },
+  "Blue Butterfly": {
+    "из": {
+      "Blue Dye": 1,
+      "Caterpillar": 1,
+      "Silk": 3,
+      "Wood": 1
+    },
+    "Silver": 450,
+    "Crafting XP": 4750,
+    "Crafting Lv": 85
+  },
+  "Green Butterfly": {
+    "из": {
+      "Caterpillar": 1,
+      "Green Dye": 1,
+      "Silk": 3,
+      "Wood": 1
+    },
+    "Silver": 450,
+    "Crafting XP": 4750,
+    "Crafting Lv": 85
+  },
+  "Power Monitor": {
+    "из": {
+      "Broken Pipe": 1,
+      "Copper Wire": 1,
+      "Iron": 10,
+      "Pocket Watch": 1,
+      "Transistor": 5
+    },
+    "Silver": 900,
+    "Crafting XP": 4500,
+    "Crafting Lv": 85
+  },
+  "Purple Butterfly": {
+    "из": {
+      "Caterpillar": 1,
+      "Purple Dye": 1,
+      "Silk": 3,
+      "Wood": 1
+    },
+    "Silver": 450,
+    "Crafting XP": 4750,
+    "Crafting Lv": 85
+  },
+  "Red Butterfly": {
+    "из": {
+      "Caterpillar": 1,
+      "Red Dye": 1,
+      "Silk": 3,
+      "Wood": 1
+    },
+    "Silver": 450,
+    "Crafting XP": 4750,
+    "Crafting Lv": 85
+  },
+  "Fancy Clock": {
+    "из": {
+      "Cogwheel": 2,
+      "Glass Orb": 4,
+      "Oak": 12,
+      "Pocket Watch": 1,
+      "Scrap Metal": 4,
+      "Small Gear": 4,
+      "Steel Wire": 8
+    },
+    "Silver": 5000,
+    "Crafting XP": 5500,
+    "Crafting Lv": 86
+  },
+  "Fancy Drum": {
+    "из": {
+      "Leather": 2,
+      "Mushroom Paste": 2,
+      "Oak": 15,
+      "Yarn": 4
+    },
+    "Silver": 20000,
+    "Crafting XP": 2500,
+    "Crafting Lv": 90
+  },
+  "Arnold Palmer": {
+    "из": {
+      "Iced Tea": 1,
+      "Lemonade": 20
+    },
+    "Silver": 100,
+    "Crafting XP": 3500,
+    "Crafting Lv": 92
+  },
+  "Large Net": {
+    "из": {
+      "Fishing Net": 25,
+      "Iron Ring": 25
+    },
+    "Silver": 100,
+    "Crafting XP": 3500,
+    "Crafting Lv": 92
+  },
+  "Polished Boot": {
+    "из": {
+      "Corn Oil": 1,
+      "Old Boot": 1
+    },
+    "Silver": 500,
+    "Crafting XP": 2500,
+    "Crafting Lv": 93
+  },
+  "Pair of Boots": {
+    "из": {
+      "Polished Boot": 2
+    },
+    "Silver": 5,
+    "Crafting XP": 2500,
+    "Crafting Lv": 94
+  },
+  "Blue Purse": {
+    "из": {
+      "Blue Dye": 1,
+      "Coin Purse": 1
+    },
+    "Silver": 850,
+    "Crafting XP": 5500,
+    "Crafting Lv": 95,
+    "Visible in Workshop": true
+  },
+  "Purple Bag": {
+    "из": {
+      "Leather Bag": 1,
+      "Purple Dye": 1
+    },
+    "Silver": 1500,
+    "Crafting XP": 5500,
+    "Crafting Lv": 95,
+    "Visible in Workshop": true
+  },
+  "Red Shield": {
+    "из": {
+      "Red Dye": 1,
+      "Steel": 3,
+      "Wooden Shield": 1
+    },
+    "Silver": 2500,
+    "Crafting XP": 5500,
+    "Crafting Lv": 95,
+    "Visible in Workshop": true
+  },
+  "Fancy Chair": {
+    "из": {
+      "Cotton": 6,
+      "Green Dye": 1,
+      "Leather": 4,
+      "Nails": 8,
+      "Oak": 50,
+      "Red Dye": 1,
+      "Twine": 8
+    },
+    "Silver": 25000,
+    "Crafting XP": 3500,
+    "Crafting Lv": 96,
+    "Visible in Workshop": true
+  },
+  "Fancy Pan Flute": {
+    "из": {
+      "Blue Dye": 1,
+      "Leather": 1,
+      "Twine": 5,
+      "Wood": 9
+    },
+    "Silver": 8000,
+    "Crafting XP": 2750,
+    "Crafting Lv": 96,
+    "Visible in Workshop": true
+  },
+  "Potato Battery": {
+    "из": {
+      "Nails": 4,
+      "Potato": 8,
+      "Spool of Copper": 1,
+      "Steel Wire": 4,
+      "Transistor": 8
+    },
+    "Silver": 750,
+    "Crafting XP": 4000,
+    "Crafting Lv": 97,
+    "Visible in Workshop": true
+  },
+  "Red Trunk": {
+    "из": {
+      "Leather": 3,
+      "Nails": 16,
+      "Red Dye": 4,
+      "Steel": 8,
+      "Wooden Plank": 6
+    },
+    "Silver": 7500,
+    "Crafting XP": 6500,
+    "Crafting Lv": 97,
+    "Visible in Workshop": true
+  },
+  "Steel Vise": {
+    "из": {
+      "Blue Dye": 2,
+      "Broken Pipe": 1,
+      "Glass Orb": 2,
+      "Small Bolt": 2,
+      "Steel": 50,
+      "Wooden Plank": 1
+    },
+    "Silver": 4750,
+    "Crafting XP": 4250,
+    "Crafting Lv": 97,
+    "Visible in Workshop": true
+  },
+  "Amber Cane": {
+    "из": {
+      "Amber": 1,
+      "Bone": 1,
+      "Iron Ring": 2,
+      "Mushroom Paste": 1,
+      "Oak": 1,
+      "Sand": 3
+    },
+    "Silver": 50000,
+    "Crafting XP": 17000,
+    "Crafting Lv": 98,
+    "Visible in Workshop": true
+  },
+  "Fancy Table": {
+    "из": {
+      "Corn Oil": 1,
+      "Glass Orb": 8,
+      "Nails": 32,
+      "Oak": 80,
+      "Steel Vise": 1
+    },
+    "Silver": 45000,
+    "Crafting XP": 10000,
+    "Crafting Lv": 98,
+    "Visible in Workshop": true
+  },
+  "Ship in a Bottle": {
+    "из": {
+      "Glass Bottle": 1,
+      "Model Ship": 1,
+      "Mushroom Paste": 3,
+      "Oak": 2,
+      "Sand": 2
+    },
+    "Silver": 250000,
+    "Crafting XP": 17000,
+    "Crafting Lv": 98,
+    "Visible in Workshop": true
+  },
+  "Canoe": {
+    "из": {
+      "Blue Gel": 10,
+      "Board": 4,
+      "Mushroom Paste": 5,
+      "Nails": 10,
+      "Oak": 100,
+      "Rope": 2
+    },
+    "Silver": 45000,
+    "Crafting XP": 5000,
+    "Crafting Lv": 99,
+    "Visible in Workshop": true
+  },
+  "Crossbow": {
+    "из": {
+      "Arrowhead": 1,
+      "Iron": 2,
+      "Iron Ring": 2,
+      "Oak": 3,
+      "Steel Wire": 2
+    },
+    "Silver": 28000,
+    "Crafting XP": 2500,
+    "Crafting Lv": 99,
+    "Visible in Workshop": true
+  },
+  "Engine": {
+    "из": {
+      "Belt Drive": 1,
+      "Control Box": 1,
+      "Energy Coil": 1,
+      "Flywheel": 1,
+      "Kill Switch": 1,
+      "Magicite": 1,
+      "Pear Grease": 1,
+      "Power Monitor": 1,
+      "Steel": 20,
+      "Steel Plate": 1,
+      "Steel Wire": 50,
+      "Transistor": 12
+    },
+    "Silver": 250000,
+    "Crafting XP": 15000,
+    "Crafting Lv": 99,
+    "Visible in Workshop": true
+  },
+  "Fancy Violin": {
+    "из": {
+      "Moonstone": 4,
+      "Mushroom Paste": 8,
+      "Pine Board": 5,
+      "Purple Dye": 3,
+      "Steel": 4,
+      "Steel Plate": 1,
+      "Steel Wire": 4
+    },
+    "Silver": 25000,
+    "Crafting XP": 12000,
+    "Crafting Lv": 99,
+    "Visible in Workshop": true
+  },
+  "Flying Machine": {
+    "из": {
+      "Leather": 10,
+      "Magna Quartz": 4,
+      "Nailed Board": 10,
+      "Power Monitor": 1,
+      "Pulley": 4,
+      "Rope": 10,
+      "Small Gear": 4,
+      "Small Spring": 6,
+      "Steel Buckle": 2,
+      "Steel Wire": 10
+    },
+    "Silver": 350000,
+    "Crafting XP": 17500,
+    "Crafting Lv": 99,
+    "Visible in Workshop": true
+  },
+  "Frost Shield": {
+    "из": {
+      "Blue Gel": 3,
+      "Frost Snapper Shell": 1,
+      "Hammer": 1,
+      "Nails": 3,
+      "Red Shield": 1
+    },
+    "Silver": 5000,
+    "Crafting XP": 6500,
+    "Crafting Lv": 99,
+    "Visible in Workshop": true
+  },
+  "Gainite": {
+    "из": {
+      "Green Dye": 500,
+      "Mushroom Paste": 2000,
+      "Painite": 5,
+      "Steel": 2000,
+      "Stone": 2000
+    },
+    "Silver": 1,
+    "Crafting XP": 0,
+    "Crafting Lv": 99,
+    "Visible in Workshop": true
+  },
+  "Grand Piano": {
+    "из": {
+      "Block of Wood": 8,
+      "Fancy Chair": 1,
+      "Green Dye": 5,
+      "Hammer": 1,
+      "Handsaw": 1,
+      "Horn": 88,
+      "Steel": 10,
+      "Steel Wire": 88,
+      "White Parchment": 10,
+      "Wood": 88,
+      "Wooden Plank": 11
+    },
+    "Silver": 500000,
+    "Crafting XP": 19250,
+    "Crafting Lv": 99,
+    "Visible in Workshop": true
+  },
+  "Heart Container": {
+    "из": {
+      "Piece of Heart": 4
+    },
+    "Silver": 1000000000,
+    "Crafting XP": 0,
+    "Crafting Lv": 99,
+    "Visible in Workshop": true
+  },
+  "Pair of Gold Boots": {
+    "из": {
+      "Gold Boot": 2
+    },
+    "Silver": 10,
+    "Crafting XP": 25000,
+    "Crafting Lv": 99,
+    "Visible in Workshop": true
+  }
+}

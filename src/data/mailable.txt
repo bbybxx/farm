@@ -1,0 +1,73 @@
+The following items can be given to other players via Mailboxes. The  amount shown is how much the item is worth at the Farmer's Market.
+
+Acorn
+Apple
+Apple Cider
+Aquamarine
+Arnold Palmer
+Arrowhead
+Axe
+Black Powder
+Blue Dye
+Blue Feathers
+Bone
+Bouquet of Flowers
+Bucket
+Carbon Sphere
+Caterpillar
+Coal
+Eggs
+Explosive
+Feathers
+Fern Leaf
+Fire Ant
+Fishing Net
+Fruit Punch
+Glass Orb
+Grapes
+Green Dye
+Green Parchment
+Grubs
+Hammer
+Heart Container
+Hide
+Horn
+Iced Tea
+Iron Cup
+Ladder
+Large Net
+Leather
+Leather Diary
+Lemon
+Lemonade
+Milk
+Minnows
+Mushroom
+Mushroom Paste
+Oak
+Old Boot
+Orange
+Orange Juice
+Peach
+Peach Juice
+Potato
+Purple Dye
+Purple Flower
+Purple Parchment
+Red Dye
+Rope
+Scrap Metal
+Scrap Wire
+Shimmer Stone
+Shovel
+Slimestone
+Spider
+Stone
+Twine
+Unpolished Shimmer Stone
+Wood
+Wooden Box
+Wooden Button
+Wooden Table
+Worms
+Yarn

@@ -114,8 +114,18 @@ export function useTelegram() {
   const sendBugReport = async (message, userInfo = null) => {
     try {
       // Отправляем напрямую через Telegram Bot API
-      const BOT_TOKEN = '8035311656:AAFB8nrpINRSaREmNRtevET2iOjREohVgGs';
-      const CHAT_ID = '592052544'; // ваш актуальный chat ID
+      const BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
+      const CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+      
+      if (!BOT_TOKEN || !CHAT_ID) {
+        console.error('Bot token or chat ID not configured');
+        if (isInTelegram) {
+          showAlert('Bug report feature is not available');
+        } else {
+          alert('Bug report feature is not available');
+        }
+        return;
+      }
       
       const bugReportData = {
         message: message,

@@ -175,17 +175,6 @@ body {
 	transform: scale(0.95);
 }
 
-.breadcrumb-item:disabled {
-	cursor: default;
-	opacity: 0.7;
-}
-
-.breadcrumb-item:disabled:hover {
-	background: none;
-	color: var(--text);
-	transform: none;
-}
-
 .breadcrumb-separator {
 	color: var(--muted);
 	font-size: 12px;
@@ -397,7 +386,8 @@ select.input option {
 		overflow: hidden;
 	}
 	.main { padding-left: 0; padding-top: 0; }
-	.header { position: relative; top: auto; left: auto; right: auto; transform: none; cursor: default; pointer-events: none; }
+	.header { position: relative; top: auto; left: auto; right: auto; transform: none; cursor: default; }
+	.header .breadcrumbs { pointer-events: auto; }
 	.header.hidden { transform: none; }
 	.header .icon { display: none; }
 	.sidebar .close { display: none; }

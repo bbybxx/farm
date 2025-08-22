@@ -161,30 +161,11 @@ export default function App() {
 
   // Function to navigate to a specific item in the chain
   const handleChainClick = (index) => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Breadcrumb clicked:', { index, targetItem: craftChain[index] })
-    }
-    
     hapticFeedback('light')
     const targetItem = craftChain[index]
-    
-    if (!targetItem) {
-      if (process.env.NODE_ENV === 'development') {
-        console.error('Target item not found at index:', index)
-      }
-      return
-    }
-    
-    const newChain = craftChain.slice(0, index + 1)
-    
-    // Update states in order
     setItem(targetItem.name)
     setAmount(targetItem.amount)
-    setCraftChain(newChain)
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Navigation completed:', { item: targetItem.name, amount: targetItem.amount, chainLength: newChain.length })
-    }
+    setCraftChain(prev => prev.slice(0, index + 1))
   }
 
   // Function to load a craft from history
@@ -1037,13 +1018,8 @@ export default function App() {
                   <span key={`${chainItem.name}-${index}`}>
                     <button 
                       className="breadcrumb-item" 
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        handleChainClick(index)
-                      }}
+                      onClick={() => handleChainClick(index)}
                       type="button"
-                      disabled={index === craftChain.length - 1}
                     >
                       {chainItem.name}
                     </button>

@@ -10,6 +10,7 @@ import LocationConfigPanel from '../components/LocationConfigPanel'
 import APPLE_CIDER_REAL_DROP_RATES from '../data/apple-cider-real-drop-rates.js'
 import { computePinnedEstimate, getItemLocations } from '../utils/exploringUtils.js'
 import PinnedLocationSelect from '../components/PinnedLocationSelect.jsx'
+import { Analytics } from "@vercel/analytics/next"
 import './app.css'
 
 // Helper functions for localStorage

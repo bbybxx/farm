@@ -548,6 +548,12 @@ export default function App() {
       ]
     },
     {
+      title: 'Exploring',
+      perks: [
+        'Eagle Eye (Runecube)'
+      ]
+    },
+    {
       title: 'Apple Cider Perks',
       perks: [
         'Cinnamon Sticks',
@@ -561,7 +567,7 @@ export default function App() {
     },
     {
       title: 'Arnold Palmer Perks',
-      perks: ['Lemon Squeezer', 'Eagle Eye (Runecube)']
+      perks: ['Lemon Squeezer']
     },
     {
       title: 'Apple Cider Meals',

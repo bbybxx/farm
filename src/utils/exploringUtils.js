@@ -50,11 +50,34 @@ export function getItemLocations(itemName) {
 const findItemLocations = getItemLocations
 
 // Compute manual exploring numbers for item in a location
-function manualForLocation(quantity, locName, perksParsed) {
+function manualForLocation(quantity, locName, perksParsed, itemName = null) {
   const zone = APPLE_CIDER_DATA.zoneDropRates.base[locName]
   if (!zone) return null
   const exploresPerItem = zone.exploresPerItem || (1 / zone.rate)
-  const requiredExplores = Math.ceil(quantity * exploresPerItem)
+  let adjustedExploresPerItem = exploresPerItem
+  // If Runecube perk is active and we have real-drop variants, adjust manual explores
+  try {
+    if (perksParsed.hasEagleEyeRunecube && itemName) {
+      const locObj = APPLE_CIDER_REAL_DROP_RATES.locations && APPLE_CIDER_REAL_DROP_RATES.locations[locName]
+      if (locObj) {
+        // prefer comparing rq1 vs rq0 for same cinnamon state
+        const cs = perksParsed.hasCinnamon ? 'cs1' : 'cs0'
+        const rq0 = locObj[`rq0${cs}`] && locObj[`rq0${cs}`][itemName]
+        const rq1 = locObj[`rq1${cs}`] && locObj[`rq1${cs}`][itemName]
+        const drops0 = rq0 && (typeof rq0 === 'object' ? rq0.dropsPerCider || rq0.cidersPerDrop : rq0)
+        const drops1 = rq1 && (typeof rq1 === 'object' ? rq1.dropsPerCider || rq1.cidersPerDrop : rq1)
+        if (drops0 && drops1 && drops1 > 0) {
+          // If rq1 gives more drops per cider, reduce explores per item proportionally
+          // We assume drops values are comparable; compute factor to scale explores
+          const factor = (drops0 / drops1)
+          adjustedExploresPerItem = exploresPerItem * factor
+        }
+      }
+    }
+  } catch (e) {
+    // ignore and fall back to unadjusted
+  }
+  const requiredExplores = Math.ceil(quantity * adjustedExploresPerItem)
   const stamina = AppleCiderCalculator.calculateStamina(requiredExplores, perksParsed.wandererPerks, perksParsed.hasNeigh)
   return { explores: requiredExplores, stamina }
 }
@@ -108,15 +131,20 @@ export function computePinnedEstimate(pinnedItem, quantity, activePerks, explori
   let bestAP = null
 
   for (const loc of locations) {
-    const manual = manualForLocation(quantity, loc.name, perks)
+  const manual = manualForLocation(quantity, loc.name, perks, itemName)
     if (manual) {
       if (!bestManual || manual.explores < bestManual.explores) bestManual = Object.assign({ location: loc.name }, manual)
     }
 
     // cider: need dropsPerCider for the item in appropriate variant
     const adjustedVariants = applyLocationOverrides(loc.variants, loc.name)
-    // prefer rq1 or rq0? use rq1 if exists for item in rq1cs1/rq1cs0 else use rq0
-    const variantsToTry = ['rq1cs1','rq1cs0','rq0cs1','rq0cs0']
+    // Determine variant preference based on Runecube perk
+    let variantsToTry
+    if (perks.hasEagleEyeRunecube) {
+      variantsToTry = ['rq1cs1','rq1cs0','rq0cs1','rq0cs0']
+    } else {
+      variantsToTry = ['rq0cs1','rq0cs0','rq1cs1','rq1cs0']
+    }
     for (const vKey of variantsToTry) {
       const v = adjustedVariants[vKey]
       if (!v) continue

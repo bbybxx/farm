@@ -6,6 +6,10 @@ import RecipeUpdateService from '../services/RecipeUpdateService'
 import perks from '../data/perks.json'
 import { useTelegram } from '../hooks/useTelegram'
 import BugReportModal from '../components/BugReportModal'
+import LocationConfigPanel from '../components/LocationConfigPanel'
+import APPLE_CIDER_REAL_DROP_RATES from '../data/apple-cider-real-drop-rates.js'
+import { computePinnedEstimate, getItemLocations } from '../utils/exploringUtils.js'
+import PinnedLocationSelect from '../components/PinnedLocationSelect.jsx'
 import './app.css'
 
 // Helper functions for localStorage
@@ -73,7 +77,13 @@ export default function App() {
   
   const [item, setItem] = useState(() => loadFromStorage('craftCalculator_item', 'Board'))
   const [amount, setAmount] = useState(() => loadFromStorage('craftCalculator_amount', 1))
-  const [activePerks, setActivePerks] = useState(() => loadFromStorage('craftCalculator_activePerks', []))
+  const [activePerks, setActivePerks] = useState(() => loadFromStorage('craftCalculator_activePerks', []));
+  const [exploringMode, setExploringMode] = useState(() => loadFromStorage('craftCalculator_exploringMode', 'Manually'));
+
+  useEffect(() => {
+    saveToStorage('craftCalculator_exploringMode', exploringMode);
+  }, [exploringMode]);
+
   const [showAllBase, setShowAllBase] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sidebarActiveTab, setSidebarActiveTab] = useState('perks')
@@ -94,6 +104,7 @@ export default function App() {
   const [historyLimit, setHistoryLimit] = useState(() => loadFromStorage('craftCalculator_historyLimit', 50))
   // Pinned resources system (replaces cart)
   const [pinnedResources, setPinnedResources] = useState(() => loadFromStorage('craftCalculator_pinnedResources', []))
+  const [lastPinnedLocation, setLastPinnedLocation] = useState(() => loadFromStorage('craftCalculator_lastPinnedLocation', ''))
   const [isPinnedOpen, setIsPinnedOpen] = useState(false)
   const [useThousandsFormat, setUseThousandsFormat] = useState(() => loadFromStorage('craftCalculator_useThousandsFormat', true))
   const [recentlyAddedItems, setRecentlyAddedItems] = useState(new Set())
@@ -105,6 +116,25 @@ export default function App() {
   // Feature toggles
   const [pinnedEnabled, setPinnedEnabled] = useState(() => loadFromStorage('craftCalculator_pinnedEnabled', true))
   const [historyEnabled, setHistoryEnabled] = useState(() => loadFromStorage('craftCalculator_historyEnabled', true))
+  const [isLocationConfigOpen, setIsLocationConfigOpen] = useState(false)
+
+  const locationsForConfig = useMemo(() => {
+    try {
+      const locObj = APPLE_CIDER_REAL_DROP_RATES && APPLE_CIDER_REAL_DROP_RATES.locations
+      if (!locObj) return []
+      return Object.keys(locObj).map((name) => {
+        const loc = locObj[name] || {}
+        const itemsSet = new Set()
+        ;['rq0cs0','rq0cs1','rq1cs0','rq1cs1'].forEach((k) => {
+          const part = loc[k]
+          if (part && typeof part === 'object') Object.keys(part).forEach(i => itemsSet.add(i))
+        })
+        return { name, items: Array.from(itemsSet).sort() }
+      })
+    } catch (e) {
+      return []
+    }
+  }, [APPLE_CIDER_REAL_DROP_RATES])
 
   const result = useMemo(() => {
     if (!item || !combinedRecipes[item]) return null
@@ -251,7 +281,7 @@ export default function App() {
   }, [amount])
 
   useEffect(() => {
-    saveToStorage('craftCalculator_activePerks', activePerks)
+    saveToStorage('craftCalculator_activePerks', activePerks);
   }, [activePerks])
 
   useEffect(() => {
@@ -278,6 +308,32 @@ export default function App() {
   useEffect(() => {
     saveToStorage('craftCalculator_pinnedResources', pinnedResources)
   }, [pinnedResources])
+
+  useEffect(() => {
+    saveToStorage('craftCalculator_lastPinnedLocation', lastPinnedLocation)
+  }, [lastPinnedLocation])
+
+  // Migration: some older pinned entries used `selectedLocation` key.
+  // Normalize to `location` on first load to avoid mismatch between selector and estimate.
+  useEffect(() => {
+    try {
+      if (!pinnedResources || pinnedResources.length === 0) return
+      let migrated = false
+      const next = pinnedResources.map(p => {
+        if (p.selectedLocation && !p.location) {
+          migrated = true
+          const { selectedLocation, ...rest } = p
+          return { ...rest, location: selectedLocation }
+        }
+        return p
+      })
+      if (migrated) setPinnedResources(next)
+    } catch (e) {
+      // ignore
+    }
+    // run only once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     saveToStorage('craftCalculator_useThousandsFormat', useThousandsFormat)
@@ -310,10 +366,14 @@ export default function App() {
     
     setPinnedResources(prev => {
       // Always add as new entry to allow multiple instances with different parent recipes
-      const newEntry = { 
-        name: resourceName, 
-        quantity, 
-        parentRecipe: parentRecipe || item // Use current item as parent if not specified
+      // But only inherit lastPinnedLocation if that location actually contains this item
+      const locs = getItemLocations(resourceName) || []
+      const hasLast = lastPinnedLocation && locs.some(l => l.name === lastPinnedLocation)
+      const newEntry = {
+        name: resourceName,
+        quantity,
+        parentRecipe: parentRecipe || item, // Use current item as parent if not specified
+        ...(hasLast ? { location: lastPinnedLocation } : {})
       }
       return [...prev, newEntry]
     })
@@ -477,18 +537,39 @@ export default function App() {
   }
 
   // Organized perks by category
+  // Organize perks into explicit categories so sidebar groups match feature sets
   const perkCategories = [
     {
-      title: 'Resource Saving',
-      perks: ['Resource Saver I', 'Resource Saver II', 'Resource Saver III']
+      title: 'Crafting Perks',
+      perks: [
+        'Resource Saver I',
+        'Resource Saver II',
+        'Resource Saver III'
+      ]
     },
     {
-      title: 'Silver Discount', 
-      perks: ['Artisan I', 'Artisan II', 'Artisan III', 'Artisan IV', 'Toolbox I', 'Steady Hands']
+      title: 'Apple Cider Perks',
+      perks: [
+        'Cinnamon Sticks',
+        'Wanderer I',
+        'Wanderer II',
+        'Wanderer III',
+        'Wanderer IV',
+        'Sprint Shoes I',
+        'Sprint Shoes II'
+      ]
     },
     {
-      title: 'Experience',
-      perks: ['Crafting Primer', 'Crafting Primer II', 'Crafting Almanac']
+      title: 'Arnold Palmer Perks',
+      perks: ['Lemon Squeezer', 'Eagle Eye (Runecube)']
+    },
+    {
+      title: 'Apple Cider Meals',
+      perks: ['Cabbage Stew', 'Neigh']
+    },
+    {
+      title: 'Arnold Palmer Meals',
+      perks: ['Lemon Cream Pie', 'Lemon Seltzer', 'Quandary Chowder']
     }
   ]
 
@@ -531,9 +612,47 @@ export default function App() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [lastScrollY])
 
+  // refs for accessibility handling
+  const sidebarRef = React.useRef(null)
+  const menuBtnRef = React.useRef(null)
+
+  // Manage inert/aria-hidden and focus when sidebar toggles to avoid hiding a focused element
+  // Only apply inert/aria-hidden for overlay (mobile) layouts; desktop sidebar is sticky and must remain interactive
+  useEffect(() => {
+    const asideEl = sidebarRef.current
+    const menuBtn = menuBtnRef.current || document.querySelector('[aria-controls="perks-sidebar"]')
+    if (!asideEl) return
+
+    const isOverlay = (typeof window !== 'undefined') && window.matchMedia && window.matchMedia('(max-width: 899px)').matches
+
+    if (!isOverlay) {
+      // Desktop: ensure sidebar is interactive and visible to AT
+      try { asideEl.inert = false } catch (e) {}
+      asideEl.removeAttribute('aria-hidden')
+      return
+    }
+
+    if (sidebarOpen) {
+      // opening on overlay: make interactive and visible to AT
+      try { asideEl.inert = false } catch (e) {}
+      asideEl.setAttribute('aria-hidden', 'false')
+    } else {
+      // closing on overlay: if focus is inside the aside, move it to the menu button first
+      const active = document.activeElement
+      if (active && asideEl.contains(active)) {
+        try {
+          if (menuBtn && typeof menuBtn.focus === 'function') menuBtn.focus()
+          else (document.body && document.body.focus && document.body.focus())
+        } catch (err) {}
+      }
+      try { asideEl.inert = true } catch (e) {}
+      asideEl.setAttribute('aria-hidden', 'true')
+    }
+  }, [sidebarOpen])
+
   return (
     <div className="app layout">
-      <aside id="perks-sidebar" className={"sidebar glass" + (sidebarOpen ? ' open' : '')} aria-hidden={!sidebarOpen}>
+      <aside id="perks-sidebar" ref={sidebarRef} className={"sidebar glass" + (sidebarOpen ? ' open' : '')}>
         <div className="side-head">
           <div className="sidebar-tabs">
             <button 
@@ -668,32 +787,64 @@ export default function App() {
                 </div>
               ) : (
                 <div className="pinned-items">
-                  {pinnedResources.map((pinnedItem, index) => (
-                    <div key={index} className="pinned-card">
-                      <button
-                        className="pinned-close-btn"
-                        onClick={() => removeFromPinned(index)}
-                        type="button"
-                        title="Remove from pinned"
-                      >
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <line x1="18" y1="6" x2="6" y2="18"></line>
-                          <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                      </button>
-                      <div className="pinned-card-content">
-                        <div className="pinned-item-name">
-                          {pinnedItem.name}
+                  {pinnedResources.map((pinnedItem, index) => {
+                    // compute estimate once per pinned item so selector and estimate use same default
+                    let est = null
+                    try {
+                      est = computePinnedEstimate(pinnedItem, pinnedItem.quantity, activePerks, exploringMode)
+                    } catch (e) { est = null }
+
+                    const locs = getItemLocations(pinnedItem.name) || []
+                    // prefer explicit user-set `location`, then computed estimate location, then legacy `selectedLocation`, then first available
+                    const selectorValue = pinnedItem.location || (est && est.location) || pinnedItem.selectedLocation || (locs[0] && locs[0].name) || ''
+
+                    return (
+                      <div key={index} className="pinned-card">
+                        <button
+                          className="pinned-close-btn"
+                          onClick={() => removeFromPinned(index)}
+                          type="button"
+                          title="Remove from pinned"
+                        >
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                          </svg>
+                        </button>
+
+                        <div className="pinned-card-content">
+                          <div className="pinned-item-name">{pinnedItem.name}</div>
+                          <div className="pinned-item-details">
+                            <span className="pinned-item-quantity">×{formatNumber(pinnedItem.quantity)}</span>
+                            {pinnedItem.parentRecipe && <span className="parent-recipe">from {pinnedItem.parentRecipe}</span>}
+
+                            {est && (() => {
+                              if (typeof est.apNeeded !== 'undefined' && est.apNeeded !== null) {
+                                return (<div className="pinned-ap-line">{`${formatNumber(est.apNeeded)} AP${est.location ? ` @ ${est.location}` : ''}`}</div>)
+                              }
+                              if (est.mode === 'EXP') return (<div style={{ fontSize: 12, color: '#99a', marginTop: 6 }}>{formatNumber(est.explores)} EXP • {formatNumber(est.stamina)} STA @ {est.location}</div>)
+                              if (est.mode === 'AC') return (<div style={{ fontSize: 12, color: '#99a', marginTop: 6 }}>{formatNumber(est.cidersNeeded)} AC • {formatNumber(est.totalStamina)} STA @ {est.location}</div>)
+                              return null
+                            })()}
+                          </div>
                         </div>
-                        <div className="pinned-item-details">
-                          <span className="pinned-item-quantity">×{formatNumber(pinnedItem.quantity)}</span>
-                          {pinnedItem.parentRecipe && (
-                            <span className="parent-recipe">from {pinnedItem.parentRecipe}</span>
+
+                        <div className="pinned-loc-select">
+                          {locs.length === 0 ? null : (
+                            <PinnedLocationSelect
+                              options={locs.map(l => l.name)}
+                              value={selectorValue}
+                              onChange={(newLoc) => {
+                                setPinnedResources(prev => prev.map((p, i) => i === index ? { ...p, location: newLoc } : p))
+                                // persist last-picked location so subsequent pins default to it
+                                setLastPinnedLocation(newLoc)
+                              }}
+                            />
                           )}
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </div>
@@ -719,6 +870,8 @@ export default function App() {
                   Show pinned tab and pin buttons for resources
                 </p>
               </div>
+
+              
               
               <div className="setting-item">
                 <label className="setting-label">
@@ -733,6 +886,54 @@ export default function App() {
                 <p className="setting-description">
                   Track and save calculation history
                 </p>
+              </div>
+
+              <h3 className="section-title">Exploring</h3>
+              <div className="setting-item">
+                <div className="setting-label" style={{ alignItems: 'center', gap: 12 }}>
+                  <span style={{ fontWeight: 600 }}>Mode</span>
+                  <div className="exploring-chips">
+                    <motion.button
+                      whileTap={{ scale: 0.98 }}
+                      className={`chip${exploringMode === 'Manually' ? ' active' : ''}`}
+                      onClick={() => setExploringMode('Manually')}
+                      type="button"
+                    >
+                      Manually
+                    </motion.button>
+
+                    <motion.button
+                      whileTap={{ scale: 0.98 }}
+                      className={`chip${exploringMode === 'Apple Cider' ? ' active' : ''}`}
+                      onClick={() => setExploringMode('Apple Cider')}
+                      type="button"
+                    >
+                      Apple Cider
+                    </motion.button>
+
+                    <motion.button
+                      whileTap={{ scale: 0.98 }}
+                      className={`chip${exploringMode === 'Arnold Palmer' ? ' active' : ''}`}
+                      onClick={() => setExploringMode('Arnold Palmer')}
+                      type="button"
+                    >
+                      Arnold Palmer
+                    </motion.button>
+                  </div>
+                </div>
+                <p className="setting-description">Select how exploring calculations should be performed.</p>
+              </div>
+              
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
+                <button
+                  type="button"
+                  onClick={() => setIsLocationConfigOpen(true)}
+                  className="small-btn"
+                  style={{ padding: '6px 10px' }}
+                >
+                  Configure locations
+                </button>
+                <div style={{ fontSize: 12, color: '#666' }}>Set Exploring Effectiveness per location (affects cider explores)</div>
               </div>
               
               {historyEnabled && (
@@ -784,8 +985,12 @@ export default function App() {
               <div className="settings-info">
                 <p>This will remove all saved perks, craft history, settings, and current selection.</p>
               </div>
+              
+              
             </div>
           )}
+          
+          {/* Exploring perks now use existing perkCategories UI (chips) */}
         </div>
       </aside>
 
@@ -797,6 +1002,7 @@ export default function App() {
         >
           <button
             className="icon menu"
+            ref={menuBtnRef}
             onClick={(e) => {
               e.stopPropagation()
               setSidebarOpen(true)
@@ -979,6 +1185,36 @@ export default function App() {
                     ))
                   )}
                 </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {isLocationConfigOpen && (
+            <motion.div
+              className="modal-wrapper"
+              onClick={() => setIsLocationConfigOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div
+                className="glass history-content"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="location-config-title"
+                initial={{ scale: 0.95 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.95 }}
+                onClick={(e) => e.stopPropagation()}
+                style={{ maxWidth: 920 }}
+              >
+                <h2 id="location-config-title">Configure locations</h2>
+                <LocationConfigPanel
+                  locations={locationsForConfig}
+                  onClose={() => setIsLocationConfigOpen(false)}
+                />
               </motion.div>
             </motion.div>
           )}

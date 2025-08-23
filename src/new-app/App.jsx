@@ -10,7 +10,18 @@ import LocationConfigPanel from '../components/LocationConfigPanel'
 import APPLE_CIDER_REAL_DROP_RATES from '../data/apple-cider-real-drop-rates.js'
 import { computePinnedEstimate, getItemLocations } from '../utils/exploringUtils.js'
 import PinnedLocationSelect from '../components/PinnedLocationSelect.jsx'
-import { Analytics } from "@vercel/analytics/next"
+// Vercel's `@vercel/analytics/next` is Next.js-specific and breaks Vite builds.
+// Provide a safe no-op fallback when not running in Next.js.
+let Analytics = () => null
+try {
+  // Only attempt to require the Next adapter at runtime if it's present.
+  // This avoids static ESM import which Rollup/Vite will try to resolve.
+  // eslint-disable-next-line no-undef
+  const maybe = require('@vercel/analytics/next')
+  if (maybe && maybe.Analytics) Analytics = maybe.Analytics
+} catch (e) {
+  // ignore - fallback no-op will be used
+}
 import './app.css'
 
 // Helper functions for localStorage

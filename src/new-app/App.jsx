@@ -9,6 +9,8 @@ import BugReportModal from '../components/BugReportModal'
 import LocationConfigPanel from '../components/LocationConfigPanel'
 import APPLE_CIDER_REAL_DROP_RATES from '../data/apple-cider-real-drop-rates.js'
 import { computePinnedEstimate, getItemLocations } from '../utils/exploringUtils.js'
+// Vercel Web Analytics (React)
+import { Analytics } from '@vercel/analytics/react'
 import PinnedLocationSelect from '../components/PinnedLocationSelect.jsx'
 // Vercel's `@vercel/analytics/next` is Next.js-specific and breaks Vite builds.
 // Provide a safe no-op fallback when not running in Next.js.
@@ -1848,6 +1850,8 @@ export default function App() {
           onClose={handleBugReportClose}
           onSubmit={handleBugReportSubmit}
         />
+  {/* Vercel Web Analytics */}
+  <Analytics />
   {/* debug overlay removed */}
       </div>
     </div>

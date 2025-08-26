@@ -92,7 +92,7 @@ export default function App() {
   const [item, setItem] = useState(() => loadFromStorage('craftCalculator_item', 'Board'))
   const [amount, setAmount] = useState(() => loadFromStorage('craftCalculator_amount', 1))
   const [activePerks, setActivePerks] = useState(() => loadFromStorage('craftCalculator_activePerks', []));
-  const [exploringMode, setExploringMode] = useState(() => loadFromStorage('craftCalculator_exploringMode', 'Manually'));
+  const [exploringMode, setExploringMode] = useState(() => loadFromStorage('craftCalculator_exploringMode', 'Apple Cider'));
 
   useEffect(() => {
     saveToStorage('craftCalculator_exploringMode', exploringMode);
@@ -137,6 +137,9 @@ export default function App() {
 
   // Reverse-craft mode: when true the UI lists "source" resources and shows available crafts for the selected resource
   const [reverseMode, setReverseMode] = useState(false)
+  // Locations mode: show locations list and location-specific drops
+  const [locationsMode, setLocationsMode] = useState(() => loadFromStorage('craftCalculator_locationsMode', false))
+  const [selectedLocation, setSelectedLocation] = useState(() => loadFromStorage('craftCalculator_selectedLocation', 'Forest'))
   // Reverse-craft mode: debug instrumentation removed
 
   const locationsForConfig = useMemo(() => {
@@ -214,6 +217,14 @@ export default function App() {
 
   const itemsForSelect = reverseMode ? sourceResources : items
 
+  useEffect(() => {
+    saveToStorage('craftCalculator_locationsMode', locationsMode)
+  }, [locationsMode])
+
+  useEffect(() => {
+    saveToStorage('craftCalculator_selectedLocation', selectedLocation)
+  }, [selectedLocation])
+
   // When in reverse mode, compute crafts that use the currently selected `item` as an ingredient
   const availableCrafts = useMemo(() => {
     // Normalizer for names to cover spacing/casing/unicode variants
@@ -289,6 +300,12 @@ export default function App() {
   const isCraftable = (resourceName) => {
     const recipe = combinedRecipes[resourceName];
     return recipe && (recipe.из || recipe.ingredients);
+  }
+
+  // Helper to round to two decimals
+  const roundToTwo = (n) => {
+    if (n === null || n === undefined || Number.isNaN(n)) return null
+    return Math.round(Number(n) * 100) / 100
   }
 
   // Function to handle clicking on a craftable resource
@@ -1026,15 +1043,6 @@ export default function App() {
                   <div className="exploring-chips">
                     <motion.button
                       whileTap={{ scale: 0.98 }}
-                      className={`chip${exploringMode === 'Manually' ? ' active' : ''}`}
-                      onClick={() => setExploringMode('Manually')}
-                      type="button"
-                    >
-                      Manually
-                    </motion.button>
-
-                    <motion.button
-                      whileTap={{ scale: 0.98 }}
                       className={`chip${exploringMode === 'Apple Cider' ? ' active' : ''}`}
                       onClick={() => setExploringMode('Apple Cider')}
                       type="button"
@@ -1160,34 +1168,61 @@ export default function App() {
               </button>
               {modeOpen && (
                 <div className="mode-dropdown glass" style={{ position: 'absolute', right: 0, marginTop: 8, minWidth: 160, zIndex: 40 }}>
-                  {!reverseMode && (
-                    <button
-                      className={`mode-option`}
-                      type="button"
-                      onClick={() => { setReverseMode(true); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
-                    >
-                      Base to Craft
-                    </button>
-                  )}
-                  {reverseMode && (
+                  {locationsMode ? (
+                    // When on Locations page: offer both craft↔base options
                     <>
                       <button
-                        className="mode-option"
+                        className={`mode-option`}
                         type="button"
-                        onClick={() => { setReverseMode(false); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
+                        onClick={() => { setReverseMode(true); setLocationsMode(false); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
                       >
                         Craft to base
                       </button>
                       <button
-                        className={`mode-option ${!reverseMode ? 'active' : ''}`}
+                        className={`mode-option`}
                         type="button"
-                        onClick={() => { setReverseMode(false); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
+                        onClick={() => { setReverseMode(false); setLocationsMode(false); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
                       >
-                        INACTIVE
+                        Base to Craft
+                      </button>
+                    </>
+                  ) : reverseMode ? (
+                    // When on Craft to base: offer Base to Craft and Locations
+                    <>
+                      <button
+                        className={`mode-option`}
+                        type="button"
+                        onClick={() => { setReverseMode(false); setLocationsMode(false); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
+                      >
+                        Base to Craft
+                      </button>
+                        <button
+                          className={`mode-option ${locationsMode ? 'active' : ''}`}
+                          type="button"
+                          onClick={() => { setLocationsMode(true); setReverseMode(false); setModeOpen(false); setSelectedLocation('Forest'); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
+                        >
+                          Locations
+                        </button>
+                    </>
+                  ) : (
+                    // Default (Base to Craft): offer Craft to base and Locations
+                    <>
+                      <button
+                        className={`mode-option`}
+                        type="button"
+                        onClick={() => { setReverseMode(true); setLocationsMode(false); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
+                      >
+                        Craft to base
+                      </button>
+                      <button
+                        className={`mode-option ${locationsMode ? 'active' : ''}`}
+                        type="button"
+                        onClick={() => { setLocationsMode(true); setReverseMode(false); setModeOpen(false); setSelectedLocation('Forest'); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
+                      >
+                        Locations
                       </button>
                     </>
                   )}
-                  {/* single Location button is rendered above (inside reverseMode block or as default) */}
                 </div>
               )}
             </div>
@@ -1197,9 +1232,11 @@ export default function App() {
         <section className="glass controls">
           <label className="field">
             <span className="label">Item</span>
-            <button className="input" onClick={() => setIsItemSelectOpen(true)} type="button">
-              {item}
-            </button>
+            { !locationsMode ? (
+              <button className="input" onClick={() => setIsItemSelectOpen(true)} type="button">{item}</button>
+            ) : (
+              <button className="input" onClick={() => setIsItemSelectOpen(true)} type="button">{selectedLocation || 'Select location'}</button>
+            ) }
           </label>
           <label className="field">
             <span className="label">Amount</span>
@@ -1212,11 +1249,37 @@ export default function App() {
               placeholder="Enter amount (e.g., 1 000)"
               onChange={e => {
                 const inputValue = e.target.value
-                
-                // Remove spaces and keep only digits
+                if (locationsMode) {
+                  // allow decimals, normalize comma to dot
+                  const normalized = inputValue.replace(',', '.')
+                  // keep digits and at most one dot
+                  const cleaned = normalized.replace(/[^\d.]/g, '')
+                  const parts = cleaned.split('.')
+                  const integer = parts[0] || '0'
+                  const frac = parts[1] ? parts[1].slice(0,2) : ''
+                  const final = frac ? `${integer}.${frac}` : integer
+                  if (final === '' || final === '.' ) {
+                    setAmount('')
+                    setCraftChain(prev => {
+                      const updated = [...prev]
+                      updated[updated.length - 1] = { ...updated[updated.length - 1], amount: 1 }
+                      return updated
+                    })
+                    return
+                  }
+                  const numericValue = parseFloat(final)
+                  const rounded = Math.round(numericValue * 100) / 100
+                  setAmount(rounded)
+                  setCraftChain(prev => {
+                    const updated = [...prev]
+                    updated[updated.length - 1] = { ...updated[updated.length - 1], amount: rounded || 1 }
+                    return updated
+                  })
+                  return
+                }
+
+                // Non-locations mode (integer-only) - previous behavior
                 const cleanValue = inputValue.replace(/\D/g, '')
-                
-                // Check if empty or if number is within limit
                 if (cleanValue === '') {
                   setAmount('')
                   setCraftChain(prev => {
@@ -1226,15 +1289,9 @@ export default function App() {
                   })
                   return
                 }
-                
-                // Convert to number and check limit
                 const numericValue = parseInt(cleanValue)
-                if (numericValue > 9999999999999999) {
-                  return // Don't update if exceeds limit
-                }
-                
+                if (numericValue > 9999999999999999) return
                 setAmount(cleanValue)
-                // Update the last item in chain with new amount
                 setCraftChain(prev => {
                   const updated = [...prev]
                   updated[updated.length - 1] = { ...updated[updated.length - 1], amount: numericValue || 1 }
@@ -1266,16 +1323,27 @@ export default function App() {
               >
                 <h2 id="item-select-title" className="item-select-title">Select an Item</h2>
                 <div className="item-select-list">
-                  {(itemsForSelect || []).map(i => (
-                    <button 
-                      key={i} 
-                      className={item === i ? 'active' : ''}
-                      onClick={() => handleSelectItem(i)}
-                      type="button"
-                    >
-                      {i}
-                    </button>
-                  ))}
+                  {(locationsMode ? (locationsForConfig || []) : (itemsForSelect || [])).map(i => {
+                    const label = locationsMode ? i.name : i
+                    const active = locationsMode ? selectedLocation === i.name : item === i
+                    return (
+                      <button
+                        key={label}
+                        className={active ? 'active' : ''}
+                        onClick={() => {
+                          if (locationsMode) {
+                            setSelectedLocation(label)
+                            setIsItemSelectOpen(false)
+                          } else {
+                            handleSelectItem(label)
+                          }
+                        }}
+                        type="button"
+                      >
+                        {label}
+                      </button>
+                    )
+                  })}
                 </div>
               </motion.div>
             </motion.div>
@@ -1394,7 +1462,129 @@ export default function App() {
             transition={{ duration: 0.25, ease: 'easeOut' }}
             className="stack"
           >
-            { !reverseMode && result && Object.keys(result.filteredResources).length > 0 && (
+            {locationsMode && (
+              <motion.section className="glass card">
+                <h2>Drops {selectedLocation ? `@ ${selectedLocation}` : ''}</h2>
+                <ul className="list">
+                  {(!selectedLocation) && (
+                    <li className="empty-state" style={{ padding: '12px 16px', color: '#9aa' }}>Select a location to see drops.</li>
+                  )}
+                  {selectedLocation && (() => {
+                    const locObj = APPLE_CIDER_REAL_DROP_RATES.locations && APPLE_CIDER_REAL_DROP_RATES.locations[selectedLocation]
+                    if (!locObj) return (<li className="empty-state" style={{ padding: '12px 16px', color: '#9aa' }}>No data for this location.</li>)
+                    const itemSet = new Set()
+                    Object.values(locObj).forEach(variant => {
+                      if (variant && typeof variant === 'object') Object.keys(variant).forEach(k => itemSet.add(k))
+                    })
+                    // Sort items by drops-per-cider (best variant) descending
+                    const itemsList = Array.from(itemSet)
+                      .map(it => {
+                        // find best dropsPerCider across variants for this location
+                        let best = 0
+                        Object.keys(locObj).forEach(vk => {
+                          const part = locObj[vk]
+                          if (!part) return
+                          const entry = part[it]
+                          if (!entry) return
+                          const val = (typeof entry === 'object' && (entry.dropsPerCider || entry.cidersPerDrop)) ? (entry.dropsPerCider || (entry.cidersPerDrop ? 1 / entry.cidersPerDrop : 0)) : (typeof entry === 'number' ? entry : 0)
+                          if (val && val > best) best = val
+                        })
+                        return { name: it, bestDrops: best }
+                      })
+                      .sort((a, b) => b.bestDrops - a.bestDrops)
+                      .map(x => x.name)
+
+                    return itemsList.map((it) => {
+                        let est = null
+                        try { est = computePinnedEstimate({ name: it, location: selectedLocation }, Number(amount) || 1, activePerks, exploringMode) } catch (e) { est = null }
+                        // compute per-unit estimate (cost per 1 item) and invert using user's Amount as budget
+                        let numericValue = null
+                        try {
+                          const perUnit = computePinnedEstimate({ name: it, location: selectedLocation }, 1, activePerks, exploringMode)
+                          const budget = Number(amount) || 0
+                          if (exploringMode === 'Apple Cider') {
+                            // perUnit.effectiveDropsPerCider = drops per cider for 1 cider baseline
+                            const perCider = perUnit && perUnit.mode === 'AC' && typeof perUnit.effectiveDropsPerCider === 'number' ? perUnit.effectiveDropsPerCider : null
+                            if (perCider && budget > 0) {
+                              numericValue = budget * perCider
+                            } else {
+                              // fallback to raw dropsPerCider
+                              const raw = locObj['rq0cs0'] && locObj['rq0cs0'][it]
+                              const rawVal = raw && (raw.dropsPerCider || raw)
+                              if (rawVal && budget > 0) numericValue = budget * rawVal
+                            }
+                          } else if (exploringMode === 'Arnold Palmer') {
+                            const perAP = perUnit && perUnit.mode === 'AP' && typeof perUnit.itemsPerAP === 'number' ? perUnit.itemsPerAP : null
+                            if (perAP && budget > 0) {
+                              numericValue = budget * perAP
+                            }
+                          }
+                        } catch (e) {
+                          numericValue = null
+                        }
+                        const display = numericValue != null ? roundToTwo(numericValue) : '—'
+                      // clickable when item itself has a recipe OR there exist recipes that USE this drop as an ingredient
+                      const craftable = isCraftable(it) || ((findRecipesThatUse(it) || []).length > 0)
+                      return (
+                        <motion.li layout key={it} className="resource-item">
+                          <div
+                            className={`resource-content ${craftable ? 'clickable' : ''}`}
+                            onClick={() => {
+                              if (!craftable) return
+                              hapticFeedback('medium')
+                              // switch into Base → Craft (reverse) mode
+                              setLocationsMode(false)
+                              setReverseMode(true)
+                              // choose reasonable amount: use computed numericValue (budget result) rounded down, fallback to 1
+                              const parsed = numericValue != null && !Number.isNaN(Number(numericValue)) ? Number(numericValue) : null
+                              const targetAmount = parsed && parsed >= 1 ? Math.max(1, Math.floor(parsed)) : 1
+                              setItem(it)
+                              setAmount(targetAmount)
+                              // reset craft chain to start from this base selection
+                              setCraftChain([{ name: it, amount: targetAmount }])
+                            }}
+                            style={craftable ? { cursor: 'pointer' } : undefined}
+                            title={craftable ? `Open crafts that use ${it}` : undefined}
+                          >
+                            <span className="k">
+                              {it}
+                              {craftable && (
+                                <span className="craft-indicator">
+                                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                    <path d="M2 8L6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                  </svg>
+                                </span>
+                              )}
+                            </span>
+                            <span className="v">{display}</span>
+                          </div>
+                          {pinnedEnabled && (
+                            (() => {
+                              const qtyForPin = numericValue != null ? roundToTwo(numericValue) : 1
+                              return (
+                                <button
+                                  className={`pin-btn ${recentlyAddedItems.has(`${it}_${qtyForPin}_${selectedLocation || item}`) ? 'success' : ''}`}
+                                  onClick={(e) => { e.stopPropagation(); addToPinned(it, qtyForPin, selectedLocation || item) }}
+                                  type="button"
+                                  title={`Pin ${it}`}
+                                >
+                                  <div className="pin-icon">
+                                    <div className={`pin-line pin-line-horizontal ${recentlyAddedItems.has(`${it}_${qtyForPin}_${selectedLocation || item}`) ? 'checked' : ''}`}></div>
+                                    <div className={`pin-line pin-line-vertical ${recentlyAddedItems.has(`${it}_${qtyForPin}_${selectedLocation || item}`) ? 'checked' : ''}`}></div>
+                                  </div>
+                                </button>
+                              )
+                            })()
+                          )}
+                          
+                        </motion.li>
+                      )
+                    })
+                  })()}
+                </ul>
+              </motion.section>
+            )}
+            {!locationsMode && !reverseMode && result && Object.keys(result.filteredResources).length > 0 && (
               <motion.section className="glass card">
                 <h2>Resources</h2>
                 <ul className="list">

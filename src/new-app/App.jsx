@@ -1182,25 +1182,25 @@ export default function App() {
                         type="button"
                         onClick={() => { setReverseMode(true); setLocationsMode(false); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
                       >
-                        Craft to base
+                        Base to Craft
                       </button>
                       <button
                         className={`mode-option`}
                         type="button"
                         onClick={() => { setReverseMode(false); setLocationsMode(false); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
                       >
-                        Base to Craft
+                        Craft to Base
                       </button>
                     </>
                   ) : reverseMode ? (
-                    // When on Craft to base: offer Base to Craft and Locations
+                    // When on Base to Craft: offer Craft to Base and Locations
                     <>
                       <button
                         className={`mode-option`}
                         type="button"
                         onClick={() => { setReverseMode(false); setLocationsMode(false); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
                       >
-                        Base to Craft
+                        Craft to Base
                       </button>
                         <button
                           className={`mode-option ${locationsMode ? 'active' : ''}`}
@@ -1211,14 +1211,14 @@ export default function App() {
                         </button>
                     </>
                   ) : (
-                    // Default (Base to Craft): offer Craft to base and Locations
+                    // Default (Craft to Base): offer Base to Craft and Locations
                     <>
                       <button
                         className={`mode-option`}
                         type="button"
                         onClick={() => { setReverseMode(true); setLocationsMode(false); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
                       >
-                        Craft to base
+                        Base to Craft
                       </button>
                       <button
                         className={`mode-option ${locationsMode ? 'active' : ''}`}

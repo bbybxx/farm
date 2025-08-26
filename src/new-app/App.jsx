@@ -1464,10 +1464,13 @@ export default function App() {
               </motion.section>
             )}
 
-            { reverseMode && availableCrafts.length > 0 && (
+            { reverseMode && (
               <motion.section className="glass card">
                 <h2>Crafts</h2>
                 <ul className="list">
+                  {availableCrafts.length === 0 && (
+                    <li className="empty-state" style={{ padding: '12px 16px', color: '#9aa' }}>No crafts available for the current selection.</li>
+                  )}
                   {availableCrafts.map(c => {
                     const further = findRecipesThatUse(c.name) || []
                     const canNavigate = further.length > 0

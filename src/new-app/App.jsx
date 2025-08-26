@@ -1703,6 +1703,10 @@ export default function App() {
                           className={`resource-content ${canNavigate ? 'clickable' : ''}`}
                           onClick={() => {
                             if (!canNavigate) return
+                            // Determine the sensible amount for the new craft node: how many of this craft
+                            // can be made from the currently available ingredient amount (precomputed as craftableCount).
+                            const targetAmount = (typeof c.craftableCount === 'number') ? c.craftableCount : (Number(amount) || 1)
+
                             // Add current navigation to craft history (same behavior as original mode)
                             if (historyEnabled) {
                               const historyEntry = {
@@ -1711,8 +1715,7 @@ export default function App() {
                                   fromItem: item,
                                   fromAmount: amount,
                                   toItem: c.name,
-                                  // preserve the user's requested amount when navigating deeper
-                                  toAmount: Number(amount) || 1,
+                                  toAmount: targetAmount,
                                   chain: [...craftChain]
                                 }
                               setCraftHistory(prev => [historyEntry, ...prev.slice(0, historyLimit - 1)])
@@ -1720,13 +1723,13 @@ export default function App() {
 
                             // Navigate to the craft (select the crafted item)
                             setItem(c.name)
-                            // Preserve the currently requested amount (don't reset to recipe output)
-                            setAmount(Number(amount) || 1)
-                            // Append crafted item to existing chain preserving the requested amount
+                            // Set amount to how many of the crafted item can be made from current resources
+                            setAmount(targetAmount)
+                            // Append crafted item to existing chain with the computed amount
                             setCraftChain(prev => {
                               // If prev already ends with the crafted item, keep as-is
                               if (prev && prev.length > 0 && String(prev[prev.length - 1].name) === String(c.name)) return prev
-                              return [...prev, { name: c.name, amount: Number(amount) || 1 }]
+                              return [...prev, { name: c.name, amount: targetAmount }]
                             })
                           }}
                           style={canNavigate ? { cursor: 'pointer' } : undefined}

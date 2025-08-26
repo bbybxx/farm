@@ -1706,25 +1706,27 @@ export default function App() {
                             // Add current navigation to craft history (same behavior as original mode)
                             if (historyEnabled) {
                               const historyEntry = {
-                                id: Date.now(),
-                                timestamp: new Date().toISOString(),
-                                fromItem: item,
-                                fromAmount: amount,
-                                toItem: c.name,
-                                toAmount: c.outputQty || 1,
-                                chain: [...craftChain]
-                              }
+                                  id: Date.now(),
+                                  timestamp: new Date().toISOString(),
+                                  fromItem: item,
+                                  fromAmount: amount,
+                                  toItem: c.name,
+                                  // preserve the user's requested amount when navigating deeper
+                                  toAmount: Number(amount) || 1,
+                                  chain: [...craftChain]
+                                }
                               setCraftHistory(prev => [historyEntry, ...prev.slice(0, historyLimit - 1)])
                             }
 
                             // Navigate to the craft (select the crafted item)
                             setItem(c.name)
-                            setAmount(c.outputQty || 1)
-                            // Append crafted item to existing chain (preserve navigation history)
+                            // Preserve the currently requested amount (don't reset to recipe output)
+                            setAmount(Number(amount) || 1)
+                            // Append crafted item to existing chain preserving the requested amount
                             setCraftChain(prev => {
                               // If prev already ends with the crafted item, keep as-is
                               if (prev && prev.length > 0 && String(prev[prev.length - 1].name) === String(c.name)) return prev
-                              return [...prev, { name: c.name, amount: c.outputQty || 1 }]
+                              return [...prev, { name: c.name, amount: Number(amount) || 1 }]
                             })
                           }}
                           style={canNavigate ? { cursor: 'pointer' } : undefined}

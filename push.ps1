@@ -1,81 +1,64 @@
 <#
-push.ps1 — PowerShell helper for git: add, commit, push
-Usage: .\push.ps1 "Commit message" [branch]
+Simple push.ps1 - minimal ASCII-only script
+Usage: .\push.ps1 "Commit message" [branch] [deploy]
+If no args are provided the script will prompt interactively.
 #>
-param(
-    [Parameter(Mandatory=$true, Position=0)]
-    [string]$Message,
 
-    [Parameter(Mandatory=$false, Position=1)]
+param(
+    [string]$Message,
     [string]$Branch,
-    [Parameter(Mandatory=$false, Position=2)]
     [string]$Deploy
 )
 
-Set-StrictMode -Version Latest
-
-function Write-ErrAndExit($msg, $code=1) {
+function ErrExit([string]$msg, [int]$code = 1) {
     Write-Host $msg -ForegroundColor Red
     exit $code
 }
 
-if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
-    Write-ErrAndExit "git не найден в PATH. Установите git и убедитесь, что он доступен из терминала."
+# Prompt for missing values
+if (-not $Message -or $Message -eq '') {
+    $Message = Read-Host 'Commit message (required)'
+    if (-not $Message -or $Message -eq '') { ErrExit 'No commit message provided.' 1 }
 }
 
-if (-not $Branch) {
-    try {
-        $Branch = git rev-parse --abbrev-ref HEAD 2>$null | Out-String
-        $Branch = $Branch.Trim()
-        if (-not $Branch) { $Branch = 'main' }
-    } catch {
-        $Branch = 'main'
-    }
+if (-not $Branch -or $Branch -eq '') {
+    try { $curr = git rev-parse --abbrev-ref HEAD 2>$null | Out-String; $curr = $curr.Trim(); if (-not $curr -or $curr -eq '') { $curr = 'main' } } catch { $curr = 'main' }
+    $branchInput = Read-Host ("Branch to push (Enter = $curr)")
+    if ($branchInput -and $branchInput -ne '') { $Branch = $branchInput } else { $Branch = $curr }
 }
 
-Write-Host "Staging changes..." -ForegroundColor Cyan
-$add = git add -A 2>&1 | Out-String
-if ($LASTEXITCODE -ne 0) { Write-ErrAndExit "Ошибка: git add завершился с ошибкой.`n$add" }
-
-Write-Host "Committing with message: $Message" -ForegroundColor Cyan
-$commit = git commit -m "$Message" 2>&1 | Out-String
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "Предупреждение: git commit вернул код ошибки (возможно, нет изменений). Попробую выполнить push." -ForegroundColor Yellow
-} else {
-    Write-Host "Commit выполнен." -ForegroundColor Green
+if (-not $Deploy -or $Deploy -eq '') {
+    $d = Read-Host 'Deploy to Vercel? (Y/n, Enter = Y)'
+    if ($d -and $d.ToLower() -in @('n','no')) { $Deploy = 'no' } else { $Deploy = 'yes' }
 }
 
-Write-Host "Pushing to origin/$Branch..." -ForegroundColor Cyan
-$push = git push origin $Branch 2>&1 | Out-String
-if ($LASTEXITCODE -ne 0) { Write-ErrAndExit "Ошибка: git push завершился с ошибкой.`n$push" }
+if (-not (Get-Command git -ErrorAction SilentlyContinue)) { ErrExit 'git not found in PATH' 1 }
 
-Write-Host "Push успешен." -ForegroundColor Green
+Write-Host 'Staging changes...'
+$addOut = git add -A 2>&1 | Out-String
+if ($LASTEXITCODE -ne 0) { ErrExit ("git add failed:`n$addOut") 1 }
 
-# Deploy to Vercel by default. Pass third argument 'no' or 'false' to skip.
-if ($Deploy -and ($Deploy.ToLower() -in @('no','false','skip'))) {
-    Write-Host "Vercel deployment пропущен по флагу." -ForegroundColor Yellow
-    exit 0
-}
+Write-Host ("Committing: {0}" -f $Message)
+$commitOut = git commit -m "$Message" 2>&1 | Out-String
+if ($LASTEXITCODE -ne 0) { Write-Host 'Commit returned non-zero (maybe no changes).' -ForegroundColor Yellow; Write-Host $commitOut -ForegroundColor Yellow } else { Write-Host 'Commit done.' -ForegroundColor Green }
 
-Write-Host "Попытка деплоя на Vercel..." -ForegroundColor Cyan
+Write-Host ("Pushing to origin/{0}..." -f $Branch)
+$pushOut = git push origin $Branch 2>&1 | Out-String
+if ($LASTEXITCODE -ne 0) { ErrExit ("git push failed:`n$pushOut") 1 }
+Write-Host 'Push succeeded.' -ForegroundColor Green
 
+if ($Deploy -and $Deploy.ToLower() -in @('no','false','skip')) { Write-Host 'Vercel deploy skipped.'; exit 0 }
+
+Write-Host 'Attempting Vercel deploy...'
 if (Get-Command vercel -ErrorAction SilentlyContinue) {
-    $out = & vercel --prod --confirm 2>&1 | Out-String
-    $code = $LASTEXITCODE
+    $deployOut = & vercel --prod --confirm 2>&1 | Out-String; $code = $LASTEXITCODE
 } elseif (Get-Command npx -ErrorAction SilentlyContinue) {
-    $out = & npx --yes vercel --prod --confirm 2>&1 | Out-String
-    $code = $LASTEXITCODE
+    $deployOut = & npx --yes vercel --prod --confirm 2>&1 | Out-String; $code = $LASTEXITCODE
 } else {
-    Write-Host "Vercel CLI не найден. Установите его (npm i -g vercel) либо используйте npx." -ForegroundColor Yellow
-    Write-Host "Если нужно, запустите вручную: vercel --prod --confirm" -ForegroundColor Yellow
+    Write-Host 'Vercel CLI not found. Install it or run deploy manually: vercel --prod --confirm'
     exit 0
 }
 
-if ($code -ne 0) {
-    Write-ErrAndExit "Ошибка при деплое на Vercel.`n$out"
-} else {
-    Write-Host "Деплой на Vercel завершён." -ForegroundColor Green
-    Write-Host $out
-}
+if ($code -ne 0) { ErrExit ("Vercel deploy failed:`n$deployOut") 1 } else { Write-Host 'Vercel deploy finished.'; Write-Host $deployOut }
 
 exit 0

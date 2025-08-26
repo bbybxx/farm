@@ -50,12 +50,32 @@ Write-Host 'Push succeeded.' -ForegroundColor Green
 if ($Deploy -and $Deploy.ToLower() -in @('no','false','skip')) { Write-Host 'Vercel deploy skipped.'; exit 0 }
 
 Write-Host 'Attempting Vercel deploy...'
+
+# Prefer non-interactive token if provided
+$vercelToken = $env:VERCEL_TOKEN
+if ($vercelToken -and $vercelToken -ne '') { Write-Host 'Using VERCEL_TOKEN for non-interactive deploy.' -ForegroundColor Cyan }
+
 if (Get-Command vercel -ErrorAction SilentlyContinue) {
-    $deployOut = & vercel --prod --confirm 2>&1 | Out-String; $code = $LASTEXITCODE
+    if ($vercelToken) {
+        Write-Host 'Running: vercel --prod --confirm --token <VERCEL_TOKEN>' -ForegroundColor Cyan
+        $deployOut = & vercel --prod --confirm --token $vercelToken 2>&1 | Out-String
+    } else {
+        Write-Host 'Running: vercel --prod --confirm' -ForegroundColor Cyan
+        $deployOut = & vercel --prod --confirm 2>&1 | Out-String
+    }
+    $code = $LASTEXITCODE
 } elseif (Get-Command npx -ErrorAction SilentlyContinue) {
-    $deployOut = & npx --yes vercel --prod --confirm 2>&1 | Out-String; $code = $LASTEXITCODE
+    if ($vercelToken) {
+        Write-Host 'Running: npx vercel --prod --confirm --token <VERCEL_TOKEN>' -ForegroundColor Cyan
+        $deployOut = & npx --yes vercel --prod --confirm --token $vercelToken 2>&1 | Out-String
+    } else {
+        Write-Host 'Running: npx vercel --prod --confirm' -ForegroundColor Cyan
+        $deployOut = & npx --yes vercel --prod --confirm 2>&1 | Out-String
+    }
+    $code = $LASTEXITCODE
 } else {
-    Write-Host 'Vercel CLI not found. Install it or run deploy manually: vercel --prod --confirm'
+    Write-Host 'Vercel CLI not found. Install it (npm i -g vercel) or set VERCEL_TOKEN and use npx.' -ForegroundColor Yellow
+    Write-Host 'Manual deploy tip: vercel --prod --confirm' -ForegroundColor Yellow
     exit 0
 }
 

@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { calculateAllResources } from '../utils/calculator'
-import { getCombinedRecipes } from '../utils/recipeUtils'
+import { calculateAllResources, getResourceSaverPercent } from '../utils/calculator'
+import { getCombinedRecipes, findRecipesThatUse } from '../utils/recipeUtils'
 import RecipeUpdateService from '../services/RecipeUpdateService'
 import perks from '../data/perks.json'
 import { useTelegram } from '../hooks/useTelegram'
@@ -25,7 +25,7 @@ try {
 import './app.css'
 
 // Helper functions for localStorage
-const isStorageAvailable = () => {
+function isStorageAvailable() {
   try {
     const testKey = '__storage_test__'
     localStorage.setItem(testKey, 'test')
@@ -36,7 +36,7 @@ const isStorageAvailable = () => {
   }
 }
 
-const saveToStorage = (key, data) => {
+function saveToStorage(key, data) {
   try {
     if (!isStorageAvailable()) return
     localStorage.setItem(key, JSON.stringify(data))
@@ -46,7 +46,7 @@ const saveToStorage = (key, data) => {
 }
 
 // Format numbers with spaces for better readability
-const formatNumber = (num) => {
+function formatNumber(num) {
   if (num === null || num === undefined || num === '') return ''
   const number = typeof num === 'string' ? parseFloat(num) : num
   if (isNaN(number)) return num
@@ -55,7 +55,7 @@ const formatNumber = (num) => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 }
 
-const loadFromStorage = (key, defaultValue) => {
+function loadFromStorage(key, defaultValue) {
   try {
     if (!isStorageAvailable()) return defaultValue
     const stored = localStorage.getItem(key)
@@ -69,6 +69,8 @@ const loadFromStorage = (key, defaultValue) => {
 export default function App() {
   // Получаем объединенные рецепты (API + локальные)
   const combinedRecipes = getCombinedRecipes();
+    // items is declared earlier to be available for select lists
+    const items = Object.keys(combinedRecipes || {})
   
   // Инициализируем сервис обновлений
   const [updateService] = useState(() => new RecipeUpdateService());
@@ -103,6 +105,7 @@ export default function App() {
   const [lastScrollY, setLastScrollY] = useState(0)
   const [isItemSelectOpen, setIsItemSelectOpen] = useState(false)
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
+  const [modeOpen, setModeOpen] = useState(false)
   const [craftChain, setCraftChain] = useState(() => {
     const storedChain = loadFromStorage('craftCalculator_craftChain', null)
     if (storedChain && storedChain.length > 0) {
@@ -112,6 +115,8 @@ export default function App() {
     const storedAmount = loadFromStorage('craftCalculator_amount', 1)
     return [{ name: storedItem, amount: storedAmount }]
   })
+
+  
   const [craftHistory, setCraftHistory] = useState(() => loadFromStorage('craftCalculator_craftHistory', []))
   const [historyLimit, setHistoryLimit] = useState(() => loadFromStorage('craftCalculator_historyLimit', 50))
   // Pinned resources system (replaces cart)
@@ -129,6 +134,10 @@ export default function App() {
   const [pinnedEnabled, setPinnedEnabled] = useState(() => loadFromStorage('craftCalculator_pinnedEnabled', true))
   const [historyEnabled, setHistoryEnabled] = useState(() => loadFromStorage('craftCalculator_historyEnabled', true))
   const [isLocationConfigOpen, setIsLocationConfigOpen] = useState(false)
+
+  // Reverse-craft mode: when true the UI lists "source" resources and shows available crafts for the selected resource
+  const [reverseMode, setReverseMode] = useState(false)
+  // Reverse-craft mode: debug instrumentation removed
 
   const locationsForConfig = useMemo(() => {
     try {
@@ -177,6 +186,105 @@ export default function App() {
     }
   }, [item, amount, activePerks])
 
+  // Compute distinct resources that are used as ingredients across recipes (sources for reverse crafting)
+  const sourceResources = useMemo(() => {
+    // Recursive extractor: collect all ingredient keys from possibly nested ingredient objects
+    function collectIngredientKeys(obj, set) {
+      if (!obj || typeof obj !== 'object') return
+      Object.entries(obj).forEach(([k, v]) => {
+        // key may be an ingredient name
+        if (typeof k === 'string' && k.trim()) set.add(k.trim())
+        // value may itself be an object containing more ingredient names
+        if (v && typeof v === 'object') collectIngredientKeys(v, set)
+      })
+    }
+
+    try {
+      if (!combinedRecipes) return []
+      const s = new Set()
+      Object.values(combinedRecipes).forEach((rec) => {
+        const ing = rec?.из || rec?.ingredients || {}
+        collectIngredientKeys(ing, s)
+      })
+      return Array.from(s).sort()
+    } catch (e) {
+      return []
+    }
+  }, [combinedRecipes])
+
+  const itemsForSelect = reverseMode ? sourceResources : items
+
+  // When in reverse mode, compute crafts that use the currently selected `item` as an ingredient
+  const availableCrafts = useMemo(() => {
+    // Normalizer for names to cover spacing/casing/unicode variants
+    function normalizeName(s) {
+      if (!s && s !== 0) return ''
+      return String(s).normalize('NFKC').trim().replace(/\s+/g, ' ').toLowerCase()
+    }
+
+    try {
+      if (!combinedRecipes || !item) return []
+      const target = normalizeName(item)
+      const results = []
+
+      // available amount of the target resource (from current selection)
+      const availableAmount = Number(amount) || 0
+      const resourceSaverPercent = getResourceSaverPercent(activePerks || [])
+
+      Object.entries(combinedRecipes).forEach(([name, recipe]) => {
+        const ing = recipe?.из || recipe?.ingredients || {}
+        // check top-level keys of ingredients
+        const keys = Object.keys(ing || {})
+        let found = false
+        let requiredPerCraft = null
+
+        for (const k of keys) {
+          if (normalizeName(k) === target) {
+            const val = ing[k]
+            requiredPerCraft = (typeof val === 'number') ? val : 1
+            found = true
+            break
+          }
+          // if value is object, check nested keys as fallback
+          const v = ing[k]
+          if (v && typeof v === 'object') {
+            const nestedKeys = Object.keys(v)
+            for (const nk of nestedKeys) {
+              if (normalizeName(nk) === target) {
+                const nestedVal = v[nk]
+                requiredPerCraft = (typeof nestedVal === 'number') ? nestedVal : 1
+                found = true
+                break
+              }
+            }
+            if (found) break
+          }
+        }
+
+        if (found) {
+          // apply Resource Saver: reduce required per craft by dividing by (1 + percent)
+          // (this keeps the same behavior as calculateAllResources)
+          const adjustedRequired = requiredPerCraft && resourceSaverPercent > 0 ? (requiredPerCraft / (1 + resourceSaverPercent)) : requiredPerCraft
+
+          // avoid zero or NaN
+          const finalRequired = adjustedRequired && adjustedRequired > 0 ? adjustedRequired : requiredPerCraft || 1
+
+          // compute how many crafts can be made from availableAmount
+          const craftable = finalRequired > 0 ? Math.floor(availableAmount / finalRequired) : 0
+
+          results.push({ name, outputQty: recipe?.amount || 1, requiredPerCraft, craftableCount: craftable })
+        }
+      })
+
+      // dedupe by name and sort alphabetically
+      const uniq = Array.from(new Map(results.map(r => [r.name, r])).values())
+      uniq.sort((a, b) => a.name.localeCompare(b.name))
+      return uniq
+    } catch (e) {
+      return []
+    }
+  }, [combinedRecipes, item, amount, activePerks])
+
   // Function to check if a resource can be crafted (has a recipe)
   const isCraftable = (resourceName) => {
     const recipe = combinedRecipes[resourceName];
@@ -209,14 +317,7 @@ export default function App() {
     }
   }
 
-  // Function to navigate to a specific item in the chain
-  const handleChainClick = (index) => {
-    hapticFeedback('light')
-    const targetItem = craftChain[index]
-    setItem(targetItem.name)
-    setAmount(targetItem.amount)
-    setCraftChain(prev => prev.slice(0, index + 1))
-  }
+  // Breadcrumb navigation removed
 
   // Function to load a craft from history
   const handleHistoryClick = (historyEntry) => {
@@ -267,21 +368,7 @@ export default function App() {
     }
   }
 
-  // Auto-scroll breadcrumbs to the end when chain changes
-  useEffect(() => {
-    if (craftChain.length > 1) {
-      const breadcrumbsContainer = document.querySelector('.breadcrumbs')
-      if (breadcrumbsContainer) {
-        // Small delay to ensure DOM is updated
-        setTimeout(() => {
-          breadcrumbsContainer.scrollTo({
-            left: breadcrumbsContainer.scrollWidth,
-            behavior: 'smooth'
-          })
-        }, 100)
-      }
-    }
-  }, [craftChain])
+  // Breadcrumb scrolling removed
 
   // Save state to localStorage when it changes
   useEffect(() => {
@@ -345,6 +432,23 @@ export default function App() {
     }
     // run only once on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Close mode dropdown on outside click or ESC
+  useEffect(() => {
+    function onDoc(e) {
+      if (!modeRef.current) return
+      if (!modeRef.current.contains(e.target)) setModeOpen(false)
+    }
+    function onKey(e) {
+      if (e.key === 'Escape') setModeOpen(false)
+    }
+    document.addEventListener('mousedown', onDoc)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDoc)
+      document.removeEventListener('keydown', onKey)
+    }
   }, [])
 
   useEffect(() => {
@@ -437,7 +541,6 @@ export default function App() {
     }
   }, [themeParams, isInTelegram])
 
-  const items = Object.keys(combinedRecipes)
   const togglePerk = (p) => {
     hapticFeedback('light')
     setActivePerks(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p])
@@ -545,8 +648,12 @@ export default function App() {
     setItem(selectedItem)
     setAmount(1)
     setIsItemSelectOpen(false)
+    // buildCraftChain was removed from recipeUtils; use a simple fallback chain
     setCraftChain([{ name: selectedItem, amount: 1 }])
   }
+
+  // Display chain for header: only previous recipe names (exclude current target)
+  // Header breadcrumb display removed
 
   // Organized perks by category
   // Organize perks into explicit categories so sidebar groups match feature sets
@@ -633,6 +740,12 @@ export default function App() {
   // refs for accessibility handling
   const sidebarRef = React.useRef(null)
   const menuBtnRef = React.useRef(null)
+  const modeRef = React.useRef(null)
+
+  // Helper to determine overlay (mobile) layout
+  const isOverlayNow = () => (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 899px)').matches)
+
+  // Breadcrumb logic removed
 
   // Manage inert/aria-hidden and focus when sidebar toggles to avoid hiding a focused element
   // Only apply inert/aria-hidden for overlay (mobile) layouts; desktop sidebar is sticky and must remain interactive
@@ -641,9 +754,9 @@ export default function App() {
     const menuBtn = menuBtnRef.current || document.querySelector('[aria-controls="perks-sidebar"]')
     if (!asideEl) return
 
-    const isOverlay = (typeof window !== 'undefined') && window.matchMedia && window.matchMedia('(max-width: 899px)').matches
+  const isOverlay = isOverlayNow()
 
-    if (!isOverlay) {
+  if (!isOverlay) {
       // Desktop: ensure sidebar is interactive and visible to AT
       try { asideEl.inert = false } catch (e) {}
       asideEl.removeAttribute('aria-hidden')
@@ -669,7 +782,7 @@ export default function App() {
   }, [sidebarOpen])
 
   return (
-    <div className="app layout">
+  <div className="app layout">
       <aside id="perks-sidebar" ref={sidebarRef} className={"sidebar glass" + (sidebarOpen ? ' open' : '')}>
         <div className="side-head">
           <div className="sidebar-tabs">
@@ -1013,11 +1126,7 @@ export default function App() {
       </aside>
 
       <div className="main">
-        <header 
-          className={"glass header" + (headerVisible ? '' : ' hidden')}
-          onClick={() => setSidebarOpen(true)}
-          style={{ cursor: 'pointer' }}
-        >
+  <header className={"glass header" + (headerVisible ? '' : ' hidden')}>
           <button
             className="icon menu"
             ref={menuBtnRef}
@@ -1031,29 +1140,57 @@ export default function App() {
           >☰</button>
           
           <div className="craft-chain" onClick={(e) => e.stopPropagation()}>
-            {craftChain.length === 1 ? (
-              <div className="header-title">
-                <h1>Craft</h1>
-                {user && isInTelegram && (
-                  <span className="user-greeting">Hi, {user.first_name}! 👋</span>
-                )}
-              </div>
-            ) : (
-              <div className="breadcrumbs">
-                {craftChain.map((chainItem, index) => (
-                  <span key={`${chainItem.name}-${index}`}>
-                    <button 
-                      className="breadcrumb-item" 
-                      onClick={() => handleChainClick(index)}
+            <div className="header-title">
+              <h1>Craft</h1>
+              {user && isInTelegram && (
+                <span className="user-greeting">Hi, {user.first_name}! 👋</span>
+              )}
+            </div>
+          </div>
+          {/* Header right controls: Mode button */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 8, width: '100%', justifyContent: 'flex-end' }}>
+            <div style={{ position: 'relative' }} ref={modeRef}>
+              <button
+                className="chip"
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setModeOpen(!modeOpen) }}
+                aria-expanded={modeOpen}
+              >
+                mode
+              </button>
+              {modeOpen && (
+                <div className="mode-dropdown glass" style={{ position: 'absolute', right: 0, marginTop: 8, minWidth: 160, zIndex: 40 }}>
+                  {!reverseMode && (
+                    <button
+                      className={`mode-option`}
                       type="button"
+                      onClick={() => { setReverseMode(true); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
                     >
-                      {chainItem.name}
+                      Base to Craft
                     </button>
-                    {index < craftChain.length - 1 && <span className="breadcrumb-separator">→</span>}
-                  </span>
-                ))}
-              </div>
-            )}
+                  )}
+                  {reverseMode && (
+                    <>
+                      <button
+                        className="mode-option"
+                        type="button"
+                        onClick={() => { setReverseMode(false); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
+                      >
+                        Craft to base
+                      </button>
+                      <button
+                        className={`mode-option ${!reverseMode ? 'active' : ''}`}
+                        type="button"
+                        onClick={() => { setReverseMode(false); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
+                      >
+                        INACTIVE
+                      </button>
+                    </>
+                  )}
+                  {/* single Location button is rendered above (inside reverseMode block or as default) */}
+                </div>
+              )}
+            </div>
           </div>
         </header>
 
@@ -1129,7 +1266,7 @@ export default function App() {
               >
                 <h2 id="item-select-title" className="item-select-title">Select an Item</h2>
                 <div className="item-select-list">
-                  {items.map(i => (
+                  {(itemsForSelect || []).map(i => (
                     <button 
                       key={i} 
                       className={item === i ? 'active' : ''}
@@ -1239,7 +1376,7 @@ export default function App() {
         </AnimatePresence>
 
         <AnimatePresence initial={false} mode="popLayout">
-          {sidebarOpen && (
+          {sidebarOpen && isOverlayNow() && (
             <motion.button
               className="scrim"
               aria-label="Close overlay"
@@ -1249,86 +1386,157 @@ export default function App() {
               exit={{ opacity: 0 }}
             />
           )}
-          {result && (
-            <motion.div
-              key={`${item}-${amount}-${activePerks.join(',')}`}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
-              className="stack"
-            >
-              {Object.keys(result.filteredResources).length > 0 && (
-                <motion.section className="glass card">
-                  <h2>Resources</h2>
-                  <ul className="list">
-                    {(showAllBase ? Object.entries(result.filteredResources) : Object.entries(result.filteredResources).slice(0, 8)).map(([k, v]) => {
-                      const mailableItems = ['Acorn', 'Apple', 'Apple Cider', 'Aquamarine', 'Arnold Palmer', 'Arrowhead', 'Axe', 'Black Powder', 'Blue Dye', 'Blue Feathers', 'Bone', 'Bouquet of Flowers', 'Bucket', 'Carbon Sphere', 'Caterpillar', 'Coal', 'Eggs', 'Explosive', 'Feathers', 'Fern Leaf', 'Fire Ant', 'Fishing Net', 'Fruit Punch', 'Glass Orb', 'Grapes', 'Green Dye', 'Green Parchment', 'Grubs', 'Hammer', 'Heart Container', 'Hide', 'Horn', 'Iced Tea', 'Iron Cup', 'Ladder', 'Large Net', 'Leather', 'Leather Diary', 'Lemon', 'Lemonade', 'Milk', 'Minnows', 'Mushroom', 'Mushroom Paste', 'Oak', 'Old Boot', 'Orange', 'Orange Juice', 'Peach', 'Peach Juice', 'Potato', 'Purple Dye', 'Purple Flower', 'Purple Parchment', 'Red Dye', 'Rope', 'Scrap Metal', 'Scrap Wire', 'Shimmer Stone', 'Shovel', 'Slimestone', 'Spider', 'Stone', 'Twine', 'Unpolished Shimmer Stone', 'Wood', 'Wooden Box', 'Wooden Button', 'Wooden Table', 'Worms', 'Yarn']
-                      const isMailable = mailableItems.includes(k)
-                      
-                      return (
-                        <motion.li 
-                          layout 
-                          key={k}
-                          className="resource-item"
+          <motion.div
+            key={`${item}-${amount}-${activePerks.join(',')}`}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="stack"
+          >
+            { !reverseMode && result && Object.keys(result.filteredResources).length > 0 && (
+              <motion.section className="glass card">
+                <h2>Resources</h2>
+                <ul className="list">
+                  {(showAllBase ? Object.entries(result.filteredResources) : Object.entries(result.filteredResources).slice(0, 8)).map(([k, v]) => {
+                    const mailableItems = ['Acorn', 'Apple', 'Apple Cider', 'Aquamarine', 'Arnold Palmer', 'Arrowhead', 'Axe', 'Black Powder', 'Blue Dye', 'Blue Feathers', 'Bone', 'Bouquet of Flowers', 'Bucket', 'Carbon Sphere', 'Caterpillar', 'Coal', 'Eggs', 'Explosive', 'Feathers', 'Fern Leaf', 'Fire Ant', 'Fishing Net', 'Fruit Punch', 'Glass Orb', 'Grapes', 'Green Dye', 'Green Parchment', 'Grubs', 'Hammer', 'Heart Container', 'Hide', 'Horn', 'Iced Tea', 'Iron Cup', 'Ladder', 'Large Net', 'Leather', 'Leather Diary', 'Lemon', 'Lemonade', 'Milk', 'Minnows', 'Mushroom', 'Mushroom Paste', 'Oak', 'Old Boot', 'Orange', 'Orange Juice', 'Peach', 'Peach Juice', 'Potato', 'Purple Dye', 'Purple Flower', 'Purple Parchment', 'Red Dye', 'Rope', 'Scrap Metal', 'Scrap Wire', 'Shimmer Stone', 'Shovel', 'Slimestone', 'Spider', 'Stone', 'Twine', 'Unpolished Shimmer Stone', 'Wood', 'Wooden Box', 'Wooden Button', 'Wooden Table', 'Worms', 'Yarn']
+                    const isMailable = mailableItems.includes(k)
+                    
+                    return (
+                      <motion.li 
+                        layout 
+                        key={k}
+                        className="resource-item"
+                      >
+                        <div 
+                          className={`resource-content ${isCraftable(k) ? 'clickable' : ''}`}
+                          onClick={() => isCraftable(k) && handleResourceClick(k, v)}
+                          style={isCraftable(k) ? { cursor: 'pointer' } : {}}
+                          title={isCraftable(k) ? `Click to craft ${k}` : undefined}
                         >
-                          <div 
-                            className={`resource-content ${isCraftable(k) ? 'clickable' : ''}`}
-                            onClick={() => isCraftable(k) && handleResourceClick(k, v)}
-                            style={isCraftable(k) ? { cursor: 'pointer' } : {}}
-                            title={isCraftable(k) ? `Click to craft ${k}` : undefined}
+                          <span className="k">
+                            {k}
+                            {isCraftable(k) && (
+                              <span className="craft-indicator">
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                  <path 
+                                    d="M2 8L6 4L10 8" 
+                                    stroke="currentColor" 
+                                    strokeWidth="1.5" 
+                                    strokeLinecap="round" 
+                                    strokeLinejoin="round"
+                                  />
+                                </svg>
+                              </span>
+                            )}
+                          </span>
+                          <span className="v">{formatNumber(v)}</span>
+                        </div>
+                        {pinnedEnabled && (
+                          <button
+                            className={`pin-btn ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'success' : ''}`}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              addToPinned(k, v, craftChain.length > 0 ? craftChain[0].name : item)
+                            }}
+                            type="button"
+                            title={`Pin ${k} from ${item}`}
                           >
-                            <span className="k">
-                              {k}
-                              {isCraftable(k) && (
-                                <span className="craft-indicator">
-                                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                    <path 
-                                      d="M2 8L6 4L10 8" 
-                                      stroke="currentColor" 
-                                      strokeWidth="1.5" 
-                                      strokeLinecap="round" 
-                                      strokeLinejoin="round"
-                                    />
-                                  </svg>
-                                </span>
-                              )}
-                            </span>
-                            <span className="v">{formatNumber(v)}</span>
-                          </div>
-                          {pinnedEnabled && (
-                            <button
-                              className={`pin-btn ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'success' : ''}`}
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                addToPinned(k, v, craftChain.length > 0 ? craftChain[0].name : item)
-                              }}
-                              type="button"
-                              title={`Pin ${k} from ${item}`}
-                            >
-                              <div className="pin-icon">
-                                <div 
-                                  className={`pin-line pin-line-horizontal ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'checked' : ''}`}
-                                ></div>
-                                <div 
-                                  className={`pin-line pin-line-vertical ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'checked' : ''}`}
-                                ></div>
-                              </div>
-                            </button>
-                          )}
-                        </motion.li>
-                      )
-                    })}
-                  </ul>
-                  {Object.keys(result.filteredResources).length > 8 && (
-                    <button className="link" onClick={() => setShowAllBase(s => !s)}>
-                      {showAllBase ? 'Show less' : `Show all (${Object.keys(result.filteredResources).length})`}
-                    </button>
-                  )}
-                </motion.section>
-              )}
-            </motion.div>
-          )}
+                            <div className="pin-icon">
+                              <div 
+                                className={`pin-line pin-line-horizontal ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'checked' : ''}`}
+                              ></div>
+                              <div 
+                                className={`pin-line pin-line-vertical ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'checked' : ''}`}
+                              ></div>
+                            </div>
+                          </button>
+                        )}
+                      </motion.li>
+                    )
+                  })}
+                </ul>
+                {Object.keys(result.filteredResources).length > 8 && (
+                  <button className="link" onClick={() => setShowAllBase(s => !s)}>
+                    {showAllBase ? 'Show less' : `Show all (${Object.keys(result.filteredResources).length})`}
+                  </button>
+                )}
+              </motion.section>
+            )}
+
+            { reverseMode && availableCrafts.length > 0 && (
+              <motion.section className="glass card">
+                <h2>Crafts</h2>
+                <ul className="list">
+                  {availableCrafts.map(c => {
+                    const further = findRecipesThatUse(c.name) || []
+                    const canNavigate = further.length > 0
+                    return (
+                      <motion.li layout key={c.name} className="resource-item">
+                        <div 
+                          className={`resource-content ${canNavigate ? 'clickable' : ''}`}
+                          onClick={() => {
+                            if (!canNavigate) return
+                            // Add current navigation to craft history (same behavior as original mode)
+                            if (historyEnabled) {
+                              const historyEntry = {
+                                id: Date.now(),
+                                timestamp: new Date().toISOString(),
+                                fromItem: item,
+                                fromAmount: amount,
+                                toItem: c.name,
+                                toAmount: c.outputQty || 1,
+                                chain: [...craftChain]
+                              }
+                              setCraftHistory(prev => [historyEntry, ...prev.slice(0, historyLimit - 1)])
+                            }
+
+                            // Navigate to the craft (select the crafted item)
+                            setItem(c.name)
+                            setAmount(c.outputQty || 1)
+                            // Append crafted item to existing chain (preserve navigation history)
+                            setCraftChain(prev => {
+                              // If prev already ends with the crafted item, keep as-is
+                              if (prev && prev.length > 0 && String(prev[prev.length - 1].name) === String(c.name)) return prev
+                              return [...prev, { name: c.name, amount: c.outputQty || 1 }]
+                            })
+                          }}
+                          style={canNavigate ? { cursor: 'pointer' } : undefined}
+                          title={canNavigate ? `Open recipe for ${c.name}` : undefined}
+                        >
+                          <span className="k">
+                            {c.name}
+                            {canNavigate && (
+                              <span className="craft-indicator">
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                  <path d="M2 8L6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                              </span>
+                            )}
+                          </span>
+                          <span className="v">{formatNumber(c.craftableCount != null ? c.craftableCount : 0)}</span>
+                        </div>
+
+                        {pinnedEnabled && (
+                          <button
+                            className={`pin-btn ${recentlyAddedItems.has(`${c.name}_${c.outputQty}_${item}`) ? 'success' : ''}`}
+                            onClick={(e) => { e.stopPropagation(); addToPinned(c.name, c.outputQty || 1, item) }}
+                            type="button"
+                            title={`Pin ${c.name}`}
+                          >
+                            <div className="pin-icon">
+                              <div className={`pin-line pin-line-horizontal ${recentlyAddedItems.has(`${c.name}_${c.outputQty}_${item}`) ? 'checked' : ''}`}></div>
+                              <div className={`pin-line pin-line-vertical ${recentlyAddedItems.has(`${c.name}_${c.outputQty}_${item}`) ? 'checked' : ''}`}></div>
+                            </div>
+                          </button>
+                        )}
+                      </motion.li>
+                    )
+                  })}
+                </ul>
+              </motion.section>
+            )}
+          </motion.div>
         </AnimatePresence>
 
         <footer className="spacer" />
@@ -1404,7 +1612,9 @@ export default function App() {
           onClose={handleBugReportClose}
           onSubmit={handleBugReportSubmit}
         />
+  {/* debug overlay removed */}
       </div>
     </div>
   )
 }
+

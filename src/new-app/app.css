@@ -59,6 +59,47 @@ body {
 	position: relative;
 }
 
+/* Preview buttons panel (visible placeholders for planned features) */
+.preview-chip {
+  background: color-mix(in oklab, var(--accent) 28%, transparent);
+  color: #001;
+  border: 1px solid color-mix(in oklab, var(--accent) 50%, transparent);
+  border-radius: 999px;
+  padding: 6px 8px;
+  min-width: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  opacity: 0.95;
+}
+.preview-chip[disabled] {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.mode-dropdown {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  background: color-mix(in oklab, #000 30%, var(--glass-bg));
+  border: 1px solid var(--glass-stroke);
+}
+.mode-option {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.mode-option:hover { background: color-mix(in oklab, #ffffff 4%, transparent); }
+
 .glass {
 	background: var(--glass-bg);
 	backdrop-filter: blur(var(--blur)) saturate(1.1);

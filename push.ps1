@@ -7,7 +7,9 @@ param(
     [string]$Message,
 
     [Parameter(Mandatory=$false, Position=1)]
-    [string]$Branch
+    [string]$Branch,
+    [Parameter(Mandatory=$false, Position=2)]
+    [string]$Deploy
 )
 
 Set-StrictMode -Version Latest
@@ -48,4 +50,32 @@ $push = git push origin $Branch 2>&1 | Out-String
 if ($LASTEXITCODE -ne 0) { Write-ErrAndExit "Ошибка: git push завершился с ошибкой.`n$push" }
 
 Write-Host "Push успешен." -ForegroundColor Green
+
+# Deploy to Vercel by default. Pass third argument 'no' or 'false' to skip.
+if ($Deploy -and ($Deploy.ToLower() -in @('no','false','skip'))) {
+    Write-Host "Vercel deployment пропущен по флагу." -ForegroundColor Yellow
+    exit 0
+}
+
+Write-Host "Попытка деплоя на Vercel..." -ForegroundColor Cyan
+
+if (Get-Command vercel -ErrorAction SilentlyContinue) {
+    $out = & vercel --prod --confirm 2>&1 | Out-String
+    $code = $LASTEXITCODE
+} elseif (Get-Command npx -ErrorAction SilentlyContinue) {
+    $out = & npx --yes vercel --prod --confirm 2>&1 | Out-String
+    $code = $LASTEXITCODE
+} else {
+    Write-Host "Vercel CLI не найден. Установите его (npm i -g vercel) либо используйте npx." -ForegroundColor Yellow
+    Write-Host "Если нужно, запустите вручную: vercel --prod --confirm" -ForegroundColor Yellow
+    exit 0
+}
+
+if ($code -ne 0) {
+    Write-ErrAndExit "Ошибка при деплое на Vercel.`n$out"
+} else {
+    Write-Host "Деплой на Vercel завершён." -ForegroundColor Green
+    Write-Host $out
+}
+
 exit 0

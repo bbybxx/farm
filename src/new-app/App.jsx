@@ -1508,10 +1508,24 @@ export default function App() {
                             if (perCider && budget > 0) {
                               numericValue = budget * perCider
                             } else {
-                              // fallback to raw dropsPerCider
+                              // fallback to raw dropsPerCider from variants
                               const raw = locObj['rq0cs0'] && locObj['rq0cs0'][it]
                               const rawVal = raw && (raw.dropsPerCider || raw)
                               if (rawVal && budget > 0) numericValue = budget * rawVal
+
+                              // additional fallback: compute best dropsPerCider across all variants for this location
+                              if ((numericValue == null || numericValue === 0) && budget > 0) {
+                                let bestDrops = 0
+                                Object.keys(locObj).forEach(vk => {
+                                  const part = locObj[vk]
+                                  if (!part) return
+                                  const entry = part[it]
+                                  if (!entry) return
+                                  const val = (typeof entry === 'object' && (entry.dropsPerCider || entry.cidersPerDrop)) ? (entry.dropsPerCider || (entry.cidersPerDrop ? 1 / entry.cidersPerDrop : 0)) : (typeof entry === 'number' ? entry : 0)
+                                  if (val && val > bestDrops) bestDrops = val
+                                })
+                                if (bestDrops > 0) numericValue = budget * bestDrops
+                              }
                             }
                           } else if (exploringMode === 'Arnold Palmer') {
                             const perAP = perUnit && perUnit.mode === 'AP' && typeof perUnit.itemsPerAP === 'number' ? perUnit.itemsPerAP : null
@@ -1522,7 +1536,20 @@ export default function App() {
                         } catch (e) {
                           numericValue = null
                         }
-                        const display = numericValue != null ? roundToTwo(numericValue) : '—'
+                        let display = numericValue != null ? roundToTwo(numericValue) : null
+                        // fallback to est if computePinnedEstimate returned useful totals
+                        if ((display === null || display === undefined || display === '') && est) {
+                          if (est.mode === 'AC' && typeof est.effectiveDropsPerCider === 'number') {
+                            display = roundToTwo((Number(amount) || 0) * est.effectiveDropsPerCider)
+                          } else if (est.mode === 'AP' && typeof est.itemsPerAP === 'number') {
+                            display = roundToTwo((Number(amount) || 0) * est.itemsPerAP)
+                          } else if (est.mode === 'EXP' && typeof est.explores === 'number') {
+                            // show explores-derived estimate as 1 / explores if possible
+                            const unitCost = est.explores
+                            if (unitCost && unitCost > 0) display = roundToTwo((Number(amount) || 0) / unitCost)
+                          }
+                        }
+                        if (display === null || display === undefined) display = '—'
                       // clickable when item itself has a recipe OR there exist recipes that USE this drop as an ingredient
                       const craftable = isCraftable(it) || ((findRecipesThatUse(it) || []).length > 0)
                       return (

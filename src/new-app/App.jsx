@@ -92,9 +92,25 @@ export default function App() {
   const [item, setItem] = useState(() => loadFromStorage('craftCalculator_item', 'Board'))
   const [amount, setAmount] = useState(() => loadFromStorage('craftCalculator_amount', 1))
   const [activePerks, setActivePerks] = useState(() => loadFromStorage('craftCalculator_activePerks', []));
-  const [exploringMode, setExploringMode] = useState(() => loadFromStorage('craftCalculator_exploringMode', 'Apple Cider'));
+  const [exploringMode, setExploringMode] = useState(() => {
+    const stored = loadFromStorage('craftCalculator_exploringMode', null)
+    if (!stored) return 'Apple Cider'
+    // map legacy 'Manually' to 'Apple Cider' to preserve UI after removal
+    if (stored === 'Manually') return 'Apple Cider'
+    return stored
+  })
 
+  // persist exploringMode; also fix legacy saved values on first mount
   useEffect(() => {
+    // if legacy value still present in storage, overwrite it with the mapped value
+    try {
+      const raw = loadFromStorage('craftCalculator_exploringMode', null)
+      if (raw === 'Manually') {
+        saveToStorage('craftCalculator_exploringMode', exploringMode)
+      }
+    } catch (e) {
+      // ignore
+    }
     saveToStorage('craftCalculator_exploringMode', exploringMode);
   }, [exploringMode]);
 

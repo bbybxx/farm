@@ -410,6 +410,19 @@ export default function App() {
     saveToStorage('craftCalculator_craftChain', craftChain)
   }, [craftChain])
 
+  // Auto-scroll breadcrumbs to the rightmost (latest) node when chain updates
+  useEffect(() => {
+    try {
+      if (breadcrumbsRef && breadcrumbsRef.current) {
+        const el = breadcrumbsRef.current
+        // scroll to far right smoothly
+        el.scrollTo({ left: el.scrollWidth, behavior: 'smooth' })
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, [craftChain])
+
   useEffect(() => {
     saveToStorage('craftCalculator_craftHistory', craftHistory)
   }, [craftHistory])
@@ -763,6 +776,7 @@ export default function App() {
   // refs for accessibility handling
   const sidebarRef = React.useRef(null)
   const menuBtnRef = React.useRef(null)
+  const breadcrumbsRef = React.useRef(null)
   const modeRef = React.useRef(null)
 
   // Helper to determine overlay (mobile) layout
@@ -1154,15 +1168,57 @@ export default function App() {
           >☰</button>
           
           <div className="craft-chain" onClick={(e) => e.stopPropagation()}>
-            <div className="header-title">
-              <h1>Craft</h1>
-              {user && isInTelegram && (
-                <span className="user-greeting">Hi, {user.first_name}! 👋</span>
-              )}
-            </div>
+            {/* Show breadcrumbs only when chain has more than one node; otherwise show current mode */}
+            {craftChain && craftChain.length > 1 ? (
+              <nav ref={breadcrumbsRef} className="breadcrumbs" aria-label="Craft chain">
+                {craftChain.slice(0, Math.max(0, craftChain.length - 1)).map((node, idx) => {
+                  const displayName = (typeof node === 'string') ? node : (node && node.name) || ''
+                  return (
+                    <span key={idx}>
+                      <button
+                        type="button"
+                        className="breadcrumb-item"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          const newChain = craftChain.slice(0, idx + 1)
+                          setCraftChain(newChain)
+                          const target = newChain[idx]
+                          // If this breadcrumb represents a location node, switch back into Locations mode
+                          if (target && typeof target === 'object' && target.isLocation) {
+                            setLocationsMode(true)
+                            setReverseMode(false)
+                            setSelectedLocation(target.name)
+                            // restore amount user had while viewing this location, if saved
+                            const restored = (typeof target.savedAmount !== 'undefined' && target.savedAmount !== null) ? target.savedAmount : 1
+                            setItem('Board')
+                            setAmount(restored)
+                          } else {
+                            const targetName = (typeof target === 'string') ? target : (target && target.name) || ''
+                            const targetAmt = (typeof target === 'object' && target && target.amount) ? target.amount : 1
+                            if (targetName) setItem(targetName)
+                            setAmount(targetAmt)
+                          }
+                        }}
+                      >
+                        {displayName}
+                      </button>
+                      <span className="breadcrumb-separator">›</span>
+                    </span>
+                  )
+                })}
+
+                {craftChain.length > 0 && (
+                  <span className="breadcrumb-item current">{(typeof craftChain[craftChain.length - 1] === 'string') ? craftChain[craftChain.length - 1] : (craftChain[craftChain.length - 1] && craftChain[craftChain.length - 1].name)}</span>
+                )}
+              </nav>
+            ) : (
+              <div className="breadcrumb-mode" aria-label="Mode">
+                {locationsMode ? 'Locations' : (reverseMode ? 'Base to Craft' : 'Craft to Base')}
+              </div>
+            )}
           </div>
           {/* Header right controls: Mode button */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 8, width: '100%', justifyContent: 'flex-end' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 'auto', marginRight: 0 }}>
             <div style={{ position: 'relative' }} ref={modeRef}>
               <button
                 className="chip"
@@ -1571,10 +1627,15 @@ export default function App() {
                               // choose reasonable amount: use computed numericValue (budget result) rounded down, fallback to 1
                               const parsed = numericValue != null && !Number.isNaN(Number(numericValue)) ? Number(numericValue) : null
                               const targetAmount = parsed && parsed >= 1 ? Math.max(1, Math.floor(parsed)) : 1
+                              // capture current amount (what user had in Locations view) so we can restore it if user returns
+                              const savedAmountForLocation = amount
+                              // include the selected location as the first node so breadcrumbs show source and remember the prior amount
+                              const locNode = selectedLocation ? { name: selectedLocation, isLocation: true, savedAmount: savedAmountForLocation } : null
+                              const baseNode = { name: it, amount: targetAmount }
+                              setCraftChain(locNode ? [locNode, baseNode] : [baseNode])
+                              // navigate to the craft target
                               setItem(it)
                               setAmount(targetAmount)
-                              // reset craft chain to start from this base selection
-                              setCraftChain([{ name: it, amount: targetAmount }])
                             }}
                             style={craftable ? { cursor: 'pointer' } : undefined}
                             title={craftable ? `Open crafts that use ${it}` : undefined}

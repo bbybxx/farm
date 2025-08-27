@@ -152,13 +152,14 @@ body {
 .breadcrumbs {
 	display: flex;
 	align-items: center;
-	gap: 6px;
+  gap: 6px;
 	overflow-x: auto;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 	min-height: 24px;
 	scroll-behavior: smooth;
-	padding: 0 2px;
+  padding: 0 2px;
+  width: 100%;
 }
 
 .breadcrumbs::-webkit-scrollbar {
@@ -205,6 +206,10 @@ body {
 	display: inline-flex;
 	align-items: center;
 	min-height: 24px;
+}
+
+.breadcrumbs .current {
+  margin-left: 8px;
 }
 
 .breadcrumb-item:hover {

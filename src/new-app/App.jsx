@@ -1307,7 +1307,7 @@ export default function App() {
 
         <section className="glass controls">
           <label className="field">
-            <span className="label">Item</span>
+            <span className="label">{locationsMode ? 'Location' : 'Item'}</span>
             { !locationsMode ? (
               <button className="input" onClick={() => setIsItemSelectOpen(true)} type="button">
                 <ItemDisplay itemName={item} itemsData={itemsAPI} />
@@ -1316,8 +1316,8 @@ export default function App() {
               <button className="input" onClick={() => setIsItemSelectOpen(true)} type="button">{selectedLocation || 'Select location'}</button>
             ) }
           </label>
-          <label className="field">
-            <span className="label">Amount</span>
+            <label className="field">
+            <span className="label">{locationsMode ? (exploringMode === 'Apple Cider' ? 'Apple Cider' : 'Arnold Palmer') : 'Amount'}</span>
             <input 
               className="input" 
               type="text" 

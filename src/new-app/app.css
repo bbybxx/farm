@@ -300,6 +300,13 @@ body {
   gap: 12px;
 }
 
+/* Panel columns for desktop: show three columns */
+.panels-3col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
 .card.compact {
   overflow: hidden;
   flex-shrink: 0;

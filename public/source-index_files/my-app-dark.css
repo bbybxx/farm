@@ -1,4 +1,5 @@
-@import url("event-beach-ball.css");
+/* event-beach-ball.css missing in archive; import absolute safe fallback to avoid Vite ENOENT */
+@import url("/source-index_files/event-beach-ball.css");
 
 .view-left {
     border-right: 1px solid #333333;

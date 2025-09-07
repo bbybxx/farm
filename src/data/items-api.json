@@ -2133,5 +2133,4471 @@
     "image": "/img/items/uflarite.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Bone Broth": {
+    "name": "Bone Broth",
+    "type": "item",
+    "image": "/img/items/bonebroth.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Breakfast Boost": {
+    "name": "Breakfast Boost",
+    "type": "item",
+    "image": "/img/items/eggsandwich.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Lemon Cream Pie": {
+    "name": "Lemon Cream Pie",
+    "type": "item",
+    "image": "/img/items/lemoncreampie.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Hickory Omelette": {
+    "name": "Hickory Omelette",
+    "type": "item",
+    "image": "/img/items/omelet1.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cabbage Stew": {
+    "name": "Cabbage Stew",
+    "type": "item",
+    "image": "/img/items/greensoup.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Neigh": {
+    "name": "Neigh",
+    "type": "item",
+    "image": "/img/items/vegsoup4.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Shrimp-a-Plenty": {
+    "name": "Shrimp-a-Plenty",
+    "type": "item",
+    "image": "/img/items/shrimpgreensmix.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cat's Meow": {
+    "name": "Cat's Meow",
+    "type": "item",
+    "image": "/img/items/fishessensestew.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Quandary Chowder": {
+    "name": "Quandary Chowder",
+    "type": "item",
+    "image": "/img/items/corngreens.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sea Pincher Special": {
+    "name": "Sea Pincher Special",
+    "type": "item",
+    "image": "/img/items/crabclawsoup.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Onion Soup": {
+    "name": "Onion Soup",
+    "type": "item",
+    "image": "/img/items/onionsoup.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Festive Eggnog": {
+    "name": "Festive Eggnog",
+    "type": "item",
+    "image": "/img/items/eggnog.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Lovely Cookies": {
+    "name": "Lovely Cookies",
+    "type": "item",
+    "image": "/img/items/lcookies.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Happy Cookies": {
+    "name": "Happy Cookies",
+    "type": "item",
+    "image": "/img/items/ccookies.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Lemon Seltzer": {
+    "name": "Lemon Seltzer",
+    "type": "item",
+    "image": "/img/items/lemonseltzer.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mushroom Stew": {
+    "name": "Mushroom Stew",
+    "type": "item",
+    "image": "/img/items/mushroomstew.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Spooky Cookies": {
+    "name": "Spooky Cookies",
+    "type": "item",
+    "image": "/img/items/854.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Spooky Pie": {
+    "name": "Spooky Pie",
+    "type": "item",
+    "image": "/img/items/923.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Over The Moon": {
+    "name": "Over The Moon",
+    "type": "item",
+    "image": "/img/items/leekmeatcorn.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Supply Voucher": {
+    "name": "Supply Voucher",
+    "type": "item",
+    "image": "/img/items/voucher.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "MIAB": {
+    "name": "MIAB",
+    "type": "item",
+    "image": "/img/items/7756.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "3-leaf Clover": {
+    "name": "3-leaf Clover",
+    "type": "item",
+    "image": "/img/items/8250.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "4-leaf Clover": {
+    "name": "4-leaf Clover",
+    "type": "item",
+    "image": "/img/items/fourleaf.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Dice": {
+    "name": "Dice",
+    "type": "item",
+    "image": "/img/items/4848.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Snail": {
+    "name": "Snail",
+    "type": "item",
+    "image": "/img/items/snail.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pine Cone": {
+    "name": "Pine Cone",
+    "type": "item",
+    "image": "/img/items/pinecone2.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Herbs": {
+    "name": "Herbs",
+    "type": "item",
+    "image": "/img/items/5686.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Onyx Scorpion": {
+    "name": "Onyx Scorpion",
+    "type": "item",
+    "image": "/img/items/4514b.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Strange Letter": {
+    "name": "Strange Letter",
+    "type": "item",
+    "image": "/img/items/7852.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Steak": {
+    "name": "Steak",
+    "type": "item",
+    "image": "/img/items/steak.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Small Key": {
+    "name": "Small Key",
+    "type": "item",
+    "image": "/img/items/basickey.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bird Egg": {
+    "name": "Bird Egg",
+    "type": "item",
+    "image": "/img/items/6067.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Feed": {
+    "name": "Feed",
+    "type": "item",
+    "image": "/img/items/8299.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Flour": {
+    "name": "Flour",
+    "type": "item",
+    "image": "/img/items/5763.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Treasure Key": {
+    "name": "Treasure Key",
+    "type": "item",
+    "image": "/img/items/7148.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frog": {
+    "name": "Frog",
+    "type": "item",
+    "image": "/img/items/frog.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Horned Beetle": {
+    "name": "Horned Beetle",
+    "type": "item",
+    "image": "/img/items/hbeetle.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Skeleton Key": {
+    "name": "Skeleton Key",
+    "type": "item",
+    "image": "/img/items/skelkey.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cheese": {
+    "name": "Cheese",
+    "type": "item",
+    "image": "/img/items/8279.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Dragonfly": {
+    "name": "Dragonfly",
+    "type": "item",
+    "image": "/img/items/fishing_64_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Candy": {
+    "name": "Candy",
+    "type": "item",
+    "image": "/img/items/candy_t_09.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Beary Squishies": {
+    "name": "Beary Squishies",
+    "type": "item",
+    "image": "/img/items/squishybears.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Strawberry Good Goods": {
+    "name": "Strawberry Good Goods",
+    "type": "item",
+    "image": "/img/items/strawberrycandy.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Lollipop": {
+    "name": "Lollipop",
+    "type": "item",
+    "image": "/img/items/candy_t_08.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Taffy": {
+    "name": "Taffy",
+    "type": "item",
+    "image": "/img/items/candy_t_11.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "B for Buddies": {
+    "name": "B for Buddies",
+    "type": "item",
+    "image": "/img/items/Buddiescandy.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Candy Cane": {
+    "name": "Candy Cane",
+    "type": "item",
+    "image": "/img/items/cr_t_05.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Candy Roll": {
+    "name": "Candy Roll",
+    "type": "item",
+    "image": "/img/items/14_sm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Square Key": {
+    "name": "Square Key",
+    "type": "item",
+    "image": "/img/items/7179.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sea Dragon": {
+    "name": "Sea Dragon",
+    "type": "item",
+    "image": "/img/items/seadragon.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Wooden Mask": {
+    "name": "Wooden Mask",
+    "type": "item",
+    "image": "/img/items/4880.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Monster Skull": {
+    "name": "Monster Skull",
+    "type": "item",
+    "image": "/img/items/8617.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Piñata Whop Stick": {
+    "name": "Piñata Whop Stick",
+    "type": "item",
+    "image": "/img/items/pinata_stick.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bacon": {
+    "name": "Bacon",
+    "type": "item",
+    "image": "/img/items/bacon.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Soap": {
+    "name": "Soap",
+    "type": "item",
+    "image": "/img/items/soap_r.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Ancient Coin": {
+    "name": "Ancient Coin",
+    "type": "item",
+    "image": "/img/items/6019.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cyclops Spider": {
+    "name": "Cyclops Spider",
+    "type": "item",
+    "image": "/img/items/4080.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Snowball": {
+    "name": "Snowball",
+    "type": "item",
+    "image": "/img/items/cr_t_07.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Grasshopper": {
+    "name": "Grasshopper",
+    "type": "item",
+    "image": "/img/items/3315.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Glass Eyes": {
+    "name": "Glass Eyes",
+    "type": "item",
+    "image": "/img/items/eyes_t_01.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pirate Bandana": {
+    "name": "Pirate Bandana",
+    "type": "item",
+    "image": "/img/items/4903.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Shiny Beetle": {
+    "name": "Shiny Beetle",
+    "type": "item",
+    "image": "/img/items/beetle.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Giant Centipede": {
+    "name": "Giant Centipede",
+    "type": "item",
+    "image": "/img/items/giantcent.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Eye Patch": {
+    "name": "Eye Patch",
+    "type": "item",
+    "image": "/img/items/4920.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pirate Flag": {
+    "name": "Pirate Flag",
+    "type": "item",
+    "image": "/img/items/4924.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gouda": {
+    "name": "Gouda",
+    "type": "item",
+    "image": "/img/items/4601.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Crab Claw": {
+    "name": "Crab Claw",
+    "type": "item",
+    "image": "/img/items/crabclaw.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mittens": {
+    "name": "Mittens",
+    "type": "item",
+    "image": "/img/items/15_sm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Red Berries": {
+    "name": "Red Berries",
+    "type": "item",
+    "image": "/img/items/ForestIcons_46_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Feed": {
+    "name": "Gold Feed",
+    "type": "item",
+    "image": "/img/items/goldfeed.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Ruby Scorpion": {
+    "name": "Ruby Scorpion",
+    "type": "item",
+    "image": "/img/items/4514.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Valentines Card": {
+    "name": "Valentines Card",
+    "type": "item",
+    "image": "/img/items/card_valentines.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Popcorn": {
+    "name": "Popcorn",
+    "type": "item",
+    "image": "/img/items/popcorn.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Plum Ore": {
+    "name": "Plum Ore",
+    "type": "item",
+    "image": "/img/items/plumore.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Feather": {
+    "name": "Gold Feather",
+    "type": "item",
+    "image": "/img/items/5996.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Shark Tooth": {
+    "name": "Shark Tooth",
+    "type": "item",
+    "image": "/img/items/sharktooth.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Glacierstone": {
+    "name": "Glacierstone",
+    "type": "item",
+    "image": "/img/items/icestone.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Candy Corn": {
+    "name": "Candy Corn",
+    "type": "item",
+    "image": "/img/items/candycorn.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sweet Root": {
+    "name": "Sweet Root",
+    "type": "item",
+    "image": "/img/items/5685.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bone 02": {
+    "name": "Bone 02",
+    "type": "item",
+    "image": "/img/items/bone2.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Oceanite": {
+    "name": "Oceanite",
+    "type": "item",
+    "image": "/img/items/oceanite.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Honey": {
+    "name": "Honey",
+    "type": "item",
+    "image": "/img/items/jarofhoney.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bell": {
+    "name": "Bell",
+    "type": "item",
+    "image": "/img/items/bell.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sunstone": {
+    "name": "Sunstone",
+    "type": "item",
+    "image": "/img/items/sunstone.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fireworks": {
+    "name": "Fireworks",
+    "type": "item",
+    "image": "/img/items/petard.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Green Halite": {
+    "name": "Green Halite",
+    "type": "item",
+    "image": "/img/items/9445.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bone 03": {
+    "name": "Bone 03",
+    "type": "item",
+    "image": "/img/items/bone3.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Purple Mushroom": {
+    "name": "Purple Mushroom",
+    "type": "item",
+    "image": "/img/items/woodblewit.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Ram Skull 01": {
+    "name": "Ram Skull 01",
+    "type": "item",
+    "image": "/img/items/1137.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Honeysuckle": {
+    "name": "Honeysuckle",
+    "type": "item",
+    "image": "/img/items/honeysuckle.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bone 04": {
+    "name": "Bone 04",
+    "type": "item",
+    "image": "/img/items/bone4.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Calcifite": {
+    "name": "Calcifite",
+    "type": "item",
+    "image": "/img/items/9441.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Water Lily": {
+    "name": "Water Lily",
+    "type": "item",
+    "image": "/img/items/3258.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mug of Beer": {
+    "name": "Mug of Beer",
+    "type": "item",
+    "image": "/img/items/7264.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pyredrop": {
+    "name": "Pyredrop",
+    "type": "item",
+    "image": "/img/items/pyredrop.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Esperium": {
+    "name": "Esperium",
+    "type": "item",
+    "image": "/img/items/9446.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Rubber Duckie": {
+    "name": "Rubber Duckie",
+    "type": "item",
+    "image": "/img/items/ducky.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Potted Flower": {
+    "name": "Potted Flower",
+    "type": "item",
+    "image": "/img/items/plant_t_01.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fancy Box": {
+    "name": "Fancy Box",
+    "type": "item",
+    "image": "/img/items/4238.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fuzzy Chick 03": {
+    "name": "Fuzzy Chick 03",
+    "type": "item",
+    "image": "/img/items/Fuzzychick3green.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carved Bear": {
+    "name": "Carved Bear",
+    "type": "item",
+    "image": "/img/items/carvedbear.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Ghost Jelly": {
+    "name": "Ghost Jelly",
+    "type": "item",
+    "image": "/img/items/afk_8592.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Captains Log": {
+    "name": "Captains Log",
+    "type": "item",
+    "image": "/img/items/4868.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fossilized Frog": {
+    "name": "Fossilized Frog",
+    "type": "item",
+    "image": "/img/items/1896.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Red Mushrooms": {
+    "name": "Red Mushrooms",
+    "type": "item",
+    "image": "/img/items/redmushrooms.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Magmastone": {
+    "name": "Magmastone",
+    "type": "item",
+    "image": "/img/items/magmastone.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Barnacle Shell": {
+    "name": "Barnacle Shell",
+    "type": "item",
+    "image": "/img/items/afk_8532.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cooked Fish": {
+    "name": "Cooked Fish",
+    "type": "item",
+    "image": "/img/items/6320.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Piece 30": {
+    "name": "Piece 30",
+    "type": "item",
+    "image": "/img/items/piece30.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sea Urchin": {
+    "name": "Sea Urchin",
+    "type": "item",
+    "image": "/img/items/afk_8528.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Small Flute": {
+    "name": "Small Flute",
+    "type": "item",
+    "image": "/img/items/5255.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Embershard": {
+    "name": "Embershard",
+    "type": "item",
+    "image": "/img/items/embershard.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Green Top Hat": {
+    "name": "Green Top Hat",
+    "type": "item",
+    "image": "/img/items/greenhat.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Green Ornament": {
+    "name": "Green Ornament",
+    "type": "item",
+    "image": "/img/items/cr_t_03_c.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Orange Ornament": {
+    "name": "Orange Ornament",
+    "type": "item",
+    "image": "/img/items/cr_t_03_d.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Yellow Ornament": {
+    "name": "Yellow Ornament",
+    "type": "item",
+    "image": "/img/items/cr_t_03_e.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Purple Ornament": {
+    "name": "Purple Ornament",
+    "type": "item",
+    "image": "/img/items/cr_t_03_b.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Blue Ornament": {
+    "name": "Blue Ornament",
+    "type": "item",
+    "image": "/img/items/cr_t_03_f.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carved Owl": {
+    "name": "Carved Owl",
+    "type": "item",
+    "image": "/img/items/carvedowl.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cutlass": {
+    "name": "Cutlass",
+    "type": "item",
+    "image": "/img/items/pirates_47_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pitviper Tail": {
+    "name": "Pitviper Tail",
+    "type": "item",
+    "image": "/img/items/9478.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Red Ornament": {
+    "name": "Red Ornament",
+    "type": "item",
+    "image": "/img/items/cr_t_03.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg of Life": {
+    "name": "Egg of Life",
+    "type": "item",
+    "image": "/img/items/lifeegg.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Spiked Shell": {
+    "name": "Spiked Shell",
+    "type": "item",
+    "image": "/img/items/spikey.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Heart Necklace Left Piece": {
+    "name": "Heart Necklace Left Piece",
+    "type": "item",
+    "image": "/img/items/l_02_t_b.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cicada Shell": {
+    "name": "Cicada Shell",
+    "type": "item",
+    "image": "/img/items/cicadashell.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Teapot": {
+    "name": "Teapot",
+    "type": "item",
+    "image": "/img/items/teapot.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fire Crystal": {
+    "name": "Fire Crystal",
+    "type": "item",
+    "image": "/img/items/firecrystal.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Wax Candle": {
+    "name": "Wax Candle",
+    "type": "item",
+    "image": "/img/items/candle.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Seaweed": {
+    "name": "Seaweed",
+    "type": "item",
+    "image": "/img/items/fishing_75_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Jar of Pickles": {
+    "name": "Jar of Pickles",
+    "type": "item",
+    "image": "/img/items/jarofpickles.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Heart Necklace Right Piece": {
+    "name": "Heart Necklace Right Piece",
+    "type": "item",
+    "image": "/img/items/l_02_t_c.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bone Fragments": {
+    "name": "Bone Fragments",
+    "type": "item",
+    "image": "/img/items/873.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Orange Calcite": {
+    "name": "Orange Calcite",
+    "type": "item",
+    "image": "/img/items/3384.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Re'taw": {
+    "name": "Re'taw",
+    "type": "item",
+    "image": "/img/items/4696.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "R.O.A.S.": {
+    "name": "R.O.A.S.",
+    "type": "item",
+    "image": "/img/items/rat_t_01.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg 05": {
+    "name": "Egg 05",
+    "type": "item",
+    "image": "/img/items/egg05.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cicada": {
+    "name": "Cicada",
+    "type": "item",
+    "image": "/img/items/cicada.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Black Truffle": {
+    "name": "Black Truffle",
+    "type": "item",
+    "image": "/img/items/blacktruffle.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Freaky Picture": {
+    "name": "Freaky Picture",
+    "type": "item",
+    "image": "/img/items/5592.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Snowflakes": {
+    "name": "Snowflakes",
+    "type": "item",
+    "image": "/img/items/snowflakes.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg 10": {
+    "name": "Egg 10",
+    "type": "item",
+    "image": "/img/items/egg10.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg 07": {
+    "name": "Egg 07",
+    "type": "item",
+    "image": "/img/items/egg07.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg 08": {
+    "name": "Egg 08",
+    "type": "item",
+    "image": "/img/items/egg08.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Briomine": {
+    "name": "Briomine",
+    "type": "item",
+    "image": "/img/items/9439.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Orange Gecko": {
+    "name": "Orange Gecko",
+    "type": "item",
+    "image": "/img/items/3493.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg 01": {
+    "name": "Egg 01",
+    "type": "item",
+    "image": "/img/items/egg01.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carved Kitty": {
+    "name": "Carved Kitty",
+    "type": "item",
+    "image": "/img/items/carved_cat.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pencil": {
+    "name": "Pencil",
+    "type": "item",
+    "image": "/img/items/pencil_t_01.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carved Fox": {
+    "name": "Carved Fox",
+    "type": "item",
+    "image": "/img/items/carved_fox.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg 09": {
+    "name": "Egg 09",
+    "type": "item",
+    "image": "/img/items/egg09.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carved Cow": {
+    "name": "Carved Cow",
+    "type": "item",
+    "image": "/img/items/carved_cow.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg 12": {
+    "name": "Egg 12",
+    "type": "item",
+    "image": "/img/items/egg12.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Diamonds": {
+    "name": "Diamonds",
+    "type": "item",
+    "image": "/img/items/card_diamonds.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egyptian Necklace": {
+    "name": "Egyptian Necklace",
+    "type": "item",
+    "image": "/img/items/egyptian1.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg 04": {
+    "name": "Egg 04",
+    "type": "item",
+    "image": "/img/items/egg04.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Borgen Buck": {
+    "name": "Borgen Buck",
+    "type": "item",
+    "image": "/img/items/borgenbuck.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Christmas Tree": {
+    "name": "Christmas Tree",
+    "type": "item",
+    "image": "/img/items/cr_t_06_b.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Christmas Sweater": {
+    "name": "Christmas Sweater",
+    "type": "item",
+    "image": "/img/items/9_sm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Teddy Bear": {
+    "name": "Teddy Bear",
+    "type": "item",
+    "image": "/img/items/17_sm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg 02": {
+    "name": "Egg 02",
+    "type": "item",
+    "image": "/img/items/egg02.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Clubs": {
+    "name": "Clubs",
+    "type": "item",
+    "image": "/img/items/card_clubs.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Blue Star Stomper": {
+    "name": "Blue Star Stomper",
+    "type": "item",
+    "image": "/img/items/bluefireworks.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cooked Turkey": {
+    "name": "Cooked Turkey",
+    "type": "item",
+    "image": "/img/items/5742.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Hearts": {
+    "name": "Hearts",
+    "type": "item",
+    "image": "/img/items/card_hearts.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Spades": {
+    "name": "Spades",
+    "type": "item",
+    "image": "/img/items/card_spades.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg 06": {
+    "name": "Egg 06",
+    "type": "item",
+    "image": "/img/items/egg06.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg 11": {
+    "name": "Egg 11",
+    "type": "item",
+    "image": "/img/items/egg11.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bomb": {
+    "name": "Bomb",
+    "type": "item",
+    "image": "/img/items/bomb.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Spectacles": {
+    "name": "Spectacles",
+    "type": "item",
+    "image": "/img/items/5392.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gingerbread Man": {
+    "name": "Gingerbread Man",
+    "type": "item",
+    "image": "/img/items/4_sm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg 03": {
+    "name": "Egg 03",
+    "type": "item",
+    "image": "/img/items/egg03.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Raffle Ticket": {
+    "name": "Raffle Ticket",
+    "type": "item",
+    "image": "/img/items/raffleticket.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cave Mushroom": {
+    "name": "Cave Mushroom",
+    "type": "item",
+    "image": "/img/items/6475.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bone 05": {
+    "name": "Bone 05",
+    "type": "item",
+    "image": "/img/items/bone5.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Hot Cocoa": {
+    "name": "Hot Cocoa",
+    "type": "item",
+    "image": "/img/items/5_sm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg of Fire": {
+    "name": "Egg of Fire",
+    "type": "item",
+    "image": "/img/items/fireegg.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Moonbreaker": {
+    "name": "Moonbreaker",
+    "type": "item",
+    "image": "/img/items/moonbreaker.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Joker": {
+    "name": "Joker",
+    "type": "item",
+    "image": "/img/items/joker.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg of Shadow": {
+    "name": "Egg of Shadow",
+    "type": "item",
+    "image": "/img/items/shadowegg.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Heart Necklace": {
+    "name": "Heart Necklace",
+    "type": "item",
+    "image": "/img/items/l_02_t_a.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Broken Sword": {
+    "name": "Broken Sword",
+    "type": "item",
+    "image": "/img/items/9489.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Brain Fungus": {
+    "name": "Brain Fungus",
+    "type": "item",
+    "image": "/img/items/brainfungus.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Event Token": {
+    "name": "Event Token",
+    "type": "item",
+    "image": "/img/items/token.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Corn Kabob": {
+    "name": "Corn Kabob",
+    "type": "item",
+    "image": "/img/items/cornkabob.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mossy Stone": {
+    "name": "Mossy Stone",
+    "type": "item",
+    "image": "/img/items/viri_4012.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cricket": {
+    "name": "Cricket",
+    "type": "item",
+    "image": "/img/items/cricket.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fuzzy Chick 02": {
+    "name": "Fuzzy Chick 02",
+    "type": "item",
+    "image": "/img/items/Fuzzychick2.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Blue Milk": {
+    "name": "Blue Milk",
+    "type": "item",
+    "image": "/img/items/bluemilk.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Taco": {
+    "name": "Taco",
+    "type": "item",
+    "image": "/img/items/taco.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Blue Spritz": {
+    "name": "Blue Spritz",
+    "type": "item",
+    "image": "/img/items/bluedrink.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Safety Pin": {
+    "name": "Safety Pin",
+    "type": "item",
+    "image": "/img/items/pin_t_01.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carved Pig": {
+    "name": "Carved Pig",
+    "type": "item",
+    "image": "/img/items/carved_pig.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bouquet of Roses": {
+    "name": "Bouquet of Roses",
+    "type": "item",
+    "image": "/img/items/l_03_t.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Jadeite": {
+    "name": "Jadeite",
+    "type": "item",
+    "image": "/img/items/jadeite.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carved Camel": {
+    "name": "Carved Camel",
+    "type": "item",
+    "image": "/img/items/carvedcamel.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carved Chicken": {
+    "name": "Carved Chicken",
+    "type": "item",
+    "image": "/img/items/carved_chicken.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Maverick Chip": {
+    "name": "Maverick Chip",
+    "type": "item",
+    "image": "/img/items/Maverick_coin.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Apple Core": {
+    "name": "Apple Core",
+    "type": "item",
+    "image": "/img/items/8267.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Beach Umbrella": {
+    "name": "Beach Umbrella",
+    "type": "item",
+    "image": "/img/items/beach_umbrella.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Green Torpedo": {
+    "name": "Green Torpedo",
+    "type": "item",
+    "image": "/img/items/greenfw.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carved Moose": {
+    "name": "Carved Moose",
+    "type": "item",
+    "image": "/img/items/carvedmoose.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Buddy Doll": {
+    "name": "Buddy Doll",
+    "type": "item",
+    "image": "/img/items/buddydoll2.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carved Rhino": {
+    "name": "Carved Rhino",
+    "type": "item",
+    "image": "/img/items/carvedrhino.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carved Squisquatch": {
+    "name": "Carved Squisquatch",
+    "type": "item",
+    "image": "/img/items/carved_squisquatch.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Chattering Teeth": {
+    "name": "Chattering Teeth",
+    "type": "item",
+    "image": "/img/items/jaw_t_01.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Protein Bar": {
+    "name": "Protein Bar",
+    "type": "item",
+    "image": "/img/items/chocolate_t_01.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Event Key": {
+    "name": "Event Key",
+    "type": "item",
+    "image": "/img/items/eventkey.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Witch Hat": {
+    "name": "Witch Hat",
+    "type": "item",
+    "image": "/img/items/hat_t_02.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg of Air": {
+    "name": "Egg of Air",
+    "type": "item",
+    "image": "/img/items/airegg.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Prune Juice": {
+    "name": "Prune Juice",
+    "type": "item",
+    "image": "/img/items/prunejuice.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Onion Rings": {
+    "name": "Onion Rings",
+    "type": "item",
+    "image": "/img/items/onionrings.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carved Dragon": {
+    "name": "Carved Dragon",
+    "type": "item",
+    "image": "/img/items/carved_dragon.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gummy Globber": {
+    "name": "Gummy Globber",
+    "type": "item",
+    "image": "/img/items/candyfish.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Thomas's Cup of PB": {
+    "name": "Thomas's Cup of PB",
+    "type": "item",
+    "image": "/img/items/pbcup.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Wooden Pipe": {
+    "name": "Wooden Pipe",
+    "type": "item",
+    "image": "/img/items/4910.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Paper Receipt": {
+    "name": "Paper Receipt",
+    "type": "item",
+    "image": "/img/items/7611.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Notebook": {
+    "name": "Notebook",
+    "type": "item",
+    "image": "/img/items/pad_t_01.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg of Earth": {
+    "name": "Egg of Earth",
+    "type": "item",
+    "image": "/img/items/earthegg.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Party Hat": {
+    "name": "Party Hat",
+    "type": "item",
+    "image": "/img/items/partyhat.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Apple Turnover": {
+    "name": "Apple Turnover",
+    "type": "item",
+    "image": "/img/items/appleturnover.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg of Light": {
+    "name": "Egg of Light",
+    "type": "item",
+    "image": "/img/items/lightegg.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg of Space": {
+    "name": "Egg of Space",
+    "type": "item",
+    "image": "/img/items/spaceegg.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Hummingbird Feeder": {
+    "name": "Hummingbird Feeder",
+    "type": "item",
+    "image": "/img/items/hummingbird_feeder.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fuzzy Chick 05": {
+    "name": "Fuzzy Chick 05",
+    "type": "item",
+    "image": "/img/items/Fuzzychick1blue.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fuzzy Chick 10": {
+    "name": "Fuzzy Chick 10",
+    "type": "item",
+    "image": "/img/items/Fuzzychick1green.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Honeycomb": {
+    "name": "Honeycomb",
+    "type": "item",
+    "image": "/img/items/6311.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg of Chaos": {
+    "name": "Egg of Chaos",
+    "type": "item",
+    "image": "/img/items/chaosegg.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg of Water": {
+    "name": "Egg of Water",
+    "type": "item",
+    "image": "/img/items/wateregg.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Baba Cola": {
+    "name": "Baba Cola",
+    "type": "item",
+    "image": "/img/items/babacola.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Snowman": {
+    "name": "Snowman",
+    "type": "item",
+    "image": "/img/items/cr_t_08.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Water Bottle": {
+    "name": "Water Bottle",
+    "type": "item",
+    "image": "/img/items/water_t_01.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg of Ages": {
+    "name": "Egg of Ages",
+    "type": "item",
+    "image": "/img/items/timeegg2.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carved Mouse": {
+    "name": "Carved Mouse",
+    "type": "item",
+    "image": "/img/items/carved_mouse.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bone 06": {
+    "name": "Bone 06",
+    "type": "item",
+    "image": "/img/items/1276.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Rudolph": {
+    "name": "Rudolph",
+    "type": "item",
+    "image": "/img/items/rudolph.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Chocolate Bunny": {
+    "name": "Chocolate Bunny",
+    "type": "item",
+    "image": "/img/items/chocobunny.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Piece of Cake": {
+    "name": "Piece of Cake",
+    "type": "item",
+    "image": "/img/items/birthdaycakeslice.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fuzzy Chick 08": {
+    "name": "Fuzzy Chick 08",
+    "type": "item",
+    "image": "/img/items/Fuzzychick1.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Ant Apple": {
+    "name": "Ant Apple",
+    "type": "item",
+    "image": "/img/items/ant_apple.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carved Rabbit": {
+    "name": "Carved Rabbit",
+    "type": "item",
+    "image": "/img/items/carvedrabbit.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mistletoe": {
+    "name": "Mistletoe",
+    "type": "item",
+    "image": "/img/items/28_sm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pie": {
+    "name": "Pie",
+    "type": "item",
+    "image": "/img/items/5794.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Peafowl Feather": {
+    "name": "Peafowl Feather",
+    "type": "item",
+    "image": "/img/items/2599.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Jester Buddy Doll": {
+    "name": "Jester Buddy Doll",
+    "type": "item",
+    "image": "/img/items/jbuddy.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Heart Candies": {
+    "name": "Heart Candies",
+    "type": "item",
+    "image": "/img/items/heartcandies.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fuzzy Chick 01": {
+    "name": "Fuzzy Chick 01",
+    "type": "item",
+    "image": "/img/items/fuzzychick1pink.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fuzzy Chick 12": {
+    "name": "Fuzzy Chick 12",
+    "type": "item",
+    "image": "/img/items/Fuzzychick3blue.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Corn Buddy Doll": {
+    "name": "Corn Buddy Doll",
+    "type": "item",
+    "image": "/img/items/cornbuddydollx.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Star": {
+    "name": "Star",
+    "type": "item",
+    "image": "/img/items/29_sm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Holiday Wreath": {
+    "name": "Holiday Wreath",
+    "type": "item",
+    "image": "/img/items/wreath.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pizza Slice": {
+    "name": "Pizza Slice",
+    "type": "item",
+    "image": "/img/items/pizzaslice.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fuji Apple": {
+    "name": "Fuji Apple",
+    "type": "item",
+    "image": "/img/items/fujiapple.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Fishing Net": {
+    "name": "Frozen Fishing Net",
+    "type": "item",
+    "image": "/img/items/frozen_net.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Apple Slicer": {
+    "name": "Apple Slicer",
+    "type": "item",
+    "image": "/img/items/applecutter.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Tombstone": {
+    "name": "Tombstone",
+    "type": "item",
+    "image": "/img/items/afk_9605.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Spooky Slime": {
+    "name": "Spooky Slime",
+    "type": "item",
+    "image": "/img/items/afk_9541.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Adventure Buddy Doll": {
+    "name": "Adventure Buddy Doll",
+    "type": "item",
+    "image": "/img/items/ebuddy.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Nut Cracker Buddy": {
+    "name": "Nut Cracker Buddy",
+    "type": "item",
+    "image": "/img/items/nutcrackerbuddy.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Holiday Garland": {
+    "name": "Holiday Garland",
+    "type": "item",
+    "image": "/img/items/garland.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Stone Fragment": {
+    "name": "Stone Fragment",
+    "type": "item",
+    "image": "/img/items/stonefragment.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Safety Mask": {
+    "name": "Safety Mask",
+    "type": "item",
+    "image": "/img/items/2755.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Red Rocket": {
+    "name": "Red Rocket",
+    "type": "item",
+    "image": "/img/items/redrocket.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Backstabbing Dagger": {
+    "name": "Backstabbing Dagger",
+    "type": "item",
+    "image": "/img/items/9078.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Santa Hat": {
+    "name": "Santa Hat",
+    "type": "item",
+    "image": "/img/items/cr_t_04.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carnevale": {
+    "name": "Carnevale",
+    "type": "item",
+    "image": "/img/items/2749.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Whistle": {
+    "name": "Whistle",
+    "type": "item",
+    "image": "/img/items/whistle_t_01.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Piece 09": {
+    "name": "Piece 09",
+    "type": "item",
+    "image": "/img/items/piece09.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Piece 11": {
+    "name": "Piece 11",
+    "type": "item",
+    "image": "/img/items/piece11.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Thankful Notes": {
+    "name": "Thankful Notes",
+    "type": "item",
+    "image": "/img/items/2379.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bread": {
+    "name": "Bread",
+    "type": "item",
+    "image": "/img/items/7200.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sand Shovel": {
+    "name": "Sand Shovel",
+    "type": "item",
+    "image": "/img/items/sand_shovel.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sand Castle Bucket": {
+    "name": "Sand Castle Bucket",
+    "type": "item",
+    "image": "/img/items/sand_castle_bucket.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mixed Nuts": {
+    "name": "Mixed Nuts",
+    "type": "item",
+    "image": "/img/items/nuts.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Consumption Belt": {
+    "name": "Consumption Belt",
+    "type": "item",
+    "image": "/img/items/afk_9592.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mana Scarab": {
+    "name": "Mana Scarab",
+    "type": "item",
+    "image": "/img/items/afk_9531.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fish Biscuit": {
+    "name": "Fish Biscuit",
+    "type": "item",
+    "image": "/img/items/fish_biscuit.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Laurel": {
+    "name": "Gold Laurel",
+    "type": "item",
+    "image": "/img/items/goldleaflaurel.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Party Horn": {
+    "name": "Party Horn",
+    "type": "item",
+    "image": "/img/items/party_horn.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Shark Jaws": {
+    "name": "Shark Jaws",
+    "type": "item",
+    "image": "/img/items/370.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sunscreen": {
+    "name": "Sunscreen",
+    "type": "item",
+    "image": "/img/items/sunscreen.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sun Shades": {
+    "name": "Sun Shades",
+    "type": "item",
+    "image": "/img/items/4221.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Apple Slice": {
+    "name": "Apple Slice",
+    "type": "item",
+    "image": "/img/items/apple_slice.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sealed Letter": {
+    "name": "Sealed Letter",
+    "type": "item",
+    "image": "/img/items/7475.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Ring of Renthisj": {
+    "name": "Ring of Renthisj",
+    "type": "item",
+    "image": "/img/items/5466.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gingerbread House": {
+    "name": "Gingerbread House",
+    "type": "item",
+    "image": "/img/items/10_sm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Dasher": {
+    "name": "Dasher",
+    "type": "item",
+    "image": "/img/items/dasher.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cupid": {
+    "name": "Cupid",
+    "type": "item",
+    "image": "/img/items/cupid.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Blitzen": {
+    "name": "Blitzen",
+    "type": "item",
+    "image": "/img/items/blitzen.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Star's Treasure Map": {
+    "name": "Star's Treasure Map",
+    "type": "item",
+    "image": "/img/items/starmap1.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mapping Compass": {
+    "name": "Mapping Compass",
+    "type": "item",
+    "image": "/img/items/mappingcompass.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Wishbone Necklace": {
+    "name": "Wishbone Necklace",
+    "type": "item",
+    "image": "/img/items/wishbone.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Horseshoe": {
+    "name": "Gold Horseshoe",
+    "type": "item",
+    "image": "/img/items/goldhs.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Piñata": {
+    "name": "Piñata",
+    "type": "item",
+    "image": "/img/items/pinata.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sombrero": {
+    "name": "Sombrero",
+    "type": "item",
+    "image": "/img/items/sombrero.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Holger's Mushroom Stew": {
+    "name": "Holger's Mushroom Stew",
+    "type": "item",
+    "image": "/img/items/recipe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "George's Onion Soup": {
+    "name": "George's Onion Soup",
+    "type": "item",
+    "image": "/img/items/recipe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Rosalie's Bone Broth": {
+    "name": "Rosalie's Bone Broth",
+    "type": "item",
+    "image": "/img/items/recipe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Thomas's Cat's Meow": {
+    "name": "Thomas's Cat's Meow",
+    "type": "item",
+    "image": "/img/items/recipe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Jill's Quandary Chowder": {
+    "name": "Jill's Quandary Chowder",
+    "type": "item",
+    "image": "/img/items/recipe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Vincent's Sea Pincher Special": {
+    "name": "Vincent's Sea Pincher Special",
+    "type": "item",
+    "image": "/img/items/recipe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cecil's Shrimp-a-Plenty": {
+    "name": "Cecil's Shrimp-a-Plenty",
+    "type": "item",
+    "image": "/img/items/recipe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Roomba's Over The Moon": {
+    "name": "Roomba's Over The Moon",
+    "type": "item",
+    "image": "/img/items/recipe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Charles's Neigh": {
+    "name": "Charles's Neigh",
+    "type": "item",
+    "image": "/img/items/recipe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Lorn's Breakfast Boost": {
+    "name": "Lorn's Breakfast Boost",
+    "type": "item",
+    "image": "/img/items/recipe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Witch's Broom": {
+    "name": "Witch's Broom",
+    "type": "item",
+    "image": "/img/items/broom_t_01.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fancy Shoe": {
+    "name": "Fancy Shoe",
+    "type": "item",
+    "image": "/img/items/bshoe2.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Keyglobe": {
+    "name": "Keyglobe",
+    "type": "item",
+    "image": "/img/items/keyglobe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cepathorf's Case": {
+    "name": "Cepathorf's Case",
+    "type": "item",
+    "image": "/img/items/boxes_012.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Playground Key": {
+    "name": "Frozen Playground Key",
+    "type": "item",
+    "image": "/img/items/frozenkey.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Rosalie's Red Berry Pie": {
+    "name": "Rosalie's Red Berry Pie",
+    "type": "item",
+    "image": "/img/items/recipe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Rosalie's Concord Grape Pie": {
+    "name": "Rosalie's Concord Grape Pie",
+    "type": "item",
+    "image": "/img/items/recipe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "King Cake": {
+    "name": "King Cake",
+    "type": "item",
+    "image": "/img/items/kingcake.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mariya's Hickory Omelette": {
+    "name": "Mariya's Hickory Omelette",
+    "type": "item",
+    "image": "/img/items/recipe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mariya's Crunchy Omelette": {
+    "name": "Mariya's Crunchy Omelette",
+    "type": "item",
+    "image": "/img/items/recipe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Piece 15": {
+    "name": "Piece 15",
+    "type": "item",
+    "image": "/img/items/piece15.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Baba Gec's Cabbage Stew": {
+    "name": "Baba Gec's Cabbage Stew",
+    "type": "item",
+    "image": "/img/items/recipe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pearl Berries": {
+    "name": "Pearl Berries",
+    "type": "item",
+    "image": "/img/items/4488.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Wizard's Second Favorite Feather": {
+    "name": "Wizard's Second Favorite Feather",
+    "type": "item",
+    "image": "/img/items/magicfeather.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Desk Calendar": {
+    "name": "Desk Calendar",
+    "type": "item",
+    "image": "/img/items/calendar_t_01.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sling Blade": {
+    "name": "Sling Blade",
+    "type": "item",
+    "image": "/img/items/8974.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Green Apple": {
+    "name": "Green Apple",
+    "type": "item",
+    "image": "/img/items/greenapple.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Notary Stamp": {
+    "name": "Notary Stamp",
+    "type": "item",
+    "image": "/img/items/stamper.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Velocity Belt": {
+    "name": "Velocity Belt",
+    "type": "item",
+    "image": "/img/items/5310.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Belt of Truth": {
+    "name": "Belt of Truth",
+    "type": "item",
+    "image": "/img/items/5488.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Buddy's Old Pirate Belt": {
+    "name": "Buddy's Old Pirate Belt",
+    "type": "item",
+    "image": "/img/items/2077.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Steel Soap Belt": {
+    "name": "Steel Soap Belt",
+    "type": "item",
+    "image": "/img/items/soapbelt.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Belt of Menace": {
+    "name": "Belt of Menace",
+    "type": "item",
+    "image": "/img/items/s_98.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Calavera 02": {
+    "name": "Calavera 02",
+    "type": "item",
+    "image": "/img/items/739.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Waffle": {
+    "name": "Waffle",
+    "type": "item",
+    "image": "/img/items/1588.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Circuit Breaker Belt": {
+    "name": "Circuit Breaker Belt",
+    "type": "item",
+    "image": "/img/items/973.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Owl Guard Belt": {
+    "name": "Owl Guard Belt",
+    "type": "item",
+    "image": "/img/items/8708.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Boltonic Love Potion 4": {
+    "name": "Boltonic Love Potion 4",
+    "type": "item",
+    "image": "/img/items/lovepotion.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Piece 01": {
+    "name": "Piece 01",
+    "type": "item",
+    "image": "/img/items/piece01.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Piece 03": {
+    "name": "Piece 03",
+    "type": "item",
+    "image": "/img/items/piece03.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Piece 24": {
+    "name": "Piece 24",
+    "type": "item",
+    "image": "/img/items/piece24.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Borgen's Dancing Belt": {
+    "name": "Borgen's Dancing Belt",
+    "type": "item",
+    "image": "/img/items/2064.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Certificate of Potato Giving": {
+    "name": "Certificate of Potato Giving",
+    "type": "item",
+    "image": "/img/items/7896-blue.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Coconut": {
+    "name": "Coconut",
+    "type": "item",
+    "image": "/img/items/coconut.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Safety Goggles": {
+    "name": "Safety Goggles",
+    "type": "item",
+    "image": "/img/items/2129.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Belt of Freedom": {
+    "name": "Belt of Freedom",
+    "type": "item",
+    "image": "/img/items/freedombelt.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "YoYo": {
+    "name": "YoYo",
+    "type": "item",
+    "image": "/img/items/yoyo.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Strange Temple Necklace": {
+    "name": "Strange Temple Necklace",
+    "type": "item",
+    "image": "/img/items/9419.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Book of Spells": {
+    "name": "Book of Spells",
+    "type": "item",
+    "image": "/img/items/afk_9510.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Buddy Doll": {
+    "name": "Frozen Buddy Doll",
+    "type": "item",
+    "image": "/img/items/Buddy_doll_frozen.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gary's Crushroom Key": {
+    "name": "Gary's Crushroom Key",
+    "type": "item",
+    "image": "/img/items/mushroomkey.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Groundhog Buddy Doll": {
+    "name": "Groundhog Buddy Doll",
+    "type": "item",
+    "image": "/img/items/buddydoll_groundhog.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Two Hearts Belt": {
+    "name": "Two Hearts Belt",
+    "type": "item",
+    "image": "/img/items/valbelt.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Leprechaun Buddy Doll": {
+    "name": "Leprechaun Buddy Doll",
+    "type": "item",
+    "image": "/img/items/leafymcluckybuddydoll.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Tanooki Buddy Doll": {
+    "name": "Tanooki Buddy Doll",
+    "type": "item",
+    "image": "/img/items/tanooki_buddy_doll.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Nirumdivar": {
+    "name": "Nirumdivar",
+    "type": "item",
+    "image": "/img/items/stave1.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "frank's Bunny Mask": {
+    "name": "frank's Bunny Mask",
+    "type": "item",
+    "image": "/img/items/afk_8744.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fuzzy Chick 04": {
+    "name": "Fuzzy Chick 04",
+    "type": "item",
+    "image": "/img/items/Fuzzychick3yellow.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fuzzy Chick 06": {
+    "name": "Fuzzy Chick 06",
+    "type": "item",
+    "image": "/img/items/Fuzzychick3.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fuzzy Chick 07": {
+    "name": "Fuzzy Chick 07",
+    "type": "item",
+    "image": "/img/items/Fuzzychick2green.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fuzzy Chick 09": {
+    "name": "Fuzzy Chick 09",
+    "type": "item",
+    "image": "/img/items/Fuzzychick2pink.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fuzzy Chick 11": {
+    "name": "Fuzzy Chick 11",
+    "type": "item",
+    "image": "/img/items/Fuzzychick2yellow.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cockatrice Ether Source": {
+    "name": "Cockatrice Ether Source",
+    "type": "item",
+    "image": "/img/items/ethersource.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Vacation Buddy Doll": {
+    "name": "Vacation Buddy Doll",
+    "type": "item",
+    "image": "/img/items/vacation_buddy_doll.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mermaid's Necklace": {
+    "name": "Mermaid's Necklace",
+    "type": "item",
+    "image": "/img/items/5164.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fishing Hook": {
+    "name": "Fishing Hook",
+    "type": "item",
+    "image": "/img/items/fishing_48_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Apple Picker": {
+    "name": "Apple Picker",
+    "type": "item",
+    "image": "/img/items/applepicker.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bar of Silver": {
+    "name": "Bar of Silver",
+    "type": "item",
+    "image": "/img/items/silverbar.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pink Jelly": {
+    "name": "Pink Jelly",
+    "type": "item",
+    "image": "/img/items/pinkjelly.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Octopus": {
+    "name": "Octopus",
+    "type": "item",
+    "image": "/img/items/8802.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Marlin": {
+    "name": "Marlin",
+    "type": "item",
+    "image": "/img/items/7816.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fluorifish": {
+    "name": "Fluorifish",
+    "type": "item",
+    "image": "/img/items/5771.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mussel": {
+    "name": "Mussel",
+    "type": "item",
+    "image": "/img/items/7785.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Stingray": {
+    "name": "Stingray",
+    "type": "item",
+    "image": "/img/items/7831.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Jellyfish": {
+    "name": "Jellyfish",
+    "type": "item",
+    "image": "/img/items/7808.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Blue Sea Bass": {
+    "name": "Blue Sea Bass",
+    "type": "item",
+    "image": "/img/items/7818.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Catfish": {
+    "name": "Catfish",
+    "type": "item",
+    "image": "/img/items/redcatfish.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Globber": {
+    "name": "Globber",
+    "type": "item",
+    "image": "/img/items/5766.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Blue Shell": {
+    "name": "Blue Shell",
+    "type": "item",
+    "image": "/img/items/7875.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Shrimp": {
+    "name": "Shrimp",
+    "type": "item",
+    "image": "/img/items/7844.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mackerel": {
+    "name": "Mackerel",
+    "type": "item",
+    "image": "/img/items/5768.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carp": {
+    "name": "Carp",
+    "type": "item",
+    "image": "/img/items/7737.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Trout": {
+    "name": "Trout",
+    "type": "item",
+    "image": "/img/items/trout.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Green Chromis": {
+    "name": "Green Chromis",
+    "type": "item",
+    "image": "/img/items/7828.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Blue Crab": {
+    "name": "Blue Crab",
+    "type": "item",
+    "image": "/img/items/7825.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Largemouth Bass": {
+    "name": "Largemouth Bass",
+    "type": "item",
+    "image": "/img/items/7736.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Small Prawn": {
+    "name": "Small Prawn",
+    "type": "item",
+    "image": "/img/items/7826.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mealworms": {
+    "name": "Mealworms",
+    "type": "item",
+    "image": "/img/items/mw.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gummy Worms": {
+    "name": "Gummy Worms",
+    "type": "item",
+    "image": "/img/items/gworm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Skipjack": {
+    "name": "Skipjack",
+    "type": "item",
+    "image": "/img/items/7790.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Ruby Fish": {
+    "name": "Ruby Fish",
+    "type": "item",
+    "image": "/img/items/7838.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bluegill": {
+    "name": "Bluegill",
+    "type": "item",
+    "image": "/img/items/7722.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Starfish": {
+    "name": "Starfish",
+    "type": "item",
+    "image": "/img/items/7821.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Red Starfish": {
+    "name": "Red Starfish",
+    "type": "item",
+    "image": "/img/items/8814.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Blue Tiger Fish": {
+    "name": "Blue Tiger Fish",
+    "type": "item",
+    "image": "/img/items/5772.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Seahorse": {
+    "name": "Seahorse",
+    "type": "item",
+    "image": "/img/items/8819.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Clam Shell": {
+    "name": "Clam Shell",
+    "type": "item",
+    "image": "/img/items/7820.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Conch Shell": {
+    "name": "Conch Shell",
+    "type": "item",
+    "image": "/img/items/7904.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Yellow Perch": {
+    "name": "Yellow Perch",
+    "type": "item",
+    "image": "/img/items/yellowperch.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Green Jellyfish": {
+    "name": "Green Jellyfish",
+    "type": "item",
+    "image": "/img/items/7787.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Drum": {
+    "name": "Drum",
+    "type": "item",
+    "image": "/img/items/7718.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Crappie": {
+    "name": "Crappie",
+    "type": "item",
+    "image": "/img/items/7735.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Flarefin": {
+    "name": "Flarefin",
+    "type": "item",
+    "image": "/img/items/5230-2.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Puffer": {
+    "name": "Puffer",
+    "type": "item",
+    "image": "/img/items/pufferfix.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Blue Catfish": {
+    "name": "Blue Catfish",
+    "type": "item",
+    "image": "/img/items/7842.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bone Fish": {
+    "name": "Bone Fish",
+    "type": "item",
+    "image": "/img/items/7741.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sunfish": {
+    "name": "Sunfish",
+    "type": "item",
+    "image": "/img/items/7802.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Flier": {
+    "name": "Flier",
+    "type": "item",
+    "image": "/img/items/7843.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Shinefish": {
+    "name": "Shinefish",
+    "type": "item",
+    "image": "/img/items/fishing_112_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Large Clam Shell": {
+    "name": "Large Clam Shell",
+    "type": "item",
+    "image": "/img/items/fishing_74_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Sea Crest": {
+    "name": "Gold Sea Crest",
+    "type": "item",
+    "image": "/img/items/goldseacrest.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Goldfish": {
+    "name": "Goldfish",
+    "type": "item",
+    "image": "/img/items/fishing_118_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fish Bones": {
+    "name": "Fish Bones",
+    "type": "item",
+    "image": "/img/items/7747.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Crab": {
+    "name": "Gold Crab",
+    "type": "item",
+    "image": "/img/items/fishing_102_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Anglerfish": {
+    "name": "Anglerfish",
+    "type": "item",
+    "image": "/img/items/pirates_76_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Goldgill": {
+    "name": "Goldgill",
+    "type": "item",
+    "image": "/img/items/goldgill.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Sea Bass": {
+    "name": "Gold Sea Bass",
+    "type": "item",
+    "image": "/img/items/goldseabass.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Drum": {
+    "name": "Gold Drum",
+    "type": "item",
+    "image": "/img/items/golddrum.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Coral": {
+    "name": "Gold Coral",
+    "type": "item",
+    "image": "/img/items/goldcoral.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Goldray": {
+    "name": "Goldray",
+    "type": "item",
+    "image": "/img/items/goldray.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Jelly": {
+    "name": "Gold Jelly",
+    "type": "item",
+    "image": "/img/items/goldjelly.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Trout": {
+    "name": "Gold Trout",
+    "type": "item",
+    "image": "/img/items/goldtrout.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Giant Squid": {
+    "name": "Giant Squid",
+    "type": "item",
+    "image": "/img/items/7726.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Goldjack": {
+    "name": "Goldjack",
+    "type": "item",
+    "image": "/img/items/goldjack.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Goldfin": {
+    "name": "Goldfin",
+    "type": "item",
+    "image": "/img/items/goldfin.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Catfish": {
+    "name": "Gold Catfish",
+    "type": "item",
+    "image": "/img/items/goldcatfish.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Flier": {
+    "name": "Gold Flier",
+    "type": "item",
+    "image": "/img/items/goldflier.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Catfish": {
+    "name": "Frozen Catfish",
+    "type": "item",
+    "image": "/img/items/frozen_catfish.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Crab Claw": {
+    "name": "Frozen Crab Claw",
+    "type": "item",
+    "image": "/img/items/frozen_claw.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Boot": {
+    "name": "Frozen Boot",
+    "type": "item",
+    "image": "/img/items/frozen_boot.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frosteye": {
+    "name": "Frosteye",
+    "type": "item",
+    "image": "/img/items/frosteye.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Bones": {
+    "name": "Frozen Bones",
+    "type": "item",
+    "image": "/img/items/frozen_bones.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Sheepshead": {
+    "name": "Frozen Sheepshead",
+    "type": "item",
+    "image": "/img/items/frozen_sheepshead.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Crowfish": {
+    "name": "Crowfish",
+    "type": "item",
+    "image": "/img/items/crowfish.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Squid": {
+    "name": "Frozen Squid",
+    "type": "item",
+    "image": "/img/items/frozen_squid.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bullfish": {
+    "name": "Bullfish",
+    "type": "item",
+    "image": "/img/items/bullfish.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sea Crest": {
+    "name": "Sea Crest",
+    "type": "item",
+    "image": "/img/items/seacrest.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Glassback": {
+    "name": "Glassback",
+    "type": "item",
+    "image": "/img/items/glassback.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Seeker": {
+    "name": "Seeker",
+    "type": "item",
+    "image": "/img/items/seeker.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Stone Jelly": {
+    "name": "Stone Jelly",
+    "type": "item",
+    "image": "/img/items/stonejelly.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Serpent Eel": {
+    "name": "Serpent Eel",
+    "type": "item",
+    "image": "/img/items/7817.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Ice Shark": {
+    "name": "Ice Shark",
+    "type": "item",
+    "image": "/img/items/iceshark.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sea Turtle": {
+    "name": "Sea Turtle",
+    "type": "item",
+    "image": "/img/items/afk_8514.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Coin": {
+    "name": "Frozen Coin",
+    "type": "item",
+    "image": "/img/items/frozen_coin.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Starfish": {
+    "name": "Frozen Starfish",
+    "type": "item",
+    "image": "/img/items/frozen_starfish.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Skull": {
+    "name": "Frozen Skull",
+    "type": "item",
+    "image": "/img/items/frozen_skull.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Jelly": {
+    "name": "Frozen Jelly",
+    "type": "item",
+    "image": "/img/items/frozen_jelly.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Lobster": {
+    "name": "Frozen Lobster",
+    "type": "item",
+    "image": "/img/items/frozen_lobster.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Manta Ray": {
+    "name": "Frozen Manta Ray",
+    "type": "item",
+    "image": "/img/items/frozen_ray.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Red Diamond Fish": {
+    "name": "Red Diamond Fish",
+    "type": "item",
+    "image": "/img/items/reddfish.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Spyfish": {
+    "name": "Frozen Spyfish",
+    "type": "item",
+    "image": "/img/items/frozen_spy.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Wheel": {
+    "name": "Frozen Wheel",
+    "type": "item",
+    "image": "/img/items/frozen_wheel.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Lobster": {
+    "name": "Lobster",
+    "type": "item",
+    "image": "/img/items/lobster.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Angelfish": {
+    "name": "Frozen Angelfish",
+    "type": "item",
+    "image": "/img/items/frozen_angelfish.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Biter": {
+    "name": "Frozen Biter",
+    "type": "item",
+    "image": "/img/items/frozen_biter.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Feather": {
+    "name": "Frozen Feather",
+    "type": "item",
+    "image": "/img/items/frozen_feather.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Dagger": {
+    "name": "Frozen Dagger",
+    "type": "item",
+    "image": "/img/items/frozen_dagger.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Book": {
+    "name": "Frozen Book",
+    "type": "item",
+    "image": "/img/items/frozen_book.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Eggplant": {
+    "name": "Gold Eggplant",
+    "type": "item",
+    "image": "/img/items/geggplant.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Peppers": {
+    "name": "Gold Peppers",
+    "type": "item",
+    "image": "/img/items/8301g.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Carrot": {
+    "name": "Gold Carrot",
+    "type": "item",
+    "image": "/img/items/8391g.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Peas": {
+    "name": "Gold Peas",
+    "type": "item",
+    "image": "/img/items/8259g.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Cucumber": {
+    "name": "Gold Cucumber",
+    "type": "item",
+    "image": "/img/items/5805g.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Hops": {
+    "name": "Hops",
+    "type": "item",
+    "image": "/img/items/8248.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Watermelon": {
+    "name": "Watermelon",
+    "type": "item",
+    "image": "/img/items/8293.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cucumber": {
+    "name": "Cucumber",
+    "type": "item",
+    "image": "/img/items/5805.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Wheat": {
+    "name": "Wheat",
+    "type": "item",
+    "image": "/img/items/8249.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carrot": {
+    "name": "Carrot",
+    "type": "item",
+    "image": "/img/items/8391.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pumpkin": {
+    "name": "Pumpkin",
+    "type": "item",
+    "image": "/img/items/8294.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Eggplant": {
+    "name": "Eggplant",
+    "type": "item",
+    "image": "/img/items/eggplant.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Tomato": {
+    "name": "Tomato",
+    "type": "item",
+    "image": "/img/items/8290.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Leek": {
+    "name": "Leek",
+    "type": "item",
+    "image": "/img/items/8291.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Radish": {
+    "name": "Radish",
+    "type": "item",
+    "image": "/img/items/radish.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Peas": {
+    "name": "Peas",
+    "type": "item",
+    "image": "/img/items/8259.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Radish": {
+    "name": "Frozen Radish",
+    "type": "item",
+    "image": "/img/items/frozen_radish.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Onion": {
+    "name": "Onion",
+    "type": "item",
+    "image": "/img/items/8317.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Broccoli": {
+    "name": "Broccoli",
+    "type": "item",
+    "image": "/img/items/8757.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Beet": {
+    "name": "Beet",
+    "type": "item",
+    "image": "/img/items/2850.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Hot Potato": {
+    "name": "Hot Potato",
+    "type": "item",
+    "image": "/img/items/hotpotato.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Rice": {
+    "name": "Rice",
+    "type": "item",
+    "image": "/img/items/rice.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cabbage": {
+    "name": "Cabbage",
+    "type": "item",
+    "image": "/img/items/8319-3.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Yellow Watermelon": {
+    "name": "Yellow Watermelon",
+    "type": "item",
+    "image": "/img/items/yellowwatermelon.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Corn": {
+    "name": "Frozen Corn",
+    "type": "item",
+    "image": "/img/items/frozen_corn.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Peas": {
+    "name": "Frozen Peas",
+    "type": "item",
+    "image": "/img/items/frozenpeas.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Pine": {
+    "name": "Frozen Pine",
+    "type": "item",
+    "image": "/img/items/frozenpine.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Tomato": {
+    "name": "Frozen Tomato",
+    "type": "item",
+    "image": "/img/items/frozen_tomato.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Inferno Pepper": {
+    "name": "Inferno Pepper",
+    "type": "item",
+    "image": "/img/items/infpepper.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Jack-o-lantern": {
+    "name": "Jack-o-lantern",
+    "type": "item",
+    "image": "/img/items/pumpkin_t_05.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Peppers": {
+    "name": "Peppers",
+    "type": "item",
+    "image": "/img/items/8301.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Cabbage": {
+    "name": "Frozen Cabbage",
+    "type": "item",
+    "image": "/img/items/frozencabbage.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Potato Seeds": {
+    "name": "Potato Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_potato.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Eggplant Seeds": {
+    "name": "Eggplant Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_eggplants.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Rice Seeds": {
+    "name": "Rice Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_rice.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pine Seeds": {
+    "name": "Pine Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_pine.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mushroom Spores": {
+    "name": "Mushroom Spores",
+    "type": "item",
+    "image": "/img/items/seeds_mushroom.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sunflower Seeds": {
+    "name": "Sunflower Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_sunflower.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Broccoli Seeds": {
+    "name": "Broccoli Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_broccoli.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Wheat Seeds": {
+    "name": "Wheat Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_wheet.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pumpkin Seeds": {
+    "name": "Pumpkin Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_pumpkin.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cabbage Seeds": {
+    "name": "Cabbage Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_cabbage.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Watermelon Seeds": {
+    "name": "Watermelon Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_watermelon.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Leek Seeds": {
+    "name": "Leek Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_leek.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Hops Seeds": {
+    "name": "Hops Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_hops.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Onion Seeds": {
+    "name": "Onion Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_onions.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Radish Seeds": {
+    "name": "Radish Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_radish.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Tomato Seeds": {
+    "name": "Tomato Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_tomato.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cucumber Seeds": {
+    "name": "Cucumber Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_cucumber.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Carrot Seeds": {
+    "name": "Carrot Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_carrots.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pea Seeds": {
+    "name": "Pea Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_peas.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mega Beet Seeds": {
+    "name": "Mega Beet Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_mbeet.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pepper Seeds": {
+    "name": "Pepper Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_peppers.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cotton Seeds": {
+    "name": "Cotton Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_cotton.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Beet Seeds": {
+    "name": "Beet Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_beet.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Corn Seeds": {
+    "name": "Corn Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_corn.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Spring Seeds": {
+    "name": "Spring Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_spring.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Carrot Seeds": {
+    "name": "Gold Carrot Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_gcarrots.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Pepper Seeds": {
+    "name": "Gold Pepper Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_gpeppers.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mega Sunflower Seeds": {
+    "name": "Mega Sunflower Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_msunflower.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Cucumber Seeds": {
+    "name": "Gold Cucumber Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_gcucumber.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Eggplant Seeds": {
+    "name": "Gold Eggplant Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_geggplants.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Pea Seeds": {
+    "name": "Gold Pea Seeds",
+    "type": "item",
+    "image": "/img/items/seeds_gpeas.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Grab Bag 04": {
+    "name": "Grab Bag 04",
+    "type": "item",
+    "image": "/img/items/4497.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Grab Bag 05": {
+    "name": "Grab Bag 05",
+    "type": "item",
+    "image": "/img/items/4497.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Grab Bag 07": {
+    "name": "Grab Bag 07",
+    "type": "item",
+    "image": "/img/items/4497.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Grab Bag 02": {
+    "name": "Grab Bag 02",
+    "type": "item",
+    "image": "/img/items/4497.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Grab Bag 08": {
+    "name": "Grab Bag 08",
+    "type": "item",
+    "image": "/img/items/4497.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Grab Bag 01": {
+    "name": "Grab Bag 01",
+    "type": "item",
+    "image": "/img/items/4497.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Small Chest 02": {
+    "name": "Small Chest 02",
+    "type": "item",
+    "image": "/img/items/4493.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Large Chest 01": {
+    "name": "Large Chest 01",
+    "type": "item",
+    "image": "/img/items/8572.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Grab Bag 06": {
+    "name": "Grab Bag 06",
+    "type": "item",
+    "image": "/img/items/4497.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Large Chest 02": {
+    "name": "Large Chest 02",
+    "type": "item",
+    "image": "/img/items/8572.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Small Chest 01": {
+    "name": "Small Chest 01",
+    "type": "item",
+    "image": "/img/items/4493.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Medium Chest 01": {
+    "name": "Medium Chest 01",
+    "type": "item",
+    "image": "/img/items/8574.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Large Chest 03": {
+    "name": "Large Chest 03",
+    "type": "item",
+    "image": "/img/items/8572.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Grab Bag 03": {
+    "name": "Grab Bag 03",
+    "type": "item",
+    "image": "/img/items/4497.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mystical Chest 01": {
+    "name": "Mystical Chest 01",
+    "type": "item",
+    "image": "/img/items/4456.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Medium Chest 02": {
+    "name": "Medium Chest 02",
+    "type": "item",
+    "image": "/img/items/8574.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gift Basket 01": {
+    "name": "Gift Basket 01",
+    "type": "item",
+    "image": "/img/items/giftbasket.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mystical Chest 02": {
+    "name": "Mystical Chest 02",
+    "type": "item",
+    "image": "/img/items/4456.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Corn Prize Bag": {
+    "name": "Corn Prize Bag",
+    "type": "item",
+    "image": "/img/items/bagofcorn.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg Basket": {
+    "name": "Egg Basket",
+    "type": "item",
+    "image": "/img/items/eggbasket.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Magical Egg Basket": {
+    "name": "Magical Egg Basket",
+    "type": "item",
+    "image": "/img/items/mageggbasket.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Void Bag 01": {
+    "name": "Void Bag 01",
+    "type": "item",
+    "image": "/img/items/voidbag.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Treat Bag 02": {
+    "name": "Treat Bag 02",
+    "type": "item",
+    "image": "/img/items/bag_t_03.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fuzzy Egg": {
+    "name": "Fuzzy Egg",
+    "type": "item",
+    "image": "/img/items/fuzzychickegg.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bait Bag 01": {
+    "name": "Bait Bag 01",
+    "type": "item",
+    "image": "/img/items/baitbag01.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bag of Spring Seeds": {
+    "name": "Bag of Spring Seeds",
+    "type": "item",
+    "image": "/img/items/4497.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Drink Bundle": {
+    "name": "Drink Bundle",
+    "type": "item",
+    "image": "/img/items/juices.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Tackle Box": {
+    "name": "Tackle Box",
+    "type": "item",
+    "image": "/img/items/7847.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Christmas Stocking": {
+    "name": "Christmas Stocking",
+    "type": "item",
+    "image": "/img/items/18_sm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Medium Chest 03": {
+    "name": "Medium Chest 03",
+    "type": "item",
+    "image": "/img/items/8574.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Supply Bag 01": {
+    "name": "Supply Bag 01",
+    "type": "item",
+    "image": "/img/items/BagsAndBoxes_30_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Event Token Purse": {
+    "name": "Event Token Purse",
+    "type": "item",
+    "image": "/img/items/BagsAndBoxes_46_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Treat Bag 03": {
+    "name": "Treat Bag 03",
+    "type": "item",
+    "image": "/img/items/bag_t_03.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Treat Bag 01": {
+    "name": "Treat Bag 01",
+    "type": "item",
+    "image": "/img/items/bag_t_03.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Borgen Bag 01": {
+    "name": "Borgen Bag 01",
+    "type": "item",
+    "image": "/img/items/BagsAndBoxes_59_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Supply Crate 01": {
+    "name": "Supply Crate 01",
+    "type": "item",
+    "image": "/img/items/BagsAndBoxes_17_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bag of Snowballs": {
+    "name": "Bag of Snowballs",
+    "type": "item",
+    "image": "/img/items/bagofsnowballs.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Supply Bag 02": {
+    "name": "Supply Bag 02",
+    "type": "item",
+    "image": "/img/items/BagsAndBoxes_30_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Birthday Present": {
+    "name": "Birthday Present",
+    "type": "item",
+    "image": "/img/items/present03.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Christmas Present 08": {
+    "name": "Christmas Present 08",
+    "type": "item",
+    "image": "/img/items/7468.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Runestone Necklace": {
+    "name": "Runestone Necklace",
+    "type": "item",
+    "image": "/img/items/pirates_17_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Runestone 23": {
+    "name": "Runestone 23",
+    "type": "item",
+    "image": "/img/items/5658.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Book of Flora": {
+    "name": "Book of Flora",
+    "type": "item",
+    "image": "/img/items/7587.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Book of Skill": {
+    "name": "Book of Skill",
+    "type": "item",
+    "image": "/img/items/7792.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Book of Schemas": {
+    "name": "Book of Schemas",
+    "type": "item",
+    "image": "/img/items/7922.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Book of Knots": {
+    "name": "Book of Knots",
+    "type": "item",
+    "image": "/img/items/5835.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Book of Clues": {
+    "name": "Book of Clues",
+    "type": "item",
+    "image": "/img/items/6979.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Book of Maps": {
+    "name": "Book of Maps",
+    "type": "item",
+    "image": "/img/items/7583.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Book of Time": {
+    "name": "Book of Time",
+    "type": "item",
+    "image": "/img/items/7574.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Book of Insects": {
+    "name": "Book of Insects",
+    "type": "item",
+    "image": "/img/items/7578.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Book of Fish": {
+    "name": "Book of Fish",
+    "type": "item",
+    "image": "/img/items/bookoffish.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Welcome Card": {
+    "name": "Welcome Card",
+    "type": "item",
+    "image": "/img/items/card_welcome.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "4th Birthday Card": {
+    "name": "4th Birthday Card",
+    "type": "item",
+    "image": "/img/items/card_4th.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Thank You Card": {
+    "name": "Thank You Card",
+    "type": "item",
+    "image": "/img/items/card_thankyou.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Buddy Loves You Card": {
+    "name": "Buddy Loves You Card",
+    "type": "item",
+    "image": "/img/items/card_buddylove.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Red Envelope": {
+    "name": "Red Envelope",
+    "type": "item",
+    "image": "/img/items/redletter.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Clawed Card": {
+    "name": "Clawed Card",
+    "type": "item",
+    "image": "/img/items/card_clawed.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Congratulations Card": {
+    "name": "Congratulations Card",
+    "type": "item",
+    "image": "/img/items/card_congrats.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "3rd Birthday Card": {
+    "name": "3rd Birthday Card",
+    "type": "item",
+    "image": "/img/items/card_3ears.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Good Luck Card": {
+    "name": "Good Luck Card",
+    "type": "item",
+    "image": "/img/items/card_goodluck.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Happy Farmiversary Card": {
+    "name": "Happy Farmiversary Card",
+    "type": "item",
+    "image": "/img/items/card_farmiversary.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Christmas Card": {
+    "name": "Christmas Card",
+    "type": "item",
+    "image": "/img/items/card_christmas.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "You Rock Card": {
+    "name": "You Rock Card",
+    "type": "item",
+    "image": "/img/items/card_yourock.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Capy Birthday Card": {
+    "name": "Capy Birthday Card",
+    "type": "item",
+    "image": "/img/items/card_capybirthday.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Get Well Soon Card": {
+    "name": "Get Well Soon Card",
+    "type": "item",
+    "image": "/img/items/card_gws.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Diamond": {
+    "name": "Diamond",
+    "type": "item",
+    "image": "/img/items/7999.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Skull Coin": {
+    "name": "Skull Coin",
+    "type": "item",
+    "image": "/img/items/7286.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Diving Helmet": {
+    "name": "Diving Helmet",
+    "type": "item",
+    "image": "/img/items/fishing_70_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Buddystone": {
+    "name": "Buddystone",
+    "type": "item",
+    "image": "/img/items/buddystone.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Raptor Claw": {
+    "name": "Raptor Claw",
+    "type": "item",
+    "image": "/img/items/raptor.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Strange Ring": {
+    "name": "Strange Ring",
+    "type": "item",
+    "image": "/img/items/onering.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Magic Conch Shell": {
+    "name": "Magic Conch Shell",
+    "type": "item",
+    "image": "/img/items/mcs.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Tribal Staff": {
+    "name": "Tribal Staff",
+    "type": "item",
+    "image": "/img/items/3972.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Dragon Skull": {
+    "name": "Dragon Skull",
+    "type": "item",
+    "image": "/img/items/7212.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Raptor Egg": {
+    "name": "Raptor Egg",
+    "type": "item",
+    "image": "/img/items/raptoregg.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pirate Hook": {
+    "name": "Pirate Hook",
+    "type": "item",
+    "image": "/img/items/pirates_38_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Langstaff Crest": {
+    "name": "Langstaff Crest",
+    "type": "item",
+    "image": "/img/items/langstaff.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Ramjoram's Mask": {
+    "name": "Ramjoram's Mask",
+    "type": "item",
+    "image": "/img/items/strangemask1.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Schoolbook": {
+    "name": "Schoolbook",
+    "type": "item",
+    "image": "/img/items/book_t_01.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Shamrock": {
+    "name": "Gold Shamrock",
+    "type": "item",
+    "image": "/img/items/goldclover.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Coderanger's Missing Semicolon": {
+    "name": "Coderanger's Missing Semicolon",
+    "type": "item",
+    "image": "/img/items/semi.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Forcepath's Book of Quest Requirements": {
+    "name": "Forcepath's Book of Quest Requirements",
+    "type": "item",
+    "image": "/img/items/7581.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Tenfoo's Lost Sock": {
+    "name": "Tenfoo's Lost Sock",
+    "type": "item",
+    "image": "/img/items/sock.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Lima Bean": {
+    "name": "Lima Bean",
+    "type": "item",
+    "image": "/img/items/limabean.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Firestream's Magic Wire": {
+    "name": "Firestream's Magic Wire",
+    "type": "item",
+    "image": "/img/items/magicwire.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Boobun's Spray Bottle": {
+    "name": "Boobun's Spray Bottle",
+    "type": "item",
+    "image": "/img/items/spraybottle.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Potato": {
+    "name": "Gold Potato",
+    "type": "item",
+    "image": "/img/items/gp3.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Prism Shell": {
+    "name": "Prism Shell",
+    "type": "item",
+    "image": "/img/items/prismshell.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cockatrice Egg": {
+    "name": "Cockatrice Egg",
+    "type": "item",
+    "image": "/img/items/cockatrice_egg.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Quicksilver's Ring": {
+    "name": "Quicksilver's Ring",
+    "type": "item",
+    "image": "/img/items/viri_3369b.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Support's Ticket": {
+    "name": "Support's Ticket",
+    "type": "item",
+    "image": "/img/items/sticket.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cid's Stone Ale": {
+    "name": "Cid's Stone Ale",
+    "type": "item",
+    "image": "/img/items/ale.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Perfect Paint Palette": {
+    "name": "Perfect Paint Palette",
+    "type": "item",
+    "image": "/img/items/palette.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Corn Ball": {
+    "name": "Corn Ball",
+    "type": "item",
+    "image": "/img/items/Cornball.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg of Zeal": {
+    "name": "Egg of Zeal",
+    "type": "item",
+    "image": "/img/items/eggofzeal2.gif",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Ric Ryph Bobblehead": {
+    "name": "Ric Ryph Bobblehead",
+    "type": "item",
+    "image": "/img/items/bobble_ric.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fuzzy Bunny": {
+    "name": "Fuzzy Bunny",
+    "type": "item",
+    "image": "/img/items/Fuzzybunny.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Dream Nail": {
+    "name": "Dream Nail",
+    "type": "item",
+    "image": "/img/items/dream_nail.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Meerif Crest": {
+    "name": "Meerif Crest",
+    "type": "item",
+    "image": "/img/items/meerif.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pig Collar": {
+    "name": "Pig Collar",
+    "type": "item",
+    "image": "/img/items/pigcollar.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Five Point Mace": {
+    "name": "Five Point Mace",
+    "type": "item",
+    "image": "/img/items/5046.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Egg": {
+    "name": "Gold Egg",
+    "type": "item",
+    "image": "/img/items/egg_gold.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Winged Amulet": {
+    "name": "Winged Amulet",
+    "type": "item",
+    "image": "/img/items/7422.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Tribal Mask": {
+    "name": "Tribal Mask",
+    "type": "item",
+    "image": "/img/items/ForestIcons_19_t.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mystical Staff": {
+    "name": "Mystical Staff",
+    "type": "item",
+    "image": "/img/items/5273.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Flame Orb": {
+    "name": "Flame Orb",
+    "type": "item",
+    "image": "/img/items/7405.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Trident of Poseidon": {
+    "name": "Trident of Poseidon",
+    "type": "item",
+    "image": "/img/items/trident.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Holiday Candles": {
+    "name": "Holiday Candles",
+    "type": "item",
+    "image": "/img/items/11_sm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Lucky Rabbit Foot": {
+    "name": "Lucky Rabbit Foot",
+    "type": "item",
+    "image": "/img/items/4289.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Tower Key": {
+    "name": "Tower Key",
+    "type": "item",
+    "image": "/img/items/7140.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Opposition Hourglass": {
+    "name": "Opposition Hourglass",
+    "type": "item",
+    "image": "/img/items/hourglass.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pink Ribbon": {
+    "name": "Pink Ribbon",
+    "type": "item",
+    "image": "/img/items/l_05_t.PNG",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cursed Effigy": {
+    "name": "Cursed Effigy",
+    "type": "item",
+    "image": "/img/items/Buddyidol.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Runecorn": {
+    "name": "Runecorn",
+    "type": "item",
+    "image": "/img/items/runecorn.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Water Orb": {
+    "name": "Water Orb",
+    "type": "item",
+    "image": "/img/items/2324.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Time Egg": {
+    "name": "Time Egg",
+    "type": "item",
+    "image": "/img/items/timeegg.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "VIP Card": {
+    "name": "VIP Card",
+    "type": "item",
+    "image": "/img/items/vipcard.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sturdy Saw": {
+    "name": "Sturdy Saw",
+    "type": "item",
+    "image": "/img/items/318.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Rune Dice": {
+    "name": "Rune Dice",
+    "type": "item",
+    "image": "/img/items/1931.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "World Globe": {
+    "name": "World Globe",
+    "type": "item",
+    "image": "/img/items/globe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Keeper Trapper": {
+    "name": "Keeper Trapper",
+    "type": "item",
+    "image": "/img/items/buddytk.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Music Box": {
+    "name": "Music Box",
+    "type": "item",
+    "image": "/img/items/809.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

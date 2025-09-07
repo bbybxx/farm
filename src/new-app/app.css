@@ -725,7 +725,6 @@ select.input option {
 .craft-indicator {
   display: inline-flex;
   align-items: center;
-  margin-left: 8px;
   opacity: 0.4;
   transition: opacity 0.2s ease;
 }
@@ -1864,6 +1863,31 @@ select.setting-input option {
   max-width: 400px;
   width: 100%;
   overflow: hidden;
+}
+
+/* On desktop, allow clicks to pass through modal wrappers/overlays
+   so the sticky sidebar and other page chrome remain interactive.
+   Keep modal content itself interactive. This preserves modal UI
+   while preventing an invisible full-screen wrapper from blocking
+   the sidebar on wide viewports. */
+@media (min-width: 900px) {
+  /* On desktop, keep modal wrappers interactive but don't cover the
+     left sticky sidebar (340px). This allows outside clicks to close
+     the modal while preserving sidebar interactivity. */
+  .modal-wrapper,
+  .modal-overlay {
+    /* start the overlay to the right of the sidebar */
+    left: 340px;
+    right: 0;
+    width: auto;
+    pointer-events: auto;
+  }
+  .modal-wrapper .modal-content,
+  .modal-overlay .modal-content {
+    pointer-events: auto;
+    /* ensure modal content sits above the sidebar when needed */
+    z-index: 60;
+  }
 }
 
 .modal-header {

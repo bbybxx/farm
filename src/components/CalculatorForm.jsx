@@ -3,6 +3,8 @@ import { calculateAllResources } from '../utils/calculator';
 import { getAllCraftableItems, getCombinedRecipes } from '../utils/recipeUtils';
 import { sortItemsAlphabetically } from '../utils/sortingUtils';
 import PerksSidebar from './PerksSidebar';
+import ItemDisplay from './ItemDisplay';
+import itemsAPI from '../data/items-api.json';
 import './CalculatorForm.css';
 
 function CalculatorForm({ onCalculate }) {
@@ -206,7 +208,11 @@ function CalculatorForm({ onCalculate }) {
                 }
               }}
             >
-              {selectedItemName || 'Select an item'}
+              {selectedItemName ? (
+                <ItemDisplay itemName={selectedItemName} itemsData={itemsAPI} />
+              ) : (
+                'Select an item'
+              )}
             </div>
             {isDropdownOpen && (
               <div className="dropdown-list" ref={dropdownRef}>
@@ -217,7 +223,7 @@ function CalculatorForm({ onCalculate }) {
                       className="dropdown-item"
                       onClick={() => handleItemSelect(item)}
                     >
-                      {item}
+                      <ItemDisplay itemName={item} itemsData={itemsAPI} />
                     </div>
                   ))
                 ) : (

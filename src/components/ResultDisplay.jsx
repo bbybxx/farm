@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getResourceYieldBonus, getSilverDiscountPercent, getXPBonusPercent } from '../utils/calculator';
+import ItemDisplay from './ItemDisplay';
+import itemsAPI from '../data/items-api.json';
 import './ResultDisplay.css';
 
 // Компонент для отображения отдельного ресурса и его компонентов
@@ -42,7 +44,9 @@ function ResourceItem({ name, quantity, recipes, activePerks, level = 0, isTarge
         {isCraftable && (
           <span className="expand-icon">{isExpanded ? '▼' : '▶'}</span>
         )}
-        <span className="resource-name">{name}:</span>
+        <span className="resource-name">
+          <ItemDisplay itemName={name} itemsData={itemsAPI} />
+        </span>
         <span className="resource-quantity">{Math.ceil(effectiveQuantity)}</span>
         {isTargetItem && yieldBonus > 0 && (
           <span className="resource-bonus">(+{(yieldBonus * 100).toFixed(0)}%)</span>

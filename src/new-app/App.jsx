@@ -12,6 +12,8 @@ import { computePinnedEstimate, getItemLocations } from '../utils/exploringUtils
 // Vercel Web Analytics (React)
 import { Analytics } from '@vercel/analytics/react'
 import PinnedLocationSelect from '../components/PinnedLocationSelect.jsx'
+import ItemDisplay from '../components/ItemDisplay'
+import itemsAPI from '../data/items-api.json'
 import './app.css'
 
 // Helper functions for localStorage
@@ -988,10 +990,10 @@ export default function App() {
 
                             {est && (() => {
                               if (typeof est.apNeeded !== 'undefined' && est.apNeeded !== null) {
-                                return (<div className="pinned-ap-line">{`${formatNumber(est.apNeeded)} AP${est.location ? ` @ ${est.location}` : ''}`}</div>)
+                                return (<div className="pinned-ap-line">{`${formatNumber(est.apNeeded)} AP`}</div>)
                               }
-                              if (est.mode === 'EXP') return (<div style={{ fontSize: 12, color: '#99a', marginTop: 6 }}>{formatNumber(est.explores)} EXP • {formatNumber(est.stamina)} STA @ {est.location}</div>)
-                              if (est.mode === 'AC') return (<div style={{ fontSize: 12, color: '#99a', marginTop: 6 }}>{formatNumber(est.cidersNeeded)} AC • {formatNumber(est.totalStamina)} STA @ {est.location}</div>)
+                              if (est.mode === 'EXP') return (<div style={{ fontSize: 12, color: '#99a', marginTop: 6 }}>{formatNumber(est.explores)} EXP • {formatNumber(est.stamina)} STA</div>)
+                              if (est.mode === 'AC') return (<div style={{ fontSize: 12, color: '#99a', marginTop: 6 }}>{formatNumber(est.cidersNeeded)} AC • {formatNumber(est.totalStamina)} STA</div>)
                               return null
                             })()}
                           </div>
@@ -1200,7 +1202,7 @@ export default function App() {
                           }
                         }}
                       >
-                        {displayName}
+                        <ItemDisplay itemName={displayName} itemsData={itemsAPI} />
                       </button>
                       <span className="breadcrumb-separator">›</span>
                     </span>
@@ -1208,7 +1210,12 @@ export default function App() {
                 })}
 
                 {craftChain.length > 0 && (
-                  <span className="breadcrumb-item current">{(typeof craftChain[craftChain.length - 1] === 'string') ? craftChain[craftChain.length - 1] : (craftChain[craftChain.length - 1] && craftChain[craftChain.length - 1].name)}</span>
+                  <span className="breadcrumb-item current">
+                    <ItemDisplay 
+                      itemName={(typeof craftChain[craftChain.length - 1] === 'string') ? craftChain[craftChain.length - 1] : (craftChain[craftChain.length - 1] && craftChain[craftChain.length - 1].name)} 
+                      itemsData={itemsAPI} 
+                    />
+                  </span>
                 )}
               </nav>
             ) : (
@@ -1228,8 +1235,14 @@ export default function App() {
               >
                 mode
               </button>
-              {modeOpen && (
-                <div className="mode-dropdown glass" style={{ position: 'absolute', right: 0, marginTop: 8, minWidth: 160, zIndex: 40 }}>
+              <AnimatePresence>
+                {modeOpen && (
+                  <motion.div className="mode-dropdown glass" style={{ position: 'absolute', right: 0, marginTop: 8, minWidth: 160, zIndex: 40 }}
+                    initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                    transition={{ duration: 0.12 }}
+                  >
                   {locationsMode ? (
                     // When on Locations page: offer both craft↔base options
                     <>
@@ -1285,8 +1298,9 @@ export default function App() {
                       </button>
                     </>
                   )}
-                </div>
+                </motion.div>
               )}
+            </AnimatePresence>
             </div>
           </div>
         </header>
@@ -1295,7 +1309,9 @@ export default function App() {
           <label className="field">
             <span className="label">Item</span>
             { !locationsMode ? (
-              <button className="input" onClick={() => setIsItemSelectOpen(true)} type="button">{item}</button>
+              <button className="input" onClick={() => setIsItemSelectOpen(true)} type="button">
+                <ItemDisplay itemName={item} itemsData={itemsAPI} />
+              </button>
             ) : (
               <button className="input" onClick={() => setIsItemSelectOpen(true)} type="button">{selectedLocation || 'Select location'}</button>
             ) }
@@ -1402,7 +1418,7 @@ export default function App() {
                         }}
                         type="button"
                       >
-                        {label}
+                        {locationsMode ? label : <ItemDisplay itemName={i} itemsData={itemsAPI} />}
                       </button>
                     )
                   })}
@@ -1458,9 +1474,9 @@ export default function App() {
                         type="button"
                       >
                         <div className="history-main">
-                          <span className="from">{entry.fromItem}</span>
+                          <span className="from"><ItemDisplay itemName={entry.fromItem} itemsData={itemsAPI} /></span>
                           <span className="arrow">→</span>
-                          <span className="to">{entry.toItem}</span>
+                          <span className="to"><ItemDisplay itemName={entry.toItem} itemsData={itemsAPI} /></span>
                           <span className="amount">×{entry.toAmount}</span>
                         </div>
                         <div className="history-time">
@@ -1641,14 +1657,15 @@ export default function App() {
                             title={craftable ? `Open crafts that use ${it}` : undefined}
                           >
                             <span className="k">
-                              {it}
-                              {craftable && (
-                                <span className="craft-indicator">
-                                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                    <path d="M2 8L6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                  </svg>
-                                </span>
-                              )}
+                              <ItemDisplay itemName={it} itemsData={itemsAPI}>
+                                {craftable && (
+                                  <span className="craft-indicator">
+                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                      <path d="M2 8L6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                  </span>
+                                )}
+                              </ItemDisplay>
                             </span>
                             <span className="v">{display}</span>
                           </div>
@@ -1699,20 +1716,21 @@ export default function App() {
                           title={isCraftable(k) ? `Click to craft ${k}` : undefined}
                         >
                           <span className="k">
-                            {k}
-                            {isCraftable(k) && (
-                              <span className="craft-indicator">
-                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                  <path 
-                                    d="M2 8L6 4L10 8" 
-                                    stroke="currentColor" 
-                                    strokeWidth="1.5" 
-                                    strokeLinecap="round" 
-                                    strokeLinejoin="round"
-                                  />
-                                </svg>
-                              </span>
-                            )}
+                            <ItemDisplay itemName={k} itemsData={itemsAPI}>
+                              {isCraftable(k) && (
+                                <span className="craft-indicator">
+                                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                    <path 
+                                      d="M2 8L6 4L10 8" 
+                                      stroke="currentColor" 
+                                      strokeWidth="1.5" 
+                                      strokeLinecap="round" 
+                                      strokeLinejoin="round"
+                                    />
+                                  </svg>
+                                </span>
+                              )}
+                            </ItemDisplay>
                           </span>
                           <span className="v">{formatNumber(v)}</span>
                         </div>
@@ -1797,14 +1815,15 @@ export default function App() {
                           title={canNavigate ? `Open recipe for ${c.name}` : undefined}
                         >
                           <span className="k">
-                            {c.name}
-                            {canNavigate && (
-                              <span className="craft-indicator">
-                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                  <path d="M2 8L6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                              </span>
-                            )}
+                            <ItemDisplay itemName={c.name} itemsData={itemsAPI}>
+                              {canNavigate && (
+                                <span className="craft-indicator">
+                                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                    <path d="M2 8L6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                  </svg>
+                                </span>
+                              )}
+                            </ItemDisplay>
                           </span>
                           <span className="v">{formatNumber(c.craftableCount != null ? c.craftableCount : 0)}</span>
                         </div>

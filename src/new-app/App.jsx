@@ -15,6 +15,7 @@ import PinnedLocationSelect from '../components/PinnedLocationSelect.jsx'
 import ItemDisplay from '../components/ItemDisplay'
 import itemsAPI from '../data/items-api.json'
 import './app.css'
+import LocationImage from '../components/LocationImage.jsx'
 
 // Helper functions for localStorage
 function isStorageAvailable() {
@@ -983,7 +984,16 @@ export default function App() {
                         </button>
 
                         <div className="pinned-card-content">
-                          <div className="pinned-item-name">{pinnedItem.name}</div>
+                          <div className="pinned-item-name">
+                            {itemsAPI && itemsAPI[pinnedItem.name] ? (
+                              <ItemDisplay itemName={pinnedItem.name} itemsData={itemsAPI} />
+                            ) : (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <LocationImage name={pinnedItem.name} size={24} />
+                                <span style={{ fontWeight: 600 }}>{pinnedItem.name}</span>
+                              </div>
+                            )}
+                          </div>
                           <div className="pinned-item-details">
                             <span className="pinned-item-quantity">×{formatNumber(pinnedItem.quantity)}</span>
                             {pinnedItem.parentRecipe && <span className="parent-recipe">from {pinnedItem.parentRecipe}</span>}
@@ -1202,7 +1212,14 @@ export default function App() {
                           }
                         }}
                       >
-                        <ItemDisplay itemName={displayName} itemsData={itemsAPI} />
+                        {typeof node === 'object' && node && node.isLocation ? (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <LocationImage name={node.name} size={20} />
+                            <span style={{ fontWeight: 600 }}>{node.name}</span>
+                          </div>
+                        ) : (
+                          <ItemDisplay itemName={displayName} itemsData={itemsAPI} />
+                        )}
                       </button>
                       <span className="breadcrumb-separator">›</span>
                     </span>
@@ -1211,10 +1228,19 @@ export default function App() {
 
                 {craftChain.length > 0 && (
                   <span className="breadcrumb-item current">
-                    <ItemDisplay 
-                      itemName={(typeof craftChain[craftChain.length - 1] === 'string') ? craftChain[craftChain.length - 1] : (craftChain[craftChain.length - 1] && craftChain[craftChain.length - 1].name)} 
-                      itemsData={itemsAPI} 
-                    />
+                    {(() => {
+                      const last = craftChain[craftChain.length - 1]
+                      const lastName = (typeof last === 'string') ? last : (last && last.name) || ''
+                      if (typeof last === 'object' && last && last.isLocation) {
+                        return (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <LocationImage name={lastName} size={20} />
+                            <span style={{ fontWeight: 600 }}>{lastName}</span>
+                          </div>
+                        )
+                      }
+                      return <ItemDisplay itemName={lastName} itemsData={itemsAPI} />
+                    })()}
                   </span>
                 )}
               </nav>
@@ -1313,7 +1339,10 @@ export default function App() {
                 <ItemDisplay itemName={item} itemsData={itemsAPI} />
               </button>
             ) : (
-              <button className="input" onClick={() => setIsItemSelectOpen(true)} type="button">{selectedLocation || 'Select location'}</button>
+              <button className="input" onClick={() => setIsItemSelectOpen(true)} type="button" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <LocationImage name={selectedLocation} size={18} />
+                <span>{selectedLocation || 'Select location'}</span>
+              </button>
             ) }
           </label>
             <label className="field">
@@ -1418,7 +1447,12 @@ export default function App() {
                         }}
                         type="button"
                       >
-                        {locationsMode ? label : <ItemDisplay itemName={i} itemsData={itemsAPI} />}
+                              {locationsMode ? (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                  <LocationImage name={label} size={22} />
+                                  <span>{label}</span>
+                                </div>
+                              ) : <ItemDisplay itemName={i} itemsData={itemsAPI} />}
                       </button>
                     )
                   })}

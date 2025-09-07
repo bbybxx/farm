@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CustomListbox from '../components/CustomListbox.jsx';
+import LocationImage from './LocationImage.jsx'
 import {
   getAllLocationConfigs,
   getLocationConfig,
@@ -77,7 +78,10 @@ export default function LocationConfigPanel({ locations = [], onClose }) {
           onChange={(v) => setSelected(v)}
           ariaLabel="Select location"
         />
-        <div style={{ fontSize: 13, color: '#666' }}>Changes are saved automatically</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <LocationImage name={selected} size={26} />
+          <div style={{ fontSize: 13, color: '#666' }}>Changes are saved automatically</div>
+        </div>
       </div>
 
       <div style={{ display: 'flex', gap: 12 }}>

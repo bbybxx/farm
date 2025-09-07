@@ -1,6 +1,7 @@
 import React from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { getItemLocations, computePinnedEstimate } from '../../utils/exploringUtils.js'
+import LocationImage from '../../components/LocationImage.jsx'
 
 export default function FindSourcesModal({ isOpen, onClose, resourceName, amount, results = [], onUse, exploringMode = 'Apple Cider', activePerks = [], selectedLocation = null }) {
   // Ensure location-type results appear: merge any locations from data that aren't present in results
@@ -88,8 +89,13 @@ export default function FindSourcesModal({ isOpen, onClose, resourceName, amount
             <tbody>
               {displayArray.map((r, idx) => (
                 <tr key={idx} style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
-                  <td style={{ padding: '8px 6px' }}>
-                    {r.kind === 'location' ? r.location : (r.kind === 'craft' ? `Craft: ${r.recipe}` : "")}
+                  <td style={{ padding: '8px 6px', display: 'flex', alignItems: 'center' }}>
+                    {r.kind === 'location' ? (
+                      <>
+                        <LocationImage name={r.location} size={28} />
+                        <span>{r.location}</span>
+                      </>
+                    ) : (r.kind === 'craft' ? `Craft: ${r.recipe}` : "")}
                   </td>
                   <td style={{ padding: '8px 6px' }}>
                     {r.hasData === false ? 'No data' : (

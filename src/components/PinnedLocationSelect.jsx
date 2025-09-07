@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import LocationImage from './LocationImage.jsx'
 
 export default function PinnedLocationSelect({ options = [], value = '', onChange }) {
   const [open, setOpen] = useState(false)
@@ -33,7 +34,8 @@ export default function PinnedLocationSelect({ options = [], value = '', onChang
         onClick={() => setOpen(o => !o)}
         onKeyDown={handleKey}
       >
-        <div className="pinned-loc-btn-row">
+        <div className="pinned-loc-btn-row" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <LocationImage name={label} size={20} />
           <span className="pinned-loc-label">{label}</span>
           <span className="pinned-loc-arrow">{open ? '▴' : '▾'}</span>
         </div>
@@ -51,7 +53,10 @@ export default function PinnedLocationSelect({ options = [], value = '', onChang
               onClick={() => { onChange(opt); setOpen(false) }}
               tabIndex={open ? 0 : -1}
             >
-              {opt}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <LocationImage name={opt} size={18} />
+                <span>{opt}</span>
+              </div>
             </button>
           )
         })}

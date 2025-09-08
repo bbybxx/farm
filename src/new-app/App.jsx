@@ -116,6 +116,7 @@ export default function App() {
   const [isItemSelectOpen, setIsItemSelectOpen] = useState(false)
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   const [modeOpen, setModeOpen] = useState(false)
+  
   const [craftChain, setCraftChain] = useState(() => {
     const storedChain = loadFromStorage('craftCalculator_craftChain', null)
     if (storedChain && storedChain.length > 0) {
@@ -150,6 +151,43 @@ export default function App() {
   // Locations mode: show locations list and location-specific drops
   const [locationsMode, setLocationsMode] = useState(() => loadFromStorage('craftCalculator_locationsMode', false))
   const [selectedLocation, setSelectedLocation] = useState(() => loadFromStorage('craftCalculator_selectedLocation', 'Forest'))
+  // Remember last selection per mode (modeKey -> { item, amount, craftChain, selectedLocation })
+  const [lastSelectionByMode, setLastSelectionByMode] = useState(() => loadFromStorage('craftCalculator_lastSelectionByMode', {}))
+
+  const getModeKeyFor = (rev, loc, exp) => {
+    const modeName = loc ? 'locations' : (rev ? 'baseToCraft' : 'craftToBase')
+    return `${modeName}|${exp || ''}`
+  }
+
+  const saveCurrentSelection = () => {
+    try {
+      const key = getModeKeyFor(reverseMode, locationsMode, exploringMode)
+      const data = { item, amount, craftChain, selectedLocation }
+      setLastSelectionByMode(prev => {
+        const next = { ...(prev || {}), [key]: data }
+        try { saveToStorage('craftCalculator_lastSelectionByMode', next) } catch (e) {}
+        return next
+      })
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  const restoreSelectionFor = (rev, loc, exp) => {
+    try {
+      const key = getModeKeyFor(rev, loc, exp)
+      const stored = loadFromStorage('craftCalculator_lastSelectionByMode', lastSelectionByMode || {})
+      const data = stored && stored[key]
+      if (data) {
+        if (data.item) setItem(data.item)
+        if (data.amount !== undefined) setAmount(data.amount)
+        if (data.craftChain) setCraftChain(data.craftChain)
+        if (data.selectedLocation) setSelectedLocation(data.selectedLocation)
+        return true
+      }
+    } catch (e) {}
+    return false
+  }
   // Reverse-craft mode: debug instrumentation removed
 
   const locationsForConfig = useMemo(() => {
@@ -1306,14 +1344,26 @@ export default function App() {
                       <button
                         className={`mode-option`}
                         type="button"
-                        onClick={() => { setReverseMode(true); setLocationsMode(false); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
+                        onClick={() => {
+                          saveCurrentSelection()
+                          setReverseMode(true); setLocationsMode(false); setModeOpen(false);
+                          // try to restore previous selection for new mode
+                          if (!restoreSelectionFor(true, false, exploringMode)) {
+                            // leave current selection as-is
+                          }
+                        }}
                       >
                         Base to Craft
                       </button>
                       <button
                         className={`mode-option`}
                         type="button"
-                        onClick={() => { setReverseMode(false); setLocationsMode(false); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
+                        onClick={() => {
+                          saveCurrentSelection()
+                          setReverseMode(false); setLocationsMode(false); setModeOpen(false);
+                          if (!restoreSelectionFor(false, false, exploringMode)) {
+                          }
+                        }}
                       >
                         Craft to Base
                       </button>
@@ -1324,14 +1374,27 @@ export default function App() {
                       <button
                         className={`mode-option`}
                         type="button"
-                        onClick={() => { setReverseMode(false); setLocationsMode(false); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
+                        onClick={() => {
+                          saveCurrentSelection()
+                          setReverseMode(false); setLocationsMode(false); setModeOpen(false);
+                          if (!restoreSelectionFor(false, false, exploringMode)) {
+                          }
+                        }}
                       >
                         Craft to Base
                       </button>
                         <button
                           className={`mode-option ${locationsMode ? 'active' : ''}`}
                           type="button"
-                          onClick={() => { setLocationsMode(true); setReverseMode(false); setModeOpen(false); setSelectedLocation('Forest'); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
+                          onClick={() => {
+                            saveCurrentSelection()
+                            setLocationsMode(true); setReverseMode(false); setModeOpen(false);
+                            // try to restore previous selection for locations mode
+                            if (!restoreSelectionFor(false, true, exploringMode)) {
+                              // if nothing saved, keep existing selections but ensure there's a selectedLocation
+                              if (!selectedLocation) setSelectedLocation('Forest')
+                            }
+                          }}
                         >
                           Locations
                         </button>
@@ -1342,14 +1405,25 @@ export default function App() {
                       <button
                         className={`mode-option`}
                         type="button"
-                        onClick={() => { setReverseMode(true); setLocationsMode(false); setModeOpen(false); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
+                        onClick={() => {
+                          saveCurrentSelection()
+                          setReverseMode(true); setLocationsMode(false); setModeOpen(false);
+                          if (!restoreSelectionFor(true, false, exploringMode)) {
+                          }
+                        }}
                       >
                         Base to Craft
                       </button>
                       <button
                         className={`mode-option ${locationsMode ? 'active' : ''}`}
                         type="button"
-                        onClick={() => { setLocationsMode(true); setReverseMode(false); setModeOpen(false); setSelectedLocation('Forest'); setItem('Board'); setAmount(1); setCraftChain([{ name: 'Board', amount: 1 }]) }}
+                        onClick={() => {
+                          saveCurrentSelection()
+                          setLocationsMode(true); setReverseMode(false); setModeOpen(false);
+                          if (!restoreSelectionFor(false, true, exploringMode)) {
+                            if (!selectedLocation) setSelectedLocation('Forest')
+                          }
+                        }}
                       >
                         Locations
                       </button>

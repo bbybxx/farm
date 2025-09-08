@@ -520,13 +520,26 @@ export default function App() {
     hapticFeedback('light')
     
     setPinnedResources(prev => {
+      // Normalize quantity to a number (round to two decimals for display)
+      let qty = quantity
+      if (qty === null || qty === undefined || qty === '') qty = 1
+      // If quantity comes as string, try to coerce to number
+      if (typeof qty === 'string') {
+        const parsed = Number(qty.replace(/\s+/g, ''))
+        qty = Number.isFinite(parsed) ? parsed : 1
+      }
+      // Ensure numeric and sensible
+      if (typeof qty !== 'number' || Number.isNaN(qty) || !Number.isFinite(qty) || qty <= 0) qty = 1
+      // Round to two decimals to keep behaviour consistent with UI
+      qty = Math.round(qty * 100) / 100
+
       // Always add as new entry to allow multiple instances with different parent recipes
       // But only inherit lastPinnedLocation if that location actually contains this item
       const locs = getItemLocations(resourceName) || []
       const hasLast = lastPinnedLocation && locs.some(l => l.name === lastPinnedLocation)
       const newEntry = {
         name: resourceName,
-        quantity,
+        quantity: qty,
         parentRecipe: parentRecipe || item, // Use current item as parent if not specified
         ...(hasLast ? { location: lastPinnedLocation } : {})
       }
@@ -534,7 +547,17 @@ export default function App() {
     })
     
     // Show success animation
-    const itemKey = `${resourceName}_${quantity}_${parentRecipe || item}`
+    const coercedQty = (() => {
+      let q = quantity
+      if (q === null || q === undefined || q === '') return 1
+      if (typeof q === 'string') {
+        const parsed = Number(q.replace(/\s+/g, ''))
+        q = Number.isFinite(parsed) ? parsed : 1
+      }
+      if (typeof q !== 'number' || Number.isNaN(q) || !Number.isFinite(q) || q <= 0) q = 1
+      return Math.round(q * 100) / 100
+    })()
+    const itemKey = `${resourceName}_${coercedQty}_${parentRecipe || item}`
     setRecentlyAddedItems(prev => new Set([...prev, itemKey]))
     
     // Remove animation after 2 seconds
@@ -1862,19 +1885,25 @@ export default function App() {
                           <span className="v">{formatNumber(c.craftableCount != null ? c.craftableCount : 0)}</span>
                         </div>
 
-                        {pinnedEnabled && (
-                          <button
-                            className={`pin-btn ${recentlyAddedItems.has(`${c.name}_${c.outputQty}_${item}`) ? 'success' : ''}`}
-                            onClick={(e) => { e.stopPropagation(); addToPinned(c.name, c.outputQty || 1, item) }}
-                            type="button"
-                            title={`Pin ${c.name}`}
-                          >
-                            <div className="pin-icon">
-                              <div className={`pin-line pin-line-horizontal ${recentlyAddedItems.has(`${c.name}_${c.outputQty}_${item}`) ? 'checked' : ''}`}></div>
-                              <div className={`pin-line pin-line-vertical ${recentlyAddedItems.has(`${c.name}_${c.outputQty}_${item}`) ? 'checked' : ''}`}></div>
-                            </div>
-                          </button>
-                        )}
+                        {pinnedEnabled && (() => {
+                          // If we can compute how many crafts are available, pin the full available amount
+                          const qtyForCraftPin = (typeof c.craftableCount === 'number' && c.craftableCount > 0)
+                            ? Math.round(c.craftableCount * (c.outputQty || 1))
+                            : (c.outputQty || 1)
+                          return (
+                            <button
+                              className={`pin-btn ${recentlyAddedItems.has(`${c.name}_${qtyForCraftPin}_${item}`) ? 'success' : ''}`}
+                              onClick={(e) => { e.stopPropagation(); addToPinned(c.name, qtyForCraftPin, item) }}
+                              type="button"
+                              title={`Pin ${c.name}`}
+                            >
+                              <div className="pin-icon">
+                                <div className={`pin-line pin-line-horizontal ${recentlyAddedItems.has(`${c.name}_${qtyForCraftPin}_${item}`) ? 'checked' : ''}`}></div>
+                                <div className={`pin-line pin-line-vertical ${recentlyAddedItems.has(`${c.name}_${qtyForCraftPin}_${item}`) ? 'checked' : ''}`}></div>
+                              </div>
+                            </button>
+                          )
+                        })()}
                       </motion.li>
                     )
                   })}

@@ -60,6 +60,7 @@ function loadFromStorage(key, defaultValue) {
 }
 
 export default function App() {
+  const [itemSelectFilter, setItemSelectFilter] = useState('')
   // Получаем объединенные рецепты (API + локальные)
   const combinedRecipes = getCombinedRecipes();
     // items is declared earlier to be available for select lists
@@ -782,6 +783,13 @@ export default function App() {
     return () => body.classList.remove('no-scroll')
   }, [sidebarOpen, isItemSelectOpen, isHistoryOpen, isBugReportOpen])
 
+  // Hide visual scrollbars site-wide and for sidebar/lists (user requested)
+  useEffect(() => {
+    const body = document.body
+    try { body.classList.add('no-visual-scrollbar') } catch (e) {}
+    return () => { try { body.classList.remove('no-visual-scrollbar') } catch (e) {} }
+  }, [])
+
   // Header auto-hide on scroll
   useEffect(() => {
     const onScroll = () => {
@@ -1451,9 +1459,24 @@ export default function App() {
                 exit={{ scale: 0.95 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <h2 id="item-select-title" className="item-select-title">Select an Item</h2>
+                <div className="item-select-header">
+                  <h2 id="item-select-title" className="item-select-title">Select an Item</h2>
+                  <div className="item-select-search-wrapper">
+                    <input
+                      className="calc-input item-select-search"
+                      placeholder={locationsMode ? 'Search locations...' : 'Search items...'}
+                      value={itemSelectFilter}
+                      onChange={(e) => setItemSelectFilter(e.target.value)}
+                      aria-label="Filter items"
+                    />
+                  </div>
+                </div>
                 <div className="item-select-list">
-                  {(locationsMode ? (locationsForConfig || []) : (itemsForSelect || [])).map(i => {
+                  {(locationsMode ? (locationsForConfig || []) : (itemsForSelect || [])).filter(i => {
+                    const label = locationsMode ? (i.name || '') : (i || '')
+                    if (!itemSelectFilter) return true
+                    return String(label).toLowerCase().includes(itemSelectFilter.toLowerCase())
+                  }).map(i => {
                     const label = locationsMode ? i.name : i
                     const active = locationsMode ? selectedLocation === i.name : item === i
                     return (

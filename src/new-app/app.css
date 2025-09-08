@@ -540,17 +540,41 @@ select.input option {
   overflow: hidden;
 }
 
+.item-select-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* title | center area | spacer */
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  /* bottom divider spans full header */
+  border-bottom: 1px solid var(--glass-stroke);
+}
+
 .item-select-title {
   margin: 0;
-  padding: 16px;
   font-size: 20px;
   font-weight: 700;
-  border-bottom: 1px solid var(--glass-stroke);
+  flex: 0 0 auto;
 }
 
 .item-select-list {
   overflow-y: auto;
-  padding: 8px;
+  padding: 8px 12px 12px 12px;
+}
+
+.item-select-search-wrapper {
+  display: flex;
+  justify-content: center; /* center between title and right edge */
+  align-items: center;
+  min-width: 0;
+  padding-left: 8px;
+}
+
+.item-select-header .item-select-search {
+  /* ensure the input can scroll internally when text is long */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .item-select-list button {
@@ -569,6 +593,12 @@ select.input option {
   line-height: 1.4;
   height: auto;
 }
+
+/* Minimalist scrollbar for item select list (restored) */
+.item-select-list::-webkit-scrollbar { width: 8px; }
+.item-select-list::-webkit-scrollbar-track { background: transparent; }
+.item-select-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.04); border-radius: 6px; }
+.item-select-list::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.06); }
 
 .item-select-list button:not(:last-child) {
   margin-bottom: 4px;
@@ -1156,20 +1186,20 @@ select.setting-input option {
       overflow-y: auto;
     }
 
-    /* Apply themed scrollbar to desktop areas as well */
-    body::-webkit-scrollbar, .main::-webkit-scrollbar, .sidebar .side-content::-webkit-scrollbar {
+    /* Apply themed scrollbar to desktop areas (main and sidebar) */
+    .main::-webkit-scrollbar, .sidebar .side-content::-webkit-scrollbar {
       width: 10px;
       height: 10px;
     }
 
-    body::-webkit-scrollbar-thumb, .main::-webkit-scrollbar-thumb, .sidebar .side-content::-webkit-scrollbar-thumb {
+    .main::-webkit-scrollbar-thumb, .sidebar .side-content::-webkit-scrollbar-thumb {
       background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
       border-radius: 10px;
     }
 
-    /* Firefox desktop scrollbar colors */
+    /* Firefox desktop scrollbar colors for main and sidebar only */
     @supports (scrollbar-width: thin) {
-      body, .main, .sidebar .side-content {
+      .main, .sidebar .side-content {
         scrollbar-width: thin;
         scrollbar-color: rgba(255,255,255,0.08) transparent;
       }
@@ -1206,6 +1236,73 @@ select.setting-input option {
       scrollbar-color: rgba(255,255,255,0.12) transparent;
     }
   }
+}
+
+/* Unified minimalist scrollbar across app (modal, sidebar, main content, pinned lists) */
+.main::-webkit-scrollbar,
+.sidebar .side-content::-webkit-scrollbar,
+.item-select-list::-webkit-scrollbar,
+.pinned-items::-webkit-scrollbar,
+.stack::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.main::-webkit-scrollbar-track,
+.sidebar .side-content::-webkit-scrollbar-track,
+.item-select-list::-webkit-scrollbar-track,
+.pinned-items::-webkit-scrollbar-track,
+.stack::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.main::-webkit-scrollbar-thumb,
+.sidebar .side-content::-webkit-scrollbar-thumb,
+.item-select-list::-webkit-scrollbar-thumb,
+.pinned-items::-webkit-scrollbar-thumb,
+.stack::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.main::-webkit-scrollbar-thumb:hover,
+.sidebar .side-content::-webkit-scrollbar-thumb:hover,
+.item-select-list::-webkit-scrollbar-thumb:hover,
+.pinned-items::-webkit-scrollbar-thumb:hover,
+.stack::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+}
+
+@supports (scrollbar-width: thin) {
+  .main,
+  .sidebar .side-content,
+  .item-select-list,
+  .pinned-items,
+  .stack {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.08) transparent;
+  }
+}
+
+/* If the user wants scrollbars completely hidden visually but keep scrolling available,
+   apply the platform-friendly hiding rules. This keeps scrolling via mouse-wheel, touch,
+   keyboard and programmatic methods working. */
+.no-visual-scrollbar, .no-visual-scrollbar * {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.no-visual-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Apply hiding to the page main and sidebar/pinned lists when user requested */
+body.no-visual-scrollbar,
+.main.no-visual-scrollbar,
+.sidebar .side-content.no-visual-scrollbar,
+.item-select-list.no-visual-scrollbar,
+.pinned-items.no-visual-scrollbar,
+.stack.no-visual-scrollbar {
+  overflow: auto; /* keep scrolling enabled */
 }
 
 /* Specific fix for Android Chrome gesture navigation */
@@ -1416,6 +1513,34 @@ select.setting-input option {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+/* Calculator-style input used in item/location selector */
+.calc-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  border-radius: 10px;
+  /* slightly lighter than modal background */
+  background: color-mix(in oklab, var(--secondary, #0f1624) 88%, white 12%);
+  color: var(--text, #e9ecf1);
+  border: 1px solid rgba(255,255,255,0.06);
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+  transition: box-shadow 120ms ease, transform 120ms ease;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.calc-input:focus {
+  box-shadow: 0 8px 22px rgba(0,0,0,0.6), 0 0 0 6px rgba(120,160,255,0.07);
+  transform: translateY(-1px);
+}
+.item-select-search { width: 100%; }
+.item-select-search::placeholder {
+  color: rgba(233,236,241,0.4);
+  font-weight: 500;
 }
 
 .pinned-card {

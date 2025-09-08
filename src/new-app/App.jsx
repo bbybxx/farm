@@ -658,16 +658,33 @@ export default function App() {
     try {
       // Clear all localStorage keys related to the app (only if storage is available)
       if (isStorageAvailable()) {
-        localStorage.removeItem('craftCalculator_item')
-        localStorage.removeItem('craftCalculator_amount') 
-        localStorage.removeItem('craftCalculator_activePerks')
-        localStorage.removeItem('craftCalculator_craftChain')
-        localStorage.removeItem('craftCalculator_craftHistory')
-        localStorage.removeItem('craftCalculator_historyLimit')
-        localStorage.removeItem('craftCalculator_pinnedResources')
-        localStorage.removeItem('craftCalculator_useThousandsFormat')
-        localStorage.removeItem('craftCalculator_pinnedEnabled')
-        localStorage.removeItem('craftCalculator_historyEnabled')
+        // Remove everything that starts with our app prefix
+        const prefix = 'craftCalculator_'
+        const keysToRemove = []
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i)
+          if (!k) continue
+          if (k.indexOf(prefix) === 0) keysToRemove.push(k)
+        }
+        // Also remove known keys from RecipeUpdateService/cache
+        keysToRemove.push('lastRecipeUpdate')
+        keysToRemove.push('cachedApiRecipes')
+        keysToRemove.push('cachedApiItems')
+
+        keysToRemove.forEach(k => {
+          try { localStorage.removeItem(k) } catch (e) {}
+        })
+
+        // Also clear sessionStorage copies if used
+        try {
+          for (let i = 0; i < sessionStorage.length; i++) {
+            const sk = sessionStorage.key(i)
+            if (!sk) continue
+            if (sk.indexOf(prefix) === 0) sessionStorage.removeItem(sk)
+          }
+        } catch (e) {
+          // ignore sessionStorage errors
+        }
       }
       
       // Reset all state to defaults
@@ -689,6 +706,9 @@ export default function App() {
       setIsItemSelectOpen(false)
       setIsHistoryOpen(false)
       setRecentlyAddedItems(new Set())
+
+  // Also reset any saved-last-selection map in memory
+  setLastSelectionByMode({})
       
       // Show confirmation
       hapticFeedback('heavy')

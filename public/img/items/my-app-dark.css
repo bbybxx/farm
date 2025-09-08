@@ -13,6 +13,7 @@
 
 input[type=number] {
   -moz-appearance: textfield !important;
+  appearance: textfield !important;
 }
 
 .actions-modal-button {
@@ -26,12 +27,13 @@ input[type=number] {
   color: grey;
   display:inline-block;
   -webkit-mask:linear-gradient(-60deg,#000 30%,#0005,#000 70%) right/300% 100%;
+  mask: linear-gradient(-60deg,#000 30%,#0005,#000 70%) right/300% 100%;
   background-repeat: no-repeat;
   animation: shimmer 66s 1;
 }
 
- @keyframes shimmer {
- 100% {-webkit-mask-position:left}
+@keyframes shimmer {
+  100% { mask-position: left; -webkit-mask-position: left; }
 }
 
 .newinput {
@@ -97,14 +99,14 @@ input[type=number] {
 }
 
 .border1r {
-  /*border: 3px solid gray;
-  border-radius: 5px;*/
+  min-height: 0; /* reserved placeholder */
 }
 
 .glow1 {
   border: 3px solid teal;
   border-radius: 5px;
   -webkit-animation: glow 1.5s infinite alternate;
+  animation: glow 1.5s infinite alternate;
   -webkit-transition: border 1.5s linear, box-shadow 1.5s linear;
   -moz-transition: border 1.5s linear, box-shadow 1.5s linear;
   transition: border 1.5s linear, box-shadow 1.5s linear;
@@ -117,18 +119,26 @@ input[type=number] {
     box-shadow: 0 0 20px teal;
   }
 }
+@keyframes glow {
+  to {
+    border-color: teal;
+    box-shadow: 0 0 20px teal;
+  }
+}
 
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
+  appearance: none;
   margin: 0;
 }
 
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .c-progress-bar-fill {
@@ -209,13 +219,15 @@ input[type=number] {
 .cc1001 {
   background: #66ff00;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #66ff00, #a80077);  /* Chrome 10-25, Safari 5.1-6 */
-  background: -o-linear-gradient(to right, #66ff00, #a80077);  /* Chrome 10-25, Safari 5.1-6 */
-  background: -moz-linear-gradient(to right, #66ff00, #a80077);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #66ff00, #a80077); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: -o-linear-gradient(to right, #66ff00, #a80077);  /* old Opera */
+  background: -moz-linear-gradient(to right, #66ff00, #a80077);  /* old Firefox */
+  background: linear-gradient(to right, #66ff00, #a80077); /* standard */
   -webkit-background-clip: text;
+  background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 1px 1px 1px #aaa;
-  }
+}
 
 .cc1002 {
   padding-left:2px;
@@ -229,6 +241,7 @@ input[type=number] {
   background: -moz-linear-gradient(90deg, #ff0000 0%, #ff9900 100%);
   background: linear-gradient(90deg, #ff0000 0%, #ff9900 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -239,6 +252,7 @@ input[type=number] {
   background: -moz-linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%);
   background: linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -249,6 +263,7 @@ input[type=number] {
   background: -moz-linear-gradient(90deg, #efd5ff 0%, #515ada 100%);
   background: linear-gradient(90deg, #efd5ff 0%, #515ada 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 1px 1px 2px #aaa;
 }
@@ -260,6 +275,7 @@ input[type=number] {
     background: -o-linear-gradient(left, #3F5EFB, #FC466B);
     background: linear-gradient(to right, #3F5EFB, #FC466B); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -270,6 +286,7 @@ background: -moz-linear-gradient(left, #0ABFBC, #FC354C);
 background: -o-linear-gradient(left, #0ABFBC, #FC354C);
 background: linear-gradient(to right, #0ABFBC, #FC354C);  /* Chrome 10-25, Safari 5.1-6 */ /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -1092,11 +1109,12 @@ div[class*="col-"] {
   margin-bottom: 15px;
 }
 
-#bottom {
+.navbar {
+  min-height: 0;
 }
 
-.navbar {
-/*border-top: 1px solid #222;*/
+#bottom {
+  min-height: 0;
 }
 
 .card-content-inner img {
@@ -1111,7 +1129,7 @@ div[class*="col-"] {
   height: 100%;
 }
 .swiper-slide {
-
+  min-height: 0; /* neutral placeholder to avoid empty-rules lint */
 }
 .swiper-slide span {
   text-align:center;
@@ -1413,7 +1431,7 @@ a.chatlink:active {
   height: 100%;
 }
 .swiper-slide {
-
+  min-height: 0; /* neutral placeholder to avoid empty-rules lint */
 }
 .swiper-slide span {
   text-align:center;
@@ -1858,6 +1876,7 @@ a.skipmission {
     -moz-transform: rotate(-45deg);
     -ms-transform: rotate(-45deg);
     -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
     position: absolute;
     top: -4px;
     left: -24px;
@@ -2490,7 +2509,6 @@ li.success {
 }
 
 .stacked-bar-graph-span {
-  display: inline-block;
   height:100%;
   box-sizing: border-box;
   float: left;

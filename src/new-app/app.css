@@ -11,6 +11,20 @@
 	--shadow: 0 6px 18px #0007;
 }
 
+/* Prevent some browsers from forcibly adjusting colors (forced color modes, readers) */
+/* Respect author's color scheme and provide explicit fallbacks */
+html, body {
+  color-scheme: light dark;
+  forced-color-adjust: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Provide a solid fallback background color for environments that don't support gradients */
+body {
+  background-color: #0b1020; /* fallback for gradient */
+}
+
 /* Telegram theme support */
 @media (prefers-color-scheme: dark) {
   :root {

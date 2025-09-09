@@ -64,23 +64,79 @@ yarn-error.log*
 /android/.gradle/
 /android/build/
 /android/app/build/
+# ---- Node / frontend ----
+/node_modules/
+/.pnp
+.pnp.js
+
+# Vite / build outputs
+/dist/
+/build/
+/build-output/
+
+# caches, lockfiles (local), logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Environment
+.env
+.env.*
+server/.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# ---- Source artifacts / IDE ----
+/.idea/
+/.vscode/
+/.gradle/
+
+# Editor temp files
+*~
+*.swp
+*.swo
+
+# ---- Android / Gradle ----
+/android/.gradle/
+/android/build/
+/android/app/build/
+/android/**/build/
+/android/local.properties
+/android/*.iml
+
+# Local Capacitor/Android modules and build outputs
 /android/capacitor-android/build/
 /android/capacitor-cordova-android-plugins/build/
-/android/**/build/
 
-# Local IDE / SDK / JDK artifacts
+# Android Studio config and JBR/JDK shipped in repo
 /android/.idea/
 /android/"Android Studio"/
 /android/JDK/
 
-# Platform tools (local copy)
+# platform-tools if downloaded into repo
 /platform-tools/
 
 # Unpacked APK / temp
 /apk-unpacked/
 
-# keystore files and signing properties
+# ---- Keystore / signing ----
 *.jks
 keystore.properties
 keystore.*
+
+# ---- Server / Node service ----
+/server/node_modules/
+
+# ---- Misc / generated ----
+/all-items_files/
+/source-index_files/
+
+# ---- Vercel / deployment ----
+/.vercel
+vercel.json
+
+# End of file
 

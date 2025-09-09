@@ -1,0 +1,9 @@
+﻿android/
+apk-unpacked/
+apk/
+build/
+android/**
+all-items_files/
+node_modules/
+.gradle/
+.idea/

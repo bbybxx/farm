@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
+import multer from 'multer';
+import FormData from 'form-data';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -27,6 +29,14 @@ app.use(cors({
 // Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+// Multer for multipart/form-data (attachments)
+const upload = multer({
+  limits: {
+    fileSize: 20 * 1024 * 1024, // 20 MB per file
+    files: 8
+  }
+});
 
 // Telegram Bot API helper function
 async function sendTelegramMessage(chatId, message, parseMode = 'HTML') {
@@ -160,13 +170,27 @@ app.get('/health', (req, res) => {
 });
 
 // Bug report endpoint
-app.post('/api/bug-report', async (req, res) => {
+// Accept either JSON or multipart/form-data with files
+app.post('/api/bug-report', upload.array('files', 8), async (req, res) => {
   try {
+    // If multipart/form-data was used, multer will populate req.files and req.body
+    const isMultipart = Array.isArray(req.files) && req.files.length > 0;
+
+    const bodySource = isMultipart ? req.body : req.body;
+
+    // For multipart we may receive a 'metadata' field containing JSON
+    let metadata = {};
+    if (isMultipart && req.body?.metadata) {
+      try { metadata = JSON.parse(req.body.metadata); } catch (e) { metadata = {}; }
+    }
+
+    const combined = Object.assign({}, metadata, bodySource);
+
     const { 
       type, message, user, timestamp, url, userAgent,
       viewport, screen, language, platform, onLine, 
       cookieEnabled, timezone, isInTelegram, telegramVersion, telegramPlatform
-    } = req.body;
+    } = combined;
     
     // Validate required fields
     if (!message || !message.trim()) {
@@ -183,8 +207,8 @@ app.post('/api/bug-report', async (req, res) => {
       });
     }
     
-    // Check if bot token and chat ID are configured
-    if (!BOT_TOKEN) {
+  // Check if bot token and chat ID are configured
+  if (!BOT_TOKEN) {
       console.error('BOT_TOKEN not configured');
       return res.status(500).json({
         success: false,
@@ -219,7 +243,46 @@ app.post('/api/bug-report', async (req, res) => {
       telegramVersion,
       telegramPlatform
     });
-    
+
+    // If multipart and files exist, upload them first to Telegram
+    if (isMultipart && Array.isArray(req.files) && req.files.length > 0) {
+      console.log(`Uploading ${req.files.length} attachment(s) to Telegram...`);
+
+      for (const file of req.files) {
+        try {
+          const form = new FormData();
+          form.append('chat_id', CHAT_ID);
+
+          // Decide between photo and document by mime type
+          if (file.mimetype && file.mimetype.startsWith('image/')) {
+            form.append('photo', file.buffer, {
+              filename: file.originalname,
+              contentType: file.mimetype
+            });
+            const uploadRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+              method: 'POST',
+              body: form
+            });
+            const uploadJson = await uploadRes.json();
+            if (!uploadJson.ok) console.warn('Telegram upload warning:', uploadJson.description || uploadJson);
+          } else {
+            form.append('document', file.buffer, {
+              filename: file.originalname,
+              contentType: file.mimetype
+            });
+            const uploadRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
+              method: 'POST',
+              body: form
+            });
+            const uploadJson = await uploadRes.json();
+            if (!uploadJson.ok) console.warn('Telegram upload warning:', uploadJson.description || uploadJson);
+          }
+        } catch (uploadErr) {
+          console.error('Failed to upload attachment to Telegram:', uploadErr);
+        }
+      }
+    }
+
     const result = await sendTelegramMessage(CHAT_ID, formattedMessage);
     
     console.log('Bug report sent successfully:', {

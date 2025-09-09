@@ -88,30 +88,80 @@ Write-Host 'Attempting Vercel deploy...'
 $vercelToken = $env:VERCEL_TOKEN
 if ($vercelToken -and $vercelToken -ne '') { Write-Host 'Using VERCEL_TOKEN for non-interactive deploy.' -ForegroundColor Cyan }
 
-if (Get-Command vercel -ErrorAction SilentlyContinue) {
-    if ($vercelToken) {
-        Write-Host 'Running: vercel --prod --yes --token <VERCEL_TOKEN> --archive=tgz' -ForegroundColor Cyan
-        $deployOut = & vercel --prod --yes --token $vercelToken --archive=tgz 2>&1 | Out-String
-    } else {
-        Write-Host 'Running: vercel --prod --yes --archive=tgz' -ForegroundColor Cyan
-        $deployOut = & vercel --prod --yes --archive=tgz 2>&1 | Out-String
-    }
-    $code = $LASTEXITCODE
-} elseif (Get-Command npx -ErrorAction SilentlyContinue) {
-    if ($vercelToken) {
-        Write-Host 'Running: npx vercel --prod --yes --token <VERCEL_TOKEN> --archive=tgz' -ForegroundColor Cyan
-        $deployOut = & npx --yes vercel --prod --yes --token $vercelToken --archive=tgz 2>&1 | Out-String
-    } else {
-        Write-Host 'Running: npx vercel --prod --yes --archive=tgz' -ForegroundColor Cyan
-        $deployOut = & npx --yes vercel --prod --yes --archive=tgz 2>&1 | Out-String
-    }
-    $code = $LASTEXITCODE
-} else {
-    Write-Host 'Vercel CLI not found. Install it (npm i -g vercel) or set VERCEL_TOKEN and use npx.' -ForegroundColor Yellow
-    Write-Host 'Manual deploy tip: vercel --prod --confirm' -ForegroundColor Yellow
-    exit 0
-}
+# Create or update a temporary .vercelignore so we exclude large build/artifact folders from the deploy.
+# We'll backup any existing .vercelignore and restore it after deploy.
+$ignorePath = Join-Path (Get-Location) '.vercelignore'
+$backupPath = "$ignorePath.bak.$((Get-Date).ToString('yyyyMMddHHmmss'))"
+$tempCreated = $false
+$defaultExcludes = @(
+    'android/',
+    'apk-unpacked/',
+    'apk/',
+    'build/',
+    'android/**',
+    'all-items_files/',
+    'node_modules/',
+    '.gradle/',
+    '.idea/'
+)
 
-if ($code -ne 0) { ErrExit ("Vercel deploy failed:`n$deployOut") 1 } else { Write-Host 'Vercel deploy finished.'; Write-Host $deployOut }
+try {
+    if (-not (Test-Path $ignorePath)) {
+        Write-Host 'Creating temporary .vercelignore to exclude large build folders...' -ForegroundColor Cyan
+        $defaultExcludes | Out-File -FilePath $ignorePath -Encoding utf8
+        $tempCreated = $true
+    } else {
+        Copy-Item -Path $ignorePath -Destination $backupPath -ErrorAction SilentlyContinue
+        Write-Host ("Backed up existing .vercelignore to {0}" -f $backupPath) -ForegroundColor Cyan
+        $existing = Get-Content $ignorePath -ErrorAction SilentlyContinue
+        $toAdd = $defaultExcludes | Where-Object { $_ -notin $existing }
+        if ($toAdd) {
+            $toAdd | Add-Content -Path $ignorePath -Encoding utf8
+            Write-Host 'Appended suggested excludes to existing .vercelignore' -ForegroundColor Cyan
+        } else {
+            Write-Host '.vercelignore already contains suggested excludes' -ForegroundColor Cyan
+        }
+    }
+
+    if (Get-Command vercel -ErrorAction SilentlyContinue) {
+        if ($vercelToken) {
+            Write-Host 'Running: vercel --prod --yes --token <VERCEL_TOKEN> --archive=tgz' -ForegroundColor Cyan
+            $deployOut = & vercel --prod --yes --token $vercelToken --archive=tgz 2>&1 | Out-String
+        } else {
+            Write-Host 'Running: vercel --prod --yes --archive=tgz' -ForegroundColor Cyan
+            $deployOut = & vercel --prod --yes --archive=tgz 2>&1 | Out-String
+        }
+        $code = $LASTEXITCODE
+    } elseif (Get-Command npx -ErrorAction SilentlyContinue) {
+        if ($vercelToken) {
+            Write-Host 'Running: npx vercel --prod --yes --token <VERCEL_TOKEN> --archive=tgz' -ForegroundColor Cyan
+            $deployOut = & npx --yes vercel --prod --yes --token $vercelToken --archive=tgz 2>&1 | Out-String
+        } else {
+            Write-Host 'Running: npx vercel --prod --yes --archive=tgz' -ForegroundColor Cyan
+            $deployOut = & npx --yes vercel --prod --yes --archive=tgz 2>&1 | Out-String
+        }
+        $code = $LASTEXITCODE
+    } else {
+        Write-Host 'Vercel CLI not found. Install it (npm i -g vercel) or set VERCEL_TOKEN and use npx.' -ForegroundColor Yellow
+        Write-Host 'Manual deploy tip: vercel --prod --yes --archive=tgz' -ForegroundColor Yellow
+        exit 0
+    }
+
+    if ($code -ne 0) { ErrExit ("Vercel deploy failed:`n$deployOut") 1 } else { Write-Host 'Vercel deploy finished.'; Write-Host $deployOut }
+
+} finally {
+    # Restore original .vercelignore if we created a temporary one or restore backup
+    try {
+        if ($tempCreated -and (Test-Path $ignorePath)) {
+            Remove-Item $ignorePath -Force -ErrorAction SilentlyContinue
+            Write-Host 'Removed temporary .vercelignore' -ForegroundColor Cyan
+        } elseif ((Test-Path $backupPath) -and -not $tempCreated) {
+            Move-Item -Path $backupPath -Destination $ignorePath -Force -ErrorAction SilentlyContinue
+            Write-Host 'Restored original .vercelignore from backup' -ForegroundColor Cyan
+        }
+    } catch {
+        Write-Host 'Warning: failed to restore .vercelignore automatically. Check manually.' -ForegroundColor Yellow
+    }
+}
 
 exit 0

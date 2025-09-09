@@ -180,10 +180,6 @@ Acceptance criteria
 - Given a resource and amount, the modal lists locations ranked by required exploring budget and the numbers match the per-location estimates visible elsewhere in the app (consistency with pinned estimates).
 - The "Use" action navigates to the chosen location and restores the budget or inserts a location node into the craftChain.
 
-Estimated effort
-- Phase 1: Small (1–3 days) to provide a usable MVP.
-- Phase 2: Medium (1–2 weeks) for polish, variants, and caching.
-
 Why this helps
 - Removes manual trial-and-error when sourcing resources for quests or large batches. Lets players quickly compare real costs across locations using their current perks and yields.
 

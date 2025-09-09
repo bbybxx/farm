@@ -5,43 +5,43 @@
 
 
 Wood
-Explores/drop
+Stamina/drop
 8,97
 
 Nails
-Explores/drop
+Stamina/drop
 8,97
 
 Stone
-Explores/drop
+Stamina/drop
 8,97
 
 Mushroom
-Explores/drop
+Stamina/drop
 20,82
 
 Bone
-Explores/drop
+Stamina/drop
 67,08
 
 Grab Bag 02
-Explores/drop
+Stamina/drop
 862,79
 
 Wooden Mask
-Explores/drop
+Stamina/drop
 865,37
 
 Runestone 04
-Explores/drop
+Stamina/drop
 2 769,59
 
 Skeleton Key
-Explores/drop
+Stamina/drop
 12 675,56
 
 Model Ship
-Explores/drop
+Stamina/drop
 56 650,80
 Navigated to Small Cave
 

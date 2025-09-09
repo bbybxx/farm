@@ -1,0 +1,99 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace "com.example.craftcalculator"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "com.example.craftcalculator"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        aaptOptions {
+             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
+             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+            ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    // Read signing configuration from project properties or environment variables.
+    // Allowed sources (in order): Gradle project property, environment variable, file at ../keystore.jks
+    def ksPathProp = project.hasProperty('KEYSTORE_PATH') ? project.property('KEYSTORE_PATH') : null
+    def ksPasswordProp = project.hasProperty('KEYSTORE_PASSWORD') ? project.property('KEYSTORE_PASSWORD') : null
+    def keyAliasProp = project.hasProperty('KEY_ALIAS') ? project.property('KEY_ALIAS') : null
+    def keyPasswordProp = project.hasProperty('KEY_PASSWORD') ? project.property('KEY_PASSWORD') : null
+
+    def ksPathEnv = System.getenv('KEYSTORE_PATH')
+    def ksPasswordEnv = System.getenv('KEYSTORE_PASSWORD')
+    def keyAliasEnv = System.getenv('KEY_ALIAS')
+    def keyPasswordEnv = System.getenv('KEY_PASSWORD')
+
+    def resolvedKeystorePath = ksPathProp ?: ksPathEnv ?: file('..').toPath().resolve('keystore.jks').toFile().absolutePath
+    def resolvedKeystorePassword = ksPasswordProp ?: ksPasswordEnv ?: ''
+    def resolvedKeyAlias = keyAliasProp ?: keyAliasEnv ?: ''
+    def resolvedKeyPassword = keyPasswordProp ?: keyPasswordEnv ?: ''
+    signingConfigs {
+        release {
+            // Only set signing values if a keystore file exists or a path was provided
+            def storeFileCandidate = file(resolvedKeystorePath)
+            if (storeFileCandidate.exists()) {
+                storeFile storeFileCandidate
+                if (resolvedKeystorePassword) storePassword resolvedKeystorePassword
+                if (resolvedKeyAlias) keyAlias resolvedKeyAlias
+                if (resolvedKeyPassword) keyPassword resolvedKeyPassword
+            } else {
+                // No keystore found; release builds will be unsigned unless user supplies properties/env vars
+                println "[build] Signing: keystore not found at ${resolvedKeystorePath} — release APK will be unsigned unless signing properties are provided."
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // Configure signing if keystore is provided via properties or environment
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+repositories {
+    flatDir{
+    dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+    }
+    // Ensure Maven Central is available for resolving Capacitor artifacts
+    mavenCentral()
+}
+
+// Use remote androidx.webkit artifact resolved from Maven Central.
+// (Removed local vendored AAR / forced resolution to avoid missing-file and
+// duplicate-class issues. The project now compiles against compileSdk >= 34.)
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    // WebView compatibility library required by Capacitor
+    // Use local Capacitor Android project (node_modules) instead of remote artifact
+    // This avoids failing remote resolution when the published artifact is unavailable.
+    implementation project(':capacitor-android')
+    // Ensure androidx.webkit is packaged so WebViewFeature is available at runtime
+    implementation 'androidx.webkit:webkit:1.8.0'
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    implementation project(':capacitor-cordova-android-plugins')
+}
+
+apply from: 'capacitor.build.gradle'
+
+try {
+    def servicesJSON = file('google-services.json')
+    if (servicesJSON.text) {
+        apply plugin: 'com.google.gms.google-services'
+    }
+} catch(Exception e) {
+    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+}

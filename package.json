@@ -7,9 +7,15 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "vercel-build": "vite build"
+    "vercel-build": "vite build",
+    "capacitor:init": "npx cap init",
+    "capacitor:copy": "npx cap copy",
+    "capacitor:open:android": "npx cap open android"
   },
   "dependencies": {
+    "@capacitor/android": "^5.7.8",
+    "@capacitor/cli": "^5.0.0",
+    "@capacitor/core": "^5.0.0",
     "@vercel/analytics": "^1.5.0",
     "framer-motion": "^12.23.12",
     "react": "^19.1.0",

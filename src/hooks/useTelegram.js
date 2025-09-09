@@ -118,11 +118,12 @@ export function useTelegram() {
       let BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
       let CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
       
-      // Fallback для случая, когда переменные окружения не настроены на Vercel
+      // Do NOT keep secrets in source.
+      // If env vars are not configured, disable direct Telegram API usage.
       if (!BOT_TOKEN || !CHAT_ID) {
-        console.warn('Environment variables not found, using fallback values');
-        BOT_TOKEN = '8035311656:AAFB8nrpINRSaREmNRtevET2iOjREohVgGs';
-        CHAT_ID = '592052544';
+        console.warn('VITE_TELEGRAM_BOT_TOKEN or VITE_TELEGRAM_CHAT_ID not set. Direct Telegram API will be disabled; server endpoint will handle reports in production.');
+        BOT_TOKEN = null;
+        CHAT_ID = null;
       }
       
       // Собираем расширенную информацию о пользователе и системе
@@ -149,7 +150,7 @@ export function useTelegram() {
       };
       
       // Форматируем сообщение для Telegram
-      let telegramMessage = `🐛 Bug Report\n\n`;
+      let telegramMessage = `Bug Report\n\n`;
       
       if (bugReportData.user) {
         telegramMessage += `👤 User: ${bugReportData.user.first_name || 'Unknown'}`;
@@ -158,12 +159,19 @@ export function useTelegram() {
         telegramMessage += `\n`;
       }
       
-      telegramMessage += `⏰ Time: ${new Date(bugReportData.timestamp).toLocaleString()}\n`;
-      telegramMessage += `🔗 URL: ${bugReportData.url}\n\n`;
-      telegramMessage += `📝 Report:\n${bugReportData.message}`;
+      telegramMessage += `Time: ${new Date(bugReportData.timestamp).toLocaleString()}\n`;
+      telegramMessage += `URL: ${bugReportData.url}\n\n`;
+      telegramMessage += `Report:\n${bugReportData.message}`;
       
-      // В продакшене всегда используем наш API endpoint
-      const isProduction = import.meta.env.PROD || window.location.hostname !== 'localhost';
+  // В продакшене всегда используем наш API endpoint
+  const isProduction = import.meta.env.PROD || window.location.hostname !== 'localhost';
+
+  // Detect native / file protocol (Android APK) and allow overriding base API URL
+  const envBase = import.meta.env.VITE_API_BASE || null;
+  const runningOnFileProtocol = typeof window !== 'undefined' && window.location && window.location.protocol === 'file:';
+  const isCapacitor = typeof window !== 'undefined' && (!!window.Capacitor || !!window.android);
+  const FALLBACK_PUBLIC_BASES = ['https://craft-calculator.com', 'https://farmcraftcalculator.infy.uk'];
+  const apiBase = (envBase && (runningOnFileProtocol || isCapacitor)) ? envBase.replace(/\/$/, '') : ((runningOnFileProtocol || isCapacitor) ? FALLBACK_PUBLIC_BASES[0] : '');
       
       let response;
       
@@ -181,7 +189,9 @@ export function useTelegram() {
           });
         }
 
-        response = await fetch('/api/bug-report', {
+  const endpoint = apiBase ? apiBase + '/api/bug-report' : '/api/bug-report';
+  if (import.meta.env.DEV) console.log('Bug report endpoint:', endpoint, 'apiBase:', apiBase, 'runningOnFileProtocol:', runningOnFileProtocol, 'isCapacitor:', isCapacitor);
+  response = await fetch(endpoint, {
           method: 'POST',
           body: form
         });
@@ -194,42 +204,48 @@ export function useTelegram() {
 
         const safeFiles = Array.isArray(files) ? files.slice(0, MAX_FILES).filter(f => f.size <= MAX_SIZE) : [];
 
-        // Helper to upload a single file via sendDocument/sendPhoto
-        const uploadSingle = async (file) => {
-          const fd = new FormData();
-          fd.append('chat_id', CHAT_ID);
-          // choose appropriate method
-          if (file.type && file.type.startsWith('image/')) {
-            fd.append('photo', file, file.name);
-            return fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: fd });
-          } else {
-            fd.append('document', file, file.name);
-            return fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, { method: 'POST', body: fd });
-          }
-        };
+        if (!BOT_TOKEN || !CHAT_ID) {
+          console.warn('Telegram bot credentials missing in environment; skipping direct Telegram API send in dev mode. Falling back to WebApp or console log.');
+          // Simulate a failed response to trigger the fallback behavior below
+          response = { ok: false, json: async () => ({ description: 'Missing credentials' }) };
+        } else {
+          // Helper to upload a single file via sendDocument/sendPhoto
+          const uploadSingle = async (file) => {
+            const fd = new FormData();
+            fd.append('chat_id', CHAT_ID);
+            // choose appropriate method
+            if (file.type && file.type.startsWith('image/')) {
+              fd.append('photo', file, file.name);
+              return fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: fd });
+            } else {
+              fd.append('document', file, file.name);
+              return fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, { method: 'POST', body: fd });
+            }
+          };
 
-        // Upload each file sequentially to avoid hitting rate limits or memory spikes
-        for (const f of safeFiles) {
-          try {
-            // Note: in browser environment fetch will stream file content in multipart/form-data
-            await uploadSingle(f);
-          } catch (upErr) {
-            console.warn('Failed to upload attachment:', f.name, upErr);
+          // Upload each file sequentially to avoid hitting rate limits or memory spikes
+          for (const f of safeFiles) {
+            try {
+              // Note: in browser environment fetch will stream file content in multipart/form-data
+              await uploadSingle(f);
+            } catch (upErr) {
+              console.warn('Failed to upload attachment:', f.name, upErr);
+            }
           }
+
+          // Finally, send the text message
+          response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              chat_id: CHAT_ID,
+              text: telegramMessage,
+              parse_mode: 'HTML'
+            })
+          });
         }
-
-        // Finally, send the text message
-        response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            chat_id: CHAT_ID,
-            text: telegramMessage,
-            parse_mode: 'HTML'
-          })
-        });
       }
       
       if (response.ok) {

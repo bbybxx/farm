@@ -20,11 +20,47 @@ const BOT_TOKEN = process.env.BOT_TOKEN;
 const CHAT_ID = process.env.CHAT_ID;
 
 // CORS configuration
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:5173'];
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
-}));
+// Allow explicit origins from env or sensible defaults and also allow native/app origins
+const envOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [];
+const defaultOrigins = ['http://localhost:5173', 'http://localhost', 'http://127.0.0.1'];
+const allowedOrigins = [...new Set([...envOrigins, ...defaultOrigins])];
+
+// Custom CORS handler so we can echo back the Origin header for file:// / null origins
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+
+  // Accept if origin is in allowed list, or if origin is 'null' (file://) or capacitor app origin
+  if (!origin) {
+    // No origin header (native WebView or same-origin requests) - allow
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    return next();
+  }
+
+  const normalized = origin.trim();
+  const isAllowed = allowedOrigins.includes(normalized)
+    || normalized === 'null'
+    || normalized.startsWith('capacitor://')
+    || normalized.startsWith('file://')
+    || normalized.endsWith('.vercel.app');
+
+  if (isAllowed) {
+    // Echo origin to be stricter than wildcard when Origin present
+    res.setHeader('Access-Control-Allow-Origin', normalized === 'null' ? '*' : normalized);
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
+
+  // Handle preflight quickly
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  next();
+});
 
 // Middleware
 app.use(express.json({ limit: '10mb' }));

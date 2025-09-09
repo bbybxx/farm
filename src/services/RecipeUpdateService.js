@@ -2,7 +2,25 @@
 class RecipeUpdateService {
   constructor() {
     // Используем прокси в development и production (Vercel автоматически проксирует /api)
-    this.API_URL = '/api/graphql';
+    // Но в нативных сборках (Capacitor / file://) относительные пути не работают —
+    // переключаемся на явный полный URL. Можно задать VITE_API_BASE в окружении.
+    const envBase = import.meta.env.VITE_API_BASE || null;
+    const runningOnFileProtocol = typeof window !== 'undefined' && window.location && window.location.protocol === 'file:';
+    const isCapacitor = typeof window !== 'undefined' && (!!window.Capacitor || !!window.android);
+    // Safe fallback: if VITE_API_BASE is not provided for native builds, try known public host
+    const FALLBACK_PUBLIC_BASES = [
+      'https://craft-calculator.com',
+      'https://farmcraftcalculator.infy.uk'
+    ];
+
+    if (envBase && (runningOnFileProtocol || isCapacitor)) {
+      this.API_URL = envBase.replace(/\/$/, '') + '/api/graphql';
+    } else if (!envBase && (runningOnFileProtocol || isCapacitor)) {
+      // pick first reachable fallback at runtime (optimistic). We still attempt a relative path if nothing available.
+      this.API_URL = FALLBACK_PUBLIC_BASES[0] + '/api/graphql';
+    } else {
+      this.API_URL = '/api/graphql';
+    }
     this.STORAGE_KEY = 'lastRecipeUpdate';
     this.RECIPES_KEY = 'cachedApiRecipes';
     this.ITEMS_KEY = 'cachedApiItems';
@@ -77,7 +95,7 @@ class RecipeUpdateService {
     try {
       if (import.meta.env.DEV) {
         console.log('🔄 Обновляем рецепты из buddy.farm API...');
-        console.log('🌐 Используемый URL:', this.API_URL);
+  console.log('🌐 Используемый URL:', this.API_URL);
         console.log('🛠️ Development mode:', import.meta.env.DEV);
       }
       

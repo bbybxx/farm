@@ -90,20 +90,20 @@ if ($vercelToken -and $vercelToken -ne '') { Write-Host 'Using VERCEL_TOKEN for 
 
 if (Get-Command vercel -ErrorAction SilentlyContinue) {
     if ($vercelToken) {
-        Write-Host 'Running: vercel --prod --confirm --token <VERCEL_TOKEN>' -ForegroundColor Cyan
-        $deployOut = & vercel --prod --confirm --token $vercelToken 2>&1 | Out-String
+        Write-Host 'Running: vercel --prod --yes --token <VERCEL_TOKEN> --archive=tgz' -ForegroundColor Cyan
+        $deployOut = & vercel --prod --yes --token $vercelToken --archive=tgz 2>&1 | Out-String
     } else {
-        Write-Host 'Running: vercel --prod --confirm' -ForegroundColor Cyan
-        $deployOut = & vercel --prod --confirm 2>&1 | Out-String
+        Write-Host 'Running: vercel --prod --yes --archive=tgz' -ForegroundColor Cyan
+        $deployOut = & vercel --prod --yes --archive=tgz 2>&1 | Out-String
     }
     $code = $LASTEXITCODE
 } elseif (Get-Command npx -ErrorAction SilentlyContinue) {
     if ($vercelToken) {
-        Write-Host 'Running: npx vercel --prod --confirm --token <VERCEL_TOKEN>' -ForegroundColor Cyan
-        $deployOut = & npx --yes vercel --prod --confirm --token $vercelToken 2>&1 | Out-String
+        Write-Host 'Running: npx vercel --prod --yes --token <VERCEL_TOKEN> --archive=tgz' -ForegroundColor Cyan
+        $deployOut = & npx --yes vercel --prod --yes --token $vercelToken --archive=tgz 2>&1 | Out-String
     } else {
-        Write-Host 'Running: npx vercel --prod --confirm' -ForegroundColor Cyan
-        $deployOut = & npx --yes vercel --prod --confirm 2>&1 | Out-String
+        Write-Host 'Running: npx vercel --prod --yes --archive=tgz' -ForegroundColor Cyan
+        $deployOut = & npx --yes vercel --prod --yes --archive=tgz 2>&1 | Out-String
     }
     $code = $LASTEXITCODE
 } else {

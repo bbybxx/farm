@@ -58,6 +58,7 @@ yarn-debug.log*
 yarn-error.log*
 
 .vercel
+/android
 
 # Android / Gradle / build artifacts
 /android/.gradle/

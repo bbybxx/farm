@@ -1,0 +1,15 @@
+﻿android/Android Studio
+android/Android Studio/lib
+android/Android Studio/lib/app.jar
+android/Android Studio/lib/lib.jar
+android/Android Studio/plugins
+android/Android Studio/plugins/gradle
+android/Android Studio/plugins/Kotlin
+android/Android Studio/plugins/gradle/lib/gradle-api-9.0-milestone-1.jar
+android/Android Studio/plugins/Kotlin/lib/kotlin-plugin.jar
+android/Android Studio/lib/modules/intellij.libraries.skiko.jar
+.local/gh/bin/gh.exe
+build-output/app-debug.apk
+android/Android Studio/plugins/terminal/lib/terminal.jar
+android/Android Studio/plugins/design-tools/lib/layoutlib.jar
+android/Android Studio/plugins/java/lib/java-impl.jar

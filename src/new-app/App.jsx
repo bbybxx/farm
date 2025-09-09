@@ -740,9 +740,13 @@ export default function App() {
     setIsBugReportOpen(true)
   }
 
-  const handleBugReportSubmit = async (message) => {
+  // Accept either a string message or an object { message, files }
+  const handleBugReportSubmit = async (payload) => {
     try {
-      const result = await sendBugReport(message, user)
+      const message = typeof payload === 'string' ? payload : (payload?.message || '');
+      const files = typeof payload === 'object' ? payload.files || [] : [];
+
+      const result = await sendBugReport(message, user, files)
       
       if (result.success) {
         hapticFeedback('success')
@@ -752,7 +756,7 @@ export default function App() {
         // Error will be handled by the modal component
       }
       
-      return result
+  return result
     } catch (error) {
       console.error('Error submitting bug report:', error)
       hapticFeedback('error')

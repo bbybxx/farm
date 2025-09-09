@@ -111,7 +111,8 @@ export function useTelegram() {
     }
   };
 
-  const sendBugReport = async (message, userInfo = null) => {
+  // message: string, userInfo: optional, files: optional array of File objects
+  const sendBugReport = async (message, userInfo = null, files = []) => {
     try {
       // Отправляем напрямую через Telegram Bot API
       let BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
@@ -143,7 +144,8 @@ export function useTelegram() {
         // Telegram Web App информация
         isInTelegram: !!tg,
         telegramVersion: tg?.version || 'N/A',
-        telegramPlatform: tg?.platform || 'N/A'
+        telegramPlatform: tg?.platform || 'N/A',
+        attachments: Array.isArray(files) ? files.map((f) => ({ name: f.name, size: f.size, type: f.type })) : []
       };
       
       // Форматируем сообщение для Telegram
@@ -166,33 +168,57 @@ export function useTelegram() {
       let response;
       
       if (isProduction) {
-        // В продакшене используем наш прокси
+        // В продакшене используем наш прокси endpoint which should accept multipart/form-data
+        const form = new FormData();
+        form.append('type', 'bug_report');
+        form.append('message', message);
+        form.append('metadata', JSON.stringify(bugReportData));
+
+        if (Array.isArray(files)) {
+          files.slice(0, 8).forEach((f, idx) => {
+            // append files under 'files' field
+            form.append('files', f, f.name);
+          });
+        }
+
         response = await fetch('/api/bug-report', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            type: 'bug_report',
-            message: message,
-            user: bugReportData.user,
-            timestamp: bugReportData.timestamp,
-            url: bugReportData.url,
-            userAgent: bugReportData.userAgent,
-            viewport: bugReportData.viewport,
-            screen: bugReportData.screen,
-            language: bugReportData.language,
-            platform: bugReportData.platform,
-            onLine: bugReportData.onLine,
-            cookieEnabled: bugReportData.cookieEnabled,
-            timezone: bugReportData.timezone,
-            isInTelegram: bugReportData.isInTelegram,
-            telegramVersion: bugReportData.telegramVersion,
-            telegramPlatform: bugReportData.telegramPlatform
-          })
+          body: form
         });
       } else {
-        // Локально отправляем напрямую
+        // Локально отправляем напрямую через Telegram Bot API.
+        // We'll upload attachments first (images -> sendPhoto, others -> sendDocument), then send text message.
+        // Limit files to max 8 and max 20 MB each for safety.
+        const MAX_FILES = 8;
+        const MAX_SIZE = 20 * 1024 * 1024;
+
+        const safeFiles = Array.isArray(files) ? files.slice(0, MAX_FILES).filter(f => f.size <= MAX_SIZE) : [];
+
+        // Helper to upload a single file via sendDocument/sendPhoto
+        const uploadSingle = async (file) => {
+          const fd = new FormData();
+          fd.append('chat_id', CHAT_ID);
+          // choose appropriate method
+          if (file.type && file.type.startsWith('image/')) {
+            fd.append('photo', file, file.name);
+            return fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: fd });
+          } else {
+            fd.append('document', file, file.name);
+            return fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, { method: 'POST', body: fd });
+          }
+        };
+
+        // Upload each file sequentially to avoid hitting rate limits or memory spikes
+        for (const f of safeFiles) {
+          try {
+            // Note: in browser environment fetch will stream file content in multipart/form-data
+            await uploadSingle(f);
+          } catch (upErr) {
+            console.warn('Failed to upload attachment:', f.name, upErr);
+          }
+        }
+
+        // Finally, send the text message
         response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
           method: 'POST',
           headers: {

@@ -4,6 +4,7 @@ import './BugReportModal.css';
 
 function BugReportModal({ isOpen, onClose, onSubmit }) {
   const [message, setMessage] = useState('');
+  const [files, setFiles] = useState([]); // Array of File objects
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitResult, setSubmitResult] = useState(null);
@@ -18,7 +19,9 @@ function BugReportModal({ isOpen, onClose, onSubmit }) {
     setIsSubmitting(true);
     
     try {
-      const result = await onSubmit(message.trim());
+      // Pass files along with the message. Convert files state (array) to FileList-like array
+      const payload = { message: message.trim(), files };
+      const result = await onSubmit(payload);
       
       if (result.success) {
         setSubmitSuccess(true);
@@ -45,10 +48,22 @@ function BugReportModal({ isOpen, onClose, onSubmit }) {
   const handleClose = () => {
     if (!isSubmitting) {
       setMessage('');
+      setFiles([]);
       setSubmitSuccess(false);
       setSubmitResult(null);
       onClose();
     }
+  };
+
+  const handleFileChange = (e) => {
+    const selected = Array.from(e.target.files || []);
+    // limit to 8 files to avoid huge uploads
+    const limited = selected.slice(0, 8);
+    setFiles(limited);
+  };
+
+  const removeFileAt = (index) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -114,6 +129,37 @@ function BugReportModal({ isOpen, onClose, onSubmit }) {
                     disabled={isSubmitting}
                     autoFocus
                   />
+
+                  <div style={{ marginTop: 12 }}>
+                    <label className="bug-report-label" htmlFor="bug-files">Attach files (images, logs, etc.) — up to 8 files</label>
+                    <input
+                      id="bug-files"
+                      type="file"
+                      multiple
+                      accept="image/*,text/plain,application/json,application/zip,application/octet-stream"
+                      onChange={handleFileChange}
+                      disabled={isSubmitting}
+                    />
+
+                    {files.length > 0 && (
+                      <div style={{ marginTop: 8, display: 'grid', gap: 8 }}>
+                        {files.map((f, idx) => (
+                          <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            {f.type.startsWith('image/') ? (
+                              <img src={URL.createObjectURL(f)} alt={f.name} style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 8 }} />
+                            ) : (
+                              <div style={{ width: 60, height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#222', borderRadius: 8, color: '#bbb', fontSize: 12 }}>{f.name.split('.').pop()}</div>
+                            )}
+                            <div style={{ flex: 1 }}>
+                              <div style={{ fontSize: 13 }}>{f.name}</div>
+                              <div style={{ fontSize: 12, color: '#999' }}>{(f.size / 1024).toFixed(1)} KB</div>
+                            </div>
+                            <button type="button" className="bug-report-button secondary" style={{ padding: '6px 10px', minHeight: 'auto', height: 36 }} onClick={() => removeFileAt(idx)} disabled={isSubmitting}>Remove</button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
                 <div className="bug-report-actions">

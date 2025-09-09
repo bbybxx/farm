@@ -1,13 +1,15 @@
 <#
 Simple push.ps1 - minimal ASCII-only script
-Usage: .\push.ps1 "Commit message" [branch] [deploy]
+Usage: .\push.ps1 "Commit message" [branch] [deploy] [force]
 If no args are provided the script will prompt interactively.
+The optional fourth argument (or the -ForcePush switch) causes a non-interactive force-push.
 #>
 
 param(
     [string]$Message,
     [string]$Branch,
-    [string]$Deploy
+    [string]$Deploy,
+    [switch]$ForcePush
 )
 
 function ErrExit([string]$msg, [int]$code = 1) {
@@ -32,6 +34,12 @@ if (-not $Deploy -or $Deploy -eq '') {
     if ($d -and $d.ToLower() -in @('n','no')) { $Deploy = 'no' } else { $Deploy = 'yes' }
 }
 
+# If user passed a fourth positional arg (e.g. push.ps1 "msg" main yes force)
+if (-not $ForcePush -and $args.Count -ge 4) {
+    $maybe = $args[3]
+    if ($maybe -and $maybe.ToLower() -in @('force','--force','-f','yes')) { $ForcePush = $true }
+}
+
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) { ErrExit 'git not found in PATH' 1 }
 
 Write-Host 'Staging changes...'
@@ -43,9 +51,34 @@ $commitOut = git commit -m "$Message" 2>&1 | Out-String
 if ($LASTEXITCODE -ne 0) { Write-Host 'Commit returned non-zero (maybe no changes).' -ForegroundColor Yellow; Write-Host $commitOut -ForegroundColor Yellow } else { Write-Host 'Commit done.' -ForegroundColor Green }
 
 Write-Host ("Pushing to origin/{0}..." -f $Branch)
-$pushOut = git push origin $Branch 2>&1 | Out-String
-if ($LASTEXITCODE -ne 0) { ErrExit ("git push failed:`n$pushOut") 1 }
-Write-Host 'Push succeeded.' -ForegroundColor Green
+# Respect explicit force flag if provided, otherwise try ordinary push and offer interactive fallback
+if ($ForcePush) {
+    $pushOut = & git push --force origin $Branch 2>&1 | Out-String
+} else {
+    $pushOut = & git push origin $Branch 2>&1 | Out-String
+}
+$pushCode = $LASTEXITCODE
+if ($pushCode -ne 0) {
+    if (-not $ForcePush) {
+        Write-Host ("git push failed:`n$pushOut") -ForegroundColor Yellow
+        try {
+            $resp = Read-Host "Push failed. Force push to origin/$Branch? (y/N)"
+        } catch {
+            $resp = ''
+        }
+        if ($resp -and $resp.ToLower() -in @('y','yes')) {
+            Write-Host 'Running force push...' -ForegroundColor Cyan
+            $forceOut = & git push --force origin $Branch 2>&1 | Out-String
+            if ($LASTEXITCODE -ne 0) { ErrExit ("git force-push failed:`n$forceOut") 1 } else { Write-Host 'Force push succeeded.' -ForegroundColor Green }
+        } else {
+            ErrExit ("git push failed:`n$pushOut") 1
+        }
+    } else {
+        ErrExit ("git push failed even with --force:`n$pushOut") 1
+    }
+} else {
+    Write-Host 'Push succeeded.' -ForegroundColor Green
+}
 
 if ($Deploy -and $Deploy.ToLower() -in @('no','false','skip')) { Write-Host 'Vercel deploy skipped.'; exit 0 }
 

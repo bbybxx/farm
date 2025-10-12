@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { calculateAllResources, getResourceSaverPercent } from '../utils/calculator'
 import { getCombinedRecipes, findRecipesThatUse } from '../utils/recipeUtils'
@@ -13,26 +13,36 @@ import { computePinnedEstimate, getItemLocations } from '../utils/exploringUtils
 import { Analytics } from '@vercel/analytics/react'
 import PinnedLocationSelect from '../components/PinnedLocationSelect.jsx'
 import ItemDisplay from '../components/ItemDisplay'
-import itemsAPI from '../data/items-api.json'
+import itemsAPI from '../data/items-api.json' with { type: 'json' }
+import { normalizeItemsMap, normalizeItemRecord, areItemRecordsEqual } from '../utils/itemImageUtils.js'
 import './app.css'
 import LocationImage from '../components/LocationImage.jsx'
 
 // Helper functions for localStorage
+let storageAvailabilityCache = null
 function isStorageAvailable() {
+  if (storageAvailabilityCache !== null) {
+    return storageAvailabilityCache
+  }
+  if (typeof window === 'undefined' || typeof window.localStorage === 'undefined') {
+    storageAvailabilityCache = false
+    return storageAvailabilityCache
+  }
   try {
     const testKey = '__storage_test__'
-    localStorage.setItem(testKey, 'test')
-    localStorage.removeItem(testKey)
-    return true
+    window.localStorage.setItem(testKey, 'test')
+    window.localStorage.removeItem(testKey)
+    storageAvailabilityCache = true
   } catch (error) {
-    return false
+    storageAvailabilityCache = false
   }
+  return storageAvailabilityCache
 }
 
 function saveToStorage(key, data) {
+  if (!isStorageAvailable()) return
   try {
-    if (!isStorageAvailable()) return
-    localStorage.setItem(key, JSON.stringify(data))
+    window.localStorage.setItem(key, JSON.stringify(data))
   } catch (error) {
     console.warn('Failed to save to localStorage:', error)
   }
@@ -41,21 +51,90 @@ function saveToStorage(key, data) {
 // Format numbers with spaces for better readability
 function formatNumber(num) {
   if (num === null || num === undefined || num === '') return ''
-  const number = typeof num === 'string' ? parseFloat(num) : num
-  if (isNaN(number)) return num
-  // Handle zero specifically
-  if (number === 0) return '0'
-  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+
+  if (typeof num === 'string') {
+    const trimmed = num.trim()
+    if (!trimmed) return ''
+    if (/[^\d\s.-]/.test(trimmed)) {
+      return num
+    }
+    const normalized = trimmed.replace(/\s+/g, '')
+    if (normalized === '' || normalized === '-' || normalized === '.') {
+      return num
+    }
+    const numericFromString = Number(normalized)
+    if (!Number.isFinite(numericFromString)) {
+      return num
+    }
+    if (numericFromString === 0) return '0'
+    return numericFromString.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+  }
+
+  if (typeof num !== 'number' || Number.isNaN(num)) {
+    return ''
+  }
+  if (num === 0) return '0'
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 }
 
 function loadFromStorage(key, defaultValue) {
+  if (!isStorageAvailable()) return defaultValue
   try {
-    if (!isStorageAvailable()) return defaultValue
-    const stored = localStorage.getItem(key)
+    const stored = window.localStorage.getItem(key)
     return stored ? JSON.parse(stored) : defaultValue
   } catch (error) {
     console.warn('Failed to load from localStorage:', error)
     return defaultValue
+  }
+}
+
+const STATIC_ITEMS_MAP = normalizeItemsMap(itemsAPI)
+
+const clipboardAvailable = () => typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.writeText === 'function'
+
+async function copyToClipboard(text) {
+  if (clipboardAvailable() && (typeof window === 'undefined' || window.isSecureContext)) {
+    try {
+      await navigator.clipboard.writeText(text)
+      return true
+    } catch (error) {
+      // fall through to manual fallback
+    }
+  }
+
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return false
+  }
+
+  if (typeof document.execCommand !== 'function') {
+    return false
+  }
+
+  try {
+    const textarea = document.createElement('textarea')
+    textarea.value = text
+    textarea.setAttribute('readonly', '')
+    textarea.style.position = 'absolute'
+    textarea.style.left = '-9999px'
+    document.body.appendChild(textarea)
+    const selection = typeof window !== 'undefined' && typeof window.getSelection === 'function' ? window.getSelection() : null
+    const selected = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null
+    textarea.select()
+    let successful = false
+    try {
+      successful = document.execCommand('copy')
+    } finally {
+      if (textarea.parentNode) {
+        textarea.parentNode.removeChild(textarea)
+      }
+    }
+    if (selected && selection) {
+      selection.removeAllRanges()
+      selection.addRange(selected)
+    }
+    return successful
+  } catch (error) {
+    return false
   }
 }
 
@@ -68,6 +147,43 @@ export default function App() {
   
   // Инициализируем сервис обновлений
   const [updateService] = useState(() => new RecipeUpdateService());
+
+  const [itemsData, setItemsData] = useState(() => {
+    const baseItems = { ...STATIC_ITEMS_MAP }
+    try {
+      const cached = typeof updateService.getCachedRecipes === 'function'
+        ? updateService.getCachedRecipes()
+        : null
+      if (cached?.items) {
+        const normalizedCache = normalizeItemsMap(cached.items, { baseMap: STATIC_ITEMS_MAP })
+        return { ...baseItems, ...normalizedCache }
+      }
+    } catch (error) {
+      if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {
+        console.warn('Failed to initialize cached items:', error)
+      }
+    }
+    return baseItems
+  })
+
+  const mergeItemsData = useCallback((incoming) => {
+    if (!incoming || Object.keys(incoming).length === 0) return
+    setItemsData(prev => {
+      let updated = false
+      const next = { ...prev }
+      Object.entries(incoming).forEach(([name, info]) => {
+        const normalized = normalizeItemRecord(name, info, {
+          previous: prev[name],
+          base: STATIC_ITEMS_MAP[name]
+        })
+        if (!prev[name] || !areItemRecordsEqual(prev[name], normalized)) {
+          next[name] = normalized
+          updated = true
+        }
+      })
+      return updated ? next : prev
+    })
+  }, [])
   
   const { 
     isReady, 
@@ -140,6 +256,7 @@ export default function App() {
   const [showClearSuccess, setShowClearSuccess] = useState(false)
   const [isBugReportOpen, setIsBugReportOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const recentlyAddedTimersRef = useRef(new Set())
   
   // Feature toggles
   const [pinnedEnabled, setPinnedEnabled] = useState(() => loadFromStorage('craftCalculator_pinnedEnabled', true))
@@ -235,7 +352,7 @@ export default function App() {
       ...fullResult,
       filteredResources
     }
-  }, [item, amount, activePerks])
+  }, [item, amount, activePerks, combinedRecipes])
 
   // Compute distinct resources that are used as ingredients across recipes (sources for reverse crafting)
   const sourceResources = useMemo(() => {
@@ -395,7 +512,13 @@ export default function App() {
   // Function to clear craft history
   const clearHistory = () => {
     setCraftHistory([])
-    localStorage.removeItem('craftCalculator_craftHistory')
+    if (isStorageAvailable()) {
+      try {
+        window.localStorage.removeItem('craftCalculator_craftHistory')
+      } catch (error) {
+        console.warn('Failed to clear craft history from storage:', error)
+      }
+    }
   }
 
   // Function to generate shareable text
@@ -416,21 +539,23 @@ export default function App() {
   // Function to handle main button click (share results)
   const handleShare = () => {
     const shareText = generateShareText()
-    if (isInTelegram) {
-      // In Telegram - could trigger share dialog or copy to clipboard
-      navigator.clipboard?.writeText(shareText).then(() => {
-        showAlert('Results copied to clipboard!')
-      }).catch(() => {
-        showAlert(shareText)
-      })
-    } else {
-      // Outside Telegram - copy to clipboard or show alert
-      navigator.clipboard?.writeText(shareText).then(() => {
-        alert('Results copied to clipboard!')
-      }).catch(() => {
-        alert(shareText)
-      })
-    }
+    if (!shareText) return
+
+    copyToClipboard(shareText).then((copied) => {
+      if (isInTelegram) {
+        if (copied) {
+          showAlert('Results copied to clipboard!')
+        } else {
+          showAlert(shareText)
+        }
+      } else if (typeof window !== 'undefined') {
+        if (copied) {
+          window.alert('Results copied to clipboard!')
+        } else {
+          window.alert(shareText)
+        }
+      }
+    })
   }
 
   // Breadcrumb scrolling removed
@@ -473,14 +598,54 @@ export default function App() {
     saveToStorage('craftCalculator_historyLimit', historyLimit)
   }, [historyLimit])
 
-  // Запуск автообновления рецептов при загрузке приложения
   useEffect(() => {
-    // Запускаем автообновление
-    updateService.startAutoUpdate()
-    
-    // Логируем информацию о последнем обновлении
-    const updateInfo = updateService.getUpdateInfo()
-  }, [updateService])
+    return () => {
+      if (typeof window !== 'undefined') {
+        recentlyAddedTimersRef.current.forEach(id => {
+          window.clearTimeout(id)
+        })
+      }
+      recentlyAddedTimersRef.current.clear()
+    }
+  }, [])
+
+  // Запуск автообновления рецептов при загрузке приложения и синхронизация данных предметов
+  useEffect(() => {
+    let isMounted = true
+
+    const hydrateFromCache = () => {
+      try {
+        const cached = updateService.getCachedRecipes()
+        if (cached?.items) {
+          mergeItemsData(cached.items)
+        }
+      } catch (error) {
+        if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {
+          console.warn('Failed to hydrate cached items:', error)
+        }
+      }
+    }
+
+    hydrateFromCache()
+
+    const stop = updateService.startAutoUpdate((data) => {
+      if (!isMounted || !data) return
+      const nextItems = data.items || data.itemData || {}
+      if (nextItems && Object.keys(nextItems).length > 0) {
+        mergeItemsData(nextItems)
+      }
+    })
+
+    if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {
+      const info = updateService.getUpdateInfo()
+      console.log('Recipe update info:', info)
+    }
+
+    return () => {
+      isMounted = false
+      if (typeof stop === 'function') stop()
+    }
+  }, [mergeItemsData, updateService])
 
   useEffect(() => {
     saveToStorage('craftCalculator_pinnedResources', pinnedResources)
@@ -532,10 +697,6 @@ export default function App() {
   useEffect(() => {
     saveToStorage('craftCalculator_useThousandsFormat', useThousandsFormat)
   }, [useThousandsFormat])
-
-  useEffect(() => {
-    saveToStorage('craftCalculator_pinnedResources', pinnedResources)
-  }, [pinnedResources])
 
   useEffect(() => {
     saveToStorage('craftCalculator_pinnedEnabled', pinnedEnabled)
@@ -597,16 +758,24 @@ export default function App() {
       return Math.round(q * 100) / 100
     })()
     const itemKey = `${resourceName}_${coercedQty}_${parentRecipe || item}`
-    setRecentlyAddedItems(prev => new Set([...prev, itemKey]))
+    setRecentlyAddedItems(prev => {
+      const next = new Set(prev)
+      next.add(itemKey)
+      return next
+    })
     
     // Remove animation after 2 seconds
-    setTimeout(() => {
-      setRecentlyAddedItems(prev => {
-        const newSet = new Set(prev)
-        newSet.delete(itemKey)
-        return newSet
-      })
-    }, 2000)
+    if (typeof window !== 'undefined') {
+      const timerId = window.setTimeout(() => {
+        setRecentlyAddedItems(prev => {
+          const next = new Set(prev)
+          next.delete(itemKey)
+          return next
+        })
+        recentlyAddedTimersRef.current.delete(timerId)
+      }, 2000)
+      recentlyAddedTimersRef.current.add(timerId)
+    }
   }
 
   const removeFromPinned = (index) => {
@@ -661,8 +830,9 @@ export default function App() {
         // Remove everything that starts with our app prefix
         const prefix = 'craftCalculator_'
         const keysToRemove = []
-        for (let i = 0; i < localStorage.length; i++) {
-          const k = localStorage.key(i)
+        const storage = window.localStorage
+        for (let i = 0; i < storage.length; i++) {
+          const k = storage.key(i)
           if (!k) continue
           if (k.indexOf(prefix) === 0) keysToRemove.push(k)
         }
@@ -672,7 +842,7 @@ export default function App() {
         keysToRemove.push('cachedApiItems')
 
         keysToRemove.forEach(k => {
-          try { localStorage.removeItem(k) } catch (e) {}
+          try { storage.removeItem(k) } catch (e) {}
         })
 
         // Also clear sessionStorage copies if used
@@ -698,6 +868,7 @@ export default function App() {
       setUseThousandsFormat(true)
       setPinnedEnabled(true)
       setHistoryEnabled(true)
+  setItemsData({ ...STATIC_ITEMS_MAP })
       
       // Reset UI states
       setShowAllBase(false)
@@ -706,6 +877,10 @@ export default function App() {
       setIsItemSelectOpen(false)
       setIsHistoryOpen(false)
       setRecentlyAddedItems(new Set())
+      if (typeof window !== 'undefined') {
+        recentlyAddedTimersRef.current.forEach(id => window.clearTimeout(id))
+      }
+      recentlyAddedTimersRef.current.clear()
 
   // Also reset any saved-last-selection map in memory
   setLastSelectionByMode({})
@@ -716,6 +891,14 @@ export default function App() {
       setTimeout(() => {
         setShowClearSuccess(false)
       }, 3000)
+
+      updateService.forceUpdate().then((data) => {
+        mergeItemsData(data?.items || data?.itemData || {})
+      }).catch((err) => {
+        if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {
+          console.warn('Failed to refetch recipes after clearing data:', err)
+        }
+      })
     } catch (error) {
       console.warn('Failed to clear saved data:', error)
       // Could add error modal here too, but keeping minimal for now
@@ -1078,8 +1261,8 @@ export default function App() {
 
                         <div className="pinned-card-content">
                           <div className="pinned-item-name">
-                            {itemsAPI && itemsAPI[pinnedItem.name] ? (
-                              <ItemDisplay itemName={pinnedItem.name} itemsData={itemsAPI} />
+                            {itemsData && itemsData[pinnedItem.name] ? (
+                              <ItemDisplay itemName={pinnedItem.name} itemsData={itemsData} />
                             ) : (
                               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                 <LocationImage name={pinnedItem.name} size={24} />
@@ -1212,7 +1395,15 @@ export default function App() {
                         min="10"
                         max="200"
                         value={historyLimit}
-                        onChange={(e) => setHistoryLimit(parseInt(e.target.value) || 50)}
+                        onChange={(e) => {
+                          const parsed = parseInt(e.target.value, 10)
+                          if (Number.isNaN(parsed)) {
+                            setHistoryLimit(50)
+                            return
+                          }
+                          const bounded = Math.min(200, Math.max(10, parsed))
+                          setHistoryLimit(bounded)
+                        }}
                         className="setting-input"
                       />
                     </label>
@@ -1311,7 +1502,7 @@ export default function App() {
                             <span style={{ fontWeight: 600 }}>{node.name}</span>
                           </div>
                         ) : (
-                          <ItemDisplay itemName={displayName} itemsData={itemsAPI} />
+                          <ItemDisplay itemName={displayName} itemsData={itemsData} />
                         )}
                       </button>
                       <span className="breadcrumb-separator">›</span>
@@ -1332,7 +1523,7 @@ export default function App() {
                           </div>
                         )
                       }
-                      return <ItemDisplay itemName={lastName} itemsData={itemsAPI} />
+                      return <ItemDisplay itemName={lastName} itemsData={itemsData} />
                     })()}
                   </span>
                 )}
@@ -1465,7 +1656,7 @@ export default function App() {
             <span className="label">{locationsMode ? 'Location' : 'Item'}</span>
             { !locationsMode ? (
               <button className="input" onClick={() => setIsItemSelectOpen(true)} type="button">
-                <ItemDisplay itemName={item} itemsData={itemsAPI} />
+                <ItemDisplay itemName={item} itemsData={itemsData} />
               </button>
             ) : (
               <button className="input" onClick={() => setIsItemSelectOpen(true)} type="button" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -1596,7 +1787,7 @@ export default function App() {
                                   <LocationImage name={label} size={22} />
                                   <span>{label}</span>
                                 </div>
-                              ) : <ItemDisplay itemName={i} itemsData={itemsAPI} />}
+                              ) : <ItemDisplay itemName={i} itemsData={itemsData} />}
                       </button>
                     )
                   })}
@@ -1652,9 +1843,9 @@ export default function App() {
                         type="button"
                       >
                         <div className="history-main">
-                          <span className="from"><ItemDisplay itemName={entry.fromItem} itemsData={itemsAPI} /></span>
+                          <span className="from"><ItemDisplay itemName={entry.fromItem} itemsData={itemsData} /></span>
                           <span className="arrow">→</span>
-                          <span className="to"><ItemDisplay itemName={entry.toItem} itemsData={itemsAPI} /></span>
+                          <span className="to"><ItemDisplay itemName={entry.toItem} itemsData={itemsData} /></span>
                           <span className="amount">×{entry.toAmount}</span>
                         </div>
                         <div className="history-time">
@@ -1835,7 +2026,7 @@ export default function App() {
                             title={craftable ? `Open crafts that use ${it}` : undefined}
                           >
                             <span className="k">
-                              <ItemDisplay itemName={it} itemsData={itemsAPI}>
+                              <ItemDisplay itemName={it} itemsData={itemsData}>
                                 {craftable && (
                                   <span className="craft-indicator">
                                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -1894,7 +2085,7 @@ export default function App() {
                           title={isCraftable(k) ? `Click to craft ${k}` : undefined}
                         >
                           <span className="k">
-                            <ItemDisplay itemName={k} itemsData={itemsAPI}>
+                            <ItemDisplay itemName={k} itemsData={itemsData}>
                               {isCraftable(k) && (
                                 <span className="craft-indicator">
                                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -1993,7 +2184,7 @@ export default function App() {
                           title={canNavigate ? `Open recipe for ${c.name}` : undefined}
                         >
                           <span className="k">
-                            <ItemDisplay itemName={c.name} itemsData={itemsAPI}>
+                            <ItemDisplay itemName={c.name} itemsData={itemsData}>
                               {canNavigate && (
                                 <span className="craft-indicator">
                                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">

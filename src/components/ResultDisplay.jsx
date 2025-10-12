@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getResourceYieldBonus, getSilverDiscountPercent, getXPBonusPercent } from '../utils/calculator';
 import ItemDisplay from './ItemDisplay';
-import itemsAPI from '../data/items-api.json';
+import itemsAPI from '../data/items-api.json' with { type: 'json' };
 import './ResultDisplay.css';
 
 // Компонент для отображения отдельного ресурса и его компонентов

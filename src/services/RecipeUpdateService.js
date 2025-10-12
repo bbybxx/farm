@@ -1,34 +1,30 @@
+import { normalizeItemRecord } from '../utils/itemImageUtils.js'
+
 // Сервис для автоматического обновления рецептов из buddy.farm API
 class RecipeUpdateService {
   constructor() {
     // Используем прокси в development и production (Vercel автоматически проксирует /api)
-    // Но в нативных сборках (Capacitor / file://) относительные пути не работают —
-    // переключаемся на явный полный URL. Можно задать VITE_API_BASE в окружении.
-    const envBase = import.meta.env.VITE_API_BASE || null;
-    const runningOnFileProtocol = typeof window !== 'undefined' && window.location && window.location.protocol === 'file:';
-    const isCapacitor = typeof window !== 'undefined' && (!!window.Capacitor || !!window.android);
-    // Safe fallback: if VITE_API_BASE is not provided for native builds, try known public host
-    const FALLBACK_PUBLIC_BASES = [
-      'https://craft-calculator.com',
-      'https://farmcraftcalculator.infy.uk'
-    ];
+    this.API_URL = '/api/graphql'
+    this.STORAGE_KEY = 'lastRecipeUpdate'
+    this.RECIPES_KEY = 'cachedApiRecipes'
+    this.ITEMS_KEY = 'cachedApiItems'
+    this._intervalId = null
+    this._lastSuccessfulUrl = null
+    this._nativeEnvironment = this._isNativeEnvironment()
+    this._fallbackPublicEndpoints = [
+      'https://api.buddy.farm/graphql',
+      'https://craft-calculator.com/api/graphql',
+      'https://farmcraftcalculator.infy.uk/api/graphql'
+    ]
 
-    if (envBase && (runningOnFileProtocol || isCapacitor)) {
-      this.API_URL = envBase.replace(/\/$/, '') + '/api/graphql';
-    } else if (!envBase && (runningOnFileProtocol || isCapacitor)) {
-      // pick first reachable fallback at runtime (optimistic). We still attempt a relative path if nothing available.
-      this.API_URL = FALLBACK_PUBLIC_BASES[0] + '/api/graphql';
-    } else {
-      this.API_URL = '/api/graphql';
-    }
-    this.STORAGE_KEY = 'lastRecipeUpdate';
-    this.RECIPES_KEY = 'cachedApiRecipes';
-    this.ITEMS_KEY = 'cachedApiItems';
-    
+    const envBase = (import.meta?.env?.VITE_API_BASE || '').trim() || null
+    this._apiCandidates = this._createApiCandidates({ envBase })
+    this.API_URL = this._apiCandidates[0] || this.API_URL
+
     // Интервалы обновления (в миллисекундах)
-    this.REGULAR_INTERVAL = 3 * 24 * 60 * 60 * 1000; // 3 дня
-    this.MONTHLY_INTERVAL = 1 * 24 * 60 * 60 * 1000; // 1 день в месяце (первое число)
-    
+    this.REGULAR_INTERVAL = 3 * 24 * 60 * 60 * 1000 // 3 дня
+    this.MONTHLY_INTERVAL = 1 * 24 * 60 * 60 * 1000 // 1 день в месяце (первое число)
+
     this.query = `
       query {
         items {
@@ -46,15 +42,68 @@ class RecipeUpdateService {
           image
         }
       }
-    `;
+    `
+  }
+
+  _isNativeEnvironment() {
+    try {
+      const globalCapacitor = typeof window !== 'undefined'
+        ? window.Capacitor
+        : (typeof globalThis !== 'undefined' ? globalThis.Capacitor : undefined)
+      if (globalCapacitor && typeof globalCapacitor.isNativePlatform === 'function') {
+        return !!globalCapacitor.isNativePlatform()
+      }
+      if (typeof document !== 'undefined' && document.location && document.location.protocol === 'file:') {
+        return true
+      }
+    } catch (error) {
+      // ignore detection errors
+    }
+    return false
+  }
+
+  _normalizeBaseUrl(base) {
+    if (!base) {
+      return null
+    }
+    const trimmed = `${base}`.trim().replace(/\/$/, '')
+    if (trimmed.endsWith('/graphql')) {
+      return trimmed
+    }
+    return `${trimmed}/api/graphql`
+  }
+
+  _createApiCandidates({ envBase }) {
+    const candidates = []
+    const envCandidate = this._normalizeBaseUrl(envBase)
+
+    if (!this._nativeEnvironment) {
+      candidates.push('/api/graphql')
+    }
+
+    if (envCandidate) {
+      candidates.push(envCandidate)
+    }
+
+    this._fallbackPublicEndpoints.forEach(endpoint => {
+      const normalized = this._normalizeBaseUrl(endpoint)
+      if (normalized) {
+        candidates.push(normalized)
+      }
+    })
+
+    return Array.from(new Set(candidates.filter(Boolean)))
   }
 
   // Проверяет доступность localStorage
   isStorageAvailable() {
+    if (typeof window === 'undefined' || typeof window.localStorage === 'undefined') {
+      return false;
+    }
     try {
       const testKey = '__storage_test__';
-      localStorage.setItem(testKey, 'test');
-      localStorage.removeItem(testKey);
+      window.localStorage.setItem(testKey, 'test');
+      window.localStorage.removeItem(testKey);
       return true;
     } catch (error) {
       return false;
@@ -74,7 +123,7 @@ class RecipeUpdateService {
       return !this._sessionUpdated;
     }
     
-    const lastUpdate = localStorage.getItem(this.STORAGE_KEY);
+    const lastUpdate = window.localStorage.getItem(this.STORAGE_KEY);
     if (!lastUpdate) return true;
 
     const lastUpdateTime = new Date(lastUpdate);
@@ -94,57 +143,71 @@ class RecipeUpdateService {
   async fetchRecipes() {
     try {
       if (import.meta.env.DEV) {
-        console.log('🔄 Обновляем рецепты из buddy.farm API...');
-  console.log('🌐 Используемый URL:', this.API_URL);
-        console.log('🛠️ Development mode:', import.meta.env.DEV);
-      }
-      
-      const response = await fetch(this.API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query: this.query })
-      });
-
-      if (import.meta.env.DEV) {
-        console.log('📡 Response status:', response.status);
-        console.log('📡 Response ok:', response.ok);
+        console.log('🔄 Обновляем рецепты из buddy.farm API...')
+        console.log('🌐 Основной URL:', this.API_URL)
+        console.log('🛠️ Development mode:', import.meta.env.DEV)
       }
 
-      if (!response.ok) {
-        if (import.meta.env.DEV) {
-          const errorText = await response.text();
-          console.error('❌ Response error text:', errorText);
-          throw new Error(`HTTP error! status: ${response.status}, text: ${errorText}`);
+      const urlsToTry = [...(this._lastSuccessfulUrl ? [this._lastSuccessfulUrl] : []), ...this._apiCandidates]
+      let lastError = null
+
+      for (const url of urlsToTry) {
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ query: this.query })
+          })
+
+          if (import.meta.env.DEV) {
+            console.log('📡 Response status:', response.status, 'url:', url)
+            console.log('📡 Response ok:', response.ok)
+          }
+
+          if (!response.ok) {
+            const errorText = import.meta.env.DEV ? await response.text() : null
+            const error = new Error(`HTTP error! status: ${response.status}${errorText ? `, text: ${errorText}` : ''}`)
+            error.urlTried = url
+            throw error
+          }
+
+          const data = await response.json()
+
+          if (data.errors) {
+            const error = new Error('GraphQL errors occurred')
+            error.errors = data.errors
+            error.urlTried = url
+            throw error
+          }
+
+          this._lastSuccessfulUrl = url
+
+          if (import.meta.env.DEV) {
+            console.log('✅ Items received:', data.data?.items?.length || 0, 'via', url)
+            console.log('🔍 First 5 items:', data.data?.items?.slice(0, 5)?.map(item => item.name) || [])
+          }
+
+          return data.data.items
+        } catch (error) {
+          lastError = error
+          if (import.meta.env.DEV) {
+            console.error('❌ Ошибка при запросе к', error.urlTried || url, ':', error)
+          }
         }
-        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
-      
-      if (import.meta.env.DEV) {
-        console.log('📊 Raw response data:', data);
-      }
-      
-      if (data.errors) {
-        if (import.meta.env.DEV) {
-          console.error('❌ Ошибки GraphQL:', data.errors);
-        }
-        throw new Error('GraphQL errors occurred');
+      if (lastError) {
+        throw lastError
       }
 
-      if (import.meta.env.DEV) {
-        console.log('✅ Items received:', data.data?.items?.length || 0);
-        console.log('🔍 First 5 items:', data.data?.items?.slice(0, 5)?.map(item => item.name) || []);
-      }
-
-      return data.data.items;
+      throw new Error('All API endpoints failed')
     } catch (error) {
       if (import.meta.env.DEV) {
-        console.error('❌ Ошибка при получении рецептов:', error);
+        console.error('❌ Ошибка при получении рецептов:', error)
       }
-      throw error;
+      throw error
     }
   }
 
@@ -176,13 +239,15 @@ class RecipeUpdateService {
       recipes[item.name] = recipe;
 
       // Сохраняем данные о предмете
-      itemData[item.name] = {
+      itemData[item.name] = normalizeItemRecord(item.name, {
         name: item.name,
         type: item.type || 'item',
         image: item.image,
         canCraft: item.canCraft,
         craftingLevel: item.craftingLevel
-      };
+      }, {
+        previous: itemData[item.name]
+      });
     });
 
     // Дополняем данные о предметах из всех items
@@ -195,14 +260,16 @@ class RecipeUpdateService {
     });
 
     items.forEach(item => {
-      if (allItemNames.has(item.name) && !itemData[item.name]) {
-        itemData[item.name] = {
+      if (allItemNames.has(item.name)) {
+        itemData[item.name] = normalizeItemRecord(item.name, {
           name: item.name,
           type: item.type || 'item',
           image: item.image,
           canCraft: item.canCraft,
           craftingLevel: item.craftingLevel
-        };
+        }, {
+          previous: itemData[item.name]
+        });
       }
     });
 
@@ -236,9 +303,9 @@ class RecipeUpdateService {
 
     // Сохраняем в localStorage (если доступен)
     if (this.isStorageAvailable()) {
-      localStorage.setItem(this.RECIPES_KEY, JSON.stringify(sortedRecipes));
-      localStorage.setItem(this.ITEMS_KEY, JSON.stringify(sortedItemData));
-      localStorage.setItem(this.STORAGE_KEY, new Date().toISOString());
+      window.localStorage.setItem(this.RECIPES_KEY, JSON.stringify(sortedRecipes));
+      window.localStorage.setItem(this.ITEMS_KEY, JSON.stringify(sortedItemData));
+      window.localStorage.setItem(this.STORAGE_KEY, new Date().toISOString());
     } else {
       // Сохраняем в памяти для текущей сессии
       this._sessionRecipes = sortedRecipes;
@@ -251,7 +318,7 @@ class RecipeUpdateService {
       console.log(`✅ Обновлено ${Object.keys(sortedItemData).length} предметов`);
     }
 
-    return { recipes: sortedRecipes, itemData: sortedItemData };
+    return { recipes: sortedRecipes, items: sortedItemData };
   }
 
   // Получает кэшированные рецепты
@@ -265,8 +332,8 @@ class RecipeUpdateService {
         };
       }
       
-      const recipes = localStorage.getItem(this.RECIPES_KEY);
-      const items = localStorage.getItem(this.ITEMS_KEY);
+    const recipes = window.localStorage.getItem(this.RECIPES_KEY);
+    const items = window.localStorage.getItem(this.ITEMS_KEY);
       
       return {
         recipes: recipes ? JSON.parse(recipes) : {},
@@ -307,26 +374,53 @@ class RecipeUpdateService {
   }
 
   // Запускает автоматическое обновление
-  startAutoUpdate() {
-    // Проверяем при запуске
-    this.updateRecipes();
-
-    // Устанавливаем интервал проверки каждый час
-    setInterval(() => {
-      if (this.shouldUpdate()) {
-        this.updateRecipes();
+  startAutoUpdate(onUpdate) {
+    const runUpdate = async () => {
+      try {
+        const data = await this.updateRecipes();
+        if (typeof onUpdate === 'function') {
+          onUpdate(data);
+        }
+      } catch (error) {
+        if (typeof onUpdate === 'function') {
+          onUpdate(this.getCachedRecipes());
+        }
       }
-    }, 60 * 60 * 1000); // Проверяем каждый час
+    };
+
+    runUpdate();
+
+    if (this._intervalId) {
+      clearInterval(this._intervalId);
+    }
+
+    this._intervalId = setInterval(() => {
+      runUpdate();
+    }, 60 * 60 * 1000);
 
     if (import.meta.env.DEV) {
       console.log('🚀 Автообновление рецептов запущено');
+    }
+
+    return () => {
+      if (this._intervalId) {
+        clearInterval(this._intervalId);
+        this._intervalId = null;
+      }
+    };
+  }
+
+  stopAutoUpdate() {
+    if (this._intervalId) {
+      clearInterval(this._intervalId);
+      this._intervalId = null;
     }
   }
 
   // Принудительное обновление
   async forceUpdate() {
     if (this.isStorageAvailable()) {
-      localStorage.removeItem(this.STORAGE_KEY);
+      window.localStorage.removeItem(this.STORAGE_KEY);
     } else {
       this._sessionUpdated = false;
     }
@@ -338,7 +432,7 @@ class RecipeUpdateService {
     let lastUpdate = null;
     
     if (this.isStorageAvailable()) {
-      lastUpdate = localStorage.getItem(this.STORAGE_KEY);
+      lastUpdate = window.localStorage.getItem(this.STORAGE_KEY);
     }
     
     const cached = this.getCachedRecipes();

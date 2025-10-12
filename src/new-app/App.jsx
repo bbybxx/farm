@@ -256,6 +256,7 @@ export default function App() {
   const [showClearSuccess, setShowClearSuccess] = useState(false)
   const [isBugReportOpen, setIsBugReportOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [apiLoadStatus, setApiLoadStatus] = useState({ loading: false, error: null, lastUpdate: null })
   const recentlyAddedTimersRef = useRef(new Set())
   
   // Feature toggles
@@ -628,11 +629,46 @@ export default function App() {
 
     hydrateFromCache()
 
+    setApiLoadStatus(prev => ({ ...prev, loading: true, error: null }))
+
+    // Таймаут на случай если API не ответит
+    const loadingTimeout = setTimeout(() => {
+      setApiLoadStatus(prev => {
+        if (prev.loading) {
+          console.warn('⏰ API loading timeout - using cached data')
+          return { loading: false, error: 'Loading timeout - using cached data', lastUpdate: null }
+        }
+        return prev
+      })
+    }, 30000) // 30 секунд
+
     const stop = updateService.startAutoUpdate((data) => {
-      if (!isMounted || !data) return
+      if (!isMounted) return
+      
+      clearTimeout(loadingTimeout)
+      
+      if (data && data.error) {
+        console.error('❌ API update error:', data.error)
+        setApiLoadStatus({ loading: false, error: data.error, lastUpdate: new Date() })
+        return
+      }
+      
+      if (!data) {
+        console.log('⚠️ No data received from API')
+        setApiLoadStatus({ loading: false, error: 'No data received', lastUpdate: null })
+        return
+      }
+      
       const nextItems = data.items || data.itemData || {}
-      if (nextItems && Object.keys(nextItems).length > 0) {
+      const itemsCount = Object.keys(nextItems).length
+      
+      if (itemsCount > 0) {
+        console.log('✅ Successfully loaded', itemsCount, 'items from API')
         mergeItemsData(nextItems)
+        setApiLoadStatus({ loading: false, error: null, lastUpdate: new Date() })
+      } else {
+        console.log('⚠️ Received empty items data')
+        setApiLoadStatus({ loading: false, error: 'Empty data received', lastUpdate: null })
       }
     })
 
@@ -643,6 +679,7 @@ export default function App() {
 
     return () => {
       isMounted = false
+      clearTimeout(loadingTimeout)
       if (typeof stop === 'function') stop()
     }
   }, [mergeItemsData, updateService])
@@ -1414,6 +1451,49 @@ export default function App() {
                 </>
               )}
               
+              <h3 className="section-title">API Status</h3>
+              <div style={{ padding: '8px 12px', background: apiLoadStatus.error ? '#ff000020' : (apiLoadStatus.lastUpdate ? '#00ff0020' : '#ffaa0020'), borderRadius: '8px', marginBottom: '8px' }}>
+                {apiLoadStatus.loading && <div>🔄 Loading data from API...</div>}
+                {apiLoadStatus.error && <div style={{ color: '#ff6b6b', fontSize: '13px' }}>❌ {apiLoadStatus.error}</div>}
+                {apiLoadStatus.lastUpdate && !apiLoadStatus.error && (
+                  <div style={{ color: '#51cf66' }}>✅ Last update: {apiLoadStatus.lastUpdate.toLocaleTimeString()}</div>
+                )}
+                {!apiLoadStatus.loading && !apiLoadStatus.error && !apiLoadStatus.lastUpdate && (
+                  <div>⏳ Waiting for data...</div>
+                )}
+              </div>
+              <button
+                className="chip wide"
+                onClick={async () => {
+                  setApiLoadStatus({ loading: true, error: null, lastUpdate: null })
+                  try {
+                    console.log('🔄 Force updating API data...')
+                    alert('Starting force update...')
+                    const result = await updateService.forceUpdate()
+                    console.log('✅ Force update result:', result)
+                    const itemsCount = result?.items ? Object.keys(result.items).length : 0
+                    alert(`Update complete! Items: ${itemsCount}`)
+                    if (result && result.items && itemsCount > 0) {
+                      mergeItemsData(result.items)
+                      setApiLoadStatus({ loading: false, error: null, lastUpdate: new Date() })
+                    } else {
+                      const msg = `No items: ${JSON.stringify(result).substring(0, 200)}`
+                      alert(msg)
+                      setApiLoadStatus({ loading: false, error: 'No data received', lastUpdate: null })
+                    }
+                  } catch (error) {
+                    console.error('❌ Force update failed:', error)
+                    alert('Error: ' + error.message)
+                    setApiLoadStatus({ loading: false, error: error.message || 'Update failed', lastUpdate: null })
+                  }
+                }}
+                type="button"
+                title="Force reload data from API"
+                disabled={apiLoadStatus.loading}
+              >
+                🔄 Force Reload API Data
+              </button>
+
               <h3 className="section-title">Bug Report</h3>
               <button
                 className="chip wide"

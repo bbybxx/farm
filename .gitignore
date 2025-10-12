@@ -119,6 +119,9 @@ Thumbs.db
 # platform-tools if downloaded into repo
 /platform-tools/
 
+# JDK downloads
+/.jdk/
+
 # Unpacked APK / temp
 /apk-unpacked/
 

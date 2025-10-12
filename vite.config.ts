@@ -32,8 +32,13 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: false, // Keep console.log for PWA messages
+        drop_console: false,
         drop_debugger: true
+      }
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
       }
     }
   }

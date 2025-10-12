@@ -142,17 +142,21 @@ class RecipeUpdateService {
   // Получает рецепты из API
   async fetchRecipes() {
     try {
-      if (import.meta.env.DEV) {
-        console.log('🔄 Обновляем рецепты из buddy.farm API...')
-        console.log('🌐 Основной URL:', this.API_URL)
-        console.log('🛠️ Development mode:', import.meta.env.DEV)
-      }
+      // Логируем всегда для отладки в нативном приложении
+      console.log('🔄 Обновляем рецепты из buddy.farm API...')
+      console.log('🌐 Native environment:', this._nativeEnvironment)
+      console.log('🌐 API candidates:', this._apiCandidates)
+      console.log('🛠️ Development mode:', import.meta.env.DEV)
 
       const urlsToTry = [...(this._lastSuccessfulUrl ? [this._lastSuccessfulUrl] : []), ...this._apiCandidates]
       let lastError = null
 
+      console.log('📋 URLs to try:', urlsToTry)
+
       for (const url of urlsToTry) {
         try {
+          console.log('🔗 Trying URL:', url)
+          
           const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -161,58 +165,80 @@ class RecipeUpdateService {
             body: JSON.stringify({ query: this.query })
           })
 
-          if (import.meta.env.DEV) {
-            console.log('📡 Response status:', response.status, 'url:', url)
-            console.log('📡 Response ok:', response.ok)
-          }
+          console.log('📡 Response status:', response.status, 'url:', url)
+          console.log('📡 Response ok:', response.ok)
 
           if (!response.ok) {
-            const errorText = import.meta.env.DEV ? await response.text() : null
-            const error = new Error(`HTTP error! status: ${response.status}${errorText ? `, text: ${errorText}` : ''}`)
+            const errorText = await response.text()
+            const error = new Error(`HTTP error! status: ${response.status}, text: ${errorText}`)
             error.urlTried = url
+            console.error('❌ HTTP error:', error)
             throw error
           }
 
           const data = await response.json()
 
+          console.log('📦 Raw API response:', JSON.stringify(data).substring(0, 500))
+          const responseInfo = {
+            hasData: !!data.data,
+            hasItems: !!(data.data?.items),
+            itemsLength: data.data?.items?.length || 0,
+            hasErrors: !!data.errors,
+            url: url
+          }
+          console.log('📦 Response structure:', responseInfo)
+          
+          // Alert для отладки
+          if (typeof alert !== 'undefined') {
+            alert(`API Response from ${url.substring(0, 30)}...\nItems: ${responseInfo.itemsLength}\nErrors: ${responseInfo.hasErrors}`)
+          }
+
           if (data.errors) {
             const error = new Error('GraphQL errors occurred')
             error.errors = data.errors
             error.urlTried = url
+            console.error('❌ GraphQL errors:', data.errors)
             throw error
           }
 
           this._lastSuccessfulUrl = url
 
-          if (import.meta.env.DEV) {
-            console.log('✅ Items received:', data.data?.items?.length || 0, 'via', url)
-            console.log('🔍 First 5 items:', data.data?.items?.slice(0, 5)?.map(item => item.name) || [])
+          const items = data.data?.items || []
+          console.log('✅ Items received:', items.length, 'via', url)
+          console.log('🔍 First 5 items:', items.slice(0, 5).map(item => item.name) || [])
+
+          if (items.length === 0) {
+            console.warn('⚠️ API returned 0 items!')
           }
 
-          return data.data.items
+          return items
         } catch (error) {
           lastError = error
-          if (import.meta.env.DEV) {
-            console.error('❌ Ошибка при запросе к', error.urlTried || url, ':', error)
-          }
+          console.error('❌ Ошибка при запросе к', error.urlTried || url, ':', error)
         }
       }
 
       if (lastError) {
+        console.error('❌ All URLs failed, last error:', lastError)
         throw lastError
       }
 
       throw new Error('All API endpoints failed')
     } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('❌ Ошибка при получении рецептов:', error)
-      }
+      console.error('❌ Ошибка при получении рецептов:', error)
       throw error
     }
   }
 
   // Обрабатывает и сохраняет рецепты
   processAndSaveRecipes(items) {
+    console.log('🔧 Processing recipes from', items?.length || 0, 'items')
+    
+    if (!items || items.length === 0) {
+      console.error('❌ No items to process!')
+      return { recipes: {}, items: {} }
+    }
+
     const recipes = {};
     const itemData = {};
 
@@ -222,6 +248,8 @@ class RecipeUpdateService {
       item.recipeItems && 
       item.recipeItems.length > 0
     );
+
+    console.log('🔨 Craftable items found:', craftableItems.length)
 
     craftableItems.forEach(item => {
       // Создаем рецепт
@@ -377,13 +405,17 @@ class RecipeUpdateService {
   startAutoUpdate(onUpdate) {
     const runUpdate = async () => {
       try {
+        console.log('🔄 Starting API update...')
         const data = await this.updateRecipes();
+        console.log('✅ API update successful, got data:', !!data)
         if (typeof onUpdate === 'function') {
           onUpdate(data);
         }
       } catch (error) {
+        console.error('❌ API update failed:', error)
         if (typeof onUpdate === 'function') {
-          onUpdate(this.getCachedRecipes());
+          const cached = this.getCachedRecipes();
+          onUpdate({ ...cached, error: error.message || 'Unknown error' });
         }
       }
     };
@@ -398,9 +430,7 @@ class RecipeUpdateService {
       runUpdate();
     }, 60 * 60 * 1000);
 
-    if (import.meta.env.DEV) {
-      console.log('🚀 Автообновление рецептов запущено');
-    }
+    console.log('🚀 Автообновление рецептов запущено');
 
     return () => {
       if (this._intervalId) {

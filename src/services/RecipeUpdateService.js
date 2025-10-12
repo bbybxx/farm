@@ -187,11 +187,6 @@ class RecipeUpdateService {
             url: url
           }
           console.log('📦 Response structure:', responseInfo)
-          
-          // Alert для отладки
-          if (typeof alert !== 'undefined') {
-            alert(`API Response from ${url.substring(0, 30)}...\nItems: ${responseInfo.itemsLength}\nErrors: ${responseInfo.hasErrors}`)
-          }
 
           if (data.errors) {
             const error = new Error('GraphQL errors occurred')

@@ -1451,49 +1451,6 @@ export default function App() {
                 </>
               )}
               
-              <h3 className="section-title">API Status</h3>
-              <div style={{ padding: '8px 12px', background: apiLoadStatus.error ? '#ff000020' : (apiLoadStatus.lastUpdate ? '#00ff0020' : '#ffaa0020'), borderRadius: '8px', marginBottom: '8px' }}>
-                {apiLoadStatus.loading && <div>🔄 Loading data from API...</div>}
-                {apiLoadStatus.error && <div style={{ color: '#ff6b6b', fontSize: '13px' }}>❌ {apiLoadStatus.error}</div>}
-                {apiLoadStatus.lastUpdate && !apiLoadStatus.error && (
-                  <div style={{ color: '#51cf66' }}>✅ Last update: {apiLoadStatus.lastUpdate.toLocaleTimeString()}</div>
-                )}
-                {!apiLoadStatus.loading && !apiLoadStatus.error && !apiLoadStatus.lastUpdate && (
-                  <div>⏳ Waiting for data...</div>
-                )}
-              </div>
-              <button
-                className="chip wide"
-                onClick={async () => {
-                  setApiLoadStatus({ loading: true, error: null, lastUpdate: null })
-                  try {
-                    console.log('🔄 Force updating API data...')
-                    alert('Starting force update...')
-                    const result = await updateService.forceUpdate()
-                    console.log('✅ Force update result:', result)
-                    const itemsCount = result?.items ? Object.keys(result.items).length : 0
-                    alert(`Update complete! Items: ${itemsCount}`)
-                    if (result && result.items && itemsCount > 0) {
-                      mergeItemsData(result.items)
-                      setApiLoadStatus({ loading: false, error: null, lastUpdate: new Date() })
-                    } else {
-                      const msg = `No items: ${JSON.stringify(result).substring(0, 200)}`
-                      alert(msg)
-                      setApiLoadStatus({ loading: false, error: 'No data received', lastUpdate: null })
-                    }
-                  } catch (error) {
-                    console.error('❌ Force update failed:', error)
-                    alert('Error: ' + error.message)
-                    setApiLoadStatus({ loading: false, error: error.message || 'Update failed', lastUpdate: null })
-                  }
-                }}
-                type="button"
-                title="Force reload data from API"
-                disabled={apiLoadStatus.loading}
-              >
-                🔄 Force Reload API Data
-              </button>
-
               <h3 className="section-title">Bug Report</h3>
               <button
                 className="chip wide"

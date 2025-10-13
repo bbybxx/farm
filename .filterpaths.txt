@@ -1,7 +1,0 @@
-﻿android/Android Studio
-android/JDK
-platform-tools
-apk-unpacked
-android/.gradle
-android/build
-android/app/build

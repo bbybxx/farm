@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">Craft Calculator</string>
-    <string name="title_activity_main">Craft Calculator</string>
-    <string name="package_name">com.example.craftcalculator</string>
-    <string name="custom_url_scheme">com.example.craftcalculator</string>
-</resources>

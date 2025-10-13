@@ -1,6 +1,0 @@
-{
-  "appId": "com.example.craftcalculator",
-  "appName": "Craft Calculator",
-  "webDir": "dist",
-  "bundledWebRuntime": false
-}

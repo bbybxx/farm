@@ -1,105 +1,231 @@
-# Craft Calculator
-
-Craft Calculator is a React + Vite application that helps calculate crafting resource requirements and exploring drop estimates for game items.
-
-This repository contains the web client, a small development server used during local development, and scripts to build and deploy the production bundle.
-
-Key features
-- Resource/crafting calculations for in-game items
-- Pinned resources system and per-location exploring estimates
-- Auto-update system for recipes (with caching and configurable intervals)
-- Accessible UI components and theming
-
-Quickstart (development)
-1. Install dependencies:
-
-```powershell
-npm install
-```
-
-2. Run development server (HMR enabled):
-
-```powershell
-npm run dev
-```
-
-3. Open http://localhost:5173/ (Vite may auto-select another port if 5173 is busy)
-
-Production build
-
-```powershell
-npm run build
-npm run preview
-```
-
-This repository is configured to build with Vite. Production builds use Terser to remove console.* calls (see `vite.config.ts`) and the runtime also silences console calls in production via `src/silence-console.js`.
-
-Deployment (Vercel)
-- Push this repository to GitHub. Vercel will run the `vercel-build` / `npm run build` command and serve the `dist/` output.
-- In production, client-side console logs are removed by the build and runtime guard, so F12 will be clean.
-
-Notes about backups and branches
-- This repo contains several backup branches (for example `backup-stable-2025-08-22*`). I will not delete any branches or tags without explicit confirmation. If you want to clean up old backup branches on the remote, confirm which ones to delete.
-
-If you want, I can:
-- Create a tidy release commit and tag (e.g., `v0.3.0`) and push it.
-- Create a minimal project page in `index.html` describing the app (or use the existing `README.md` as site content).
-- Open a PR for the README and configuration changes.
-
-License
-MIT
 # 🧙‍♂️ Craft Calculator
 
-Калькулятор крафта для игры с автоматическим обновлением рецептов из buddy.farm API.
+Progressive Web App калькулятор крафта для X-Farm игры с автоматическим обновлением рецептов и интеграцией с Telegram.
 
-## ✨ Функции
+## ✨ Основные возможности
 
-- 📋 **191 рецепт** с автоматической сортировкой по алфавиту
-- 🔄 **Автообновление** рецептов каждые 3 дня из buddy.farm API
-- 🎮 **Интеграция с Telegram** для багрепортов
-- 📱 **Адаптивный дизайн** для всех устройств
-- ⚡ **Быстрая работа** с кэшированием данных
+- **📋 Калькулятор крафта** - Расчёт необходимых ресурсов для крафта предметов
+- **🗺️ Калькулятор исследований** - Оптимальные локации для фарма с учётом дропа
+- **🔄 Автообновление рецептов** - Синхронизация с buddy.farm API каждые 3 дня
+- **🎨 Система перков** - Учёт бонусов от перков при расчётах
+- **📌 Закрепление ресурсов** - Настройка исключений для фарма
+- **🐛 Баг-репорты** - Отправка отчётов с скриншотами в Telegram
+- **📱 PWA** - Устанавливается как приложение на iOS/Android
+- **🌙 Тёмная тема** - Оптимизирована для комфортного использования
+- **⚡ Офлайн режим** - Service Worker для работы без интернета
 
 ## 🚀 Технологии
 
-- **Frontend:** React 19, Vite, Framer Motion
-- **Backend:** Node.js, Express
-- **API:** GraphQL (buddy.farm)
-- **Деплой:** Vercel
+### Frontend
+- **React 19.1** - UI библиотека
+- **Vite 7.1** - Сборщик и dev-сервер
+- **Framer Motion 12** - Анимации
+- **Service Worker** - PWA функциональность
 
-## 📦 Установка
+### Backend
+- **Vercel Serverless Functions** - API endpoints
+- **Formidable** - Обработка multipart/form-data
+- **Telegram Bot API** - Баг-репорты
 
+### Инфраструктура
+- **Vercel** - Хостинг и CI/CD
+- **GraphQL** - Запросы к buddy.farm API
+- **Git** - Версионирование
+
+## 📦 Установка и разработка
+
+### Клонирование репозитория
 ```bash
-# Фронтенд
-npm install
-npm run dev
+git clone https://github.com/bbybxx/farm.git
+cd farm
+```
 
-# Бэкенд
+### Установка зависимостей
+```bash
+npm install
+```
+
+### Локальная разработка
+```bash
+# Frontend dev server (HMR)
+npm run dev
+# Откроется http://localhost:5173
+
+# Production build
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+### Локальный сервер для тестирования API
+```bash
 cd server
 npm install
 npm start
+# Откроется http://localhost:3000
 ```
 
-## 🌍 Production
+## 🌍 Production деплой
 
-Проект автоматически деплоится на Vercel при пуше в main ветку.
+Проект автоматически деплоится на Vercel при push в `main` ветку:
+- Frontend: `npm run build` → `dist/`
+- Serverless Functions: `api/*.js`
 
-## 📝 API Endpoints
+**Live URL:** [craft-calculator.vercel.app](https://craft-calculator.vercel.app)
 
-- `GET /` - Главная страница калькулятора
-- `POST /api/graphql` - Прокси для buddy.farm API  
-- `POST /api/bug-report` - Отправка багрепортов в Telegram
+## 📁 Структура проекта
 
-## 🔧 Переменные окружения
+```
+craft-calculator/
+├── api/                        # Vercel serverless functions
+│   ├── bug-report.js          # Telegram bug report endpoint
+│   └── graphql.php            # GraphQL proxy (legacy)
+├── public/                    # Статические файлы
+│   ├── img/items/            # Иконки предметов
+│   ├── manifest.json         # PWA manifest
+│   └── service-worker.js     # Service Worker
+├── server/                    # Dev server для локальной разработки
+│   ├── server.js             # Express server
+│   └── package.json          # Server dependencies
+├── src/
+│   ├── app/                  # Основное приложение
+│   │   ├── App.jsx           # Root компонент
+│   │   ├── app.css           # Глобальные стили
+│   │   └── findBestSources.js # Алгоритм оптимизации фарма
+│   ├── components/           # UI компоненты
+│   │   ├── BugReportModal.jsx
+│   │   ├── ItemDisplay.jsx
+│   │   ├── LocationConfigPanel.jsx
+│   │   ├── LocationImage.jsx
+│   │   └── PinnedLocationSelect.jsx
+│   ├── data/                 # Игровые данные
+│   │   ├── items-api.json    # Все предметы
+│   │   ├── recipes-api.json  # Все рецепты
+│   │   ├── perks.js          # Система перков
+│   │   └── locations.md      # Описание локаций
+│   ├── hooks/                # React hooks
+│   │   ├── useTelegram.js    # Telegram WebApp интеграция
+│   │   └── useViewportHeight.js
+│   ├── services/             # Бизнес-логика
+│   │   ├── RecipeUpdateService.js
+│   │   └── itemImages.js
+│   ├── styles/               # Стили
+│   │   └── ios-pwa-fix.css   # iOS PWA фиксы
+│   ├── utils/                # Утилиты
+│   │   └── recipeCalculator.js
+│   ├── main.jsx              # Entry point
+│   └── silence-console.js    # Отключение console в production
+├── docs/                      # Документация
+│   └── FEATURE_IDEAS.md
+├── ANDROID_ARCHIVE.md        # История миграции с Capacitor
+├── arnold-palmer.md          # Документация по Arnold Palmer event
+├── future-plans.md           # Планы развития
+├── package.json              # Frontend dependencies
+├── vite.config.ts            # Vite конфигурация
+└── vercel.json               # Vercel deployment config
+```
 
+## 🔧 Конфигурация
+
+### Environment Variables
+
+#### Production (Vercel)
 ```bash
-# server/.env
-NODE_ENV=production
+# Telegram Bot
 BOT_TOKEN=your_telegram_bot_token
 CHAT_ID=your_telegram_chat_id
+
+# CORS (автоматически от Vercel)
 ALLOWED_ORIGINS=https://your-domain.vercel.app
 ```
 
-## 📄 Лицензия
+#### Development (server/.env)
+```bash
+NODE_ENV=development
+BOT_TOKEN=your_telegram_bot_token
+CHAT_ID=your_telegram_chat_id
+PORT=3000
+```
 
-MIT License
+### PWA Configuration
+
+PWA настроен в `public/manifest.json`:
+- **Имя:** Craft Calculator
+- **Иконки:** 192×192, 512×512 (PNG), 180×180 (Apple Touch)
+- **Режим:** standalone
+- **Тема:** dark (#1a1a2e)
+
+iOS PWA фиксы для Dynamic Island в `src/styles/ios-pwa-fix.css`.
+
+## 📱 Использование
+
+### Установка PWA
+
+**iOS (Safari):**
+1. Откройте сайт в Safari
+2. Нажмите кнопку "Поделиться" 
+3. Выберите "На экран «Домой»"
+
+**Android (Chrome):**
+1. Откройте сайт в Chrome
+2. Нажмите меню (⋮)
+3. Выберите "Установить приложение"
+
+### Отправка баг-репорта
+
+1. Нажмите кнопку "🐛" в правом верхнем углу
+2. Опишите проблему
+3. Прикрепите скриншоты (опционально, до 8 файлов)
+4. Отправьте — репорт придёт в Telegram разработчику
+
+## 🎨 Фичи для интеграции с игрой
+
+Проект готов к интеграции с API игры для:
+- Привязки игровых аккаунтов
+- Синхронизации инвентаря
+- Автоматического импорта доступных ресурсов
+- Отображения прогресса крафта в реальном времени
+
+## 🧹 Недавние изменения
+
+### v0.3.0 (October 2025)
+- ✅ Полная миграция на PWA (удалён Capacitor/Android)
+- ✅ Чистка codebase: удалены старые компоненты, скрипты парсинга, test файлы
+- ✅ Переименование `src/new-app/` → `src/app/`
+- ✅ iOS PWA фиксы для Dynamic Island/notch
+- ✅ Serverless функция для баг-репортов с Formidable
+- ✅ Service Worker с auto-update
+- ✅ Обновлены drop rates для Haunted House
+- ✅ Arnold Palmer event auto-sync с Apple Cider
+
+## 📊 Статистика
+
+- **191** рецепта крафта
+- **1000+** игровых предметов
+- **40+** локаций для исследования
+- **15** перков с бонусами
+- **~530 KB** размер бандла (gzip: ~145 KB)
+
+## 🤝 Contributing
+
+1. Fork репозиторий
+2. Создайте feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit изменения (`git commit -m 'Add amazing feature'`)
+4. Push в branch (`git push origin feature/amazing-feature`)
+5. Откройте Pull Request
+
+## 📝 Лицензия
+
+MIT License - свободно используйте для своих проектов.
+
+## 🔗 Ссылки
+
+- **Живой сайт:** [craft-calculator.vercel.app](https://craft-calculator.vercel.app)
+- **Репозиторий:** [github.com/bbybxx/farm](https://github.com/bbybxx/farm)
+- **API источник:** [buddy.farm](https://buddy.farm)
+- **История Android:** [ANDROID_ARCHIVE.md](./ANDROID_ARCHIVE.md)
+
+---
+
+Made with ❤️ for X-Farm community

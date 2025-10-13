@@ -652,61 +652,62 @@ Stamina/drop
 
 
 
+
 Candy
 Stamina/drop
-5,01
+4,84
 
 Lollipop
 Stamina/drop
-13,78
+13,41
 
 Taffy
 Stamina/drop
-21,91
+21,37
 
 Apple
 Stamina/drop
-46,17
-
-Jack-o-lantern
-Stamina/drop
-78,34
+45,05
 
 Candy Corn
 Stamina/drop
-78,38
+76,43
 
 Spider
 Stamina/drop
-279,56
-
-Chattering Teeth
-Stamina/drop
-602,09
-
-Bat Wing
-Stamina/drop
-602,29
+272,29
 
 Witch Hat
 Stamina/drop
-603,04
+588,59
 
-Treat Bag 03
+Chattering Teeth
 Stamina/drop
-2 008,55
+588,72
 
-Treat Bag 02
+Bat Wing
 Stamina/drop
-2 011,70
+589,39
+
+Jack-o-lantern
+Stamina/drop
+781,41
 
 Treat Bag 01
 Stamina/drop
-2 017,88
+1 958,37
+
+Treat Bag 03
+Stamina/drop
+1 959,30
+
+Treat Bag 02
+Stamina/drop
+1 976,41
 
 Hockey Mask
 Stamina/drop
-39 818,82
+39 014,87
 
 ## Gary's Crushroom
 
@@ -1379,61 +1380,62 @@ Stamina/drop
 Back to all exploring locations
 
 
+
 Candy
 Stamina/drop
-5,55
-
-Taffy
-Stamina/drop
-14,84
+5,37
 
 Lollipop
 Stamina/drop
-14,84
+14,47
+
+Taffy
+Stamina/drop
+14,47
 
 Apple
 Stamina/drop
-40,82
+39,84
 
 Candy Corn
 Stamina/drop
-83,84
-
-Jack-o-lantern
-Stamina/drop
-83,89
+81,94
 
 Spider
 Stamina/drop
-238,49
-
-Chattering Teeth
-Stamina/drop
-513,64
+233,06
 
 Witch Hat
 Stamina/drop
-514,01
+502,14
+
+Chattering Teeth
+Stamina/drop
+502,76
 
 Bat Wing
 Stamina/drop
-514,42
+502,79
+
+Jack-o-lantern
+Stamina/drop
+839,01
 
 Treat Bag 02
 Stamina/drop
-1 714,87
-
-Treat Bag 03
-Stamina/drop
-1 716,53
+1 676,42
 
 Treat Bag 01
 Stamina/drop
-1 717,21
+1 676,50
+
+Treat Bag 03
+Stamina/drop
+1 676,53
 
 Hockey Mask
 Stamina/drop
-35 189,58
+33 358,35
 
 ## Gary's Crushroom
 Back to all exploring locations

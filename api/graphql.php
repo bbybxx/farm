@@ -34,7 +34,10 @@ $context = stream_context_create([
     ]
 ]);
 
-$response = file_get_contents('https://api.buddy.farm/graphql', false, $context);
+// LEGACY FILE - Consider using Vercel serverless functions instead
+// Configure API endpoint via environment variable - contact FarmRPG devs for access
+$apiEndpoint = getenv('GRAPHQL_API_ENDPOINT') ?: 'https://api.buddy.farm/graphql';
+$response = file_get_contents($apiEndpoint, false, $context);
 
 if ($response === false) {
     http_response_code(500);

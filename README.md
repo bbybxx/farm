@@ -45,6 +45,22 @@ cd farm
 npm install
 ```
 
+### Environment Setup
+1. Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
+```
+
+2. Configure API endpoints:
+   - **VITE_API_ENDPOINT** - GraphQL API endpoint (contact FarmRPG developers for access)
+   - **VITE_TELEGRAM_BOT_TOKEN** - Telegram bot token for bug reports
+   - **VITE_TELEGRAM_CHAT_ID** - Telegram chat ID for receiving reports
+
+3. For the local dev server (`server/server.js`), also set:
+   - **GRAPHQL_API_ENDPOINT** - Same GraphQL endpoint
+
+> **Note:** The GraphQL API endpoint is provided by FarmRPG developers and is not publicly available. Contact the FarmRPG team for API access.
+
 ### Local Development
 ```bash
 # Frontend dev server (HMR)

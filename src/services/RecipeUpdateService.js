@@ -11,8 +11,10 @@ class RecipeUpdateService {
     this._intervalId = null
     this._lastSuccessfulUrl = null
     this._nativeEnvironment = this._isNativeEnvironment()
+    // Fallback endpoints - configure via environment variables
+    // Contact FarmRPG developers for API access
     this._fallbackPublicEndpoints = [
-      'https://api.buddy.farm/graphql',
+      import.meta.env.VITE_API_ENDPOINT || '/api/graphql',
       'https://craft-calculator.com/api/graphql',
       'https://farmcraftcalculator.infy.uk/api/graphql'
     ]

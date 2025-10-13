@@ -373,14 +373,17 @@ app.get('/api/bot-info', async (req, res) => {
   }
 });
 
-// GraphQL Proxy для buddy.farm API
+// GraphQL Proxy - configure API endpoint via environment variable
+// Contact FarmRPG developers for API access
 app.post('/api/graphql', async (req, res) => {
   try {
+    const apiEndpoint = process.env.GRAPHQL_API_ENDPOINT || 'https://api.buddy.farm/graphql';
+    
     if (process.env.NODE_ENV === 'development') {
-      console.log('🔄 Proxying GraphQL request to buddy.farm API...');
+      console.log('🔄 Proxying GraphQL request...');
     }
     
-    const response = await fetch('https://api.buddy.farm/graphql', {
+    const response = await fetch(apiEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

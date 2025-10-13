@@ -21,7 +21,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://api.buddy.farm',
+        // Configure via VITE_API_ENDPOINT env var - contact FarmRPG devs for access
+        target: process.env.VITE_API_ENDPOINT || 'https://api.buddy.farm',
         changeOrigin: true,
         secure: true,
         rewrite: (path) => path.replace(/^\/api/, '')

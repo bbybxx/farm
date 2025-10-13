@@ -40,24 +40,9 @@
   }
 }
 
-/* Fix for iOS keyboard pushing content */
-@supports (-webkit-touch-callout: none) {
-  @media (display-mode: standalone) {
-    /* When keyboard is visible, prevent viewport from shrinking */
-    body {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
-    
-    #root {
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      height: 100%;
-    }
-  }
-}
+/* Fix for iOS keyboard pushing content - REMOVED
+   This was breaking scroll and hiding header behavior
+   iOS handles keyboard automatically in PWA mode */
 
 /* Fix tap delay on iOS */
 * {

@@ -42,8 +42,6 @@ app.use((req, res, next) => {
   const normalized = origin.trim();
   const isAllowed = allowedOrigins.includes(normalized)
     || normalized === 'null'
-    || normalized.startsWith('capacitor://')
-    || normalized.startsWith('file://')
     || normalized.endsWith('.vercel.app');
 
   if (isAllowed) {

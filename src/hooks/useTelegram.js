@@ -166,12 +166,9 @@ export function useTelegram() {
   // В продакшене всегда используем наш API endpoint
   const isProduction = import.meta.env.PROD || window.location.hostname !== 'localhost';
 
-  // Detect native / file protocol (Android APK) and allow overriding base API URL
-  const envBase = import.meta.env.VITE_API_BASE || null;
+  // PWA always runs in browser context - no need for special API base handling
   const runningOnFileProtocol = typeof window !== 'undefined' && window.location && window.location.protocol === 'file:';
-  const isCapacitor = typeof window !== 'undefined' && (!!window.Capacitor || !!window.android);
-  const FALLBACK_PUBLIC_BASES = ['https://craft-calculator.com', 'https://farmcraftcalculator.infy.uk'];
-  const apiBase = (envBase && (runningOnFileProtocol || isCapacitor)) ? envBase.replace(/\/$/, '') : ((runningOnFileProtocol || isCapacitor) ? FALLBACK_PUBLIC_BASES[0] : '');
+  const apiBase = ''; // Use relative URLs for API endpoints in PWA
       
       let response;
       
@@ -195,11 +192,8 @@ export function useTelegram() {
   console.log('🐛 Bug Report Submission:', {
     isProduction,
     endpoint,
-    apiBase,
     hostname: window.location.hostname,
     protocol: window.location.protocol,
-    runningOnFileProtocol,
-    isCapacitor,
     hasFiles: files?.length || 0
   });
   

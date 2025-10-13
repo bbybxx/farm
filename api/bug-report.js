@@ -16,9 +16,7 @@ export default async function handler(req, res) {
     origin.includes('localhost') ||
     origin.includes('craft-calculator.com') ||
     origin.includes('farmcraftcalculator.infy.uk') ||
-    origin.includes('vercel.app') ||
-    origin.startsWith('capacitor://') ||
-    origin.startsWith('file://');
+    origin.includes('vercel.app');
 
   res.setHeader('Access-Control-Allow-Origin', isAllowedOrigin ? (origin === 'null' ? '*' : origin) : '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');

@@ -46,13 +46,9 @@ class RecipeUpdateService {
   }
 
   _isNativeEnvironment() {
+    // No longer using native app (Capacitor) - always return false
+    // Keeping method for backward compatibility but it's not used in PWA
     try {
-      const globalCapacitor = typeof window !== 'undefined'
-        ? window.Capacitor
-        : (typeof globalThis !== 'undefined' ? globalThis.Capacitor : undefined)
-      if (globalCapacitor && typeof globalCapacitor.isNativePlatform === 'function') {
-        return !!globalCapacitor.isNativePlatform()
-      }
       if (typeof document !== 'undefined' && document.location && document.location.protocol === 'file:') {
         return true
       }

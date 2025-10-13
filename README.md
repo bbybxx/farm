@@ -1,6 +1,6 @@
 # 🧙‍♂️ Craft Calculator
 
-Progressive Web App crafting calculator for X-Farm game with automatic recipe updates and Telegram integration.
+Progressive Web App crafting calculator for FarmRPG with automatic recipe updates and Telegram integration.
 
 ## ✨ Key Features
 
@@ -72,7 +72,7 @@ Project auto-deploys to Vercel on push to `main` branch:
 - Frontend: `npm run build` → `dist/`
 - Serverless Functions: `api/*.js`
 
-**Live URL:** [craft-calculator.vercel.app](https://craft-calculator.vercel.app)
+**Live URL:** [craft-calculator.vercel.app](https://farm-pink-gamma.vercel.app/)
 
 ## 📁 Project Structure
 
@@ -223,11 +223,11 @@ MIT License - free to use for your projects.
 
 ## 🔗 Links
 
-- **Live Site:** [craft-calculator.vercel.app](https://craft-calculator.vercel.app)
+- **Live Site:** [craft-calculator.vercel.app](https://farm-pink-gamma.vercel.app/)
 - **Repository:** [github.com/bbybxx/farm](https://github.com/bbybxx/farm)
 - **API Source:** [buddy.farm](https://buddy.farm)
 - **Android History:** [ANDROID_ARCHIVE.md](./ANDROID_ARCHIVE.md)
 
 ---
 
-Made with ❤️ for X-Farm community
+Made with ❤️ for FarmRPG community

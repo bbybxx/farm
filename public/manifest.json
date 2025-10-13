@@ -1,7 +1,7 @@
 {
   "short_name": "Craft Calc",
-  "name": "Craft Calculator - X-Farm",
-  "description": "Calculate crafting recipes and resources for X-Farm game",
+  "name": "Craft Calculator - FarmRPG",
+  "description": "Calculate crafting recipes and resources for FarmRPG game",
   "icons": [
     {
       "src": "/favicon.ico",

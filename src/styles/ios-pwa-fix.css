@@ -22,21 +22,15 @@
     --status-bar-height: env(safe-area-inset-top, 20px);
   }
   
-  /* Prevent content from going under status bar */
-  body {
-    padding-top: env(safe-area-inset-top);
-  }
-  
   /* Fix for bottom gesture area on iOS */
   body {
     padding-bottom: max(env(safe-area-inset-bottom), 20px);
   }
   
-  /* Prevent scrolling issues on iOS PWA */
+  /* Prevent horizontal scrolling issues */
   html, body {
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: none;
   }
 }
 

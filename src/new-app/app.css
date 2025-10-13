@@ -55,12 +55,22 @@ body {
 	background: var(--bg) fixed;
 	background-attachment: fixed;
 	overflow-x: hidden; /* prevent horizontal scroll */
-	/* Support for devices with notches/safe areas */
-	padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 	/* Force dark theme on mobile browsers */
 	-webkit-tap-highlight-color: transparent;
-	/* Extend background to cover gesture area */
-	padding-bottom: max(env(safe-area-inset-bottom), 20px);
+}
+
+/* iOS PWA Safe Area support - override index.css with more specific rules */
+@supports (padding: env(safe-area-inset-top)) {
+	body {
+		/* Support for devices with notches/Dynamic Island */
+		padding-top: env(safe-area-inset-top);
+		padding-bottom: env(safe-area-inset-bottom);
+		padding-left: env(safe-area-inset-left);
+		padding-right: env(safe-area-inset-right);
+		
+		/* Ensure bottom padding is at least 20px even without safe-area */
+		padding-bottom: max(env(safe-area-inset-bottom), 20px);
+	}
 }
 
 .app {
@@ -71,6 +81,10 @@ body {
 	overflow-x: hidden;
 	/* Ensure app fills the screen properly on mobile */
 	position: relative;
+	
+	/* Compensate for body safe-area padding in app container */
+	margin-top: calc(-1 * env(safe-area-inset-top, 0px));
+	padding-top: calc(12px + env(safe-area-inset-top, 0px));
 }
 
 /* Preview buttons panel (visible placeholders for planned features) */

@@ -9,6 +9,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg-primary);
   color: var(--text-primary);
+  
+  /* Ensure full viewport height with safe areas */
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
 }
 
 code {

@@ -190,7 +190,19 @@ export function useTelegram() {
         }
 
   const endpoint = apiBase ? apiBase + '/api/bug-report' : '/api/bug-report';
-  if (import.meta.env.DEV) console.log('Bug report endpoint:', endpoint, 'apiBase:', apiBase, 'runningOnFileProtocol:', runningOnFileProtocol, 'isCapacitor:', isCapacitor);
+  
+  // Always log bug report submission details for debugging
+  console.log('🐛 Bug Report Submission:', {
+    isProduction,
+    endpoint,
+    apiBase,
+    hostname: window.location.hostname,
+    protocol: window.location.protocol,
+    runningOnFileProtocol,
+    isCapacitor,
+    hasFiles: files?.length || 0
+  });
+  
   response = await fetch(endpoint, {
           method: 'POST',
           body: form
@@ -249,18 +261,26 @@ export function useTelegram() {
       }
       
       if (response.ok) {
+        console.log('✅ Bug report sent successfully via', isProduction ? 'api-endpoint' : 'direct-api');
         return { success: true, method: isProduction ? 'api-endpoint' : 'direct-api' };
       } else {
-        const errorData = await response.json();
-        throw new Error(`API error: ${errorData.description || errorData.error}`);
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('❌ Bug report failed:', response.status, errorData);
+        throw new Error(`API error: ${errorData.description || errorData.error || response.statusText}`);
       }
       
     } catch (error) {
-      console.error('Failed to send bug report:', error);
+      console.error('❌ Failed to send bug report:', error);
+      console.error('Error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
       
       // Fallback: попробуем через Telegram Web App если доступно
       if (tg?.sendData) {
         try {
+          console.log('🔄 Trying Telegram Web App fallback...');
           const fallbackData = {
             type: 'bug_report',
             message: message,
@@ -271,15 +291,17 @@ export function useTelegram() {
           };
           
           tg.sendData(JSON.stringify(fallbackData));
+          console.log('✅ Sent via Telegram Web App');
           return { success: true, method: 'telegram-webapp' };
         } catch (webAppError) {
-          console.error('Telegram Web App fallback failed:', webAppError);
+          console.error('❌ Telegram Web App fallback failed:', webAppError);
         }
       }
       
       // Окончательный fallback - логируем в консоль
+      console.warn('⚠️ Bug report logged locally (all send methods failed)');
       console.log('Bug report (fallback):', { message, user: userInfo || user });
-      return { success: true, method: 'console-log', fallback: true };
+      return { success: true, method: 'console-log', fallback: true, error: error.message };
     }
   };
 

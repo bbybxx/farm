@@ -242,7 +242,6 @@ MIT License - free to use for your projects.
 - **Live Site:** [craft-calculator.vercel.app](https://farm-pink-gamma.vercel.app/)
 - **Repository:** [github.com/bbybxx/farm](https://github.com/bbybxx/farm)
 - **API Source:** [buddy.farm](https://buddy.farm)
-- **Android History:** [ANDROID_ARCHIVE.md](./ANDROID_ARCHIVE.md)
 
 ---
 

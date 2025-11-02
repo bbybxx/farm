@@ -166,6 +166,19 @@ export default function App() {
     return baseItems
   })
 
+  // Динамические location drop rates из API
+  const [apiLocations, setApiLocations] = useState(() => {
+    try {
+      const cached = updateService.getCachedRecipes?.()
+      return cached?.locations || {}
+    } catch (error) {
+      if (import.meta?.env?.DEV) {
+        console.warn('Failed to load cached locations:', error)
+      }
+      return {}
+    }
+  })
+
   const mergeItemsData = useCallback((incoming) => {
     if (!incoming || Object.keys(incoming).length === 0) return
     setItemsData(prev => {
@@ -308,23 +321,37 @@ export default function App() {
   }
   // Reverse-craft mode: debug instrumentation removed
 
+  // Объединяем статические и API locations (приоритет API)
+  const combinedLocations = useMemo(() => {
+    const staticLocs = APPLE_CIDER_REAL_DROP_RATES?.locations || {}
+    return { ...staticLocs, ...apiLocations }
+  }, [apiLocations])
+
   const locationsForConfig = useMemo(() => {
     try {
-      const locObj = APPLE_CIDER_REAL_DROP_RATES && APPLE_CIDER_REAL_DROP_RATES.locations
-      if (!locObj) return []
+      const locObj = combinedLocations
+      if (!locObj || Object.keys(locObj).length === 0) return []
       return Object.keys(locObj).map((name) => {
         const loc = locObj[name] || {}
         const itemsSet = new Set()
         ;['rq0cs0','rq0cs1','rq1cs0','rq1cs1'].forEach((k) => {
-          const part = loc[k]
-          if (part && typeof part === 'object') Object.keys(part).forEach(i => itemsSet.add(i))
+          const part = loc[k] || loc.dropRates?.[k] // поддержка обоих форматов
+          if (part && typeof part === 'object') {
+            const items = part.items || part
+            if (items && typeof items === 'object') {
+              Object.keys(items).forEach(i => itemsSet.add(i))
+            }
+          }
         })
         return { name, items: Array.from(itemsSet).sort() }
       })
     } catch (e) {
+      if (import.meta?.env?.DEV) {
+        console.error('Error building locationsForConfig:', e)
+      }
       return []
     }
-  }, [APPLE_CIDER_REAL_DROP_RATES])
+  }, [combinedLocations])
 
   const result = useMemo(() => {
     if (!item || !combinedRecipes[item]) return null
@@ -662,12 +689,23 @@ export default function App() {
       const nextItems = data.items || data.itemData || {}
       const itemsCount = Object.keys(nextItems).length
       
+      const nextLocations = data.locations || {}
+      const locationsCount = Object.keys(nextLocations).length
+      
       if (itemsCount > 0) {
         console.log('✅ Successfully loaded', itemsCount, 'items from API')
         mergeItemsData(nextItems)
+      }
+      
+      if (locationsCount > 0) {
+        console.log('✅ Successfully loaded', locationsCount, 'locations from API')
+        setApiLocations(nextLocations)
+      }
+      
+      if (itemsCount > 0 || locationsCount > 0) {
         setApiLoadStatus({ loading: false, error: null, lastUpdate: new Date() })
       } else {
-        console.log('⚠️ Received empty items data')
+        console.log('⚠️ Received empty data')
         setApiLoadStatus({ loading: false, error: 'Empty data received', lastUpdate: null })
       }
     })
@@ -1954,11 +1992,33 @@ export default function App() {
                     <li className="empty-state" style={{ padding: '12px 16px', color: '#9aa' }}>Select a location to see drops.</li>
                   )}
                   {selectedLocation && (() => {
-                    const locObj = APPLE_CIDER_REAL_DROP_RATES.locations && APPLE_CIDER_REAL_DROP_RATES.locations[selectedLocation]
+                    let locObj = combinedLocations[selectedLocation]
                     if (!locObj) return (<li className="empty-state" style={{ padding: '12px 16px', color: '#9aa' }}>No data for this location.</li>)
+                    
+                    // Нормализуем формат (старый и новый)
+                    if (locObj.dropRates) {
+                      locObj = locObj.dropRates // новый формат из API
+                    }
+                    
+                    // Вспомогательная функция для получения предмета из variant
+                    const getItemFromVariant = (variant, itemName) => {
+                      if (!variant) return null
+                      // Новый формат: variant.items[itemName]
+                      if (variant.items && typeof variant.items === 'object') {
+                        return variant.items[itemName]
+                      }
+                      // Старый формат: variant[itemName]
+                      return variant[itemName]
+                    }
+                    
                     const itemSet = new Set()
                     Object.values(locObj).forEach(variant => {
-                      if (variant && typeof variant === 'object') Object.keys(variant).forEach(k => itemSet.add(k))
+                      if (variant && typeof variant === 'object') {
+                        const items = variant.items || variant
+                        if (items && typeof items === 'object') {
+                          Object.keys(items).forEach(k => itemSet.add(k))
+                        }
+                      }
                     })
                     // Sort items by drops-per-cider (best variant) descending
                     const itemsList = Array.from(itemSet)
@@ -1967,8 +2027,7 @@ export default function App() {
                         let best = 0
                         Object.keys(locObj).forEach(vk => {
                           const part = locObj[vk]
-                          if (!part) return
-                          const entry = part[it]
+                          const entry = getItemFromVariant(part, it)
                           if (!entry) return
                           const val = (typeof entry === 'object' && (entry.dropsPerCider || entry.cidersPerDrop)) ? (entry.dropsPerCider || (entry.cidersPerDrop ? 1 / entry.cidersPerDrop : 0)) : (typeof entry === 'number' ? entry : 0)
                           if (val && val > best) best = val
@@ -1993,7 +2052,7 @@ export default function App() {
                               numericValue = budget * perCider
                             } else {
                               // fallback to raw dropsPerCider from variants
-                              const raw = locObj['rq0cs0'] && locObj['rq0cs0'][it]
+                              const raw = getItemFromVariant(locObj['rq0cs0'], it)
                               const rawVal = raw && (raw.dropsPerCider || raw)
                               if (rawVal && budget > 0) numericValue = budget * rawVal
 
@@ -2002,8 +2061,7 @@ export default function App() {
                                 let bestDrops = 0
                                 Object.keys(locObj).forEach(vk => {
                                   const part = locObj[vk]
-                                  if (!part) return
-                                  const entry = part[it]
+                                  const entry = getItemFromVariant(part, it)
                                   if (!entry) return
                                   const val = (typeof entry === 'object' && (entry.dropsPerCider || entry.cidersPerDrop)) ? (entry.dropsPerCider || (entry.cidersPerDrop ? 1 / entry.cidersPerDrop : 0)) : (typeof entry === 'number' ? entry : 0)
                                   if (val && val > bestDrops) bestDrops = val

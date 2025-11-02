@@ -8,6 +8,7 @@ class RecipeUpdateService {
     this.STORAGE_KEY = 'lastRecipeUpdate'
     this.RECIPES_KEY = 'cachedApiRecipes'
     this.ITEMS_KEY = 'cachedApiItems'
+    this.LOCATIONS_KEY = 'cachedApiLocations'
     this._intervalId = null
     this._lastSuccessfulUrl = null
     this._nativeEnvironment = this._isNativeEnvironment()
@@ -42,6 +43,27 @@ class RecipeUpdateService {
             quantity
           }
           image
+        }
+        locations {
+          name
+          image
+          baseDropRate
+          dropRates {
+            runecube
+            seed {
+              name
+            }
+            silverPerHit
+            xpPerHit
+            items {
+              item {
+                name
+                type
+                image
+              }
+              rate
+            }
+          }
         }
       }
     `
@@ -122,38 +144,19 @@ class RecipeUpdateService {
     }
     
     const lastUpdate = window.localStorage.getItem(this.STORAGE_KEY);
-    if (!lastUpdate) {
-      console.log('📅 Нет записи о последнем обновлении - требуется обновление');
-      return true;
-    }
+    if (!lastUpdate) return true;
 
     const lastUpdateTime = new Date(lastUpdate);
     const now = new Date();
     const timeDiff = now.getTime() - lastUpdateTime.getTime();
 
-    console.log('📅 Последнее обновление:', lastUpdateTime.toLocaleString());
-    console.log('📅 Текущее время:', now.toLocaleString());
-    console.log('⏱️ Прошло времени (дней):', (timeDiff / (24 * 60 * 60 * 1000)).toFixed(2));
-
     // Проверяем месячное обновление (первое число месяца)
-    // Обновляем если сейчас 1-е число И последнее обновление было в другом месяце
-    if (now.getDate() === 1) {
-      const isNewMonth = lastUpdateTime.getMonth() !== now.getMonth() || 
-                         lastUpdateTime.getFullYear() !== now.getFullYear();
-      if (isNewMonth) {
-        console.log('📅 Месячное обновление: 1-е число нового месяца');
-        return true;
-      }
+    if (now.getDate() === 1 && lastUpdateTime.getMonth() !== now.getMonth()) {
+      return timeDiff >= this.MONTHLY_INTERVAL;
     }
 
     // Проверяем обычное обновление каждые 3 дня
-    if (timeDiff >= this.REGULAR_INTERVAL) {
-      console.log('📅 Регулярное обновление: прошло более 3 дней');
-      return true;
-    }
-
-    console.log('✅ Обновление не требуется');
-    return false;
+    return timeDiff >= this.REGULAR_INTERVAL;
   }
 
   // Получает рецепты из API
@@ -216,14 +219,22 @@ class RecipeUpdateService {
           this._lastSuccessfulUrl = url
 
           const items = data.data?.items || []
+          const locations = data.data?.locations || []
+          
           console.log('✅ Items received:', items.length, 'via', url)
+          console.log('✅ Locations received:', locations.length, 'via', url)
           console.log('🔍 First 5 items:', items.slice(0, 5).map(item => item.name) || [])
+          console.log('🔍 First 3 locations:', locations.slice(0, 3).map(loc => loc.name) || [])
 
           if (items.length === 0) {
             console.warn('⚠️ API returned 0 items!')
           }
+          
+          if (locations.length === 0) {
+            console.warn('⚠️ API returned 0 locations!')
+          }
 
-          return items
+          return { items, locations }
         } catch (error) {
           lastError = error
           console.error('❌ Ошибка при запросе к', error.urlTried || url, ':', error)
@@ -242,13 +253,18 @@ class RecipeUpdateService {
     }
   }
 
-  // Обрабатывает и сохраняет рецепты
-  processAndSaveRecipes(items) {
+  // Обрабатывает и сохраняет рецепты и локации
+  processAndSaveRecipes(data) {
+    // Поддержка старого формата (массив items) и нового (объект с items и locations)
+    const items = Array.isArray(data) ? data : (data?.items || [])
+    const locations = Array.isArray(data) ? [] : (data?.locations || [])
+    
     console.log('🔧 Processing recipes from', items?.length || 0, 'items')
+    console.log('🔧 Processing locations:', locations?.length || 0, 'locations')
     
     if (!items || items.length === 0) {
       console.error('❌ No items to process!')
-      return { recipes: {}, items: {} }
+      return { recipes: {}, items: {}, locations: {} }
     }
 
     const recipes = {};
@@ -316,7 +332,7 @@ class RecipeUpdateService {
     // Сортируем рецепты по алфавиту перед сохранением
     const sortedRecipes = {};
     const sortedKeys = Object.keys(recipes).sort((a, b) => {
-      return a.localeCompare(b, 'en', { 
+      return a.localeCompare(b, 'ru', { 
         sensitivity: 'base',
         numeric: true,
         ignorePunctuation: true 
@@ -330,7 +346,7 @@ class RecipeUpdateService {
     // Также сортируем данные о предметах
     const sortedItemData = {};
     const sortedItemKeys = Object.keys(itemData).sort((a, b) => {
-      return a.localeCompare(b, 'en', { 
+      return a.localeCompare(b, 'ru', { 
         sensitivity: 'base',
         numeric: true,
         ignorePunctuation: true 
@@ -341,49 +357,118 @@ class RecipeUpdateService {
       sortedItemData[key] = itemData[key];
     });
 
+    // Обрабатываем локации
+    const locationData = {};
+    if (locations && locations.length > 0) {
+      console.log('🗺️ Processing', locations.length, 'locations with drop rates')
+      
+      locations.forEach(location => {
+        const locationName = location.name;
+        locationData[locationName] = {
+          name: locationName,
+          image: location.image,
+          baseDropRate: location.baseDropRate,
+          dropRates: {}
+        };
+        
+        // Обрабатываем 4 варианта дропрейтов
+        // API возвращает массив из 4 вариантов, где:
+        // - варианты 0,1 имеют runecube=false (без Eagle Eye)
+        // - варианты 2,3 имеют runecube=true (с Eagle Eye)  
+        // - seed=null для всех (Cinnamon Sticks применяется формулой на фронте: +25%)
+        // - варианты 1,3 это дубликаты 0,2 (разные снэпшоты данных)
+        // Маппинг: [0->rq0cs0, 1->rq0cs1, 2->rq1cs0, 3->rq1cs1]
+        if (location.dropRates && Array.isArray(location.dropRates)) {
+          const keyMap = ['rq0cs0', 'rq0cs1', 'rq1cs0', 'rq1cs1'];
+          
+          location.dropRates.forEach((dropRate, index) => {
+            const key = keyMap[index] || `variant${index}`;
+            
+            locationData[locationName].dropRates[key] = {
+              runecube: dropRate.runecube,
+              seed: dropRate.seed?.name || null,
+              silverPerHit: dropRate.silverPerHit,
+              xpPerHit: dropRate.xpPerHit,
+              items: {}
+            };
+            
+            // Обрабатываем предметы этого варианта
+            if (dropRate.items && Array.isArray(dropRate.items)) {
+              dropRate.items.forEach(dropItem => {
+                const itemName = dropItem.item?.name;
+                if (itemName && dropItem.rate) {
+                  // API даёт rate как "explores per drop" (базовая метрика)
+                  // Сохраняем как есть, без конвертации - фронт применит Apple Cider формулы
+                  const exploresPerDrop = dropItem.rate;
+                  
+                  locationData[locationName].dropRates[key].items[itemName] = {
+                    exploresPerDrop: exploresPerDrop,
+                    // dropsPerCider будет вычислено на фронте с учётом EE и перков
+                    cidersPerDrop: exploresPerDrop  // для совместимости со старым форматом
+                  };
+                }
+              });
+            }
+          });
+        }
+      });
+      
+      console.log(`✅ Processed ${Object.keys(locationData).length} locations with drop rates`);
+    }
+
     // Сохраняем в localStorage (если доступен)
     if (this.isStorageAvailable()) {
       window.localStorage.setItem(this.RECIPES_KEY, JSON.stringify(sortedRecipes));
       window.localStorage.setItem(this.ITEMS_KEY, JSON.stringify(sortedItemData));
+      if (Object.keys(locationData).length > 0) {
+        window.localStorage.setItem(this.LOCATIONS_KEY, JSON.stringify(locationData));
+      }
       window.localStorage.setItem(this.STORAGE_KEY, new Date().toISOString());
     } else {
       // Сохраняем в памяти для текущей сессии
       this._sessionRecipes = sortedRecipes;
       this._sessionItems = sortedItemData;
+      this._sessionLocations = locationData;
       this._sessionUpdated = true;
     }
 
     if (import.meta.env.DEV) {
       console.log(`✅ Обновлено ${Object.keys(sortedRecipes).length} рецептов`);
       console.log(`✅ Обновлено ${Object.keys(sortedItemData).length} предметов`);
+      if (Object.keys(locationData).length > 0) {
+        console.log(`✅ Обновлено ${Object.keys(locationData).length} локаций`);
+      }
     }
 
-    return { recipes: sortedRecipes, items: sortedItemData };
+    return { recipes: sortedRecipes, items: sortedItemData, locations: locationData };
   }
 
-  // Получает кэшированные рецепты
+  // Получает кэшированные рецепты и локации
   getCachedRecipes() {
     try {
       // Если localStorage недоступен, используем данные из сессии
       if (!this.isStorageAvailable()) {
         return {
           recipes: this._sessionRecipes || {},
-          items: this._sessionItems || {}
+          items: this._sessionItems || {},
+          locations: this._sessionLocations || {}
         };
       }
       
-    const recipes = window.localStorage.getItem(this.RECIPES_KEY);
-    const items = window.localStorage.getItem(this.ITEMS_KEY);
+      const recipes = window.localStorage.getItem(this.RECIPES_KEY);
+      const items = window.localStorage.getItem(this.ITEMS_KEY);
+      const locations = window.localStorage.getItem(this.LOCATIONS_KEY);
       
       return {
         recipes: recipes ? JSON.parse(recipes) : {},
-        items: items ? JSON.parse(items) : {}
+        items: items ? JSON.parse(items) : {},
+        locations: locations ? JSON.parse(locations) : {}
       };
     } catch (error) {
       if (import.meta.env.DEV) {
         console.error('❌ Ошибка при чтении кэша:', error);
       }
-      return { recipes: {}, items: {} };
+      return { recipes: {}, items: {}, locations: {} };
     }
   }
 
@@ -397,8 +482,8 @@ class RecipeUpdateService {
         return this.getCachedRecipes();
       }
 
-      const items = await this.fetchRecipes();
-      const result = this.processAndSaveRecipes(items);
+      const data = await this.fetchRecipes();
+      const result = this.processAndSaveRecipes(data);
       
       if (import.meta.env.DEV) {
         console.log('✅ Рецепты успешно обновлены!');

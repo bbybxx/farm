@@ -8,7 +8,6 @@ class RecipeUpdateService {
     this.STORAGE_KEY = 'lastRecipeUpdate'
     this.RECIPES_KEY = 'cachedApiRecipes'
     this.ITEMS_KEY = 'cachedApiItems'
-    this.LOCATIONS_KEY = 'cachedApiLocations'
     this._intervalId = null
     this._lastSuccessfulUrl = null
     this._nativeEnvironment = this._isNativeEnvironment()
@@ -24,9 +23,9 @@ class RecipeUpdateService {
     this._apiCandidates = this._createApiCandidates({ envBase })
     this.API_URL = this._apiCandidates[0] || this.API_URL
 
-    // Интервалы обновления (в миллисекундах)
-    this.REGULAR_INTERVAL = 3 * 24 * 60 * 60 * 1000 // 3 дня
-    this.MONTHLY_INTERVAL = 1 * 24 * 60 * 60 * 1000 // 1 день в месяце (первое число)
+    // Интервалы обновления (в миллисекундах)   
+    this.REGULAR_INTERVAL = 6 * 60 * 60 * 1000 // 6 часов (было 3 дня)
+    this.MONTHLY_INTERVAL = 3 * 60 * 60 * 1000 // 3 часа в месяце (первое число, было 1 день)
 
     this.query = `
       query {
@@ -43,27 +42,6 @@ class RecipeUpdateService {
             quantity
           }
           image
-        }
-        locations {
-          name
-          image
-          baseDropRate
-          dropRates {
-            runecube
-            seed {
-              name
-            }
-            silverPerHit
-            xpPerHit
-            items {
-              item {
-                name
-                type
-                image
-              }
-              rate
-            }
-          }
         }
       }
     `
@@ -140,23 +118,36 @@ class RecipeUpdateService {
     
     if (!this.isStorageAvailable()) {
       // Если localStorage недоступен, обновляем только раз за сессию
-      return !this._sessionUpdated;
+      const shouldUpdate = !this._sessionUpdated;
+      console.log('📦 localStorage недоступен, обновление за сессию:', shouldUpdate);
+      return shouldUpdate;
     }
     
     const lastUpdate = window.localStorage.getItem(this.STORAGE_KEY);
-    if (!lastUpdate) return true;
+    if (!lastUpdate) {
+      console.log('🆕 Первое обновление - lastUpdate не найден');
+      return true;
+    }
 
     const lastUpdateTime = new Date(lastUpdate);
     const now = new Date();
     const timeDiff = now.getTime() - lastUpdateTime.getTime();
+    const hoursSinceUpdate = Math.floor(timeDiff / (60 * 60 * 1000));
+
+    console.log(`⏰ Последнее обновление: ${lastUpdateTime.toLocaleString()}`);
+    console.log(`⏱️ Прошло часов: ${hoursSinceUpdate}`);
 
     // Проверяем месячное обновление (первое число месяца)
     if (now.getDate() === 1 && lastUpdateTime.getMonth() !== now.getMonth()) {
-      return timeDiff >= this.MONTHLY_INTERVAL;
+      const shouldUpdate = timeDiff >= this.MONTHLY_INTERVAL;
+      console.log(`📅 Месячное обновление (1-е число): ${shouldUpdate}`);
+      return shouldUpdate;
     }
 
-    // Проверяем обычное обновление каждые 3 дня
-    return timeDiff >= this.REGULAR_INTERVAL;
+    // Проверяем обычное обновление каждые 6 часов
+    const shouldUpdate = timeDiff >= this.REGULAR_INTERVAL;
+    console.log(`🔄 Требуется обновление (>6 часов): ${shouldUpdate}`);
+    return shouldUpdate;
   }
 
   // Получает рецепты из API
@@ -219,22 +210,14 @@ class RecipeUpdateService {
           this._lastSuccessfulUrl = url
 
           const items = data.data?.items || []
-          const locations = data.data?.locations || []
-          
           console.log('✅ Items received:', items.length, 'via', url)
-          console.log('✅ Locations received:', locations.length, 'via', url)
           console.log('🔍 First 5 items:', items.slice(0, 5).map(item => item.name) || [])
-          console.log('🔍 First 3 locations:', locations.slice(0, 3).map(loc => loc.name) || [])
 
           if (items.length === 0) {
             console.warn('⚠️ API returned 0 items!')
           }
-          
-          if (locations.length === 0) {
-            console.warn('⚠️ API returned 0 locations!')
-          }
 
-          return { items, locations }
+          return items
         } catch (error) {
           lastError = error
           console.error('❌ Ошибка при запросе к', error.urlTried || url, ':', error)
@@ -253,18 +236,13 @@ class RecipeUpdateService {
     }
   }
 
-  // Обрабатывает и сохраняет рецепты и локации
-  processAndSaveRecipes(data) {
-    // Поддержка старого формата (массив items) и нового (объект с items и locations)
-    const items = Array.isArray(data) ? data : (data?.items || [])
-    const locations = Array.isArray(data) ? [] : (data?.locations || [])
-    
+  // Обрабатывает и сохраняет рецепты
+  processAndSaveRecipes(items) {
     console.log('🔧 Processing recipes from', items?.length || 0, 'items')
-    console.log('🔧 Processing locations:', locations?.length || 0, 'locations')
     
     if (!items || items.length === 0) {
       console.error('❌ No items to process!')
-      return { recipes: {}, items: {}, locations: {} }
+      return { recipes: {}, items: {} }
     }
 
     const recipes = {};
@@ -357,145 +335,49 @@ class RecipeUpdateService {
       sortedItemData[key] = itemData[key];
     });
 
-    // Обрабатываем локации
-    const locationData = {};
-    if (locations && locations.length > 0) {
-      console.log('🗺️ Processing', locations.length, 'locations with drop rates')
-      
-      // Константы для конвертации API данных
-      const BASE_APPLE_CIDER_EXPLORES = 1010;
-      const BASE_EE = 1.2; // Базовый Exploring Effectiveness с перками
-      const CINNAMON_MULTIPLIER = 1.25; // Cinnamon Sticks даёт +25%
-      
-      locations.forEach(location => {
-        const locationName = location.name;
-        locationData[locationName] = {
-          name: locationName,
-          image: location.image,
-          baseDropRate: location.baseDropRate,
-          dropRates: {}
-        };
-        
-        // API возвращает 2 варианта (дублированные как 4):
-        // - variants[0,1]: runecube=false (без Eagle Eye) - берём вариант 0
-        // - variants[2,3]: runecube=true (с Eagle Eye) - берём вариант 2
-        // Cinnamon Sticks вычисляется формулой: dropsPerCider × 1.25
-        
-        if (location.dropRates && Array.isArray(location.dropRates)) {
-          // Берём только уникальные варианты: 0 (без runecube) и 2 (с runecube)
-          const variants = [
-            { index: 0, runecube: false, key: 'rq0cs0' },
-            { index: 2, runecube: true, key: 'rq1cs0' }
-          ];
-          
-          variants.forEach(({ index, runecube, key }) => {
-            const dropRate = location.dropRates[index];
-            if (!dropRate) return;
-            
-            // Базовый вариант без Cinnamon
-            locationData[locationName].dropRates[key] = {
-              runecube: runecube,
-              items: {}
-            };
-            
-            // Вариант с Cinnamon
-            const keyWithCinnamon = key.replace('cs0', 'cs1');
-            locationData[locationName].dropRates[keyWithCinnamon] = {
-              runecube: runecube,
-              cinnamon: true,
-              items: {}
-            };
-            
-            // Обрабатываем предметы
-            if (dropRate.items && Array.isArray(dropRate.items)) {
-              dropRate.items.forEach(dropItem => {
-                const itemName = dropItem.item?.name;
-                if (!itemName || !dropItem.rate) return;
-                
-                // Конвертация: API rate (explores/drop) → dropsPerCider
-                const exploresPerDrop = dropItem.rate;
-                const dropsPerCider = (BASE_APPLE_CIDER_EXPLORES * BASE_EE) / exploresPerDrop;
-                const dropsPerCiderWithCinnamon = dropsPerCider * CINNAMON_MULTIPLIER;
-                
-                // Определяем формат (dropsPerCider или cidersPerDrop)
-                // Если dropsPerCider < 1, используем cidersPerDrop
-                if (dropsPerCider >= 1) {
-                  locationData[locationName].dropRates[key].items[itemName] = {
-                    dropsPerCider: Math.round(dropsPerCider * 100) / 100
-                  };
-                  locationData[locationName].dropRates[keyWithCinnamon].items[itemName] = {
-                    dropsPerCider: Math.round(dropsPerCiderWithCinnamon * 100) / 100
-                  };
-                } else {
-                  locationData[locationName].dropRates[key].items[itemName] = {
-                    cidersPerDrop: Math.round((1 / dropsPerCider) * 100) / 100
-                  };
-                  locationData[locationName].dropRates[keyWithCinnamon].items[itemName] = {
-                    cidersPerDrop: Math.round((1 / dropsPerCiderWithCinnamon) * 100) / 100
-                  };
-                }
-              });
-            }
-          });
-        }
-      });
-      
-      console.log(`✅ Processed ${Object.keys(locationData).length} locations with drop rates`);
-    }
-
     // Сохраняем в localStorage (если доступен)
     if (this.isStorageAvailable()) {
       window.localStorage.setItem(this.RECIPES_KEY, JSON.stringify(sortedRecipes));
       window.localStorage.setItem(this.ITEMS_KEY, JSON.stringify(sortedItemData));
-      if (Object.keys(locationData).length > 0) {
-        window.localStorage.setItem(this.LOCATIONS_KEY, JSON.stringify(locationData));
-      }
       window.localStorage.setItem(this.STORAGE_KEY, new Date().toISOString());
     } else {
       // Сохраняем в памяти для текущей сессии
       this._sessionRecipes = sortedRecipes;
       this._sessionItems = sortedItemData;
-      this._sessionLocations = locationData;
       this._sessionUpdated = true;
     }
 
     if (import.meta.env.DEV) {
       console.log(`✅ Обновлено ${Object.keys(sortedRecipes).length} рецептов`);
       console.log(`✅ Обновлено ${Object.keys(sortedItemData).length} предметов`);
-      if (Object.keys(locationData).length > 0) {
-        console.log(`✅ Обновлено ${Object.keys(locationData).length} локаций`);
-      }
     }
 
-    return { recipes: sortedRecipes, items: sortedItemData, locations: locationData };
+    return { recipes: sortedRecipes, items: sortedItemData };
   }
 
-  // Получает кэшированные рецепты и локации
+  // Получает кэшированные рецепты
   getCachedRecipes() {
     try {
       // Если localStorage недоступен, используем данные из сессии
       if (!this.isStorageAvailable()) {
         return {
           recipes: this._sessionRecipes || {},
-          items: this._sessionItems || {},
-          locations: this._sessionLocations || {}
+          items: this._sessionItems || {}
         };
       }
       
-      const recipes = window.localStorage.getItem(this.RECIPES_KEY);
-      const items = window.localStorage.getItem(this.ITEMS_KEY);
-      const locations = window.localStorage.getItem(this.LOCATIONS_KEY);
+    const recipes = window.localStorage.getItem(this.RECIPES_KEY);
+    const items = window.localStorage.getItem(this.ITEMS_KEY);
       
       return {
         recipes: recipes ? JSON.parse(recipes) : {},
-        items: items ? JSON.parse(items) : {},
-        locations: locations ? JSON.parse(locations) : {}
+        items: items ? JSON.parse(items) : {}
       };
     } catch (error) {
       if (import.meta.env.DEV) {
         console.error('❌ Ошибка при чтении кэша:', error);
       }
-      return { recipes: {}, items: {}, locations: {} };
+      return { recipes: {}, items: {} };
     }
   }
 
@@ -509,8 +391,8 @@ class RecipeUpdateService {
         return this.getCachedRecipes();
       }
 
-      const data = await this.fetchRecipes();
-      const result = this.processAndSaveRecipes(data);
+      const items = await this.fetchRecipes();
+      const result = this.processAndSaveRecipes(items);
       
       if (import.meta.env.DEV) {
         console.log('✅ Рецепты успешно обновлены!');
@@ -550,11 +432,12 @@ class RecipeUpdateService {
       clearInterval(this._intervalId);
     }
 
+    // Проверяем обновления каждые 30 минут (было 60 минут)
     this._intervalId = setInterval(() => {
       runUpdate();
-    }, 60 * 60 * 1000);
+    }, 30 * 60 * 1000);
 
-    console.log('🚀 Автообновление рецептов запущено');
+    console.log('🚀 Автообновление рецептов запущено (проверка каждые 30 минут)');
 
     return () => {
       if (this._intervalId) {

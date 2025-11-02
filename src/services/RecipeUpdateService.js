@@ -362,6 +362,11 @@ class RecipeUpdateService {
     if (locations && locations.length > 0) {
       console.log('🗺️ Processing', locations.length, 'locations with drop rates')
       
+      // Константы для конвертации API данных
+      const BASE_APPLE_CIDER_EXPLORES = 1010;
+      const BASE_EE = 1.2; // Базовый Exploring Effectiveness с перками
+      const CINNAMON_MULTIPLIER = 1.25; // Cinnamon Sticks даёт +25%
+      
       locations.forEach(location => {
         const locationName = location.name;
         locationData[locationName] = {
@@ -371,40 +376,62 @@ class RecipeUpdateService {
           dropRates: {}
         };
         
-        // Обрабатываем 4 варианта дропрейтов
-        // API возвращает массив из 4 вариантов, где:
-        // - варианты 0,1 имеют runecube=false (без Eagle Eye)
-        // - варианты 2,3 имеют runecube=true (с Eagle Eye)  
-        // - seed=null для всех (Cinnamon Sticks применяется формулой на фронте: +25%)
-        // - варианты 1,3 это дубликаты 0,2 (разные снэпшоты данных)
-        // Маппинг: [0->rq0cs0, 1->rq0cs1, 2->rq1cs0, 3->rq1cs1]
+        // API возвращает 2 варианта (дублированные как 4):
+        // - variants[0,1]: runecube=false (без Eagle Eye) - берём вариант 0
+        // - variants[2,3]: runecube=true (с Eagle Eye) - берём вариант 2
+        // Cinnamon Sticks вычисляется формулой: dropsPerCider × 1.25
+        
         if (location.dropRates && Array.isArray(location.dropRates)) {
-          const keyMap = ['rq0cs0', 'rq0cs1', 'rq1cs0', 'rq1cs1'];
+          // Берём только уникальные варианты: 0 (без runecube) и 2 (с runecube)
+          const variants = [
+            { index: 0, runecube: false, key: 'rq0cs0' },
+            { index: 2, runecube: true, key: 'rq1cs0' }
+          ];
           
-          location.dropRates.forEach((dropRate, index) => {
-            const key = keyMap[index] || `variant${index}`;
+          variants.forEach(({ index, runecube, key }) => {
+            const dropRate = location.dropRates[index];
+            if (!dropRate) return;
             
+            // Базовый вариант без Cinnamon
             locationData[locationName].dropRates[key] = {
-              runecube: dropRate.runecube,
-              seed: dropRate.seed?.name || null,
-              silverPerHit: dropRate.silverPerHit,
-              xpPerHit: dropRate.xpPerHit,
+              runecube: runecube,
               items: {}
             };
             
-            // Обрабатываем предметы этого варианта
+            // Вариант с Cinnamon
+            const keyWithCinnamon = key.replace('cs0', 'cs1');
+            locationData[locationName].dropRates[keyWithCinnamon] = {
+              runecube: runecube,
+              cinnamon: true,
+              items: {}
+            };
+            
+            // Обрабатываем предметы
             if (dropRate.items && Array.isArray(dropRate.items)) {
               dropRate.items.forEach(dropItem => {
                 const itemName = dropItem.item?.name;
-                if (itemName && dropItem.rate) {
-                  // API даёт rate как "explores per drop" (базовая метрика)
-                  // Сохраняем как есть, без конвертации - фронт применит Apple Cider формулы
-                  const exploresPerDrop = dropItem.rate;
-                  
+                if (!itemName || !dropItem.rate) return;
+                
+                // Конвертация: API rate (explores/drop) → dropsPerCider
+                const exploresPerDrop = dropItem.rate;
+                const dropsPerCider = (BASE_APPLE_CIDER_EXPLORES * BASE_EE) / exploresPerDrop;
+                const dropsPerCiderWithCinnamon = dropsPerCider * CINNAMON_MULTIPLIER;
+                
+                // Определяем формат (dropsPerCider или cidersPerDrop)
+                // Если dropsPerCider < 1, используем cidersPerDrop
+                if (dropsPerCider >= 1) {
                   locationData[locationName].dropRates[key].items[itemName] = {
-                    exploresPerDrop: exploresPerDrop,
-                    // dropsPerCider будет вычислено на фронте с учётом EE и перков
-                    cidersPerDrop: exploresPerDrop  // для совместимости со старым форматом
+                    dropsPerCider: Math.round(dropsPerCider * 100) / 100
+                  };
+                  locationData[locationName].dropRates[keyWithCinnamon].items[itemName] = {
+                    dropsPerCider: Math.round(dropsPerCiderWithCinnamon * 100) / 100
+                  };
+                } else {
+                  locationData[locationName].dropRates[key].items[itemName] = {
+                    cidersPerDrop: Math.round((1 / dropsPerCider) * 100) / 100
+                  };
+                  locationData[locationName].dropRates[keyWithCinnamon].items[itemName] = {
+                    cidersPerDrop: Math.round((1 / dropsPerCiderWithCinnamon) * 100) / 100
                   };
                 }
               });

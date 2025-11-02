@@ -15,12 +15,26 @@ export function getCombinedRecipes() {
   const cached = updateService.getCachedRecipes();
   
   // Используем только API данные (приоритет кэш > статические API данные)
-  const combined = {
+  const unsorted = {
     ...recipesAPI,
     ...cached.recipes
   };
   
-  return combined;
+  // Сортируем все рецепты по алфавиту (английская локаль для FarmRPG)
+  const sorted = {};
+  const keys = Object.keys(unsorted).sort((a, b) => {
+    return a.localeCompare(b, 'en', { 
+      sensitivity: 'base',
+      numeric: true,
+      ignorePunctuation: true 
+    });
+  });
+  
+  keys.forEach(key => {
+    sorted[key] = unsorted[key];
+  });
+  
+  return sorted;
 }
 
 /**

@@ -122,19 +122,38 @@ class RecipeUpdateService {
     }
     
     const lastUpdate = window.localStorage.getItem(this.STORAGE_KEY);
-    if (!lastUpdate) return true;
+    if (!lastUpdate) {
+      console.log('📅 Нет записи о последнем обновлении - требуется обновление');
+      return true;
+    }
 
     const lastUpdateTime = new Date(lastUpdate);
     const now = new Date();
     const timeDiff = now.getTime() - lastUpdateTime.getTime();
 
+    console.log('📅 Последнее обновление:', lastUpdateTime.toLocaleString());
+    console.log('📅 Текущее время:', now.toLocaleString());
+    console.log('⏱️ Прошло времени (дней):', (timeDiff / (24 * 60 * 60 * 1000)).toFixed(2));
+
     // Проверяем месячное обновление (первое число месяца)
-    if (now.getDate() === 1 && lastUpdateTime.getMonth() !== now.getMonth()) {
-      return timeDiff >= this.MONTHLY_INTERVAL;
+    // Обновляем если сейчас 1-е число И последнее обновление было в другом месяце
+    if (now.getDate() === 1) {
+      const isNewMonth = lastUpdateTime.getMonth() !== now.getMonth() || 
+                         lastUpdateTime.getFullYear() !== now.getFullYear();
+      if (isNewMonth) {
+        console.log('📅 Месячное обновление: 1-е число нового месяца');
+        return true;
+      }
     }
 
     // Проверяем обычное обновление каждые 3 дня
-    return timeDiff >= this.REGULAR_INTERVAL;
+    if (timeDiff >= this.REGULAR_INTERVAL) {
+      console.log('📅 Регулярное обновление: прошло более 3 дней');
+      return true;
+    }
+
+    console.log('✅ Обновление не требуется');
+    return false;
   }
 
   // Получает рецепты из API
@@ -297,7 +316,7 @@ class RecipeUpdateService {
     // Сортируем рецепты по алфавиту перед сохранением
     const sortedRecipes = {};
     const sortedKeys = Object.keys(recipes).sort((a, b) => {
-      return a.localeCompare(b, 'ru', { 
+      return a.localeCompare(b, 'en', { 
         sensitivity: 'base',
         numeric: true,
         ignorePunctuation: true 
@@ -311,7 +330,7 @@ class RecipeUpdateService {
     // Также сортируем данные о предметах
     const sortedItemData = {};
     const sortedItemKeys = Object.keys(itemData).sort((a, b) => {
-      return a.localeCompare(b, 'ru', { 
+      return a.localeCompare(b, 'en', { 
         sensitivity: 'base',
         numeric: true,
         ignorePunctuation: true 

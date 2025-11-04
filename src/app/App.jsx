@@ -1493,6 +1493,48 @@ export default function App() {
                 <p>This will remove all saved perks, craft history, settings, and current selection.</p>
               </div>
               
+              {/* Social links */}
+              <div className="social-links">
+                <div className="social-link-wrapper">
+                  <span className="social-label">Updates</span>
+                  <a 
+                    href="https://www.reddit.com/u/ConferenceSingle236" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="social-link"
+                    title="Reddit"
+                  >
+                    <img src="/reddit-logo-2436.png" alt="Reddit" className="social-icon" />
+                    Reddit
+                  </a>
+                </div>
+                <div className="social-link-wrapper">
+                  <span className="social-label">My Profile</span>
+                  <a 
+                    href="https://farmrpg.com/index.php#!/profile.php?user_name=bbybxx" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="social-link"
+                    title="FarmRPG Profile"
+                  >
+                    <img src="/farmrpg_logo.png" alt="FarmRPG" className="social-icon" />
+                    FarmRPG
+                  </a>
+                </div>
+                <div className="social-link-wrapper">
+                  <span className="social-label">Tip</span>
+                  <a 
+                    href="https://boosty.to/bbybxx/donate?forPost=9850758" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="social-link"
+                    title="Support on Boosty"
+                  >
+                    <img src="/boosty-sign-logo.png" alt="Boosty" className="social-icon" />
+                    Boosty
+                  </a>
+                </div>
+              </div>
               
             </div>
           )}

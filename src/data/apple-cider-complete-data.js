@@ -1,7 +1,7 @@
 // APPLE CIDER - COMPLETE MECHANICS DATABASE
 // Собранные данные из библиотеки и API исследований
 
-import { APPLE_CIDER_REAL_DROP_RATES_UPGRADED } from './apple-cider-real-drop-rates.js';
+import { APPLE_CIDER_REAL_DROP_RATES_UPGRADED } from './apple-cider-real-drop-rates-updated.js';
 
 const APPLE_CIDER_DATA = {
   // ===== БАЗОВАЯ ИНФОРМАЦИЯ =====

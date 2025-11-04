@@ -18,13 +18,8 @@ class RecipeUpdateService {
     this._intervalId = null
     this._lastSuccessfulUrl = null
     this._nativeEnvironment = this._isNativeEnvironment()
-    // Fallback endpoints - configure via environment variables
-    // Contact FarmRPG developers for API access
-    this._fallbackPublicEndpoints = [
-      import.meta.env.VITE_API_ENDPOINT || '/api/graphql',
-      'https://craft-calculator.com/api/graphql',
-      'https://farmcraftcalculator.infy.uk/api/graphql'
-    ]
+    // All API endpoints disabled - using cached data only
+    this._fallbackPublicEndpoints = []
 
     const envBase = (import.meta?.env?.VITE_API_BASE || '').trim() || null
     this._apiCandidates = this._createApiCandidates({ envBase })
@@ -79,25 +74,8 @@ class RecipeUpdateService {
   }
 
   _createApiCandidates({ envBase }) {
-    const candidates = []
-    const envCandidate = this._normalizeBaseUrl(envBase)
-
-    if (!this._nativeEnvironment) {
-      candidates.push('/api/graphql')
-    }
-
-    if (envCandidate) {
-      candidates.push(envCandidate)
-    }
-
-    this._fallbackPublicEndpoints.forEach(endpoint => {
-      const normalized = this._normalizeBaseUrl(endpoint)
-      if (normalized) {
-        candidates.push(normalized)
-      }
-    })
-
-    return Array.from(new Set(candidates.filter(Boolean)))
+    // API endpoints disabled - app works from cached data only
+    return []
   }
 
   // Проверяет доступность localStorage
@@ -117,44 +95,8 @@ class RecipeUpdateService {
 
   // Проверяет, нужно ли обновить рецепты
   shouldUpdate() {
-    // В development режиме всегда обновляем для отладки
-    if (import.meta.env.DEV) {
-      devLog('🛠️ Development режим - принудительное обновление');
-      return true;
-    }
-    
-    if (!this.isStorageAvailable()) {
-      // Если localStorage недоступен, обновляем только раз за сессию
-      const shouldUpdate = !this._sessionUpdated;
-      devLog('📦 localStorage недоступен, обновление за сессию:', shouldUpdate);
-      return shouldUpdate;
-    }
-    
-    const lastUpdate = window.localStorage.getItem(this.STORAGE_KEY);
-    if (!lastUpdate) {
-      devLog('🆕 Первое обновление - lastUpdate не найден');
-      return true;
-    }
-
-    const lastUpdateTime = new Date(lastUpdate);
-    const now = new Date();
-    const timeDiff = now.getTime() - lastUpdateTime.getTime();
-    const hoursSinceUpdate = Math.floor(timeDiff / (60 * 60 * 1000));
-
-    devLog(`⏰ Последнее обновление: ${lastUpdateTime.toLocaleString()}`);
-    devLog(`⏱️ Прошло часов: ${hoursSinceUpdate}`);
-
-    // Проверяем месячное обновление (первое число месяца)
-    if (now.getDate() === 1 && lastUpdateTime.getMonth() !== now.getMonth()) {
-      const shouldUpdate = timeDiff >= this.MONTHLY_INTERVAL;
-      devLog(`📅 Месячное обновление (1-е число): ${shouldUpdate}`);
-      return shouldUpdate;
-    }
-
-    // Проверяем обычное обновление каждые 6 часов
-    const shouldUpdate = timeDiff >= this.REGULAR_INTERVAL;
-    devLog(`🔄 Требуется обновление (>6 часов): ${shouldUpdate}`);
-    return shouldUpdate;
+    // API disabled - never update, always use cached data
+    return false;
   }
 
   // Получает рецепты из API

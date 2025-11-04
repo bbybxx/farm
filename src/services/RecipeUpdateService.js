@@ -1,5 +1,12 @@
 import { normalizeItemRecord } from '../utils/itemImageUtils.js'
 
+// Helper to only log in development
+const devLog = (...args) => {
+  if (import.meta.env.DEV) {
+    devLog(...args)
+  }
+}
+
 // Сервис для автоматического обновления рецептов из buddy.farm API
 class RecipeUpdateService {
   constructor() {
@@ -112,20 +119,20 @@ class RecipeUpdateService {
   shouldUpdate() {
     // В development режиме всегда обновляем для отладки
     if (import.meta.env.DEV) {
-      console.log('🛠️ Development режим - принудительное обновление');
+      devLog('🛠️ Development режим - принудительное обновление');
       return true;
     }
     
     if (!this.isStorageAvailable()) {
       // Если localStorage недоступен, обновляем только раз за сессию
       const shouldUpdate = !this._sessionUpdated;
-      console.log('📦 localStorage недоступен, обновление за сессию:', shouldUpdate);
+      devLog('📦 localStorage недоступен, обновление за сессию:', shouldUpdate);
       return shouldUpdate;
     }
     
     const lastUpdate = window.localStorage.getItem(this.STORAGE_KEY);
     if (!lastUpdate) {
-      console.log('🆕 Первое обновление - lastUpdate не найден');
+      devLog('🆕 Первое обновление - lastUpdate не найден');
       return true;
     }
 
@@ -134,19 +141,19 @@ class RecipeUpdateService {
     const timeDiff = now.getTime() - lastUpdateTime.getTime();
     const hoursSinceUpdate = Math.floor(timeDiff / (60 * 60 * 1000));
 
-    console.log(`⏰ Последнее обновление: ${lastUpdateTime.toLocaleString()}`);
-    console.log(`⏱️ Прошло часов: ${hoursSinceUpdate}`);
+    devLog(`⏰ Последнее обновление: ${lastUpdateTime.toLocaleString()}`);
+    devLog(`⏱️ Прошло часов: ${hoursSinceUpdate}`);
 
     // Проверяем месячное обновление (первое число месяца)
     if (now.getDate() === 1 && lastUpdateTime.getMonth() !== now.getMonth()) {
       const shouldUpdate = timeDiff >= this.MONTHLY_INTERVAL;
-      console.log(`📅 Месячное обновление (1-е число): ${shouldUpdate}`);
+      devLog(`📅 Месячное обновление (1-е число): ${shouldUpdate}`);
       return shouldUpdate;
     }
 
     // Проверяем обычное обновление каждые 6 часов
     const shouldUpdate = timeDiff >= this.REGULAR_INTERVAL;
-    console.log(`🔄 Требуется обновление (>6 часов): ${shouldUpdate}`);
+    devLog(`🔄 Требуется обновление (>6 часов): ${shouldUpdate}`);
     return shouldUpdate;
   }
 
@@ -154,19 +161,19 @@ class RecipeUpdateService {
   async fetchRecipes() {
     try {
       // Логируем всегда для отладки в нативном приложении
-      console.log('🔄 Обновляем рецепты из buddy.farm API...')
-      console.log('🌐 Native environment:', this._nativeEnvironment)
-      console.log('🌐 API candidates:', this._apiCandidates)
-      console.log('🛠️ Development mode:', import.meta.env.DEV)
+      devLog('🔄 Обновляем рецепты из buddy.farm API...')
+      devLog('🌐 Native environment:', this._nativeEnvironment)
+      devLog('🌐 API candidates:', this._apiCandidates)
+      devLog('🛠️ Development mode:', import.meta.env.DEV)
 
       const urlsToTry = [...(this._lastSuccessfulUrl ? [this._lastSuccessfulUrl] : []), ...this._apiCandidates]
       let lastError = null
 
-      console.log('📋 URLs to try:', urlsToTry)
+      devLog('📋 URLs to try:', urlsToTry)
 
       for (const url of urlsToTry) {
         try {
-          console.log('🔗 Trying URL:', url)
+          devLog('🔗 Trying URL:', url)
           
           const response = await fetch(url, {
             method: 'POST',
@@ -176,8 +183,8 @@ class RecipeUpdateService {
             body: JSON.stringify({ query: this.query })
           })
 
-          console.log('📡 Response status:', response.status, 'url:', url)
-          console.log('📡 Response ok:', response.ok)
+          devLog('📡 Response status:', response.status, 'url:', url)
+          devLog('📡 Response ok:', response.ok)
 
           if (!response.ok) {
             const errorText = await response.text()
@@ -189,7 +196,7 @@ class RecipeUpdateService {
 
           const data = await response.json()
 
-          console.log('📦 Raw API response:', JSON.stringify(data).substring(0, 500))
+          devLog('📦 Raw API response:', JSON.stringify(data).substring(0, 500))
           const responseInfo = {
             hasData: !!data.data,
             hasItems: !!(data.data?.items),
@@ -197,7 +204,7 @@ class RecipeUpdateService {
             hasErrors: !!data.errors,
             url: url
           }
-          console.log('📦 Response structure:', responseInfo)
+          devLog('📦 Response structure:', responseInfo)
 
           if (data.errors) {
             const error = new Error('GraphQL errors occurred')
@@ -210,8 +217,8 @@ class RecipeUpdateService {
           this._lastSuccessfulUrl = url
 
           const items = data.data?.items || []
-          console.log('✅ Items received:', items.length, 'via', url)
-          console.log('🔍 First 5 items:', items.slice(0, 5).map(item => item.name) || [])
+          devLog('✅ Items received:', items.length, 'via', url)
+          devLog('🔍 First 5 items:', items.slice(0, 5).map(item => item.name) || [])
 
           if (items.length === 0) {
             console.warn('⚠️ API returned 0 items!')
@@ -238,7 +245,7 @@ class RecipeUpdateService {
 
   // Обрабатывает и сохраняет рецепты
   processAndSaveRecipes(items) {
-    console.log('🔧 Processing recipes from', items?.length || 0, 'items')
+    devLog('🔧 Processing recipes from', items?.length || 0, 'items')
     
     if (!items || items.length === 0) {
       console.error('❌ No items to process!')
@@ -255,7 +262,7 @@ class RecipeUpdateService {
       item.recipeItems.length > 0
     );
 
-    console.log('🔨 Craftable items found:', craftableItems.length)
+    devLog('🔨 Craftable items found:', craftableItems.length)
 
     craftableItems.forEach(item => {
       // Создаем рецепт
@@ -348,8 +355,8 @@ class RecipeUpdateService {
     }
 
     if (import.meta.env.DEV) {
-      console.log(`✅ Обновлено ${Object.keys(sortedRecipes).length} рецептов`);
-      console.log(`✅ Обновлено ${Object.keys(sortedItemData).length} предметов`);
+      devLog(`✅ Обновлено ${Object.keys(sortedRecipes).length} рецептов`);
+      devLog(`✅ Обновлено ${Object.keys(sortedItemData).length} предметов`);
     }
 
     return { recipes: sortedRecipes, items: sortedItemData };
@@ -386,7 +393,7 @@ class RecipeUpdateService {
     try {
       if (!this.shouldUpdate()) {
         if (import.meta.env.DEV) {
-          console.log('📅 Обновление рецептов не требуется');
+          devLog('📅 Обновление рецептов не требуется');
         }
         return this.getCachedRecipes();
       }
@@ -395,7 +402,7 @@ class RecipeUpdateService {
       const result = this.processAndSaveRecipes(items);
       
       if (import.meta.env.DEV) {
-        console.log('✅ Рецепты успешно обновлены!');
+        devLog('✅ Рецепты успешно обновлены!');
       }
 
       return result;
@@ -411,9 +418,9 @@ class RecipeUpdateService {
   startAutoUpdate(onUpdate) {
     const runUpdate = async () => {
       try {
-        console.log('🔄 Starting API update...')
+        devLog('🔄 Starting API update...')
         const data = await this.updateRecipes();
-        console.log('✅ API update successful, got data:', !!data)
+        devLog('✅ API update successful, got data:', !!data)
         if (typeof onUpdate === 'function') {
           onUpdate(data);
         }
@@ -437,7 +444,7 @@ class RecipeUpdateService {
       runUpdate();
     }, 30 * 60 * 1000);
 
-    console.log('🚀 Автообновление рецептов запущено (проверка каждые 30 минут)');
+    devLog('🚀 Автообновление рецептов запущено (проверка каждые 30 минут)');
 
     return () => {
       if (this._intervalId) {

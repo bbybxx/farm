@@ -51,21 +51,23 @@ const KNOWN_ARNOLD_PALMER_DATA = {
 function analyzeOakPattern() {
   const oak = KNOWN_ARNOLD_PALMER_DATA["Whispering Creek"]["Oak"];
   
-  console.log('🔍 ANALYZING OAK PATTERN:');
-  console.log(`rq0ls0: ${oak.rq0ls0} Arnold Palmer per item`);
-  console.log(`rq0ls1: ${oak.rq0ls1} Arnold Palmer per item`);
-  console.log(`Lemon Squeezer ratio: ${(oak.rq0ls1 / oak.rq0ls0).toFixed(2)}x worse (should be 2.5x better)`);
-  
-  console.log(`rq1ls0: ${oak.rq1ls0} Arnold Palmer per item`);
-  console.log(`rq1ls1: ${oak.rq1ls1} Arnold Palmer per item`);
-  console.log(`Runecube improvement: ${((oak.rq0ls0 - oak.rq1ls0) / oak.rq0ls0 * 100).toFixed(1)}% (ls0)`);
-  console.log(`Runecube improvement: ${((oak.rq0ls1 - oak.rq1ls1) / oak.rq0ls1 * 100).toFixed(1)}% (ls1)`);
-  
-  // ВАЖНО: Меньшее число = лучше (меньше Arnold Palmer нужно за предмет)
-  console.log('\n💡 PATTERN DISCOVERED:');
-  console.log('- Smaller numbers = better drop rates');
-  console.log('- Lemon Squeezer makes numbers SMALLER (better)');
-  console.log('- Runecube also makes numbers SMALLER (better)');
+  if (import.meta.env?.DEV) {
+    console.log('🔍 ANALYZING OAK PATTERN:');
+    console.log(`rq0ls0: ${oak.rq0ls0} Arnold Palmer per item`);
+    console.log(`rq0ls1: ${oak.rq0ls1} Arnold Palmer per item`);
+    console.log(`Lemon Squeezer ratio: ${(oak.rq0ls1 / oak.rq0ls0).toFixed(2)}x worse (should be 2.5x better)`);
+    
+    console.log(`rq1ls0: ${oak.rq1ls0} Arnold Palmer per item`);
+    console.log(`rq1ls1: ${oak.rq1ls1} Arnold Palmer per item`);
+    console.log(`Runecube improvement: ${((oak.rq0ls0 - oak.rq1ls0) / oak.rq0ls0 * 100).toFixed(1)}% (ls0)`);
+    console.log(`Runecube improvement: ${((oak.rq0ls1 - oak.rq1ls1) / oak.rq0ls1 * 100).toFixed(1)}% (ls1)`);
+    
+    // ВАЖНО: Меньшее число = лучше (меньше Arnold Palmer нужно за предмет)
+    console.log('\n💡 PATTERN DISCOVERED:');
+    console.log('- Smaller numbers = better drop rates');
+    console.log('- Lemon Squeezer makes numbers SMALLER (better)');
+    console.log('- Runecube also makes numbers SMALLER (better)');
+  }
   
   return {
     lemonSqueezerRatio: oak.rq0ls0 / oak.rq0ls1, // сколько раз лучше с Lemon Squeezer
@@ -266,25 +268,27 @@ export const ArnoldPalmerDropCalculator = {
   }
 };
 
-// Демо расчетов
-console.log('🍹 ARNOLD PALMER DROP RATES DATABASE LOADED');
-console.log(`📊 Locations analyzed: ${Object.keys(ARNOLD_PALMER_DROP_RATES.locations).length}`);
+// Демо расчетов (только в dev режиме)
+if (import.meta.env?.DEV) {
+  console.log('🍹 ARNOLD PALMER DROP RATES DATABASE LOADED');
+  console.log(`📊 Locations analyzed: ${Object.keys(ARNOLD_PALMER_DROP_RATES.locations).length}`);
 
-// Пример: лучшие предметы в Small Cave
-const bestItems = ArnoldPalmerDropCalculator.getBestItemsInLocation("Small Cave", true, 5);
-if (bestItems) {
-  console.log('\n🏆 Top 5 items in Small Cave (with Lemon Squeezer):');
-  bestItems.forEach((item, index) => {
-    console.log(`${index + 1}. ${item.item}: ${item.itemsPerArnoldPalmer} items per Arnold Palmer`);
-  });
-}
+  // Пример: лучшие предметы в Small Cave
+  const bestItems = ArnoldPalmerDropCalculator.getBestItemsInLocation("Small Cave", true, 5);
+  if (bestItems) {
+    console.log('\n🏆 Top 5 items in Small Cave (with Lemon Squeezer):');
+    bestItems.forEach((item, index) => {
+      console.log(`${index + 1}. ${item.item}: ${item.itemsPerArnoldPalmer} items per Arnold Palmer`);
+    });
+  }
 
-// Пример: расчет для конкретного предмета
-const woodDropRate = ArnoldPalmerDropCalculator.getItemDropRate("Small Cave", "Wood", true);
-if (woodDropRate) {
-  console.log(`\n🪵 Wood in Small Cave (with Lemon Squeezer):`);
-  console.log(`   ${woodDropRate.itemsPerArnoldPalmer} items per Arnold Palmer`);
-  console.log(`   ${woodDropRate.arnoldPalmersPerItem} Arnold Palmer per item`);
+  // Пример: расчет для конкретного предмета
+  const woodDropRate = ArnoldPalmerDropCalculator.getItemDropRate("Small Cave", "Wood", true);
+  if (woodDropRate) {
+    console.log(`\n🪵 Wood in Small Cave (with Lemon Squeezer):`);
+    console.log(`   ${woodDropRate.itemsPerArnoldPalmer} items per Arnold Palmer`);
+    console.log(`   ${woodDropRate.arnoldPalmersPerItem} Arnold Palmer per item`);
+  }
 }
 
 export default ARNOLD_PALMER_DROP_RATES;

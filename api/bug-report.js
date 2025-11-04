@@ -203,10 +203,23 @@ export default async function handler(req, res) {
             headers: formData.getHeaders(), // Critical: set multipart boundary header
           });
 
-          const uploadResult = await uploadResponse.json();
+          console.log(`📡 Upload response status: ${uploadResponse.status}`);
+          
+          const responseText = await uploadResponse.text();
+          console.log(`📡 Upload response body length: ${responseText.length}`);
+          
+          let uploadResult;
+          try {
+            uploadResult = JSON.parse(responseText);
+          } catch (parseError) {
+            console.error('Failed to parse Telegram response:', responseText);
+            throw parseError;
+          }
           
           if (!uploadResult.ok) {
             console.error('Telegram upload failed:', uploadResult);
+          } else {
+            console.log('✅ File uploaded successfully to Telegram');
           }
 
           // Clean up temp file

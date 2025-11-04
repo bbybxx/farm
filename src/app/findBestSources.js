@@ -1,4 +1,4 @@
-import APPLE_CIDER_REAL_DROP_RATES from '../data/apple-cider-real-drop-rates.js'
+import { APPLE_CIDER_REAL_DROP_RATES } from '../data/apple-cider-real-drop-rates.js'
 import { computePinnedEstimate, getItemLocations } from '../utils/exploringUtils.js'
 import { getRecipe } from '../utils/recipeUtils.js'
 import { getResourceSaverPercent, getSilverDiscountPercent } from '../utils/calculator.js'

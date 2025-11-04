@@ -1,5 +1,5 @@
 import { APPLE_CIDER_DATA, AppleCiderCalculator } from '../data/apple-cider-complete-data.js'
-import APPLE_CIDER_REAL_DROP_RATES from '../data/apple-cider-real-drop-rates.js'
+import { APPLE_CIDER_REAL_DROP_RATES } from '../data/apple-cider-real-drop-rates.js'
 import { ArnoldPalmerDropCalculator } from '../data/arnold-palmer-drop-rates.js'
 import {
   getLocationConfig,

@@ -1,7 +1,7 @@
 // ARNOLD PALMER - ПОЛНЫЕ ДРОП РЕЙТЫ ПО ПРЕДМЕТАМ
 // ИСПРАВЛЕНО: Используем прямые данные из arnold-palmer.md, а не формулы через Apple Cider
 
-import APPLE_CIDER_REAL_DROP_RATES from './apple-cider-real-drop-rates.js';
+import { APPLE_CIDER_REAL_DROP_RATES } from './apple-cider-real-drop-rates.js';
 
 // ПРАВИЛЬНАЯ ФОРМУЛА для Arnold Palmer:
 // Arnold Palmer дает ФИКСИРОВАННОЕ количество предметов, НЕ зависящее от stamina cost предмета

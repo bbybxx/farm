@@ -7,7 +7,7 @@ import perks from '../data/perks.json'
 import { useTelegram } from '../hooks/useTelegram'
 import BugReportModal from '../components/BugReportModal'
 import LocationConfigPanel from '../components/LocationConfigPanel'
-import APPLE_CIDER_REAL_DROP_RATES from '../data/apple-cider-real-drop-rates.js'
+import { APPLE_CIDER_REAL_DROP_RATES } from '../data/apple-cider-real-drop-rates.js'
 import { computePinnedEstimate, getItemLocations } from '../utils/exploringUtils.js'
 // Vercel Web Analytics (React)
 import { Analytics } from '@vercel/analytics/react'

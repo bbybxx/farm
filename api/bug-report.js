@@ -187,20 +187,35 @@ export default async function handler(req, res) {
           
           console.log(`📤 Uploading file: ${filename} (${file.size} bytes) to ${endpoint}`);
           
-          // Use createReadStream instead of readFileSync for better memory efficiency
-          // and compatibility with form-data
-          const fileStream = fs.createReadStream(file.filepath);
+          // Read file as Buffer (more reliable than stream)
+          const fileBuffer = fs.readFileSync(file.filepath);
+          console.log(`📦 Buffer created: ${fileBuffer.length} bytes`);
           
-          formData.append(fieldName, fileStream, {
+          formData.append(fieldName, fileBuffer, {
             filename: filename,
             contentType: file.mimetype || 'application/octet-stream',
           });
 
+          // Wait for form-data to calculate content-length
+          await new Promise((resolve) => {
+            formData.getLength((err, length) => {
+              if (err) {
+                console.error('Error calculating form-data length:', err);
+              } else {
+                console.log(`📏 FormData total length: ${length} bytes`);
+              }
+              resolve();
+            });
+          });
+
           // form-data package requires headers to be set manually with fetch
+          const headers = formData.getHeaders();
+          console.log(`📋 Headers:`, headers);
+          
           const uploadResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/${endpoint}`, {
             method: 'POST',
             body: formData,
-            headers: formData.getHeaders(), // Critical: set multipart boundary header
+            headers: headers,
           });
 
           console.log(`📡 Upload response status: ${uploadResponse.status}`);

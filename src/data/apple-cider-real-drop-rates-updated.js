@@ -78,7 +78,8 @@ export const APPLE_CIDER_REAL_DROP_RATES = {
         "Dice": { dropsPerCider: 1.10 },
         "Spectacles": { dropsPerCider: 1.10 },
         "Small Chest 01": { dropsPerCider: 0.16447 },
-        "Skull Coin": { dropsPerCider: 0.01655 }
+        "Skull Coin": { dropsPerCider: 0.01655 },
+        "Pearl Berries": { dropsPerCider: 0.02724 }
       },
       rq0cs1: {
         "Feathers": { dropsPerCider: 130.87 },
@@ -91,7 +92,8 @@ export const APPLE_CIDER_REAL_DROP_RATES = {
         "Dice": { dropsPerCider: 1.38 },
         "Spectacles": { dropsPerCider: 1.38 },
         "Small Chest 01": { dropsPerCider: 0.20576 },
-        "Skull Coin": { dropsPerCider: 0.02069 }
+        "Skull Coin": { dropsPerCider: 0.02069 },
+        "Pearl Berries": { dropsPerCider: 0.03404 }
       },
       rq1cs0: {
         "Stone": { dropsPerCider: 101.60 },
@@ -104,7 +106,8 @@ export const APPLE_CIDER_REAL_DROP_RATES = {
         "Spectacles": { dropsPerCider: 1.35 },
         "Dice": { dropsPerCider: 1.35 },
         "Small Chest 01": { dropsPerCider: 0.20161 },
-        "Skull Coin": { dropsPerCider: 0.02044 }
+        "Skull Coin": { dropsPerCider: 0.02044 },
+        "Pearl Berries": { dropsPerCider: 0.02819 }
       },
       rq1cs1: {
         "Stone": { dropsPerCider: 127.00 },
@@ -117,7 +120,8 @@ export const APPLE_CIDER_REAL_DROP_RATES = {
         "Spectacles": { dropsPerCider: 1.68 },
         "Dice": { dropsPerCider: 1.68 },
         "Small Chest 01": { dropsPerCider: 0.25253 },
-        "Skull Coin": { dropsPerCider: 0.02554 }
+        "Skull Coin": { dropsPerCider: 0.02554 },
+        "Pearl Berries": { dropsPerCider: 0.03524 }
       }
     },
 

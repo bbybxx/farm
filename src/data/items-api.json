@@ -6599,5 +6599,12 @@
     "image": "/img/items/809.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "11th Leaf Centerpiece": {
+    "name": "11th Leaf Centerpiece",
+    "type": "item",
+    "image": "/img/items/centerpiece.png",
+    "canCraft": true,
+    "craftingLevel": 50
   }
 }

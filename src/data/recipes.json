@@ -1985,5 +1985,19 @@
     "Crafting XP": 25000,
     "Crafting Lv": 99,
     "Visible in Workshop": true
+  },
+  "11th Leaf Centerpiece": {
+    "из": {
+      "Wheat": 2,
+      "Mushroom Paste": 4,
+      "Glass Bottle": 1,
+      "Pine Cone": 3,
+      "Yarn": 2,
+      "Pearl Berries": 5
+    },
+    "Silver": 100,
+    "Crafting XP": 1000,
+    "Crafting Lv": 50,
+    "Visible in Workshop": true
   }
 }

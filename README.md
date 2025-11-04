@@ -88,7 +88,7 @@ Project auto-deploys to Vercel on push to `main` branch:
 - Frontend: `npm run build` → `dist/`
 - Serverless Functions: `api/*.js`
 
-**Live URL:** [craft-calculator.vercel.app](https://farm-pink-gamma.vercel.app/)
+**Live URL:** [https://farm-pink-gamma.vercel.app/](https://farm-pink-gamma.vercel.app/)
 
 ## 📁 Project Structure
 
@@ -239,10 +239,9 @@ MIT License - free to use for your projects.
 
 ## 🔗 Links
 
-- **Live Site:** [craft-calculator.vercel.app](https://farm-pink-gamma.vercel.app/)
+- **Live Site:** [https://farm-pink-gamma.vercel.app/](https://farm-pink-gamma.vercel.app/)
 - **Repository:** [github.com/bbybxx/farm](https://github.com/bbybxx/farm)
 - **API Source:** [buddy.farm](https://buddy.farm)
-- **Android History:** [ANDROID_ARCHIVE.md](./ANDROID_ARCHIVE.md)
 
 ---
 

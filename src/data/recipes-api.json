@@ -1791,5 +1791,17 @@
     },
     "craftingLevel": 50,
     "category": "item"
+  },
+  "11th Leaf Centerpiece": {
+    "ingredients": {
+      "Wheat": 2,
+      "Mushroom Paste": 4,
+      "Glass Bottle": 1,
+      "Pine Cone": 3,
+      "Yarn": 2,
+      "Pearl Berries": 5
+    },
+    "craftingLevel": 50,
+    "category": "item"
   }
 }

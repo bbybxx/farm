@@ -3,7 +3,7 @@ import { normalizeItemRecord } from '../utils/itemImageUtils.js'
 // Helper to only log in development
 const devLog = (...args) => {
   if (import.meta.env.DEV) {
-    devLog(...args)
+    console.log(...args)
   }
 }
 

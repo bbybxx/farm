@@ -1,4 +1,5 @@
 import './silence-console.js'
+import './utils/devLog.js' // Silence all console output in production
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './app/App.jsx'

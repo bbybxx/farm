@@ -1,3 +1,4 @@
+import { devLog } from '../utils/devLog'
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { calculateAllResources, getResourceSaverPercent } from '../utils/calculator'
@@ -44,7 +45,7 @@ function saveToStorage(key, data) {
   try {
     window.localStorage.setItem(key, JSON.stringify(data))
   } catch (error) {
-    console.warn('Failed to save to localStorage:', error)
+    devLog('Failed to save to localStorage:', error)
   }
 }
 
@@ -83,7 +84,7 @@ function loadFromStorage(key, defaultValue) {
     const stored = window.localStorage.getItem(key)
     return stored ? JSON.parse(stored) : defaultValue
   } catch (error) {
-    console.warn('Failed to load from localStorage:', error)
+    devLog('Failed to load from localStorage:', error)
     return defaultValue
   }
 }
@@ -160,7 +161,7 @@ export default function App() {
       }
     } catch (error) {
       if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {
-        console.warn('Failed to initialize cached items:', error)
+        devLog('Failed to initialize cached items:', error)
       }
     }
     return baseItems
@@ -518,7 +519,7 @@ export default function App() {
       try {
         window.localStorage.removeItem('craftCalculator_craftHistory')
       } catch (error) {
-        console.warn('Failed to clear craft history from storage:', error)
+        devLog('Failed to clear craft history from storage:', error)
       }
     }
   }
@@ -623,7 +624,7 @@ export default function App() {
         }
       } catch (error) {
         if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {
-          console.warn('Failed to hydrate cached items:', error)
+          devLog('Failed to hydrate cached items:', error)
         }
       }
     }
@@ -636,7 +637,7 @@ export default function App() {
     const loadingTimeout = setTimeout(() => {
       setApiLoadStatus(prev => {
         if (prev.loading) {
-          console.warn('⏰ API loading timeout - using cached data')
+          devLog('⏰ API loading timeout - using cached data')
           return { loading: false, error: 'Loading timeout - using cached data', lastUpdate: null }
         }
         return prev
@@ -649,13 +650,13 @@ export default function App() {
       clearTimeout(loadingTimeout)
       
       if (data && data.error) {
-        console.error('❌ API update error:', data.error)
+        devLog('❌ API update error:', data.error)
         setApiLoadStatus({ loading: false, error: data.error, lastUpdate: new Date() })
         return
       }
       
       if (!data) {
-        console.log('⚠️ No data received from API')
+        devLog('⚠️ No data received from API')
         setApiLoadStatus({ loading: false, error: 'No data received', lastUpdate: null })
         return
       }
@@ -664,18 +665,18 @@ export default function App() {
       const itemsCount = Object.keys(nextItems).length
       
       if (itemsCount > 0) {
-        console.log('✅ Successfully loaded', itemsCount, 'items from API')
+        devLog('✅ Successfully loaded', itemsCount, 'items from API')
         mergeItemsData(nextItems)
         setApiLoadStatus({ loading: false, error: null, lastUpdate: new Date() })
       } else {
-        console.log('⚠️ Received empty items data')
+        devLog('⚠️ Received empty items data')
         setApiLoadStatus({ loading: false, error: 'Empty data received', lastUpdate: null })
       }
     })
 
     if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {
       const info = updateService.getUpdateInfo()
-      console.log('Recipe update info:', info)
+      devLog('Recipe update info:', info)
     }
 
     return () => {
@@ -934,11 +935,11 @@ export default function App() {
         mergeItemsData(data?.items || data?.itemData || {})
       }).catch((err) => {
         if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {
-          console.warn('Failed to refetch recipes after clearing data:', err)
+          devLog('Failed to refetch recipes after clearing data:', err)
         }
       })
     } catch (error) {
-      console.warn('Failed to clear saved data:', error)
+      devLog('Failed to clear saved data:', error)
       // Could add error modal here too, but keeping minimal for now
     }
   }
@@ -979,7 +980,7 @@ export default function App() {
       
   return result
     } catch (error) {
-      console.error('Error submitting bug report:', error)
+      devLog('Error submitting bug report:', error)
       hapticFeedback('error')
       return { success: false, error: error.message }
     }
@@ -2346,4 +2347,5 @@ export default function App() {
     </div>
   )
 }
+
 

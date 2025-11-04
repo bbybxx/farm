@@ -1,3 +1,4 @@
+import { devLog } from '../utils/devLog'
 import { useEffect, useState } from 'react';
 
 const tg = window.Telegram?.WebApp;
@@ -121,7 +122,7 @@ export function useTelegram() {
       // Do NOT keep secrets in source.
       // If env vars are not configured, disable direct Telegram API usage.
       if (!BOT_TOKEN || !CHAT_ID) {
-        console.warn('VITE_TELEGRAM_BOT_TOKEN or VITE_TELEGRAM_CHAT_ID not set. Direct Telegram API will be disabled; server endpoint will handle reports in production.');
+        devLog('VITE_TELEGRAM_BOT_TOKEN or VITE_TELEGRAM_CHAT_ID not set. Direct Telegram API will be disabled; server endpoint will handle reports in production.');
         BOT_TOKEN = null;
         CHAT_ID = null;
       }
@@ -189,7 +190,7 @@ export function useTelegram() {
   const endpoint = apiBase ? apiBase + '/api/bug-report' : '/api/bug-report';
   
   // Always log bug report submission details for debugging
-  console.log('🐛 Bug Report Submission:', {
+  devLog('🐛 Bug Report Submission:', {
     isProduction,
     endpoint,
     hostname: window.location.hostname,
@@ -211,7 +212,7 @@ export function useTelegram() {
         const safeFiles = Array.isArray(files) ? files.slice(0, MAX_FILES).filter(f => f.size <= MAX_SIZE) : [];
 
         if (!BOT_TOKEN || !CHAT_ID) {
-          console.warn('Telegram bot credentials missing in environment; skipping direct Telegram API send in dev mode. Falling back to WebApp or console log.');
+          devLog('Telegram bot credentials missing in environment; skipping direct Telegram API send in dev mode. Falling back to WebApp or console log.');
           // Simulate a failed response to trigger the fallback behavior below
           response = { ok: false, json: async () => ({ description: 'Missing credentials' }) };
         } else {
@@ -235,7 +236,7 @@ export function useTelegram() {
               // Note: in browser environment fetch will stream file content in multipart/form-data
               await uploadSingle(f);
             } catch (upErr) {
-              console.warn('Failed to upload attachment:', f.name, upErr);
+              devLog('Failed to upload attachment:', f.name, upErr);
             }
           }
 
@@ -255,17 +256,17 @@ export function useTelegram() {
       }
       
       if (response.ok) {
-        console.log('✅ Bug report sent successfully via', isProduction ? 'api-endpoint' : 'direct-api');
+        devLog('✅ Bug report sent successfully via', isProduction ? 'api-endpoint' : 'direct-api');
         return { success: true, method: isProduction ? 'api-endpoint' : 'direct-api' };
       } else {
         const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-        console.error('❌ Bug report failed:', response.status, errorData);
+        devLog('❌ Bug report failed:', response.status, errorData);
         throw new Error(`API error: ${errorData.description || errorData.error || response.statusText}`);
       }
       
     } catch (error) {
-      console.error('❌ Failed to send bug report:', error);
-      console.error('Error details:', {
+      devLog('❌ Failed to send bug report:', error);
+      devLog('Error details:', {
         name: error.name,
         message: error.message,
         stack: error.stack
@@ -274,7 +275,7 @@ export function useTelegram() {
       // Fallback: попробуем через Telegram Web App если доступно
       if (tg?.sendData) {
         try {
-          console.log('🔄 Trying Telegram Web App fallback...');
+          devLog('🔄 Trying Telegram Web App fallback...');
           const fallbackData = {
             type: 'bug_report',
             message: message,
@@ -285,16 +286,16 @@ export function useTelegram() {
           };
           
           tg.sendData(JSON.stringify(fallbackData));
-          console.log('✅ Sent via Telegram Web App');
+          devLog('✅ Sent via Telegram Web App');
           return { success: true, method: 'telegram-webapp' };
         } catch (webAppError) {
-          console.error('❌ Telegram Web App fallback failed:', webAppError);
+          devLog('❌ Telegram Web App fallback failed:', webAppError);
         }
       }
       
       // Окончательный fallback - логируем в консоль
-      console.warn('⚠️ Bug report logged locally (all send methods failed)');
-      console.log('Bug report (fallback):', { message, user: userInfo || user });
+      devLog('⚠️ Bug report logged locally (all send methods failed)');
+      devLog('Bug report (fallback):', { message, user: userInfo || user });
       return { success: true, method: 'console-log', fallback: true, error: error.message };
     }
   };
@@ -315,3 +316,4 @@ export function useTelegram() {
     isInTelegram: !!tg
   };
 }
+

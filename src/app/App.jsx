@@ -345,17 +345,18 @@ export default function App() {
     }
     const originalIngredients = originalRecipe?.из || originalRecipe?.ingredients || {}
     
-    // Filter resources to show only original recipe ingredients
+    // Calculate ONLY the direct ingredients from the original recipe
+    // Do NOT use fullResult.base which contains ALL materials including sub-ingredients
     const filteredResources = {}
+    const resourceSaverPercent = getResourceSaverPercent(activePerks)
     
-    // Check which resources are from original recipe
-    for (const [resourceName, quantity] of Object.entries(originalIngredients)) {
-      if (fullResult.base[resourceName]) {
-        filteredResources[resourceName] = fullResult.base[resourceName]
+    for (const [resourceName, baseQuantity] of Object.entries(originalIngredients)) {
+      // Apply the same resource saver logic as in calculator
+      let needed = baseQuantity * amount
+      if (resourceSaverPercent > 0) {
+        needed = needed / (1 + resourceSaverPercent)
       }
-      if (fullResult.intermediate[resourceName]) {
-        filteredResources[resourceName] = fullResult.intermediate[resourceName]
-      }
+      filteredResources[resourceName] = Math.ceil(needed)
     }
     
     if (item === 'Pitchfork') {

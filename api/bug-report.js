@@ -96,27 +96,41 @@ export default async function handler(req, res) {
     telegramMessage += `📶 Online: ${metadata.onLine ? 'Yes' : 'No'}\n\n`;
     telegramMessage += `📝 Report:\n${message.trim()}`;
 
-    // Debug: log what we received
-    console.log('Received files object:', JSON.stringify(Object.keys(files), null, 2));
-    console.log('Files.files exists:', !!files.files);
-    console.log('All file keys:', Object.keys(files));
-
     // Send files first if any
-    // formidable returns files in format: { fieldName: File | File[] }
-    const uploadedFiles = files.files ? (Array.isArray(files.files) ? files.files : [files.files]) : [];
+    // formidable v3+ returns files in format: { fieldName: File | File[] }
+    // We're appending with form.append('files', file) on client, so check files.files
+    let uploadedFiles = [];
     
-    console.log('Uploaded files count:', uploadedFiles.length);
+    if (files.files) {
+      uploadedFiles = Array.isArray(files.files) ? files.files : [files.files];
+    } else {
+      // Fallback: check all keys in files object
+      Object.keys(files).forEach(key => {
+        const fileOrFiles = files[key];
+        if (Array.isArray(fileOrFiles)) {
+          uploadedFiles.push(...fileOrFiles);
+        } else if (fileOrFiles) {
+          uploadedFiles.push(fileOrFiles);
+        }
+      });
+    }
     
     if (uploadedFiles.length > 0) {
       const fs = await import('fs');
       const FormData = (await import('form-data')).default;
 
       for (const file of uploadedFiles) {
-        console.log('Processing file:', file.originalFilename, file.mimetype, file.size);
         try {
+          // Ensure file has required properties
+          if (!file || !file.filepath) {
+            console.error('Invalid file object:', file);
+            continue;
+          }
+
           const formData = new FormData();
           formData.append('chat_id', CHAT_ID);
           
+          // Read file from temp location
           const fileBuffer = fs.readFileSync(file.filepath);
           
           // Detect if image or document
@@ -124,9 +138,12 @@ export default async function handler(req, res) {
           const endpoint = isImage ? 'sendPhoto' : 'sendDocument';
           const fieldName = isImage ? 'photo' : 'document';
           
+          // Get filename from originalFilename or newFilename
+          const filename = file.originalFilename || file.newFilename || 'file';
+          
           formData.append(fieldName, fileBuffer, {
-            filename: file.originalFilename || file.newFilename,
-            contentType: file.mimetype,
+            filename: filename,
+            contentType: file.mimetype || 'application/octet-stream',
           });
 
           const uploadResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/${endpoint}`, {
@@ -135,12 +152,20 @@ export default async function handler(req, res) {
           });
 
           const uploadResult = await uploadResponse.json();
-          console.log('File upload result:', uploadResult.ok ? 'SUCCESS' : 'FAILED', uploadResult);
+          
+          if (!uploadResult.ok) {
+            console.error('Telegram upload failed:', uploadResult);
+          }
 
           // Clean up temp file
-          fs.unlinkSync(file.filepath);
+          try {
+            fs.unlinkSync(file.filepath);
+          } catch (cleanupErr) {
+            console.error('Failed to cleanup temp file:', cleanupErr);
+          }
         } catch (uploadErr) {
           console.error('Failed to upload file:', uploadErr);
+          // Continue with other files even if one fails
         }
       }
     }

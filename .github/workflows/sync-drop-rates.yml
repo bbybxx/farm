@@ -1,0 +1,47 @@
+name: Sync Drop Rates from buddy.farm API
+
+on:
+  schedule:
+    # Запускается каждый день в 3:30 UTC (6:30 МСК)
+    - cron: '30 3 * * *'
+  workflow_dispatch: # Позволяет запустить вручную
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/sync-drop-rates.mjs'  # Запускается только при изменении самого скрипта
+      - '.github/workflows/sync-drop-rates.yml'  # Или при изменении workflow
+
+jobs:
+  sync-drop-rates:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Разрешаем запись для коммитов
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Sync drop rates from API
+        run: node scripts/sync-drop-rates.mjs
+      
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code src/data/apple-cider-real-drop-rates.js src/data/apple-cider-real-drop-rates-updated.js || echo "changed=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add src/data/apple-cider-real-drop-rates.js src/data/apple-cider-real-drop-rates-updated.js
+          git commit -m "chore: auto-sync drop rates from buddy.farm API [skip ci]"
+          git push

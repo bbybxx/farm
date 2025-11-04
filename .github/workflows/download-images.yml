@@ -1,0 +1,41 @@
+name: Download Item Images from buddy.farm
+
+on:
+  schedule:
+    # Запускается каждую неделю в воскресенье в 4:00 UTC (7:00 MSK)
+    - cron: '0 4 * * 0'
+  workflow_dispatch: # Позволяет запустить вручную
+
+jobs:
+  download-images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Разрешаем запись для коммитов
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Download images from API
+        run: node scripts/download-images.mjs
+      
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code public/img/items/ || echo "changed=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add public/img/items/
+          git commit -m "chore: auto-download item images from buddy.farm [skip ci]"
+          git push

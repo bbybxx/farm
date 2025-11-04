@@ -117,24 +117,39 @@ let jsContent = `// Auto-generated from buddy.farm API
 // rq1cs0 = with runecube, no cinnamon sticks
 // rq1cs1 = with runecube, with cinnamon sticks (+25% drops = rate/1.25)
 
-const appleCiderRealDropRates = {\n`;
+export const APPLE_CIDER_REAL_DROP_RATES = {
+  metadata: {
+    version: "2.0.0",
+    description: "Drop rates for explore locations from buddy.farm API",
+    dataSource: "buddy.farm GraphQL API",
+    lastUpdated: "${new Date().toISOString()}",
+    variants: {
+      rq0cs0: "Without Runecube, Without Cinnamon Sticks",
+      rq0cs1: "Without Runecube, With Cinnamon Sticks (+25% drops)",
+      rq1cs0: "With Runecube, Without Cinnamon Sticks",
+      rq1cs1: "With Runecube, With Cinnamon Sticks (+25% drops)"
+    }
+  },
+
+  locations: {\n`;
 
 Object.entries(dropRatesData).forEach(([locationName, items]) => {
-  jsContent += `  "${locationName}": {\n`;
+  jsContent += `    "${locationName}": {\n`;
   Object.entries(items).forEach(([itemName, rates]) => {
-    jsContent += `    "${itemName}": {\n`;
-    jsContent += `      rq0cs0: ${rates.rq0cs0 !== null ? rates.rq0cs0.toFixed(2) : 'null'},\n`;
-    jsContent += `      rq0cs1: ${rates.rq0cs1 !== null ? rates.rq0cs1.toFixed(2) : 'null'},\n`;
-    jsContent += `      rq1cs0: ${rates.rq1cs0 !== null ? rates.rq1cs0.toFixed(2) : 'null'},\n`;
-    jsContent += `      rq1cs1: ${rates.rq1cs1 !== null ? rates.rq1cs1.toFixed(2) : 'null'}\n`;
-    jsContent += `    },\n`;
+    jsContent += `      "${itemName}": {\n`;
+    jsContent += `        rq0cs0: ${rates.rq0cs0 !== null ? rates.rq0cs0.toFixed(2) : 'null'},\n`;
+    jsContent += `        rq0cs1: ${rates.rq0cs1 !== null ? rates.rq0cs1.toFixed(2) : 'null'},\n`;
+    jsContent += `        rq1cs0: ${rates.rq1cs0 !== null ? rates.rq1cs0.toFixed(2) : 'null'},\n`;
+    jsContent += `        rq1cs1: ${rates.rq1cs1 !== null ? rates.rq1cs1.toFixed(2) : 'null'}\n`;
+    jsContent += `      },\n`;
   });
-  jsContent += `  },\n`;
+  jsContent += `    },\n`;
 });
 
-jsContent += `};
+jsContent += `  }
+};
 
-export default appleCiderRealDropRates;
+export default APPLE_CIDER_REAL_DROP_RATES;
 `;
 
 fs.writeFileSync(outputPath, jsContent, 'utf8');
@@ -151,24 +166,39 @@ let jsContentUpdated = `// Auto-generated from buddy.farm API
 // rq1cs0 = with runecube, no cinnamon sticks
 // rq1cs1 = with runecube, with cinnamon sticks (+25% drops = rate/1.25)
 
-const appleCiderRealDropRatesUpdated = {\n`;
+export const APPLE_CIDER_REAL_DROP_RATES_UPGRADED = {
+  metadata: {
+    version: "2.0.0",
+    description: "Drop rates for explore locations from buddy.farm API (inverse format)",
+    dataSource: "buddy.farm GraphQL API",
+    lastUpdated: "${new Date().toISOString()}",
+    variants: {
+      rq0cs0: "Without Runecube, Without Cinnamon Sticks",
+      rq0cs1: "Without Runecube, With Cinnamon Sticks (+25% drops)",
+      rq1cs0: "With Runecube, Without Cinnamon Sticks",
+      rq1cs1: "With Runecube, With Cinnamon Sticks (+25% drops)"
+    }
+  },
+
+  locations: {\n`;
 
 Object.entries(dropRatesData).forEach(([locationName, items]) => {
-  jsContentUpdated += `  "${locationName}": {\n`;
+  jsContentUpdated += `    "${locationName}": {\n`;
   Object.entries(items).forEach(([itemName, rates]) => {
-    jsContentUpdated += `    "${itemName}": {\n`;
-    jsContentUpdated += `      rq0cs0: ${rates.rq0cs0 !== null ? (1 / rates.rq0cs0).toFixed(5) : 'null'},\n`;
-    jsContentUpdated += `      rq0cs1: ${rates.rq0cs1 !== null ? (1 / rates.rq0cs1).toFixed(5) : 'null'},\n`;
-    jsContentUpdated += `      rq1cs0: ${rates.rq1cs0 !== null ? (1 / rates.rq1cs0).toFixed(5) : 'null'},\n`;
-    jsContentUpdated += `      rq1cs1: ${rates.rq1cs1 !== null ? (1 / rates.rq1cs1).toFixed(5) : 'null'}\n`;
-    jsContentUpdated += `    },\n`;
+    jsContentUpdated += `      "${itemName}": {\n`;
+    jsContentUpdated += `        rq0cs0: ${rates.rq0cs0 !== null ? (1 / rates.rq0cs0).toFixed(5) : 'null'},\n`;
+    jsContentUpdated += `        rq0cs1: ${rates.rq0cs1 !== null ? (1 / rates.rq0cs1).toFixed(5) : 'null'},\n`;
+    jsContentUpdated += `        rq1cs0: ${rates.rq1cs0 !== null ? (1 / rates.rq1cs0).toFixed(5) : 'null'},\n`;
+    jsContentUpdated += `        rq1cs1: ${rates.rq1cs1 !== null ? (1 / rates.rq1cs1).toFixed(5) : 'null'}\n`;
+    jsContentUpdated += `      },\n`;
   });
-  jsContentUpdated += `  },\n`;
+  jsContentUpdated += `    },\n`;
 });
 
-jsContentUpdated += `};
+jsContentUpdated += `  }
+};
 
-export default appleCiderRealDropRatesUpdated;
+export default APPLE_CIDER_REAL_DROP_RATES_UPGRADED;
 `;
 
 fs.writeFileSync(outputPathUpdated, jsContentUpdated, 'utf8');

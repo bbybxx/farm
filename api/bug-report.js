@@ -55,17 +55,30 @@ export default async function handler(req, res) {
       multiples: true, // Allow multiple files with same field name
     });
 
-    // In formidable v3, use the promisified parse
-    const parsed = await form.parse(req);
-    console.log('📦 Parsed result type:', typeof parsed);
-    console.log('📦 Parsed result keys:', Object.keys(parsed || {}));
-    console.log('📦 Parsed result:', JSON.stringify(parsed, null, 2));
+    // In formidable v3, parse returns array [fields, files]
+    let fields, files;
     
-    const fields = parsed.fields || parsed[0] || {};
-    const files = parsed.files || parsed[1] || {};
-    
-    console.log('📦 Fields type:', typeof fields, 'keys:', Object.keys(fields));
-    console.log('📦 Files type:', typeof files, 'keys:', Object.keys(files));
+    try {
+      const result = await new Promise((resolve, reject) => {
+        form.parse(req, (err, fields, files) => {
+          if (err) {
+            console.error('❌ Formidable parse error:', err);
+            reject(err);
+          } else {
+            console.log('✅ Formidable parsed successfully');
+            console.log('📦 Fields keys:', Object.keys(fields || {}));
+            console.log('📦 Files keys:', Object.keys(files || {}));
+            resolve({ fields, files });
+          }
+        });
+      });
+      
+      fields = result.fields;
+      files = result.files;
+    } catch (parseError) {
+      console.error('Failed to parse form data:', parseError);
+      return res.status(400).json({ success: false, error: 'Failed to parse form data', details: parseError.message });
+    }
 
     // Extract data
     const message = Array.isArray(fields.message) ? fields.message[0] : fields.message;

@@ -252,6 +252,16 @@ export default function App() {
   const [pinnedResources, setPinnedResources] = useState(() => loadFromStorage('craftCalculator_pinnedResources', []))
   const [lastPinnedLocation, setLastPinnedLocation] = useState(() => loadFromStorage('craftCalculator_lastPinnedLocation', ''))
   const [isPinnedOpen, setIsPinnedOpen] = useState(false)
+  
+  // Pinned folders system
+  const [pinnedFolders, setPinnedFolders] = useState(() => 
+    loadFromStorage('craftCalculator_pinnedFolders', [{ id: 'default', name: 'Main', createdAt: Date.now() }])
+  )
+  const [activePinnedFolder, setActivePinnedFolder] = useState(() => 
+    loadFromStorage('craftCalculator_activePinnedFolder', 'default')
+  )
+  const [isFolderConfigOpen, setIsFolderConfigOpen] = useState(false)
+  const [folderMenuData, setFolderMenuData] = useState(null) // { x, y, itemId } for folder selection menu
   const [useThousandsFormat, setUseThousandsFormat] = useState(() => loadFromStorage('craftCalculator_useThousandsFormat', true))
   const [recentlyAddedItems, setRecentlyAddedItems] = useState(new Set())
   const [showClearConfirm, setShowClearConfirm] = useState(false)
@@ -695,19 +705,38 @@ export default function App() {
     saveToStorage('craftCalculator_lastPinnedLocation', lastPinnedLocation)
   }, [lastPinnedLocation])
 
+  useEffect(() => {
+    saveToStorage('craftCalculator_pinnedFolders', pinnedFolders)
+  }, [pinnedFolders])
+
+  useEffect(() => {
+    saveToStorage('craftCalculator_activePinnedFolder', activePinnedFolder)
+  }, [activePinnedFolder])
+
   // Migration: some older pinned entries used `selectedLocation` key.
   // Normalize to `location` on first load to avoid mismatch between selector and estimate.
+  // Also add default folderId for items without one.
   useEffect(() => {
     try {
       if (!pinnedResources || pinnedResources.length === 0) return
       let migrated = false
       const next = pinnedResources.map(p => {
+        let updated = p
+        
+        // Migrate selectedLocation to location
         if (p.selectedLocation && !p.location) {
           migrated = true
-          const { selectedLocation, ...rest } = p
-          return { ...rest, location: selectedLocation }
+          const { selectedLocation, ...rest } = updated
+          updated = { ...rest, location: selectedLocation }
         }
-        return p
+        
+        // Add default folderId if missing
+        if (!updated.folderId) {
+          migrated = true
+          updated = { ...updated, folderId: 'default' }
+        }
+        
+        return updated
       })
       if (migrated) setPinnedResources(next)
     } catch (e) {
@@ -756,31 +785,105 @@ export default function App() {
   }, [pinnedEnabled, historyEnabled, sidebarActiveTab])
 
   // Pinned resources functions
-  const addToPinned = (resourceName, quantity, parentRecipe = null) => {
+  const addToPinned = (resourceName, quantity, parentRecipe = null, event = null) => {
+    // If multiple folders exist, show folder selection menu
+    if (pinnedFolders.length > 1 && event) {
+      const rect = event.currentTarget.getBoundingClientRect()
+      setFolderMenuData({
+        x: rect.left,
+        y: rect.top - 8, // Position above the button
+        resourceName,
+        quantity,
+        parentRecipe
+      })
+      return
+    }
+    
+    // Otherwise add to active folder
+    const result = addToPinnedWithFolder(resourceName, quantity, parentRecipe)
+    if (result && result.showFolderMenu && event) {
+      const rect = event.currentTarget.getBoundingClientRect()
+      setFolderMenuData({
+        x: rect.left,
+        y: rect.top - 8,
+        resourceName,
+        quantity,
+        parentRecipe
+      })
+    }
+  }
+
+  const removeFromPinned = (index) => {
+    hapticFeedback('light')
+    setPinnedResources(prev => prev.filter((_, i) => i !== index))
+  }
+
+  // Folder management functions
+  const createFolder = (folderName) => {
+    const newFolder = {
+      id: `folder_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      name: folderName.trim(),
+      createdAt: Date.now()
+    }
+    setPinnedFolders(prev => [...prev, newFolder])
+    return newFolder.id
+  }
+
+  const deleteFolder = (folderId) => {
+    if (folderId === 'default') return // Cannot delete default folder
+    
+    // Remove all items in this folder
+    setPinnedResources(prev => prev.filter(item => item.folderId !== folderId))
+    
+    // Remove the folder
+    setPinnedFolders(prev => prev.filter(f => f.id !== folderId))
+    
+    // If active folder is deleted, switch to default
+    if (activePinnedFolder === folderId) {
+      setActivePinnedFolder('default')
+    }
+  }
+
+  const renameFolder = (folderId, newName) => {
+    setPinnedFolders(prev => prev.map(f => 
+      f.id === folderId ? { ...f, name: newName.trim() } : f
+    ))
+  }
+
+  const addToPinnedWithFolder = (resourceName, quantity, parentRecipe = null, folderId = null) => {
+    // Determine which folder to add to
+    let targetFolder = folderId
+    
+    // If no folder specified and we have multiple folders, show menu
+    if (!targetFolder && pinnedFolders.length > 1) {
+      // Store pending add and show folder selection menu
+      return { showFolderMenu: true, resourceName, quantity, parentRecipe }
+    }
+    
+    // Default to active folder or 'default'
+    if (!targetFolder) {
+      targetFolder = activePinnedFolder || 'default'
+    }
+    
     hapticFeedback('light')
     
     setPinnedResources(prev => {
-      // Normalize quantity to a number (round to two decimals for display)
       let qty = quantity
       if (qty === null || qty === undefined || qty === '') qty = 1
-      // If quantity comes as string, try to coerce to number
       if (typeof qty === 'string') {
         const parsed = Number(qty.replace(/\s+/g, ''))
         qty = Number.isFinite(parsed) ? parsed : 1
       }
-      // Ensure numeric and sensible
       if (typeof qty !== 'number' || Number.isNaN(qty) || !Number.isFinite(qty) || qty <= 0) qty = 1
-      // Round to two decimals to keep behaviour consistent with UI
       qty = Math.round(qty * 100) / 100
 
-      // Always add as new entry to allow multiple instances with different parent recipes
-      // But only inherit lastPinnedLocation if that location actually contains this item
       const locs = getItemLocations(resourceName) || []
       const hasLast = lastPinnedLocation && locs.some(l => l.name === lastPinnedLocation)
       const newEntry = {
         name: resourceName,
         quantity: qty,
-        parentRecipe: parentRecipe || item, // Use current item as parent if not specified
+        parentRecipe: parentRecipe || item,
+        folderId: targetFolder,
         ...(hasLast ? { location: lastPinnedLocation } : {})
       }
       return [...prev, newEntry]
@@ -804,7 +907,6 @@ export default function App() {
       return next
     })
     
-    // Remove animation after 2 seconds
     if (typeof window !== 'undefined') {
       const timerId = window.setTimeout(() => {
         setRecentlyAddedItems(prev => {
@@ -816,11 +918,8 @@ export default function App() {
       }, 2000)
       recentlyAddedTimersRef.current.add(timerId)
     }
-  }
-
-  const removeFromPinned = (index) => {
-    hapticFeedback('light')
-    setPinnedResources(prev => prev.filter((_, i) => i !== index))
+    
+    return { showFolderMenu: false }
   }
 
   // Save pinned resources to localStorage
@@ -1262,31 +1361,68 @@ export default function App() {
           
           {sidebarActiveTab === 'pinned' && pinnedEnabled && (
             <div className="pinned-section">
+              {/* Folder tabs */}
+              <div className="folder-tabs-container">
+                <div className="folder-tabs">
+                  {pinnedFolders.map(folder => {
+                    const folderItems = pinnedResources.filter(item => (item.folderId || 'default') === folder.id)
+                    return (
+                      <button
+                        key={folder.id}
+                        className={`folder-tab ${activePinnedFolder === folder.id ? 'active' : ''}`}
+                        onClick={() => setActivePinnedFolder(folder.id)}
+                        type="button"
+                      >
+                        {folder.name}
+                        <span className="folder-count">({folderItems.length})</span>
+                      </button>
+                    )
+                  })}
+                  <button
+                    className="folder-tab new-folder"
+                    onClick={() => {
+                      const name = prompt('Enter folder name:')
+                      if (name && name.trim()) {
+                        const newId = createFolder(name)
+                        setActivePinnedFolder(newId)
+                      }
+                    }}
+                    type="button"
+                    title="Create new folder"
+                  >
+                    + New Folder
+                  </button>
+                </div>
+              </div>
+
               <div className="section-header">
-                <h3>Pinned Resources ({pinnedResources.length})</h3>
-                {pinnedResources.length > 0 && (
+                <h3>Pinned Resources</h3>
+                {pinnedResources.filter(item => (item.folderId || 'default') === activePinnedFolder).length > 0 && (
                   <button 
                     className="chip danger"
                     onClick={() => {
                       hapticFeedback('medium')
-                      setPinnedResources([])
+                      setPinnedResources(prev => prev.filter(item => (item.folderId || 'default') !== activePinnedFolder))
                     }}
                     type="button"
-                    title="Clear all pinned resources"
+                    title="Clear this folder"
                   >
                     Clear
                   </button>
                 )}
               </div>
               
-              {pinnedResources.length === 0 ? (
+              {pinnedResources.filter(item => (item.folderId || 'default') === activePinnedFolder).length === 0 ? (
                 <div className="empty-state">
-                  <p>No pinned resources.</p>
+                  <p>No pinned resources in this folder.</p>
                   <p>Pin resources from any recipe by clicking the "+" button next to them.</p>
                 </div>
               ) : (
                 <div className="pinned-items">
                   {pinnedResources.map((pinnedItem, index) => {
+                    // Only show items in the active folder
+                    if ((pinnedItem.folderId || 'default') !== activePinnedFolder) return null
+                    
                     // compute estimate once per pinned item so selector and estimate use same default
                     let est = null
                     try {
@@ -1379,6 +1515,20 @@ export default function App() {
                 </p>
               </div>
 
+              {pinnedEnabled && (
+                <div className="setting-item">
+                  <button
+                    className="chip wide"
+                    onClick={() => setIsFolderConfigOpen(true)}
+                    type="button"
+                  >
+                    Configure Pinning Folders
+                  </button>
+                  <p className="setting-description">
+                    Manage folders for organizing pinned resources
+                  </p>
+                </div>
+              )}
               
               
               <div className="setting-item">
@@ -2141,7 +2291,7 @@ export default function App() {
                               return (
                                 <button
                                   className={`pin-btn ${recentlyAddedItems.has(`${it}_${qtyForPin}_${selectedLocation || item}`) ? 'success' : ''}`}
-                                  onClick={(e) => { e.stopPropagation(); addToPinned(it, qtyForPin, selectedLocation || item) }}
+                                  onClick={(e) => { e.stopPropagation(); addToPinned(it, qtyForPin, selectedLocation || item, e) }}
                                   type="button"
                                   title={`Pin ${it}`}
                                 >
@@ -2205,7 +2355,7 @@ export default function App() {
                             className={`pin-btn ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'success' : ''}`}
                             onClick={(e) => {
                               e.stopPropagation()
-                              addToPinned(k, v, craftChain.length > 0 ? craftChain[0].name : item)
+                              addToPinned(k, v, craftChain.length > 0 ? craftChain[0].name : item, e)
                             }}
                             type="button"
                             title={`Pin ${k} from ${item}`}
@@ -2302,7 +2452,7 @@ export default function App() {
                           return (
                             <button
                               className={`pin-btn ${recentlyAddedItems.has(`${c.name}_${qtyForCraftPin}_${item}`) ? 'success' : ''}`}
-                              onClick={(e) => { e.stopPropagation(); addToPinned(c.name, qtyForCraftPin, item) }}
+                              onClick={(e) => { e.stopPropagation(); addToPinned(c.name, qtyForCraftPin, item, e) }}
                               type="button"
                               title={`Pin ${c.name}`}
                             >
@@ -2386,6 +2536,138 @@ export default function App() {
                 <span>All data cleared! App reset to defaults.</span>
               </div>
             </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Folder Configuration Modal */}
+        <AnimatePresence>
+          {isFolderConfigOpen && (
+            <motion.div
+              className="modal-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsFolderConfigOpen(false)}
+            >
+              <motion.div
+                className="modal glass folder-config-modal"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="modal-header">
+                  <h3>📁 Manage Pinning Folders</h3>
+                  <button 
+                    className="modal-close-btn"
+                    onClick={() => setIsFolderConfigOpen(false)}
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="modal-body">
+                  <div className="folder-list">
+                    {pinnedFolders.map(folder => (
+                      <div key={folder.id} className="folder-config-item">
+                        <div className="folder-config-info">
+                          <span className="folder-config-name">{folder.name}</span>
+                          <span className="folder-config-count">
+                            {pinnedResources.filter(item => (item.folderId || 'default') === folder.id).length} items
+                          </span>
+                        </div>
+                        <div className="folder-config-actions">
+                          <button
+                            className="folder-config-btn"
+                            onClick={() => {
+                              const newName = prompt('Enter new name:', folder.name)
+                              if (newName && newName.trim() && newName.trim() !== folder.name) {
+                                renameFolder(folder.id, newName)
+                              }
+                            }}
+                            title="Rename folder"
+                          >
+                            ✏️
+                          </button>
+                          {folder.id !== 'default' && (
+                            <button
+                              className="folder-config-btn danger"
+                              onClick={() => {
+                                if (confirm(`Delete folder "${folder.name}"? All items in it will be removed.`)) {
+                                  deleteFolder(folder.id)
+                                }
+                              }}
+                              title="Delete folder"
+                            >
+                              🗑️
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    className="chip wide"
+                    onClick={() => {
+                      const name = prompt('Enter folder name:')
+                      if (name && name.trim()) {
+                        createFolder(name)
+                      }
+                    }}
+                    type="button"
+                  >
+                    + Create New Folder
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Folder Selection Menu */}
+        <AnimatePresence>
+          {folderMenuData && (
+            <>
+              <motion.div
+                className="folder-menu-overlay"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setFolderMenuData(null)}
+              />
+              <motion.div
+                className="folder-menu"
+                style={{
+                  position: 'fixed',
+                  left: folderMenuData.x,
+                  top: folderMenuData.y,
+                  transform: 'translateY(-100%)'
+                }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.15 }}
+              >
+                <div className="folder-menu-title">Pin to folder:</div>
+                {pinnedFolders.map(folder => (
+                  <button
+                    key={folder.id}
+                    className="folder-menu-item"
+                    onClick={() => {
+                      addToPinnedWithFolder(
+                        folderMenuData.resourceName,
+                        folderMenuData.quantity,
+                        folderMenuData.parentRecipe,
+                        folder.id
+                      )
+                      setFolderMenuData(null)
+                    }}
+                  >
+                    {folder.name}
+                  </button>
+                ))}
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
 

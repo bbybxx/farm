@@ -93,16 +93,18 @@ exploreLocations.forEach(location => {
     const runecubeRate = withRunecube.items.find(i => i.item.name === itemName)?.rate;
     
     if (baseRate) {
-      // rq0cs0 = no runecube, no cinnamon (base rate from API, converted to cidersPerDrop)
+      // IMPORTANT: "rate" from API is actually "exploresPerDrop" (hits needed for 1 drop)
+      // We store it as "cidersPerDrop" but it's really exploresPerDrop
+      // rq0cs0 = no runecube, no cinnamon (base rate from API)
       locationData.rq0cs0[itemName] = { cidersPerDrop: baseRate };
-      // rq0cs1 = no runecube, with cinnamon (base rate / 1.25)
+      // rq0cs1 = no runecube, with cinnamon (base rate / 1.25 for +25% drops)
       locationData.rq0cs1[itemName] = { cidersPerDrop: baseRate / 1.25 };
     }
     
     if (runecubeRate) {
       // rq1cs0 = with runecube, no cinnamon (runecube rate from API)
       locationData.rq1cs0[itemName] = { cidersPerDrop: runecubeRate };
-      // rq1cs1 = with runecube, with cinnamon (runecube rate / 1.25)
+      // rq1cs1 = with runecube, with cinnamon (runecube rate / 1.25 for +25% drops)
       locationData.rq1cs1[itemName] = { cidersPerDrop: runecubeRate / 1.25 };
     }
   });

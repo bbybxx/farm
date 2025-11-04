@@ -22,7 +22,17 @@ function safeGetAppleCiderDrops(locationName, variant, itemName) {
   const loc = APPLE_CIDER_REAL_DROP_RATES.locations[locationName];
   if (!loc || !loc[variant] || !loc[variant][itemName]) return null;
   const data = loc[variant][itemName];
-  return data && data.dropsPerCider ? data.dropsPerCider : null;
+  
+  // Convert cidersPerDrop to dropsPerCider if needed
+  if (data && data.dropsPerCider) {
+    return data.dropsPerCider;
+  } else if (data && data.cidersPerDrop) {
+    // IMPORTANT: cidersPerDrop from API is actually "exploresPerDrop" (hits needed for 1 drop)
+    // To get dropsPerCider: divide base explores (1010) by exploresPerDrop
+    return 1010 / data.cidersPerDrop;
+  }
+  
+  return null;
 }
 
 // ПРЯМЫЕ ДАННЫЕ из ваших измерений

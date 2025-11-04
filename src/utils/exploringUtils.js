@@ -150,8 +150,22 @@ export function computePinnedEstimate(pinnedItem, quantity, activePerks, explori
       if (!v) continue
       const itemEntry = v[itemName]
       if (!itemEntry) continue
-  const dropsPerCider = (typeof itemEntry === 'object' && itemEntry.dropsPerCider) ? itemEntry.dropsPerCider : (typeof itemEntry === 'number' ? itemEntry : null)
-  if (!dropsPerCider) continue
+      // Convert cidersPerDrop to dropsPerCider if needed
+      let dropsPerCider = null
+      if (typeof itemEntry === 'object') {
+        if (itemEntry.dropsPerCider) {
+          dropsPerCider = itemEntry.dropsPerCider
+        } else if (itemEntry.cidersPerDrop) {
+          // IMPORTANT: cidersPerDrop from API is actually "exploresPerDrop" (hits needed for 1 drop)
+          // To get dropsPerCider: divide base explores (1010) by exploresPerDrop
+          // Example: if exploresPerDrop = 8.98, then dropsPerCider = 1010 / 8.98 ≈ 112.5
+          const baseExplores = APPLE_CIDER_DATA.basic.baseExplores || 1010
+          dropsPerCider = baseExplores / itemEntry.cidersPerDrop
+        }
+      } else if (typeof itemEntry === 'number') {
+        dropsPerCider = itemEntry
+      }
+      if (!dropsPerCider) continue
   // computes explores per cider for this location: we need EE from location config
   const locCfg = getLocationConfig(loc.name) || { exploringEffectiveness: 1, multiplier: 1 }
   const ee = locCfg.exploringEffectiveness || 0

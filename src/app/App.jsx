@@ -1994,7 +1994,9 @@ export default function App() {
                             } else {
                               // fallback to raw dropsPerCider from variants
                               const raw = locObj['rq0cs0'] && locObj['rq0cs0'][it]
-                              const rawVal = raw && (raw.dropsPerCider || (raw.cidersPerDrop ? 1 / raw.cidersPerDrop : null) || raw)
+                              // cidersPerDrop from API is actually exploresPerDrop (hits needed for 1 drop)
+                              // To get dropsPerCider: divide base explores (1010) by exploresPerDrop
+                              const rawVal = raw && (raw.dropsPerCider || (raw.cidersPerDrop ? 1010 / raw.cidersPerDrop : null) || raw)
                               if (rawVal && budget > 0) numericValue = budget * rawVal
 
                               // additional fallback: compute best dropsPerCider across all variants for this location
@@ -2005,7 +2007,8 @@ export default function App() {
                                   if (!part) return
                                   const entry = part[it]
                                   if (!entry) return
-                                  const val = (typeof entry === 'object' && (entry.dropsPerCider || entry.cidersPerDrop)) ? (entry.dropsPerCider || (entry.cidersPerDrop ? 1 / entry.cidersPerDrop : 0)) : (typeof entry === 'number' ? entry : 0)
+                                  // cidersPerDrop from API is actually exploresPerDrop, convert to dropsPerCider
+                                  const val = (typeof entry === 'object' && (entry.dropsPerCider || entry.cidersPerDrop)) ? (entry.dropsPerCider || (entry.cidersPerDrop ? 1010 / entry.cidersPerDrop : 0)) : (typeof entry === 'number' ? entry : 0)
                                   if (val && val > bestDrops) bestDrops = val
                                 })
                                 if (bestDrops > 0) numericValue = budget * bestDrops

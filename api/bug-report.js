@@ -56,14 +56,16 @@ export default async function handler(req, res) {
     });
 
     // In formidable v3, use the promisified parse
-    const { fields, files } = await form.parse(req);
-
-    console.log('📦 Received fields:', Object.keys(fields));
-    console.log('📦 Received files object keys:', Object.keys(files));
-    console.log('📦 files.files exists?', !!files.files);
-    console.log('📦 All files keys and types:', Object.entries(files).map(([k, v]) => 
-      `${k}: ${Array.isArray(v) ? `Array(${v.length})` : typeof v}`
-    ));
+    const parsed = await form.parse(req);
+    console.log('📦 Parsed result type:', typeof parsed);
+    console.log('📦 Parsed result keys:', Object.keys(parsed || {}));
+    console.log('📦 Parsed result:', JSON.stringify(parsed, null, 2));
+    
+    const fields = parsed.fields || parsed[0] || {};
+    const files = parsed.files || parsed[1] || {};
+    
+    console.log('📦 Fields type:', typeof fields, 'keys:', Object.keys(fields));
+    console.log('📦 Files type:', typeof files, 'keys:', Object.keys(files));
 
     // Extract data
     const message = Array.isArray(fields.message) ? fields.message[0] : fields.message;

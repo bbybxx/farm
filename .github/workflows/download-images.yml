@@ -5,6 +5,12 @@ on:
     # Запускается каждую неделю в воскресенье в 4:00 UTC (7:00 MSK)
     - cron: '0 4 * * 0'
   workflow_dispatch: # Позволяет запустить вручную
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/download-images.mjs'  # Запускается только при изменении самого скрипта
+      - '.github/workflows/download-images.yml'  # Или при изменении workflow
 
 jobs:
   download-images:

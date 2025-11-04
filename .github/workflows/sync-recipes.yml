@@ -5,6 +5,12 @@ on:
     # Запускается каждый день в 3:00 UTC (6:00 MSK)
     - cron: '0 3 * * *'
   workflow_dispatch: # Позволяет запустить вручную
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/sync-recipes-node.mjs'  # Запускается только при изменении самого скрипта
+      - '.github/workflows/sync-recipes.yml'  # Или при изменении workflow
 
 jobs:
   sync-recipes:

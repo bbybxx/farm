@@ -60,15 +60,37 @@ export default async function handler(req, res) {
     
     try {
       const result = await new Promise((resolve, reject) => {
-        form.parse(req, (err, fields, files) => {
+        form.parse(req, (err, parsedFields, parsedFiles) => {
           if (err) {
             console.error('❌ Formidable parse error:', err);
             reject(err);
           } else {
             console.log('✅ Formidable parsed successfully');
-            console.log('📦 Fields keys:', Object.keys(fields || {}));
-            console.log('📦 Files keys:', Object.keys(files || {}));
-            resolve({ fields, files });
+            console.log('📦 Fields:', JSON.stringify(parsedFields, null, 2));
+            console.log('📦 Files structure:', JSON.stringify(
+              Object.keys(parsedFiles || {}).reduce((acc, key) => {
+                const fileData = parsedFiles[key];
+                if (Array.isArray(fileData)) {
+                  acc[key] = fileData.map(f => ({
+                    name: f.originalFilename,
+                    size: f.size,
+                    type: f.mimetype,
+                    path: f.filepath
+                  }));
+                } else if (fileData) {
+                  acc[key] = {
+                    name: fileData.originalFilename,
+                    size: fileData.size,
+                    type: fileData.mimetype,
+                    path: fileData.filepath
+                  };
+                }
+                return acc;
+              }, {}),
+              null,
+              2
+            ));
+            resolve({ fields: parsedFields, files: parsedFiles });
           }
         });
       });

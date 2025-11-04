@@ -1994,7 +1994,7 @@ export default function App() {
                             } else {
                               // fallback to raw dropsPerCider from variants
                               const raw = locObj['rq0cs0'] && locObj['rq0cs0'][it]
-                              const rawVal = raw && (raw.dropsPerCider || raw)
+                              const rawVal = raw && (raw.dropsPerCider || (raw.cidersPerDrop ? 1 / raw.cidersPerDrop : null) || raw)
                               if (rawVal && budget > 0) numericValue = budget * rawVal
 
                               // additional fallback: compute best dropsPerCider across all variants for this location

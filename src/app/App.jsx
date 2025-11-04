@@ -332,8 +332,17 @@ export default function App() {
     const cleanAmount = typeof amount === 'string' ? amount.replace(/\s/g, '') : amount
     const fullResult = calculateAllResources(item, Number(cleanAmount) || 1, activePerks, combinedRecipes)
     
+    if (item === 'Pitchfork') {
+      console.log('DEBUG App.jsx Pitchfork fullResult:', fullResult);
+    }
+    
     // Get original recipe ingredients
     const originalRecipe = combinedRecipes[item]
+    if (item === 'Pitchfork') {
+      console.log('DEBUG App.jsx Pitchfork originalRecipe:', originalRecipe);
+      console.log('DEBUG App.jsx Pitchfork originalRecipe.ingredients:', originalRecipe?.ingredients);
+      console.log('DEBUG App.jsx Pitchfork originalRecipe.из:', originalRecipe?.из);
+    }
     const originalIngredients = originalRecipe?.из || originalRecipe?.ingredients || {}
     
     // Filter resources to show only original recipe ingredients
@@ -347,6 +356,10 @@ export default function App() {
       if (fullResult.intermediate[resourceName]) {
         filteredResources[resourceName] = fullResult.intermediate[resourceName]
       }
+    }
+    
+    if (item === 'Pitchfork') {
+      console.log('DEBUG App.jsx Pitchfork filteredResources:', filteredResources);
     }
     
     return {

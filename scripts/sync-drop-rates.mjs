@@ -59,13 +59,19 @@ const exploreLocations = locations.filter(loc => loc.type === 'explore');
 console.log(`Explore locations: ${exploreLocations.length}\n`);
 
 // Build drop rates structure
-// Format: { "Location Name": { "Item Name": { rq0cs0, rq0cs1, rq1cs0, rq1cs1 } } }
+// OLD Format: { "Location Name": { "Item Name": { rq0cs0, rq0cs1, rq1cs0, rq1cs1 } } }
+// NEW Format (correct): { "Location Name": { rq0cs0: { "Item Name": rate }, rq0cs1: { ... } } }
 const dropRatesData = {};
 
 exploreLocations.forEach(location => {
   console.log(`Processing: ${location.name}`);
   
-  const locationData = {};
+  const locationData = {
+    rq0cs0: {},
+    rq0cs1: {},
+    rq1cs0: {},
+    rq1cs1: {}
+  };
   
   // Find variants: without and with runecube
   const withoutRunecube = location.dropRates.find(dr => !dr.runecube && !dr.manualFishing);
@@ -86,23 +92,30 @@ exploreLocations.forEach(location => {
     const baseRate = withoutRunecube.items.find(i => i.item.name === itemName)?.rate;
     const runecubeRate = withRunecube.items.find(i => i.item.name === itemName)?.rate;
     
-    if (baseRate || runecubeRate) {
-      locationData[itemName] = {
-        // rq0cs0 = no runecube, no cinnamon (base rate from API)
-        rq0cs0: baseRate || null,
-        // rq0cs1 = no runecube, with cinnamon (base rate / 1.25)
-        rq0cs1: baseRate ? baseRate / 1.25 : null,
-        // rq1cs0 = with runecube, no cinnamon (runecube rate from API)
-        rq1cs0: runecubeRate || null,
-        // rq1cs1 = with runecube, with cinnamon (runecube rate / 1.25)
-        rq1cs1: runecubeRate ? runecubeRate / 1.25 : null
-      };
+    if (baseRate) {
+      // rq0cs0 = no runecube, no cinnamon (base rate from API, converted to cidersPerDrop)
+      locationData.rq0cs0[itemName] = { cidersPerDrop: baseRate };
+      // rq0cs1 = no runecube, with cinnamon (base rate / 1.25)
+      locationData.rq0cs1[itemName] = { cidersPerDrop: baseRate / 1.25 };
+    }
+    
+    if (runecubeRate) {
+      // rq1cs0 = with runecube, no cinnamon (runecube rate from API)
+      locationData.rq1cs0[itemName] = { cidersPerDrop: runecubeRate };
+      // rq1cs1 = with runecube, with cinnamon (runecube rate / 1.25)
+      locationData.rq1cs1[itemName] = { cidersPerDrop: runecubeRate / 1.25 };
     }
   });
   
-  if (Object.keys(locationData).length > 0) {
+  // Count unique items across all variants
+  const uniqueItems = new Set();
+  Object.values(locationData).forEach(variant => {
+    Object.keys(variant).forEach(item => uniqueItems.add(item));
+  });
+  
+  if (uniqueItems.size > 0) {
     dropRatesData[location.name] = locationData;
-    console.log(`  ✅ Added ${Object.keys(locationData).length} items`);
+    console.log(`  ✅ Added ${uniqueItems.size} items`);
   }
 });
 
@@ -133,16 +146,22 @@ export const APPLE_CIDER_REAL_DROP_RATES = {
 
   locations: {\n`;
 
-Object.entries(dropRatesData).forEach(([locationName, items]) => {
+Object.entries(dropRatesData).forEach(([locationName, variants]) => {
   jsContent += `    "${locationName}": {\n`;
-  Object.entries(items).forEach(([itemName, rates]) => {
-    jsContent += `      "${itemName}": {\n`;
-    jsContent += `        rq0cs0: ${rates.rq0cs0 !== null ? rates.rq0cs0.toFixed(2) : 'null'},\n`;
-    jsContent += `        rq0cs1: ${rates.rq0cs1 !== null ? rates.rq0cs1.toFixed(2) : 'null'},\n`;
-    jsContent += `        rq1cs0: ${rates.rq1cs0 !== null ? rates.rq1cs0.toFixed(2) : 'null'},\n`;
-    jsContent += `        rq1cs1: ${rates.rq1cs1 !== null ? rates.rq1cs1.toFixed(2) : 'null'}\n`;
-    jsContent += `      },\n`;
+  
+  // Iterate through variants: rq0cs0, rq0cs1, rq1cs0, rq1cs1
+  ['rq0cs0', 'rq0cs1', 'rq1cs0', 'rq1cs1'].forEach(variantKey => {
+    const items = variants[variantKey] || {};
+    if (Object.keys(items).length > 0) {
+      jsContent += `      ${variantKey}: {\n`;
+      Object.entries(items).forEach(([itemName, data]) => {
+        const rate = data.cidersPerDrop;
+        jsContent += `        "${itemName}": { cidersPerDrop: ${rate.toFixed(2)} },\n`;
+      });
+      jsContent += `      },\n`;
+    }
   });
+  
   jsContent += `    },\n`;
 });
 
@@ -182,16 +201,23 @@ export const APPLE_CIDER_REAL_DROP_RATES_UPGRADED = {
 
   locations: {\n`;
 
-Object.entries(dropRatesData).forEach(([locationName, items]) => {
+Object.entries(dropRatesData).forEach(([locationName, variants]) => {
   jsContentUpdated += `    "${locationName}": {\n`;
-  Object.entries(items).forEach(([itemName, rates]) => {
-    jsContentUpdated += `      "${itemName}": {\n`;
-    jsContentUpdated += `        rq0cs0: ${rates.rq0cs0 !== null ? (1 / rates.rq0cs0).toFixed(5) : 'null'},\n`;
-    jsContentUpdated += `        rq0cs1: ${rates.rq0cs1 !== null ? (1 / rates.rq0cs1).toFixed(5) : 'null'},\n`;
-    jsContentUpdated += `        rq1cs0: ${rates.rq1cs0 !== null ? (1 / rates.rq1cs0).toFixed(5) : 'null'},\n`;
-    jsContentUpdated += `        rq1cs1: ${rates.rq1cs1 !== null ? (1 / rates.rq1cs1).toFixed(5) : 'null'}\n`;
-    jsContentUpdated += `      },\n`;
+  
+  // Iterate through variants: rq0cs0, rq0cs1, rq1cs0, rq1cs1
+  ['rq0cs0', 'rq0cs1', 'rq1cs0', 'rq1cs1'].forEach(variantKey => {
+    const items = variants[variantKey] || {};
+    if (Object.keys(items).length > 0) {
+      jsContentUpdated += `      ${variantKey}: {\n`;
+      Object.entries(items).forEach(([itemName, data]) => {
+        const cidersPerDrop = data.cidersPerDrop;
+        const dropsPerCider = 1 / cidersPerDrop;
+        jsContentUpdated += `        "${itemName}": { dropsPerCider: ${dropsPerCider.toFixed(5)} },\n`;
+      });
+      jsContentUpdated += `      },\n`;
+    }
   });
+  
   jsContentUpdated += `    },\n`;
 });
 

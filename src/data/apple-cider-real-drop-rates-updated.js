@@ -10,7 +10,7 @@ export const APPLE_CIDER_REAL_DROP_RATES_UPGRADED = {
     version: "2.0.0",
     description: "Drop rates for explore locations from buddy.farm API (inverse format)",
     dataSource: "buddy.farm GraphQL API",
-    lastUpdated: "2025-11-04T14:26:01.319Z",
+    lastUpdated: "2025-11-04T14:38:43.969Z",
     variants: {
       rq0cs0: "Without Runecube, Without Cinnamon Sticks",
       rq0cs1: "Without Runecube, With Cinnamon Sticks (+25% drops)",
@@ -21,1039 +21,815 @@ export const APPLE_CIDER_REAL_DROP_RATES_UPGRADED = {
 
   locations: {
     "Small Cave": {
-      "Model Ship": {
-        rq0cs0: 0.00002,
-        rq0cs1: 0.00002,
-        rq1cs0: 0.00002,
-        rq1cs1: 0.00003
+      rq0cs0: {
+        "Model Ship": { dropsPerCider: 0.00002 },
+        "Stone": { dropsPerCider: 0.11143 },
+        "Wooden Mask": { dropsPerCider: 0.00116 },
+        "Grab Bag 02": { dropsPerCider: 0.00116 },
+        "Bone": { dropsPerCider: 0.01492 },
+        "Skeleton Key": { dropsPerCider: 0.00008 },
+        "Nails": { dropsPerCider: 0.11142 },
+        "Wood": { dropsPerCider: 0.11141 },
+        "Mushroom": { dropsPerCider: 0.04804 },
+        "Runestone 04": { dropsPerCider: 0.00036 },
       },
-      "Stone": {
-        rq0cs0: 0.11143,
-        rq0cs1: 0.13929,
-        rq1cs0: 0.11034,
-        rq1cs1: 0.13793
+      rq0cs1: {
+        "Model Ship": { dropsPerCider: 0.00002 },
+        "Stone": { dropsPerCider: 0.13929 },
+        "Wooden Mask": { dropsPerCider: 0.00145 },
+        "Grab Bag 02": { dropsPerCider: 0.00145 },
+        "Bone": { dropsPerCider: 0.01865 },
+        "Skeleton Key": { dropsPerCider: 0.00010 },
+        "Nails": { dropsPerCider: 0.13927 },
+        "Wood": { dropsPerCider: 0.13927 },
+        "Mushroom": { dropsPerCider: 0.06005 },
+        "Runestone 04": { dropsPerCider: 0.00045 },
       },
-      "Wooden Mask": {
-        rq0cs0: 0.00116,
-        rq0cs1: 0.00145,
-        rq1cs0: 0.00144,
-        rq1cs1: 0.00181
+      rq1cs0: {
+        "Model Ship": { dropsPerCider: 0.00002 },
+        "Stone": { dropsPerCider: 0.11034 },
+        "Wooden Mask": { dropsPerCider: 0.00144 },
+        "Grab Bag 02": { dropsPerCider: 0.00144 },
+        "Bone": { dropsPerCider: 0.01786 },
+        "Skeleton Key": { dropsPerCider: 0.00010 },
+        "Nails": { dropsPerCider: 0.11034 },
+        "Wood": { dropsPerCider: 0.11036 },
+        "Mushroom": { dropsPerCider: 0.04764 },
+        "Runestone 04": { dropsPerCider: 0.00045 },
       },
-      "Grab Bag 02": {
-        rq0cs0: 0.00116,
-        rq0cs1: 0.00145,
-        rq1cs0: 0.00144,
-        rq1cs1: 0.00180
-      },
-      "Bone": {
-        rq0cs0: 0.01492,
-        rq0cs1: 0.01865,
-        rq1cs0: 0.01786,
-        rq1cs1: 0.02233
-      },
-      "Skeleton Key": {
-        rq0cs0: 0.00008,
-        rq0cs1: 0.00010,
-        rq1cs0: 0.00010,
-        rq1cs1: 0.00012
-      },
-      "Nails": {
-        rq0cs0: 0.11142,
-        rq0cs1: 0.13927,
-        rq1cs0: 0.11034,
-        rq1cs1: 0.13793
-      },
-      "Wood": {
-        rq0cs0: 0.11141,
-        rq0cs1: 0.13927,
-        rq1cs0: 0.11036,
-        rq1cs1: 0.13795
-      },
-      "Mushroom": {
-        rq0cs0: 0.04804,
-        rq0cs1: 0.06005,
-        rq1cs0: 0.04764,
-        rq1cs1: 0.05955
-      },
-      "Runestone 04": {
-        rq0cs0: 0.00036,
-        rq0cs1: 0.00045,
-        rq1cs0: 0.00045,
-        rq1cs1: 0.00056
+      rq1cs1: {
+        "Model Ship": { dropsPerCider: 0.00003 },
+        "Stone": { dropsPerCider: 0.13793 },
+        "Wooden Mask": { dropsPerCider: 0.00181 },
+        "Grab Bag 02": { dropsPerCider: 0.00180 },
+        "Bone": { dropsPerCider: 0.02233 },
+        "Skeleton Key": { dropsPerCider: 0.00012 },
+        "Nails": { dropsPerCider: 0.13793 },
+        "Wood": { dropsPerCider: 0.13795 },
+        "Mushroom": { dropsPerCider: 0.05955 },
+        "Runestone 04": { dropsPerCider: 0.00056 },
       },
     },
     "Forest": {
-      "Fire Ant": {
-        rq0cs0: 0.00277,
-        rq0cs1: 0.00346,
-        rq1cs0: 0.00328,
-        rq1cs1: 0.00411
+      rq0cs0: {
+        "Fire Ant": { dropsPerCider: 0.00277 },
+        "Arrowhead": { dropsPerCider: 0.01672 },
+        "Wood": { dropsPerCider: 0.14445 },
+        "Mushroom": { dropsPerCider: 0.05537 },
+        "Straw": { dropsPerCider: 0.05534 },
+        "Gold Leaf": { dropsPerCider: 0.00014 },
+        "Hide": { dropsPerCider: 0.02563 },
+        "Bird Egg": { dropsPerCider: 0.01240 },
+        "Frog": { dropsPerCider: 0.00012 },
+        "Antler": { dropsPerCider: 0.02025 },
+        "Gold Feather": { dropsPerCider: 0.00014 },
       },
-      "Arrowhead": {
-        rq0cs0: 0.01672,
-        rq0cs1: 0.02090,
-        rq1cs0: 0.01911,
-        rq1cs1: 0.02389
+      rq0cs1: {
+        "Fire Ant": { dropsPerCider: 0.00346 },
+        "Arrowhead": { dropsPerCider: 0.02090 },
+        "Wood": { dropsPerCider: 0.18056 },
+        "Mushroom": { dropsPerCider: 0.06922 },
+        "Straw": { dropsPerCider: 0.06918 },
+        "Gold Leaf": { dropsPerCider: 0.00017 },
+        "Hide": { dropsPerCider: 0.03204 },
+        "Bird Egg": { dropsPerCider: 0.01551 },
+        "Frog": { dropsPerCider: 0.00015 },
+        "Antler": { dropsPerCider: 0.02531 },
+        "Gold Feather": { dropsPerCider: 0.00017 },
       },
-      "Wood": {
-        rq0cs0: 0.14445,
-        rq0cs1: 0.18056,
-        rq1cs0: 0.13332,
-        rq1cs1: 0.16666
+      rq1cs0: {
+        "Fire Ant": { dropsPerCider: 0.00328 },
+        "Arrowhead": { dropsPerCider: 0.01911 },
+        "Wood": { dropsPerCider: 0.13332 },
+        "Mushroom": { dropsPerCider: 0.05206 },
+        "Straw": { dropsPerCider: 0.05207 },
+        "Gold Leaf": { dropsPerCider: 0.00016 },
+        "Hide": { dropsPerCider: 0.03302 },
+        "Bird Egg": { dropsPerCider: 0.01580 },
+        "Frog": { dropsPerCider: 0.00014 },
+        "Antler": { dropsPerCider: 0.02420 },
+        "Gold Feather": { dropsPerCider: 0.00016 },
       },
-      "Mushroom": {
-        rq0cs0: 0.05537,
-        rq0cs1: 0.06922,
-        rq1cs0: 0.05206,
-        rq1cs1: 0.06508
-      },
-      "Straw": {
-        rq0cs0: 0.05534,
-        rq0cs1: 0.06918,
-        rq1cs0: 0.05207,
-        rq1cs1: 0.06508
-      },
-      "Gold Leaf": {
-        rq0cs0: 0.00014,
-        rq0cs1: 0.00017,
-        rq1cs0: 0.00016,
-        rq1cs1: 0.00020
-      },
-      "Hide": {
-        rq0cs0: 0.02563,
-        rq0cs1: 0.03204,
-        rq1cs0: 0.03302,
-        rq1cs1: 0.04127
-      },
-      "Bird Egg": {
-        rq0cs0: 0.01240,
-        rq0cs1: 0.01551,
-        rq1cs0: 0.01580,
-        rq1cs1: 0.01974
-      },
-      "Frog": {
-        rq0cs0: 0.00012,
-        rq0cs1: 0.00015,
-        rq1cs0: 0.00014,
-        rq1cs1: 0.00018
-      },
-      "Antler": {
-        rq0cs0: 0.02025,
-        rq0cs1: 0.02531,
-        rq1cs0: 0.02420,
-        rq1cs1: 0.03025
-      },
-      "Gold Feather": {
-        rq0cs0: 0.00014,
-        rq0cs1: 0.00017,
-        rq1cs0: 0.00016,
-        rq1cs1: 0.00020
+      rq1cs1: {
+        "Fire Ant": { dropsPerCider: 0.00411 },
+        "Arrowhead": { dropsPerCider: 0.02389 },
+        "Wood": { dropsPerCider: 0.16666 },
+        "Mushroom": { dropsPerCider: 0.06508 },
+        "Straw": { dropsPerCider: 0.06508 },
+        "Gold Leaf": { dropsPerCider: 0.00020 },
+        "Hide": { dropsPerCider: 0.04127 },
+        "Bird Egg": { dropsPerCider: 0.01974 },
+        "Frog": { dropsPerCider: 0.00018 },
+        "Antler": { dropsPerCider: 0.03025 },
+        "Gold Feather": { dropsPerCider: 0.00020 },
       },
     },
     "Small Spring": {
-      "Mushroom": {
-        rq0cs0: 0.03788,
-        rq0cs1: 0.04735,
-        rq1cs0: 0.03692,
-        rq1cs1: 0.04615
+      rq0cs0: {
+        "Mushroom": { dropsPerCider: 0.03788 },
+        "Feathers": { dropsPerCider: 0.08723 },
+        "Apple": { dropsPerCider: 0.01180 },
+        "Skull Coin": { dropsPerCider: 0.00001 },
+        "Aquamarine": { dropsPerCider: 0.01799 },
+        "Stone": { dropsPerCider: 0.08723 },
+        "Snail": { dropsPerCider: 0.00197 },
+        "Dice": { dropsPerCider: 0.00092 },
+        "Spectacles": { dropsPerCider: 0.00092 },
+        "Wood": { dropsPerCider: 0.08721 },
+        "Small Chest 01": { dropsPerCider: 0.00014 },
+        "Pearl Berries": { dropsPerCider: 0.00003 },
       },
-      "Feathers": {
-        rq0cs0: 0.08723,
-        rq0cs1: 0.10904,
-        rq1cs0: 0.08464,
-        rq1cs1: 0.10580
+      rq0cs1: {
+        "Mushroom": { dropsPerCider: 0.04735 },
+        "Feathers": { dropsPerCider: 0.10904 },
+        "Apple": { dropsPerCider: 0.01475 },
+        "Skull Coin": { dropsPerCider: 0.00002 },
+        "Aquamarine": { dropsPerCider: 0.02249 },
+        "Stone": { dropsPerCider: 0.10903 },
+        "Snail": { dropsPerCider: 0.00246 },
+        "Dice": { dropsPerCider: 0.00115 },
+        "Spectacles": { dropsPerCider: 0.00115 },
+        "Wood": { dropsPerCider: 0.10902 },
+        "Small Chest 01": { dropsPerCider: 0.00017 },
+        "Pearl Berries": { dropsPerCider: 0.00004 },
       },
-      "Apple": {
-        rq0cs0: 0.01180,
-        rq0cs1: 0.01475,
-        rq1cs0: 0.01389,
-        rq1cs1: 0.01736
+      rq1cs0: {
+        "Mushroom": { dropsPerCider: 0.03692 },
+        "Feathers": { dropsPerCider: 0.08464 },
+        "Apple": { dropsPerCider: 0.01389 },
+        "Skull Coin": { dropsPerCider: 0.00002 },
+        "Aquamarine": { dropsPerCider: 0.02377 },
+        "Stone": { dropsPerCider: 0.08459 },
+        "Snail": { dropsPerCider: 0.00242 },
+        "Dice": { dropsPerCider: 0.00112 },
+        "Spectacles": { dropsPerCider: 0.00112 },
+        "Wood": { dropsPerCider: 0.08465 },
+        "Small Chest 01": { dropsPerCider: 0.00017 },
+        "Pearl Berries": { dropsPerCider: 0.00004 },
       },
-      "Skull Coin": {
-        rq0cs0: 0.00001,
-        rq0cs1: 0.00002,
-        rq1cs0: 0.00002,
-        rq1cs1: 0.00002
-      },
-      "Aquamarine": {
-        rq0cs0: 0.01799,
-        rq0cs1: 0.02249,
-        rq1cs0: 0.02377,
-        rq1cs1: 0.02971
-      },
-      "Stone": {
-        rq0cs0: 0.08723,
-        rq0cs1: 0.10903,
-        rq1cs0: 0.08459,
-        rq1cs1: 0.10573
-      },
-      "Snail": {
-        rq0cs0: 0.00197,
-        rq0cs1: 0.00246,
-        rq1cs0: 0.00242,
-        rq1cs1: 0.00302
-      },
-      "Dice": {
-        rq0cs0: 0.00092,
-        rq0cs1: 0.00115,
-        rq1cs0: 0.00112,
-        rq1cs1: 0.00140
-      },
-      "Spectacles": {
-        rq0cs0: 0.00092,
-        rq0cs1: 0.00115,
-        rq1cs0: 0.00112,
-        rq1cs1: 0.00140
-      },
-      "Wood": {
-        rq0cs0: 0.08721,
-        rq0cs1: 0.10902,
-        rq1cs0: 0.08465,
-        rq1cs1: 0.10581
-      },
-      "Small Chest 01": {
-        rq0cs0: 0.00014,
-        rq0cs1: 0.00017,
-        rq1cs0: 0.00017,
-        rq1cs1: 0.00021
-      },
-      "Pearl Berries": {
-        rq0cs0: 0.00003,
-        rq0cs1: 0.00004,
-        rq1cs0: 0.00004,
-        rq1cs1: 0.00005
+      rq1cs1: {
+        "Mushroom": { dropsPerCider: 0.04615 },
+        "Feathers": { dropsPerCider: 0.10580 },
+        "Apple": { dropsPerCider: 0.01736 },
+        "Skull Coin": { dropsPerCider: 0.00002 },
+        "Aquamarine": { dropsPerCider: 0.02971 },
+        "Stone": { dropsPerCider: 0.10573 },
+        "Snail": { dropsPerCider: 0.00302 },
+        "Dice": { dropsPerCider: 0.00140 },
+        "Spectacles": { dropsPerCider: 0.00140 },
+        "Wood": { dropsPerCider: 0.10581 },
+        "Small Chest 01": { dropsPerCider: 0.00021 },
+        "Pearl Berries": { dropsPerCider: 0.00005 },
       },
     },
     "Highland Hills": {
-      "Runestone 14": {
-        rq0cs0: 0.00005,
-        rq0cs1: 0.00006,
-        rq1cs0: 0.00006,
-        rq1cs1: 0.00007
+      rq0cs0: {
+        "Runestone 14": { dropsPerCider: 0.00005 },
+        "Stone": { dropsPerCider: 0.04757 },
+        "Wood": { dropsPerCider: 0.04759 },
+        "Feathers": { dropsPerCider: 0.04760 },
+        "Strange Letter": { dropsPerCider: 0.00053 },
+        "Purple Flower": { dropsPerCider: 0.04758 },
+        "Fern Leaf": { dropsPerCider: 0.04757 },
+        "Amethyst": { dropsPerCider: 0.01035 },
+        "Medium Chest 01": { dropsPerCider: 0.00003 },
+        "Caterpillar": { dropsPerCider: 0.00114 },
       },
-      "Stone": {
-        rq0cs0: 0.04757,
-        rq0cs1: 0.05946,
-        rq1cs0: 0.04681,
-        rq1cs1: 0.05851
+      rq0cs1: {
+        "Runestone 14": { dropsPerCider: 0.00006 },
+        "Stone": { dropsPerCider: 0.05946 },
+        "Wood": { dropsPerCider: 0.05949 },
+        "Feathers": { dropsPerCider: 0.05951 },
+        "Strange Letter": { dropsPerCider: 0.00067 },
+        "Purple Flower": { dropsPerCider: 0.05947 },
+        "Fern Leaf": { dropsPerCider: 0.05946 },
+        "Amethyst": { dropsPerCider: 0.01293 },
+        "Medium Chest 01": { dropsPerCider: 0.00003 },
+        "Caterpillar": { dropsPerCider: 0.00143 },
       },
-      "Wood": {
-        rq0cs0: 0.04759,
-        rq0cs1: 0.05949,
-        rq1cs0: 0.04680,
-        rq1cs1: 0.05850
+      rq1cs0: {
+        "Runestone 14": { dropsPerCider: 0.00006 },
+        "Stone": { dropsPerCider: 0.04681 },
+        "Wood": { dropsPerCider: 0.04680 },
+        "Feathers": { dropsPerCider: 0.04681 },
+        "Strange Letter": { dropsPerCider: 0.00066 },
+        "Purple Flower": { dropsPerCider: 0.04683 },
+        "Fern Leaf": { dropsPerCider: 0.04680 },
+        "Amethyst": { dropsPerCider: 0.01378 },
+        "Medium Chest 01": { dropsPerCider: 0.00003 },
+        "Caterpillar": { dropsPerCider: 0.00141 },
       },
-      "Feathers": {
-        rq0cs0: 0.04760,
-        rq0cs1: 0.05951,
-        rq1cs0: 0.04681,
-        rq1cs1: 0.05851
-      },
-      "Strange Letter": {
-        rq0cs0: 0.00053,
-        rq0cs1: 0.00067,
-        rq1cs0: 0.00066,
-        rq1cs1: 0.00082
-      },
-      "Purple Flower": {
-        rq0cs0: 0.04758,
-        rq0cs1: 0.05947,
-        rq1cs0: 0.04683,
-        rq1cs1: 0.05854
-      },
-      "Fern Leaf": {
-        rq0cs0: 0.04757,
-        rq0cs1: 0.05946,
-        rq1cs0: 0.04680,
-        rq1cs1: 0.05850
-      },
-      "Amethyst": {
-        rq0cs0: 0.01035,
-        rq0cs1: 0.01293,
-        rq1cs0: 0.01378,
-        rq1cs1: 0.01723
-      },
-      "Medium Chest 01": {
-        rq0cs0: 0.00003,
-        rq0cs1: 0.00003,
-        rq1cs0: 0.00003,
-        rq1cs1: 0.00004
-      },
-      "Caterpillar": {
-        rq0cs0: 0.00114,
-        rq0cs1: 0.00143,
-        rq1cs0: 0.00141,
-        rq1cs1: 0.00177
+      rq1cs1: {
+        "Runestone 14": { dropsPerCider: 0.00007 },
+        "Stone": { dropsPerCider: 0.05851 },
+        "Wood": { dropsPerCider: 0.05850 },
+        "Feathers": { dropsPerCider: 0.05851 },
+        "Strange Letter": { dropsPerCider: 0.00082 },
+        "Purple Flower": { dropsPerCider: 0.05854 },
+        "Fern Leaf": { dropsPerCider: 0.05850 },
+        "Amethyst": { dropsPerCider: 0.01723 },
+        "Medium Chest 01": { dropsPerCider: 0.00004 },
+        "Caterpillar": { dropsPerCider: 0.00177 },
       },
     },
     "Cane Pole Ridge": {
-      "Lima Bean": {
-        rq0cs0: 0.00001,
-        rq0cs1: 0.00001,
-        rq1cs0: 0.00001,
-        rq1cs1: 0.00001
+      rq0cs0: {
+        "Lima Bean": { dropsPerCider: 0.00001 },
+        "Iron": { dropsPerCider: 0.05904 },
+        "Lemon Quartz": { dropsPerCider: 0.01268 },
+        "Horned Beetle": { dropsPerCider: 0.00140 },
+        "Mushroom": { dropsPerCider: 0.02646 },
+        "Unpolished Shimmer Stone": { dropsPerCider: 0.05904 },
+        "Stone": { dropsPerCider: 0.05902 },
+        "Tea Leaves": { dropsPerCider: 0.00834 },
+        "Wood": { dropsPerCider: 0.05906 },
+        "Pocket Watch": { dropsPerCider: 0.00065 },
       },
-      "Iron": {
-        rq0cs0: 0.05904,
-        rq0cs1: 0.07380,
-        rq1cs0: 0.05767,
-        rq1cs1: 0.07209
+      rq0cs1: {
+        "Lima Bean": { dropsPerCider: 0.00001 },
+        "Iron": { dropsPerCider: 0.07380 },
+        "Lemon Quartz": { dropsPerCider: 0.01585 },
+        "Horned Beetle": { dropsPerCider: 0.00175 },
+        "Mushroom": { dropsPerCider: 0.03308 },
+        "Unpolished Shimmer Stone": { dropsPerCider: 0.07380 },
+        "Stone": { dropsPerCider: 0.07378 },
+        "Tea Leaves": { dropsPerCider: 0.01043 },
+        "Wood": { dropsPerCider: 0.07383 },
+        "Pocket Watch": { dropsPerCider: 0.00081 },
       },
-      "Lemon Quartz": {
-        rq0cs0: 0.01268,
-        rq0cs1: 0.01585,
-        rq1cs0: 0.01678,
-        rq1cs1: 0.02097
+      rq1cs0: {
+        "Lima Bean": { dropsPerCider: 0.00001 },
+        "Iron": { dropsPerCider: 0.05767 },
+        "Lemon Quartz": { dropsPerCider: 0.01678 },
+        "Horned Beetle": { dropsPerCider: 0.00172 },
+        "Mushroom": { dropsPerCider: 0.02592 },
+        "Unpolished Shimmer Stone": { dropsPerCider: 0.05767 },
+        "Stone": { dropsPerCider: 0.05763 },
+        "Tea Leaves": { dropsPerCider: 0.00985 },
+        "Wood": { dropsPerCider: 0.05766 },
+        "Pocket Watch": { dropsPerCider: 0.00080 },
       },
-      "Horned Beetle": {
-        rq0cs0: 0.00140,
-        rq0cs1: 0.00175,
-        rq1cs0: 0.00172,
-        rq1cs1: 0.00216
-      },
-      "Mushroom": {
-        rq0cs0: 0.02646,
-        rq0cs1: 0.03308,
-        rq1cs0: 0.02592,
-        rq1cs1: 0.03240
-      },
-      "Unpolished Shimmer Stone": {
-        rq0cs0: 0.05904,
-        rq0cs1: 0.07380,
-        rq1cs0: 0.05767,
-        rq1cs1: 0.07209
-      },
-      "Stone": {
-        rq0cs0: 0.05902,
-        rq0cs1: 0.07378,
-        rq1cs0: 0.05763,
-        rq1cs1: 0.07204
-      },
-      "Tea Leaves": {
-        rq0cs0: 0.00834,
-        rq0cs1: 0.01043,
-        rq1cs0: 0.00985,
-        rq1cs1: 0.01232
-      },
-      "Wood": {
-        rq0cs0: 0.05906,
-        rq0cs1: 0.07383,
-        rq1cs0: 0.05766,
-        rq1cs1: 0.07208
-      },
-      "Pocket Watch": {
-        rq0cs0: 0.00065,
-        rq0cs1: 0.00081,
-        rq1cs0: 0.00080,
-        rq1cs1: 0.00100
+      rq1cs1: {
+        "Lima Bean": { dropsPerCider: 0.00001 },
+        "Iron": { dropsPerCider: 0.07209 },
+        "Lemon Quartz": { dropsPerCider: 0.02097 },
+        "Horned Beetle": { dropsPerCider: 0.00216 },
+        "Mushroom": { dropsPerCider: 0.03240 },
+        "Unpolished Shimmer Stone": { dropsPerCider: 0.07209 },
+        "Stone": { dropsPerCider: 0.07204 },
+        "Tea Leaves": { dropsPerCider: 0.01232 },
+        "Wood": { dropsPerCider: 0.07208 },
+        "Pocket Watch": { dropsPerCider: 0.00100 },
       },
     },
     "Misty Forest": {
-      "Unpolished Ruby": {
-        rq0cs0: 0.01172,
-        rq0cs1: 0.01465,
-        rq1cs0: 0.01545,
-        rq1cs1: 0.01931
+      rq0cs0: {
+        "Unpolished Ruby": { dropsPerCider: 0.01172 },
+        "Mushroom": { dropsPerCider: 0.02427 },
+        "4-leaf Clover": { dropsPerCider: 0.00460 },
+        "Pine Cone": { dropsPerCider: 0.00576 },
+        "Acorn": { dropsPerCider: 0.05283 },
+        "Shiny Beetle": { dropsPerCider: 0.00130 },
+        "Wood": { dropsPerCider: 0.05282 },
+        "Blue Feathers": { dropsPerCider: 0.05282 },
+        "Frog": { dropsPerCider: 0.00006 },
+        "Fern Leaf": { dropsPerCider: 0.05282 },
+        "Spider": { dropsPerCider: 0.00130 },
+        "Amber": { dropsPerCider: 0.00001 },
+        "3-leaf Clover": { dropsPerCider: 0.02426 },
+        "Sweet Root": { dropsPerCider: 0.02426 },
+        "Runestone 05": { dropsPerCider: 0.00015 },
+        "Straw": { dropsPerCider: 0.02428 },
+        "Gold Feather": { dropsPerCider: 0.00006 },
       },
-      "Mushroom": {
-        rq0cs0: 0.02427,
-        rq0cs1: 0.03034,
-        rq1cs0: 0.02372,
-        rq1cs1: 0.02965
+      rq0cs1: {
+        "Unpolished Ruby": { dropsPerCider: 0.01465 },
+        "Mushroom": { dropsPerCider: 0.03034 },
+        "4-leaf Clover": { dropsPerCider: 0.00575 },
+        "Pine Cone": { dropsPerCider: 0.00720 },
+        "Acorn": { dropsPerCider: 0.06604 },
+        "Shiny Beetle": { dropsPerCider: 0.00163 },
+        "Wood": { dropsPerCider: 0.06602 },
+        "Blue Feathers": { dropsPerCider: 0.06602 },
+        "Frog": { dropsPerCider: 0.00007 },
+        "Fern Leaf": { dropsPerCider: 0.06603 },
+        "Spider": { dropsPerCider: 0.00163 },
+        "Amber": { dropsPerCider: 0.00001 },
+        "3-leaf Clover": { dropsPerCider: 0.03033 },
+        "Sweet Root": { dropsPerCider: 0.03033 },
+        "Runestone 05": { dropsPerCider: 0.00019 },
+        "Straw": { dropsPerCider: 0.03035 },
+        "Gold Feather": { dropsPerCider: 0.00008 },
       },
-      "4-leaf Clover": {
-        rq0cs0: 0.00460,
-        rq0cs1: 0.00575,
-        rq1cs0: 0.00564,
-        rq1cs1: 0.00705
+      rq1cs0: {
+        "Unpolished Ruby": { dropsPerCider: 0.01545 },
+        "Mushroom": { dropsPerCider: 0.02372 },
+        "4-leaf Clover": { dropsPerCider: 0.00564 },
+        "Pine Cone": { dropsPerCider: 0.00756 },
+        "Acorn": { dropsPerCider: 0.05155 },
+        "Shiny Beetle": { dropsPerCider: 0.00160 },
+        "Wood": { dropsPerCider: 0.05156 },
+        "Blue Feathers": { dropsPerCider: 0.05155 },
+        "Frog": { dropsPerCider: 0.00007 },
+        "Fern Leaf": { dropsPerCider: 0.05156 },
+        "Spider": { dropsPerCider: 0.00160 },
+        "Amber": { dropsPerCider: 0.00001 },
+        "3-leaf Clover": { dropsPerCider: 0.02375 },
+        "Sweet Root": { dropsPerCider: 0.02371 },
+        "Runestone 05": { dropsPerCider: 0.00019 },
+        "Straw": { dropsPerCider: 0.02373 },
+        "Gold Feather": { dropsPerCider: 0.00008 },
       },
-      "Pine Cone": {
-        rq0cs0: 0.00576,
-        rq0cs1: 0.00720,
-        rq1cs0: 0.00756,
-        rq1cs1: 0.00945
-      },
-      "Acorn": {
-        rq0cs0: 0.05283,
-        rq0cs1: 0.06604,
-        rq1cs0: 0.05155,
-        rq1cs1: 0.06444
-      },
-      "Shiny Beetle": {
-        rq0cs0: 0.00130,
-        rq0cs1: 0.00163,
-        rq1cs0: 0.00160,
-        rq1cs1: 0.00199
-      },
-      "Wood": {
-        rq0cs0: 0.05282,
-        rq0cs1: 0.06602,
-        rq1cs0: 0.05156,
-        rq1cs1: 0.06445
-      },
-      "Blue Feathers": {
-        rq0cs0: 0.05282,
-        rq0cs1: 0.06602,
-        rq1cs0: 0.05155,
-        rq1cs1: 0.06444
-      },
-      "Frog": {
-        rq0cs0: 0.00006,
-        rq0cs1: 0.00007,
-        rq1cs0: 0.00007,
-        rq1cs1: 0.00009
-      },
-      "Fern Leaf": {
-        rq0cs0: 0.05282,
-        rq0cs1: 0.06603,
-        rq1cs0: 0.05156,
-        rq1cs1: 0.06445
-      },
-      "Spider": {
-        rq0cs0: 0.00130,
-        rq0cs1: 0.00163,
-        rq1cs0: 0.00160,
-        rq1cs1: 0.00200
-      },
-      "Amber": {
-        rq0cs0: 0.00001,
-        rq0cs1: 0.00001,
-        rq1cs0: 0.00001,
-        rq1cs1: 0.00001
-      },
-      "3-leaf Clover": {
-        rq0cs0: 0.02426,
-        rq0cs1: 0.03033,
-        rq1cs0: 0.02375,
-        rq1cs1: 0.02968
-      },
-      "Sweet Root": {
-        rq0cs0: 0.02426,
-        rq0cs1: 0.03033,
-        rq1cs0: 0.02371,
-        rq1cs1: 0.02964
-      },
-      "Runestone 05": {
-        rq0cs0: 0.00015,
-        rq0cs1: 0.00019,
-        rq1cs0: 0.00019,
-        rq1cs1: 0.00023
-      },
-      "Straw": {
-        rq0cs0: 0.02428,
-        rq0cs1: 0.03035,
-        rq1cs0: 0.02373,
-        rq1cs1: 0.02966
-      },
-      "Gold Feather": {
-        rq0cs0: 0.00006,
-        rq0cs1: 0.00008,
-        rq1cs0: 0.00008,
-        rq1cs1: 0.00010
+      rq1cs1: {
+        "Unpolished Ruby": { dropsPerCider: 0.01931 },
+        "Mushroom": { dropsPerCider: 0.02965 },
+        "4-leaf Clover": { dropsPerCider: 0.00705 },
+        "Pine Cone": { dropsPerCider: 0.00945 },
+        "Acorn": { dropsPerCider: 0.06444 },
+        "Shiny Beetle": { dropsPerCider: 0.00199 },
+        "Wood": { dropsPerCider: 0.06445 },
+        "Blue Feathers": { dropsPerCider: 0.06444 },
+        "Frog": { dropsPerCider: 0.00009 },
+        "Fern Leaf": { dropsPerCider: 0.06445 },
+        "Spider": { dropsPerCider: 0.00200 },
+        "Amber": { dropsPerCider: 0.00001 },
+        "3-leaf Clover": { dropsPerCider: 0.02968 },
+        "Sweet Root": { dropsPerCider: 0.02964 },
+        "Runestone 05": { dropsPerCider: 0.00023 },
+        "Straw": { dropsPerCider: 0.02966 },
+        "Gold Feather": { dropsPerCider: 0.00010 },
       },
     },
     "Black Rock Canyon": {
-      "Orange Gecko": {
-        rq0cs0: 0.00012,
-        rq0cs1: 0.00015,
-        rq1cs0: 0.00014,
-        rq1cs1: 0.00017
+      rq0cs0: {
+        "Orange Gecko": { dropsPerCider: 0.00012 },
+        "Horn": { dropsPerCider: 0.01936 },
+        "Runestone 13": { dropsPerCider: 0.00012 },
+        "Sandstone": { dropsPerCider: 0.13027 },
+        "Giant Centipede": { dropsPerCider: 0.00266 },
+        "Medium Chest 02": { dropsPerCider: 0.00005 },
+        "Runestone 09": { dropsPerCider: 0.00017 },
+        "Ruby Scorpion": { dropsPerCider: 0.00123 },
+        "Ancient Coin": { dropsPerCider: 0.00373 },
+        "Salt Rock": { dropsPerCider: 0.03341 },
+        "Shimmer Quartz": { dropsPerCider: 0.01189 },
+        "Large Chest 02": { dropsPerCider: 0.00006 },
+        "Coal": { dropsPerCider: 0.13026 },
       },
-      "Horn": {
-        rq0cs0: 0.01936,
-        rq0cs1: 0.02420,
-        rq1cs0: 0.02281,
-        rq1cs1: 0.02851
+      rq0cs1: {
+        "Orange Gecko": { dropsPerCider: 0.00015 },
+        "Horn": { dropsPerCider: 0.02420 },
+        "Runestone 13": { dropsPerCider: 0.00015 },
+        "Sandstone": { dropsPerCider: 0.16284 },
+        "Giant Centipede": { dropsPerCider: 0.00332 },
+        "Medium Chest 02": { dropsPerCider: 0.00006 },
+        "Runestone 09": { dropsPerCider: 0.00022 },
+        "Ruby Scorpion": { dropsPerCider: 0.00154 },
+        "Ancient Coin": { dropsPerCider: 0.00466 },
+        "Salt Rock": { dropsPerCider: 0.04177 },
+        "Shimmer Quartz": { dropsPerCider: 0.01486 },
+        "Large Chest 02": { dropsPerCider: 0.00008 },
+        "Coal": { dropsPerCider: 0.16283 },
       },
-      "Runestone 13": {
-        rq0cs0: 0.00012,
-        rq0cs1: 0.00015,
-        rq1cs0: 0.00014,
-        rq1cs1: 0.00017
+      rq1cs0: {
+        "Orange Gecko": { dropsPerCider: 0.00014 },
+        "Horn": { dropsPerCider: 0.02281 },
+        "Runestone 13": { dropsPerCider: 0.00014 },
+        "Sandstone": { dropsPerCider: 0.11873 },
+        "Giant Centipede": { dropsPerCider: 0.00310 },
+        "Medium Chest 02": { dropsPerCider: 0.00005 },
+        "Runestone 09": { dropsPerCider: 0.00020 },
+        "Ruby Scorpion": { dropsPerCider: 0.00145 },
+        "Ancient Coin": { dropsPerCider: 0.00436 },
+        "Salt Rock": { dropsPerCider: 0.04872 },
+        "Shimmer Quartz": { dropsPerCider: 0.01491 },
+        "Large Chest 02": { dropsPerCider: 0.00007 },
+        "Coal": { dropsPerCider: 0.11865 },
       },
-      "Sandstone": {
-        rq0cs0: 0.13027,
-        rq0cs1: 0.16284,
-        rq1cs0: 0.11873,
-        rq1cs1: 0.14841
-      },
-      "Giant Centipede": {
-        rq0cs0: 0.00266,
-        rq0cs1: 0.00332,
-        rq1cs0: 0.00310,
-        rq1cs1: 0.00388
-      },
-      "Medium Chest 02": {
-        rq0cs0: 0.00005,
-        rq0cs1: 0.00006,
-        rq1cs0: 0.00005,
-        rq1cs1: 0.00007
-      },
-      "Runestone 09": {
-        rq0cs0: 0.00017,
-        rq0cs1: 0.00022,
-        rq1cs0: 0.00020,
-        rq1cs1: 0.00025
-      },
-      "Ruby Scorpion": {
-        rq0cs0: 0.00123,
-        rq0cs1: 0.00154,
-        rq1cs0: 0.00145,
-        rq1cs1: 0.00181
-      },
-      "Ancient Coin": {
-        rq0cs0: 0.00373,
-        rq0cs1: 0.00466,
-        rq1cs0: 0.00436,
-        rq1cs1: 0.00545
-      },
-      "Salt Rock": {
-        rq0cs0: 0.03341,
-        rq0cs1: 0.04177,
-        rq1cs0: 0.04872,
-        rq1cs1: 0.06090
-      },
-      "Shimmer Quartz": {
-        rq0cs0: 0.01189,
-        rq0cs1: 0.01486,
-        rq1cs0: 0.01491,
-        rq1cs1: 0.01863
-      },
-      "Large Chest 02": {
-        rq0cs0: 0.00006,
-        rq0cs1: 0.00008,
-        rq1cs0: 0.00007,
-        rq1cs1: 0.00009
-      },
-      "Coal": {
-        rq0cs0: 0.13026,
-        rq0cs1: 0.16283,
-        rq1cs0: 0.11865,
-        rq1cs1: 0.14832
+      rq1cs1: {
+        "Orange Gecko": { dropsPerCider: 0.00017 },
+        "Horn": { dropsPerCider: 0.02851 },
+        "Runestone 13": { dropsPerCider: 0.00017 },
+        "Sandstone": { dropsPerCider: 0.14841 },
+        "Giant Centipede": { dropsPerCider: 0.00388 },
+        "Medium Chest 02": { dropsPerCider: 0.00007 },
+        "Runestone 09": { dropsPerCider: 0.00025 },
+        "Ruby Scorpion": { dropsPerCider: 0.00181 },
+        "Ancient Coin": { dropsPerCider: 0.00545 },
+        "Salt Rock": { dropsPerCider: 0.06090 },
+        "Shimmer Quartz": { dropsPerCider: 0.01863 },
+        "Large Chest 02": { dropsPerCider: 0.00009 },
+        "Coal": { dropsPerCider: 0.14832 },
       },
     },
     "Mount Banon": {
-      "Unpolished Emerald": {
-        rq0cs0: 0.02096,
-        rq0cs1: 0.02620,
-        rq1cs0: 0.03050,
-        rq1cs1: 0.03812
+      rq0cs0: {
+        "Unpolished Emerald": { dropsPerCider: 0.02096 },
+        "Stone": { dropsPerCider: 0.07271 },
+        "Gold Feather": { dropsPerCider: 0.00009 },
+        "Coal": { dropsPerCider: 0.07276 },
+        "Bacon": { dropsPerCider: 0.00006 },
+        "Iron": { dropsPerCider: 0.07274 },
+        "Carbon Sphere": { dropsPerCider: 0.02095 },
+        "Magna Quartz": { dropsPerCider: 0.00024 },
+        "Runestone 19": { dropsPerCider: 0.00005 },
+        "Small Chest 02": { dropsPerCider: 0.00006 },
+        "Unpolished Shimmer Stone": { dropsPerCider: 0.07270 },
+        "Dragon Skull": { dropsPerCider: 0.00001 },
       },
-      "Stone": {
-        rq0cs0: 0.07271,
-        rq0cs1: 0.09088,
-        rq1cs0: 0.06794,
-        rq1cs1: 0.08492
+      rq0cs1: {
+        "Unpolished Emerald": { dropsPerCider: 0.02620 },
+        "Stone": { dropsPerCider: 0.09088 },
+        "Gold Feather": { dropsPerCider: 0.00011 },
+        "Coal": { dropsPerCider: 0.09095 },
+        "Bacon": { dropsPerCider: 0.00007 },
+        "Iron": { dropsPerCider: 0.09093 },
+        "Carbon Sphere": { dropsPerCider: 0.02619 },
+        "Magna Quartz": { dropsPerCider: 0.00030 },
+        "Runestone 19": { dropsPerCider: 0.00007 },
+        "Small Chest 02": { dropsPerCider: 0.00007 },
+        "Unpolished Shimmer Stone": { dropsPerCider: 0.09088 },
+        "Dragon Skull": { dropsPerCider: 0.00001 },
       },
-      "Gold Feather": {
-        rq0cs0: 0.00009,
-        rq0cs1: 0.00011,
-        rq1cs0: 0.00010,
-        rq1cs1: 0.00012
+      rq1cs0: {
+        "Unpolished Emerald": { dropsPerCider: 0.03050 },
+        "Stone": { dropsPerCider: 0.06794 },
+        "Gold Feather": { dropsPerCider: 0.00010 },
+        "Coal": { dropsPerCider: 0.06792 },
+        "Bacon": { dropsPerCider: 0.00007 },
+        "Iron": { dropsPerCider: 0.06793 },
+        "Carbon Sphere": { dropsPerCider: 0.03052 },
+        "Magna Quartz": { dropsPerCider: 0.00028 },
+        "Runestone 19": { dropsPerCider: 0.00006 },
+        "Small Chest 02": { dropsPerCider: 0.00007 },
+        "Unpolished Shimmer Stone": { dropsPerCider: 0.06793 },
+        "Dragon Skull": { dropsPerCider: 0.00001 },
       },
-      "Coal": {
-        rq0cs0: 0.07276,
-        rq0cs1: 0.09095,
-        rq1cs0: 0.06792,
-        rq1cs1: 0.08490
-      },
-      "Bacon": {
-        rq0cs0: 0.00006,
-        rq0cs1: 0.00007,
-        rq1cs0: 0.00007,
-        rq1cs1: 0.00009
-      },
-      "Iron": {
-        rq0cs0: 0.07274,
-        rq0cs1: 0.09093,
-        rq1cs0: 0.06793,
-        rq1cs1: 0.08491
-      },
-      "Carbon Sphere": {
-        rq0cs0: 0.02095,
-        rq0cs1: 0.02619,
-        rq1cs0: 0.03052,
-        rq1cs1: 0.03815
-      },
-      "Magna Quartz": {
-        rq0cs0: 0.00024,
-        rq0cs1: 0.00030,
-        rq1cs0: 0.00028,
-        rq1cs1: 0.00035
-      },
-      "Runestone 19": {
-        rq0cs0: 0.00005,
-        rq0cs1: 0.00007,
-        rq1cs0: 0.00006,
-        rq1cs1: 0.00008
-      },
-      "Small Chest 02": {
-        rq0cs0: 0.00006,
-        rq0cs1: 0.00007,
-        rq1cs0: 0.00007,
-        rq1cs1: 0.00009
-      },
-      "Unpolished Shimmer Stone": {
-        rq0cs0: 0.07270,
-        rq0cs1: 0.09088,
-        rq1cs0: 0.06793,
-        rq1cs1: 0.08492
-      },
-      "Dragon Skull": {
-        rq0cs0: 0.00001,
-        rq0cs1: 0.00001,
-        rq1cs0: 0.00001,
-        rq1cs1: 0.00002
+      rq1cs1: {
+        "Unpolished Emerald": { dropsPerCider: 0.03812 },
+        "Stone": { dropsPerCider: 0.08492 },
+        "Gold Feather": { dropsPerCider: 0.00012 },
+        "Coal": { dropsPerCider: 0.08490 },
+        "Bacon": { dropsPerCider: 0.00009 },
+        "Iron": { dropsPerCider: 0.08491 },
+        "Carbon Sphere": { dropsPerCider: 0.03815 },
+        "Magna Quartz": { dropsPerCider: 0.00035 },
+        "Runestone 19": { dropsPerCider: 0.00008 },
+        "Small Chest 02": { dropsPerCider: 0.00009 },
+        "Unpolished Shimmer Stone": { dropsPerCider: 0.08492 },
+        "Dragon Skull": { dropsPerCider: 0.00002 },
       },
     },
     "Ember Lagoon": {
-      "Ancient Coin": {
-        rq0cs0: 0.00524,
-        rq0cs1: 0.00656,
-        rq1cs0: 0.00592,
-        rq1cs1: 0.00740
+      rq0cs0: {
+        "Ancient Coin": { dropsPerCider: 0.00524 },
+        "Stone": { dropsPerCider: 0.22621 },
+        "Glass Orb": { dropsPerCider: 0.04805 },
+        "Emberstone": { dropsPerCider: 0.03499 },
+        "Runestone 17": { dropsPerCider: 0.00013 },
+        "Diamond": { dropsPerCider: 0.00003 },
+        "Moonstone": { dropsPerCider: 0.00130 },
+        "Large Chest 01": { dropsPerCider: 0.00009 },
+        "Magicite": { dropsPerCider: 0.00052 },
+        "Prism Shard": { dropsPerCider: 0.01678 },
       },
-      "Stone": {
-        rq0cs0: 0.22621,
-        rq0cs1: 0.28277,
-        rq1cs0: 0.19283,
-        rq1cs1: 0.24103
+      rq0cs1: {
+        "Ancient Coin": { dropsPerCider: 0.00656 },
+        "Stone": { dropsPerCider: 0.28277 },
+        "Glass Orb": { dropsPerCider: 0.06007 },
+        "Emberstone": { dropsPerCider: 0.04374 },
+        "Runestone 17": { dropsPerCider: 0.00016 },
+        "Diamond": { dropsPerCider: 0.00003 },
+        "Moonstone": { dropsPerCider: 0.00162 },
+        "Large Chest 01": { dropsPerCider: 0.00011 },
+        "Magicite": { dropsPerCider: 0.00065 },
+        "Prism Shard": { dropsPerCider: 0.02097 },
       },
-      "Glass Orb": {
-        rq0cs0: 0.04805,
-        rq0cs1: 0.06007,
-        rq1cs0: 0.06875,
-        rq1cs1: 0.08593
+      rq1cs0: {
+        "Ancient Coin": { dropsPerCider: 0.00592 },
+        "Stone": { dropsPerCider: 0.19283 },
+        "Glass Orb": { dropsPerCider: 0.06875 },
+        "Emberstone": { dropsPerCider: 0.04309 },
+        "Runestone 17": { dropsPerCider: 0.00014 },
+        "Diamond": { dropsPerCider: 0.00003 },
+        "Moonstone": { dropsPerCider: 0.00146 },
+        "Large Chest 01": { dropsPerCider: 0.00010 },
+        "Magicite": { dropsPerCider: 0.00059 },
+        "Prism Shard": { dropsPerCider: 0.02043 },
       },
-      "Emberstone": {
-        rq0cs0: 0.03499,
-        rq0cs1: 0.04374,
-        rq1cs0: 0.04309,
-        rq1cs1: 0.05386
-      },
-      "Runestone 17": {
-        rq0cs0: 0.00013,
-        rq0cs1: 0.00016,
-        rq1cs0: 0.00014,
-        rq1cs1: 0.00018
-      },
-      "Diamond": {
-        rq0cs0: 0.00003,
-        rq0cs1: 0.00003,
-        rq1cs0: 0.00003,
-        rq1cs1: 0.00004
-      },
-      "Moonstone": {
-        rq0cs0: 0.00130,
-        rq0cs1: 0.00162,
-        rq1cs0: 0.00146,
-        rq1cs1: 0.00183
-      },
-      "Large Chest 01": {
-        rq0cs0: 0.00009,
-        rq0cs1: 0.00011,
-        rq1cs0: 0.00010,
-        rq1cs1: 0.00012
-      },
-      "Magicite": {
-        rq0cs0: 0.00052,
-        rq0cs1: 0.00065,
-        rq1cs0: 0.00059,
-        rq1cs1: 0.00073
-      },
-      "Prism Shard": {
-        rq0cs0: 0.01678,
-        rq0cs1: 0.02097,
-        rq1cs0: 0.02043,
-        rq1cs1: 0.02554
+      rq1cs1: {
+        "Ancient Coin": { dropsPerCider: 0.00740 },
+        "Stone": { dropsPerCider: 0.24103 },
+        "Glass Orb": { dropsPerCider: 0.08593 },
+        "Emberstone": { dropsPerCider: 0.05386 },
+        "Runestone 17": { dropsPerCider: 0.00018 },
+        "Diamond": { dropsPerCider: 0.00004 },
+        "Moonstone": { dropsPerCider: 0.00183 },
+        "Large Chest 01": { dropsPerCider: 0.00012 },
+        "Magicite": { dropsPerCider: 0.00073 },
+        "Prism Shard": { dropsPerCider: 0.02554 },
       },
     },
     "Whispering Creek": {
-      "Striped Feather": {
-        rq0cs0: 0.00767,
-        rq0cs1: 0.00959,
-        rq1cs0: 0.00858,
-        rq1cs1: 0.01073
+      rq0cs0: {
+        "Striped Feather": { dropsPerCider: 0.00767 },
+        "Salt Rock": { dropsPerCider: 0.02722 },
+        "Slimestone": { dropsPerCider: 0.04299 },
+        "Unpolished Garnet": { dropsPerCider: 0.01994 },
+        "Red Berries": { dropsPerCider: 0.00767 },
+        "Blue Gel": { dropsPerCider: 0.01573 },
+        "Raptor Claw": { dropsPerCider: 0.00000 },
+        "Sour Root": { dropsPerCider: 0.00768 },
+        "Oak": { dropsPerCider: 0.11173 },
+        "Thorns": { dropsPerCider: 0.00768 },
+        "Orange": { dropsPerCider: 0.00252 },
+        "Herbs": { dropsPerCider: 0.00030 },
+        "Raptor Egg": { dropsPerCider: 0.00001 },
+        "Lemon": { dropsPerCider: 0.00252 },
+        "Apple": { dropsPerCider: 0.01300 },
       },
-      "Salt Rock": {
-        rq0cs0: 0.02722,
-        rq0cs1: 0.03403,
-        rq1cs0: 0.03790,
-        rq1cs1: 0.04737
+      rq0cs1: {
+        "Striped Feather": { dropsPerCider: 0.00959 },
+        "Salt Rock": { dropsPerCider: 0.03403 },
+        "Slimestone": { dropsPerCider: 0.05374 },
+        "Unpolished Garnet": { dropsPerCider: 0.02492 },
+        "Red Berries": { dropsPerCider: 0.00959 },
+        "Blue Gel": { dropsPerCider: 0.01967 },
+        "Raptor Claw": { dropsPerCider: 0.00001 },
+        "Sour Root": { dropsPerCider: 0.00960 },
+        "Oak": { dropsPerCider: 0.13966 },
+        "Thorns": { dropsPerCider: 0.00960 },
+        "Orange": { dropsPerCider: 0.00314 },
+        "Herbs": { dropsPerCider: 0.00037 },
+        "Raptor Egg": { dropsPerCider: 0.00001 },
+        "Lemon": { dropsPerCider: 0.00315 },
+        "Apple": { dropsPerCider: 0.01625 },
       },
-      "Slimestone": {
-        rq0cs0: 0.04299,
-        rq0cs1: 0.05374,
-        rq1cs0: 0.03789,
-        rq1cs1: 0.04736
+      rq1cs0: {
+        "Striped Feather": { dropsPerCider: 0.00858 },
+        "Salt Rock": { dropsPerCider: 0.03790 },
+        "Slimestone": { dropsPerCider: 0.03789 },
+        "Unpolished Garnet": { dropsPerCider: 0.02411 },
+        "Red Berries": { dropsPerCider: 0.00860 },
+        "Blue Gel": { dropsPerCider: 0.01771 },
+        "Raptor Claw": { dropsPerCider: 0.00001 },
+        "Sour Root": { dropsPerCider: 0.00860 },
+        "Oak": { dropsPerCider: 0.09469 },
+        "Thorns": { dropsPerCider: 0.00861 },
+        "Orange": { dropsPerCider: 0.00281 },
+        "Herbs": { dropsPerCider: 0.00033 },
+        "Raptor Egg": { dropsPerCider: 0.00001 },
+        "Lemon": { dropsPerCider: 0.00281 },
+        "Apple": { dropsPerCider: 0.01400 },
       },
-      "Unpolished Garnet": {
-        rq0cs0: 0.01994,
-        rq0cs1: 0.02492,
-        rq1cs0: 0.02411,
-        rq1cs1: 0.03014
-      },
-      "Red Berries": {
-        rq0cs0: 0.00767,
-        rq0cs1: 0.00959,
-        rq1cs0: 0.00860,
-        rq1cs1: 0.01075
-      },
-      "Blue Gel": {
-        rq0cs0: 0.01573,
-        rq0cs1: 0.01967,
-        rq1cs0: 0.01771,
-        rq1cs1: 0.02214
-      },
-      "Raptor Claw": {
-        rq0cs0: 0.00000,
-        rq0cs1: 0.00001,
-        rq1cs0: 0.00001,
-        rq1cs1: 0.00001
-      },
-      "Sour Root": {
-        rq0cs0: 0.00768,
-        rq0cs1: 0.00960,
-        rq1cs0: 0.00860,
-        rq1cs1: 0.01075
-      },
-      "Oak": {
-        rq0cs0: 0.11173,
-        rq0cs1: 0.13966,
-        rq1cs0: 0.09469,
-        rq1cs1: 0.11837
-      },
-      "Thorns": {
-        rq0cs0: 0.00768,
-        rq0cs1: 0.00960,
-        rq1cs0: 0.00861,
-        rq1cs1: 0.01076
-      },
-      "Orange": {
-        rq0cs0: 0.00252,
-        rq0cs1: 0.00314,
-        rq1cs0: 0.00281,
-        rq1cs1: 0.00351
-      },
-      "Herbs": {
-        rq0cs0: 0.00030,
-        rq0cs1: 0.00037,
-        rq1cs0: 0.00033,
-        rq1cs1: 0.00042
-      },
-      "Raptor Egg": {
-        rq0cs0: 0.00001,
-        rq0cs1: 0.00001,
-        rq1cs0: 0.00001,
-        rq1cs1: 0.00001
-      },
-      "Lemon": {
-        rq0cs0: 0.00252,
-        rq0cs1: 0.00315,
-        rq1cs0: 0.00281,
-        rq1cs1: 0.00351
-      },
-      "Apple": {
-        rq0cs0: 0.01300,
-        rq0cs1: 0.01625,
-        rq1cs0: 0.01400,
-        rq1cs1: 0.01751
+      rq1cs1: {
+        "Striped Feather": { dropsPerCider: 0.01073 },
+        "Salt Rock": { dropsPerCider: 0.04737 },
+        "Slimestone": { dropsPerCider: 0.04736 },
+        "Unpolished Garnet": { dropsPerCider: 0.03014 },
+        "Red Berries": { dropsPerCider: 0.01075 },
+        "Blue Gel": { dropsPerCider: 0.02214 },
+        "Raptor Claw": { dropsPerCider: 0.00001 },
+        "Sour Root": { dropsPerCider: 0.01075 },
+        "Oak": { dropsPerCider: 0.11837 },
+        "Thorns": { dropsPerCider: 0.01076 },
+        "Orange": { dropsPerCider: 0.00351 },
+        "Herbs": { dropsPerCider: 0.00042 },
+        "Raptor Egg": { dropsPerCider: 0.00001 },
+        "Lemon": { dropsPerCider: 0.00351 },
+        "Apple": { dropsPerCider: 0.01751 },
       },
     },
     "Jundland Desert": {
-      "Sand": {
-        rq0cs0: 0.12990,
-        rq0cs1: 0.16237,
-        rq1cs0: 0.11383,
-        rq1cs1: 0.14228
+      rq0cs0: {
+        "Sand": { dropsPerCider: 0.12990 },
+        "Copper Wire": { dropsPerCider: 0.00336 },
+        "Small Bolt": { dropsPerCider: 0.00497 },
+        "Pulley": { dropsPerCider: 0.00336 },
+        "Broken Pipe": { dropsPerCider: 0.00563 },
+        "Monster Skull": { dropsPerCider: 0.00129 },
+        "Onyx Scorpion": { dropsPerCider: 0.00111 },
+        "Transistor": { dropsPerCider: 0.01233 },
+        "Langstaff Crest": { dropsPerCider: 0.00000 },
+        "Scrap Metal": { dropsPerCider: 0.04825 },
+        "Scrap Wire": { dropsPerCider: 0.03041 },
+        "Machine Part": { dropsPerCider: 0.01753 },
+        "Prickly Pear": { dropsPerCider: 0.00853 },
       },
-      "Copper Wire": {
-        rq0cs0: 0.00336,
-        rq0cs1: 0.00420,
-        rq1cs0: 0.00386,
-        rq1cs1: 0.00482
+      rq0cs1: {
+        "Sand": { dropsPerCider: 0.16237 },
+        "Copper Wire": { dropsPerCider: 0.00420 },
+        "Small Bolt": { dropsPerCider: 0.00621 },
+        "Pulley": { dropsPerCider: 0.00420 },
+        "Broken Pipe": { dropsPerCider: 0.00704 },
+        "Monster Skull": { dropsPerCider: 0.00161 },
+        "Onyx Scorpion": { dropsPerCider: 0.00139 },
+        "Transistor": { dropsPerCider: 0.01541 },
+        "Langstaff Crest": { dropsPerCider: 0.00001 },
+        "Scrap Metal": { dropsPerCider: 0.06031 },
+        "Scrap Wire": { dropsPerCider: 0.03802 },
+        "Machine Part": { dropsPerCider: 0.02192 },
+        "Prickly Pear": { dropsPerCider: 0.01066 },
       },
-      "Small Bolt": {
-        rq0cs0: 0.00497,
-        rq0cs1: 0.00621,
-        rq1cs0: 0.00515,
-        rq1cs1: 0.00644
+      rq1cs0: {
+        "Sand": { dropsPerCider: 0.11383 },
+        "Copper Wire": { dropsPerCider: 0.00386 },
+        "Small Bolt": { dropsPerCider: 0.00515 },
+        "Pulley": { dropsPerCider: 0.00385 },
+        "Broken Pipe": { dropsPerCider: 0.00647 },
+        "Monster Skull": { dropsPerCider: 0.00147 },
+        "Onyx Scorpion": { dropsPerCider: 0.00127 },
+        "Transistor": { dropsPerCider: 0.01323 },
+        "Langstaff Crest": { dropsPerCider: 0.00000 },
+        "Scrap Metal": { dropsPerCider: 0.04373 },
+        "Scrap Wire": { dropsPerCider: 0.04372 },
+        "Machine Part": { dropsPerCider: 0.02028 },
+        "Prickly Pear": { dropsPerCider: 0.00980 },
       },
-      "Pulley": {
-        rq0cs0: 0.00336,
-        rq0cs1: 0.00420,
-        rq1cs0: 0.00385,
-        rq1cs1: 0.00481
-      },
-      "Broken Pipe": {
-        rq0cs0: 0.00563,
-        rq0cs1: 0.00704,
-        rq1cs0: 0.00647,
-        rq1cs1: 0.00809
-      },
-      "Monster Skull": {
-        rq0cs0: 0.00129,
-        rq0cs1: 0.00161,
-        rq1cs0: 0.00147,
-        rq1cs1: 0.00183
-      },
-      "Onyx Scorpion": {
-        rq0cs0: 0.00111,
-        rq0cs1: 0.00139,
-        rq1cs0: 0.00127,
-        rq1cs1: 0.00159
-      },
-      "Transistor": {
-        rq0cs0: 0.01233,
-        rq0cs1: 0.01541,
-        rq1cs0: 0.01323,
-        rq1cs1: 0.01653
-      },
-      "Langstaff Crest": {
-        rq0cs0: 0.00000,
-        rq0cs1: 0.00001,
-        rq1cs0: 0.00000,
-        rq1cs1: 0.00001
-      },
-      "Scrap Metal": {
-        rq0cs0: 0.04825,
-        rq0cs1: 0.06031,
-        rq1cs0: 0.04373,
-        rq1cs1: 0.05467
-      },
-      "Scrap Wire": {
-        rq0cs0: 0.03041,
-        rq0cs1: 0.03802,
-        rq1cs0: 0.04372,
-        rq1cs1: 0.05465
-      },
-      "Machine Part": {
-        rq0cs0: 0.01753,
-        rq0cs1: 0.02192,
-        rq1cs0: 0.02028,
-        rq1cs1: 0.02535
-      },
-      "Prickly Pear": {
-        rq0cs0: 0.00853,
-        rq0cs1: 0.01066,
-        rq1cs0: 0.00980,
-        rq1cs1: 0.01225
+      rq1cs1: {
+        "Sand": { dropsPerCider: 0.14228 },
+        "Copper Wire": { dropsPerCider: 0.00482 },
+        "Small Bolt": { dropsPerCider: 0.00644 },
+        "Pulley": { dropsPerCider: 0.00481 },
+        "Broken Pipe": { dropsPerCider: 0.00809 },
+        "Monster Skull": { dropsPerCider: 0.00183 },
+        "Onyx Scorpion": { dropsPerCider: 0.00159 },
+        "Transistor": { dropsPerCider: 0.01653 },
+        "Langstaff Crest": { dropsPerCider: 0.00001 },
+        "Scrap Metal": { dropsPerCider: 0.05467 },
+        "Scrap Wire": { dropsPerCider: 0.05465 },
+        "Machine Part": { dropsPerCider: 0.02535 },
+        "Prickly Pear": { dropsPerCider: 0.01225 },
       },
     },
     "Gary's Crushroom": {
-      "Piece 30": {
-        rq0cs0: 0.00008,
-        rq0cs1: 0.00010,
-        rq1cs0: 0.00008,
-        rq1cs1: 0.00010
+      rq0cs0: {
+        "Piece 30": { dropsPerCider: 0.00008 },
+        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
+        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
+        "Mushroom": { dropsPerCider: 0.39992 },
       },
-      "Gary's Diary Page 36": {
-        rq0cs0: 0.00000,
-        rq0cs1: 0.00000,
-        rq1cs0: 0.00000,
-        rq1cs1: 0.00000
+      rq0cs1: {
+        "Piece 30": { dropsPerCider: 0.00010 },
+        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
+        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
+        "Mushroom": { dropsPerCider: 0.49990 },
       },
-      "Gary's Diary Page 77": {
-        rq0cs0: 0.00000,
-        rq0cs1: 0.00000,
-        rq1cs0: 0.00000,
-        rq1cs1: 0.00000
+      rq1cs0: {
+        "Piece 30": { dropsPerCider: 0.00008 },
+        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
+        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
+        "Mushroom": { dropsPerCider: 0.39992 },
       },
-      "Mushroom": {
-        rq0cs0: 0.39992,
-        rq0cs1: 0.49990,
-        rq1cs0: 0.39992,
-        rq1cs1: 0.49990
+      rq1cs1: {
+        "Piece 30": { dropsPerCider: 0.00010 },
+        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
+        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
+        "Mushroom": { dropsPerCider: 0.49990 },
       },
     },
     "Haunted House": {
-      "Apple": {
-        rq0cs0: 0.02222,
-        rq0cs1: 0.02777,
-        rq1cs0: 0.02510,
-        rq1cs1: 0.03138
+      rq0cs0: {
+        "Apple": { dropsPerCider: 0.02222 },
+        "Witch Hat": { dropsPerCider: 0.00170 },
+        "Treat Bag 03": { dropsPerCider: 0.00051 },
+        "Chattering Teeth": { dropsPerCider: 0.00170 },
+        "Candy Corn": { dropsPerCider: 0.01306 },
+        "Spider": { dropsPerCider: 0.00365 },
+        "Hockey Mask": { dropsPerCider: 0.00003 },
+        "Taffy": { dropsPerCider: 0.04685 },
+        "Treat Bag 02": { dropsPerCider: 0.00051 },
+        "Bat Wing": { dropsPerCider: 0.00170 },
+        "Treat Bag 01": { dropsPerCider: 0.00051 },
+        "Lollipop": { dropsPerCider: 0.07453 },
+        "Jack-o-lantern": { dropsPerCider: 0.00127 },
+        "Candy": { dropsPerCider: 0.20676 },
       },
-      "Witch Hat": {
-        rq0cs0: 0.00170,
-        rq0cs1: 0.00213,
-        rq1cs0: 0.00199,
-        rq1cs1: 0.00249
+      rq0cs1: {
+        "Apple": { dropsPerCider: 0.02777 },
+        "Witch Hat": { dropsPerCider: 0.00213 },
+        "Treat Bag 03": { dropsPerCider: 0.00064 },
+        "Chattering Teeth": { dropsPerCider: 0.00213 },
+        "Candy Corn": { dropsPerCider: 0.01633 },
+        "Spider": { dropsPerCider: 0.00456 },
+        "Hockey Mask": { dropsPerCider: 0.00003 },
+        "Taffy": { dropsPerCider: 0.05857 },
+        "Treat Bag 02": { dropsPerCider: 0.00064 },
+        "Bat Wing": { dropsPerCider: 0.00213 },
+        "Treat Bag 01": { dropsPerCider: 0.00064 },
+        "Lollipop": { dropsPerCider: 0.09316 },
+        "Jack-o-lantern": { dropsPerCider: 0.00159 },
+        "Candy": { dropsPerCider: 0.25845 },
       },
-      "Treat Bag 03": {
-        rq0cs0: 0.00051,
-        rq0cs1: 0.00064,
-        rq1cs0: 0.00059,
-        rq1cs1: 0.00074
+      rq1cs0: {
+        "Apple": { dropsPerCider: 0.02510 },
+        "Witch Hat": { dropsPerCider: 0.00199 },
+        "Treat Bag 03": { dropsPerCider: 0.00059 },
+        "Chattering Teeth": { dropsPerCider: 0.00199 },
+        "Candy Corn": { dropsPerCider: 0.01219 },
+        "Spider": { dropsPerCider: 0.00429 },
+        "Hockey Mask": { dropsPerCider: 0.00003 },
+        "Taffy": { dropsPerCider: 0.06910 },
+        "Treat Bag 02": { dropsPerCider: 0.00060 },
+        "Bat Wing": { dropsPerCider: 0.00199 },
+        "Treat Bag 01": { dropsPerCider: 0.00059 },
+        "Lollipop": { dropsPerCider: 0.06912 },
+        "Jack-o-lantern": { dropsPerCider: 0.00119 },
+        "Candy": { dropsPerCider: 0.18622 },
       },
-      "Chattering Teeth": {
-        rq0cs0: 0.00170,
-        rq0cs1: 0.00213,
-        rq1cs0: 0.00199,
-        rq1cs1: 0.00248
-      },
-      "Candy Corn": {
-        rq0cs0: 0.01306,
-        rq0cs1: 0.01633,
-        rq1cs0: 0.01219,
-        rq1cs1: 0.01524
-      },
-      "Spider": {
-        rq0cs0: 0.00365,
-        rq0cs1: 0.00456,
-        rq1cs0: 0.00429,
-        rq1cs1: 0.00536
-      },
-      "Hockey Mask": {
-        rq0cs0: 0.00003,
-        rq0cs1: 0.00003,
-        rq1cs0: 0.00003,
-        rq1cs1: 0.00004
-      },
-      "Taffy": {
-        rq0cs0: 0.04685,
-        rq0cs1: 0.05857,
-        rq1cs0: 0.06910,
-        rq1cs1: 0.08638
-      },
-      "Treat Bag 02": {
-        rq0cs0: 0.00051,
-        rq0cs1: 0.00064,
-        rq1cs0: 0.00060,
-        rq1cs1: 0.00074
-      },
-      "Bat Wing": {
-        rq0cs0: 0.00170,
-        rq0cs1: 0.00213,
-        rq1cs0: 0.00199,
-        rq1cs1: 0.00249
-      },
-      "Treat Bag 01": {
-        rq0cs0: 0.00051,
-        rq0cs1: 0.00064,
-        rq1cs0: 0.00059,
-        rq1cs1: 0.00074
-      },
-      "Lollipop": {
-        rq0cs0: 0.07453,
-        rq0cs1: 0.09316,
-        rq1cs0: 0.06912,
-        rq1cs1: 0.08640
-      },
-      "Jack-o-lantern": {
-        rq0cs0: 0.00127,
-        rq0cs1: 0.00159,
-        rq1cs0: 0.00119,
-        rq1cs1: 0.00149
-      },
-      "Candy": {
-        rq0cs0: 0.20676,
-        rq0cs1: 0.25845,
-        rq1cs0: 0.18622,
-        rq1cs1: 0.23277
+      rq1cs1: {
+        "Apple": { dropsPerCider: 0.03138 },
+        "Witch Hat": { dropsPerCider: 0.00249 },
+        "Treat Bag 03": { dropsPerCider: 0.00074 },
+        "Chattering Teeth": { dropsPerCider: 0.00248 },
+        "Candy Corn": { dropsPerCider: 0.01524 },
+        "Spider": { dropsPerCider: 0.00536 },
+        "Hockey Mask": { dropsPerCider: 0.00004 },
+        "Taffy": { dropsPerCider: 0.08638 },
+        "Treat Bag 02": { dropsPerCider: 0.00074 },
+        "Bat Wing": { dropsPerCider: 0.00249 },
+        "Treat Bag 01": { dropsPerCider: 0.00074 },
+        "Lollipop": { dropsPerCider: 0.08640 },
+        "Jack-o-lantern": { dropsPerCider: 0.00149 },
+        "Candy": { dropsPerCider: 0.23277 },
       },
     },
     "Santa's Workshop": {
-      "Purple Ornament": {
-        rq0cs0: 0.03926,
-        rq0cs1: 0.04908,
-        rq1cs0: 0.03794,
-        rq1cs1: 0.04742
+      rq0cs0: {
+        "Purple Ornament": { dropsPerCider: 0.03926 },
+        "Iron": { dropsPerCider: 0.03923 },
+        "Blue Ornament": { dropsPerCider: 0.03924 },
+        "Yellow Ornament": { dropsPerCider: 0.03924 },
+        "Nails": { dropsPerCider: 0.03924 },
+        "Red Ornament": { dropsPerCider: 0.03923 },
+        "Board": { dropsPerCider: 0.03926 },
+        "Orange Ornament": { dropsPerCider: 0.03925 },
+        "Green Ornament": { dropsPerCider: 0.03925 },
+        "Rudolph": { dropsPerCider: 0.00001 },
+        "Candy Roll": { dropsPerCider: 0.01872 },
+        "Carbon Sphere": { dropsPerCider: 0.01230 },
+        "Milk and Cookies": { dropsPerCider: 0.00001 },
+        "Antler": { dropsPerCider: 0.00730 },
+        "Star": { dropsPerCider: 0.00916 },
+        "Yarn": { dropsPerCider: 0.00916 },
+        "Candy Cane": { dropsPerCider: 0.01870 },
       },
-      "Iron": {
-        rq0cs0: 0.03923,
-        rq0cs1: 0.04904,
-        rq1cs0: 0.03792,
-        rq1cs1: 0.04740
+      rq0cs1: {
+        "Purple Ornament": { dropsPerCider: 0.04908 },
+        "Iron": { dropsPerCider: 0.04904 },
+        "Blue Ornament": { dropsPerCider: 0.04905 },
+        "Yellow Ornament": { dropsPerCider: 0.04905 },
+        "Nails": { dropsPerCider: 0.04905 },
+        "Red Ornament": { dropsPerCider: 0.04904 },
+        "Board": { dropsPerCider: 0.04907 },
+        "Orange Ornament": { dropsPerCider: 0.04906 },
+        "Green Ornament": { dropsPerCider: 0.04906 },
+        "Rudolph": { dropsPerCider: 0.00002 },
+        "Candy Roll": { dropsPerCider: 0.02340 },
+        "Carbon Sphere": { dropsPerCider: 0.01538 },
+        "Milk and Cookies": { dropsPerCider: 0.00001 },
+        "Antler": { dropsPerCider: 0.00912 },
+        "Star": { dropsPerCider: 0.01145 },
+        "Yarn": { dropsPerCider: 0.01145 },
+        "Candy Cane": { dropsPerCider: 0.02337 },
       },
-      "Blue Ornament": {
-        rq0cs0: 0.03924,
-        rq0cs1: 0.04905,
-        rq1cs0: 0.03795,
-        rq1cs1: 0.04743
+      rq1cs0: {
+        "Purple Ornament": { dropsPerCider: 0.03794 },
+        "Iron": { dropsPerCider: 0.03792 },
+        "Blue Ornament": { dropsPerCider: 0.03795 },
+        "Yellow Ornament": { dropsPerCider: 0.03794 },
+        "Nails": { dropsPerCider: 0.03796 },
+        "Red Ornament": { dropsPerCider: 0.03794 },
+        "Board": { dropsPerCider: 0.03795 },
+        "Orange Ornament": { dropsPerCider: 0.03793 },
+        "Green Ornament": { dropsPerCider: 0.03793 },
+        "Rudolph": { dropsPerCider: 0.00002 },
+        "Candy Roll": { dropsPerCider: 0.01812 },
+        "Carbon Sphere": { dropsPerCider: 0.01812 },
+        "Milk and Cookies": { dropsPerCider: 0.00001 },
+        "Antler": { dropsPerCider: 0.00888 },
+        "Star": { dropsPerCider: 0.01192 },
+        "Yarn": { dropsPerCider: 0.01192 },
+        "Candy Cane": { dropsPerCider: 0.01813 },
       },
-      "Yellow Ornament": {
-        rq0cs0: 0.03924,
-        rq0cs1: 0.04905,
-        rq1cs0: 0.03794,
-        rq1cs1: 0.04742
-      },
-      "Nails": {
-        rq0cs0: 0.03924,
-        rq0cs1: 0.04905,
-        rq1cs0: 0.03796,
-        rq1cs1: 0.04745
-      },
-      "Red Ornament": {
-        rq0cs0: 0.03923,
-        rq0cs1: 0.04904,
-        rq1cs0: 0.03794,
-        rq1cs1: 0.04743
-      },
-      "Board": {
-        rq0cs0: 0.03926,
-        rq0cs1: 0.04907,
-        rq1cs0: 0.03795,
-        rq1cs1: 0.04743
-      },
-      "Orange Ornament": {
-        rq0cs0: 0.03925,
-        rq0cs1: 0.04906,
-        rq1cs0: 0.03793,
-        rq1cs1: 0.04742
-      },
-      "Green Ornament": {
-        rq0cs0: 0.03925,
-        rq0cs1: 0.04906,
-        rq1cs0: 0.03793,
-        rq1cs1: 0.04741
-      },
-      "Rudolph": {
-        rq0cs0: 0.00001,
-        rq0cs1: 0.00002,
-        rq1cs0: 0.00002,
-        rq1cs1: 0.00002
-      },
-      "Candy Roll": {
-        rq0cs0: 0.01872,
-        rq0cs1: 0.02340,
-        rq1cs0: 0.01812,
-        rq1cs1: 0.02265
-      },
-      "Carbon Sphere": {
-        rq0cs0: 0.01230,
-        rq0cs1: 0.01538,
-        rq1cs0: 0.01812,
-        rq1cs1: 0.02264
-      },
-      "Milk and Cookies": {
-        rq0cs0: 0.00001,
-        rq0cs1: 0.00001,
-        rq1cs0: 0.00001,
-        rq1cs1: 0.00001
-      },
-      "Antler": {
-        rq0cs0: 0.00730,
-        rq0cs1: 0.00912,
-        rq1cs0: 0.00888,
-        rq1cs1: 0.01110
-      },
-      "Star": {
-        rq0cs0: 0.00916,
-        rq0cs1: 0.01145,
-        rq1cs0: 0.01192,
-        rq1cs1: 0.01490
-      },
-      "Yarn": {
-        rq0cs0: 0.00916,
-        rq0cs1: 0.01145,
-        rq1cs0: 0.01192,
-        rq1cs1: 0.01490
-      },
-      "Candy Cane": {
-        rq0cs0: 0.01870,
-        rq0cs1: 0.02337,
-        rq1cs0: 0.01813,
-        rq1cs1: 0.02266
+      rq1cs1: {
+        "Purple Ornament": { dropsPerCider: 0.04742 },
+        "Iron": { dropsPerCider: 0.04740 },
+        "Blue Ornament": { dropsPerCider: 0.04743 },
+        "Yellow Ornament": { dropsPerCider: 0.04742 },
+        "Nails": { dropsPerCider: 0.04745 },
+        "Red Ornament": { dropsPerCider: 0.04743 },
+        "Board": { dropsPerCider: 0.04743 },
+        "Orange Ornament": { dropsPerCider: 0.04742 },
+        "Green Ornament": { dropsPerCider: 0.04741 },
+        "Rudolph": { dropsPerCider: 0.00002 },
+        "Candy Roll": { dropsPerCider: 0.02265 },
+        "Carbon Sphere": { dropsPerCider: 0.02264 },
+        "Milk and Cookies": { dropsPerCider: 0.00001 },
+        "Antler": { dropsPerCider: 0.01110 },
+        "Star": { dropsPerCider: 0.01490 },
+        "Yarn": { dropsPerCider: 0.01490 },
+        "Candy Cane": { dropsPerCider: 0.02266 },
       },
     },
   }

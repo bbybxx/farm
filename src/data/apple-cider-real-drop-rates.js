@@ -10,7 +10,7 @@ export const APPLE_CIDER_REAL_DROP_RATES = {
     version: "2.0.0",
     description: "Drop rates for explore locations from buddy.farm API",
     dataSource: "buddy.farm GraphQL API",
-    lastUpdated: "2025-11-04T14:26:01.318Z",
+    lastUpdated: "2025-11-04T14:38:43.958Z",
     variants: {
       rq0cs0: "Without Runecube, Without Cinnamon Sticks",
       rq0cs1: "Without Runecube, With Cinnamon Sticks (+25% drops)",
@@ -21,1039 +21,815 @@ export const APPLE_CIDER_REAL_DROP_RATES = {
 
   locations: {
     "Small Cave": {
-      "Model Ship": {
-        rq0cs0: 58343.06,
-        rq0cs1: 46674.45,
-        rq1cs0: 46528.94,
-        rq1cs1: 37223.15
+      rq0cs0: {
+        "Model Ship": { cidersPerDrop: 58343.06 },
+        "Stone": { cidersPerDrop: 8.97 },
+        "Wooden Mask": { cidersPerDrop: 861.85 },
+        "Grab Bag 02": { cidersPerDrop: 864.74 },
+        "Bone": { cidersPerDrop: 67.01 },
+        "Skeleton Key": { cidersPerDrop: 12722.65 },
+        "Nails": { cidersPerDrop: 8.98 },
+        "Wood": { cidersPerDrop: 8.98 },
+        "Mushroom": { cidersPerDrop: 20.82 },
+        "Runestone 04": { cidersPerDrop: 2769.01 },
       },
-      "Stone": {
-        rq0cs0: 8.97,
-        rq0cs1: 7.18,
-        rq1cs0: 9.06,
-        rq1cs1: 7.25
+      rq0cs1: {
+        "Model Ship": { cidersPerDrop: 46674.45 },
+        "Stone": { cidersPerDrop: 7.18 },
+        "Wooden Mask": { cidersPerDrop: 689.48 },
+        "Grab Bag 02": { cidersPerDrop: 691.79 },
+        "Bone": { cidersPerDrop: 53.61 },
+        "Skeleton Key": { cidersPerDrop: 10178.12 },
+        "Nails": { cidersPerDrop: 7.18 },
+        "Wood": { cidersPerDrop: 7.18 },
+        "Mushroom": { cidersPerDrop: 16.65 },
+        "Runestone 04": { cidersPerDrop: 2215.21 },
       },
-      "Wooden Mask": {
-        rq0cs0: 861.85,
-        rq0cs1: 689.48,
-        rq1cs0: 692.22,
-        rq1cs1: 553.78
+      rq1cs0: {
+        "Model Ship": { cidersPerDrop: 46528.94 },
+        "Stone": { cidersPerDrop: 9.06 },
+        "Wooden Mask": { cidersPerDrop: 692.22 },
+        "Grab Bag 02": { cidersPerDrop: 693.43 },
+        "Bone": { cidersPerDrop: 55.98 },
+        "Skeleton Key": { cidersPerDrop: 10217.84 },
+        "Nails": { cidersPerDrop: 9.06 },
+        "Wood": { cidersPerDrop: 9.06 },
+        "Mushroom": { cidersPerDrop: 20.99 },
+        "Runestone 04": { cidersPerDrop: 2229.40 },
       },
-      "Grab Bag 02": {
-        rq0cs0: 864.74,
-        rq0cs1: 691.79,
-        rq1cs0: 693.43,
-        rq1cs1: 554.75
-      },
-      "Bone": {
-        rq0cs0: 67.01,
-        rq0cs1: 53.61,
-        rq1cs0: 55.98,
-        rq1cs1: 44.79
-      },
-      "Skeleton Key": {
-        rq0cs0: 12722.65,
-        rq0cs1: 10178.12,
-        rq1cs0: 10217.84,
-        rq1cs1: 8174.28
-      },
-      "Nails": {
-        rq0cs0: 8.98,
-        rq0cs1: 7.18,
-        rq1cs0: 9.06,
-        rq1cs1: 7.25
-      },
-      "Wood": {
-        rq0cs0: 8.98,
-        rq0cs1: 7.18,
-        rq1cs0: 9.06,
-        rq1cs1: 7.25
-      },
-      "Mushroom": {
-        rq0cs0: 20.82,
-        rq0cs1: 16.65,
-        rq1cs0: 20.99,
-        rq1cs1: 16.79
-      },
-      "Runestone 04": {
-        rq0cs0: 2769.01,
-        rq0cs1: 2215.21,
-        rq1cs0: 2229.40,
-        rq1cs1: 1783.52
+      rq1cs1: {
+        "Model Ship": { cidersPerDrop: 37223.15 },
+        "Stone": { cidersPerDrop: 7.25 },
+        "Wooden Mask": { cidersPerDrop: 553.78 },
+        "Grab Bag 02": { cidersPerDrop: 554.75 },
+        "Bone": { cidersPerDrop: 44.79 },
+        "Skeleton Key": { cidersPerDrop: 8174.28 },
+        "Nails": { cidersPerDrop: 7.25 },
+        "Wood": { cidersPerDrop: 7.25 },
+        "Mushroom": { cidersPerDrop: 16.79 },
+        "Runestone 04": { cidersPerDrop: 1783.52 },
       },
     },
     "Forest": {
-      "Fire Ant": {
-        rq0cs0: 361.29,
-        rq0cs1: 289.03,
-        rq1cs0: 304.44,
-        rq1cs1: 243.55
+      rq0cs0: {
+        "Fire Ant": { cidersPerDrop: 361.29 },
+        "Arrowhead": { cidersPerDrop: 59.82 },
+        "Wood": { cidersPerDrop: 6.92 },
+        "Mushroom": { cidersPerDrop: 18.06 },
+        "Straw": { cidersPerDrop: 18.07 },
+        "Gold Leaf": { cidersPerDrop: 7181.50 },
+        "Hide": { cidersPerDrop: 39.01 },
+        "Bird Egg": { cidersPerDrop: 80.62 },
+        "Frog": { cidersPerDrop: 8328.48 },
+        "Antler": { cidersPerDrop: 49.39 },
+        "Gold Feather": { cidersPerDrop: 7261.81 },
       },
-      "Arrowhead": {
-        rq0cs0: 59.82,
-        rq0cs1: 47.85,
-        rq1cs0: 52.32,
-        rq1cs1: 41.85
+      rq0cs1: {
+        "Fire Ant": { cidersPerDrop: 289.03 },
+        "Arrowhead": { cidersPerDrop: 47.85 },
+        "Wood": { cidersPerDrop: 5.54 },
+        "Mushroom": { cidersPerDrop: 14.45 },
+        "Straw": { cidersPerDrop: 14.46 },
+        "Gold Leaf": { cidersPerDrop: 5745.20 },
+        "Hide": { cidersPerDrop: 31.21 },
+        "Bird Egg": { cidersPerDrop: 64.49 },
+        "Frog": { cidersPerDrop: 6662.78 },
+        "Antler": { cidersPerDrop: 39.51 },
+        "Gold Feather": { cidersPerDrop: 5809.45 },
       },
-      "Wood": {
-        rq0cs0: 6.92,
-        rq0cs1: 5.54,
-        rq1cs0: 7.50,
-        rq1cs1: 6.00
+      rq1cs0: {
+        "Fire Ant": { cidersPerDrop: 304.44 },
+        "Arrowhead": { cidersPerDrop: 52.32 },
+        "Wood": { cidersPerDrop: 7.50 },
+        "Mushroom": { cidersPerDrop: 19.21 },
+        "Straw": { cidersPerDrop: 19.21 },
+        "Gold Leaf": { cidersPerDrop: 6134.09 },
+        "Hide": { cidersPerDrop: 30.28 },
+        "Bird Egg": { cidersPerDrop: 63.31 },
+        "Frog": { cidersPerDrop: 6975.61 },
+        "Antler": { cidersPerDrop: 41.33 },
+        "Gold Feather": { cidersPerDrop: 6134.97 },
       },
-      "Mushroom": {
-        rq0cs0: 18.06,
-        rq0cs1: 14.45,
-        rq1cs0: 19.21,
-        rq1cs1: 15.37
-      },
-      "Straw": {
-        rq0cs0: 18.07,
-        rq0cs1: 14.46,
-        rq1cs0: 19.21,
-        rq1cs1: 15.37
-      },
-      "Gold Leaf": {
-        rq0cs0: 7181.50,
-        rq0cs1: 5745.20,
-        rq1cs0: 6134.09,
-        rq1cs1: 4907.27
-      },
-      "Hide": {
-        rq0cs0: 39.01,
-        rq0cs1: 31.21,
-        rq1cs0: 30.28,
-        rq1cs1: 24.23
-      },
-      "Bird Egg": {
-        rq0cs0: 80.62,
-        rq0cs1: 64.49,
-        rq1cs0: 63.31,
-        rq1cs1: 50.65
-      },
-      "Frog": {
-        rq0cs0: 8328.48,
-        rq0cs1: 6662.78,
-        rq1cs0: 6975.61,
-        rq1cs1: 5580.49
-      },
-      "Antler": {
-        rq0cs0: 49.39,
-        rq0cs1: 39.51,
-        rq1cs0: 41.33,
-        rq1cs1: 33.06
-      },
-      "Gold Feather": {
-        rq0cs0: 7261.81,
-        rq0cs1: 5809.45,
-        rq1cs0: 6134.97,
-        rq1cs1: 4907.98
+      rq1cs1: {
+        "Fire Ant": { cidersPerDrop: 243.55 },
+        "Arrowhead": { cidersPerDrop: 41.85 },
+        "Wood": { cidersPerDrop: 6.00 },
+        "Mushroom": { cidersPerDrop: 15.37 },
+        "Straw": { cidersPerDrop: 15.37 },
+        "Gold Leaf": { cidersPerDrop: 4907.27 },
+        "Hide": { cidersPerDrop: 24.23 },
+        "Bird Egg": { cidersPerDrop: 50.65 },
+        "Frog": { cidersPerDrop: 5580.49 },
+        "Antler": { cidersPerDrop: 33.06 },
+        "Gold Feather": { cidersPerDrop: 4907.98 },
       },
     },
     "Small Spring": {
-      "Mushroom": {
-        rq0cs0: 26.40,
-        rq0cs1: 21.12,
-        rq1cs0: 27.09,
-        rq1cs1: 21.67
+      rq0cs0: {
+        "Mushroom": { cidersPerDrop: 26.40 },
+        "Feathers": { cidersPerDrop: 11.46 },
+        "Apple": { cidersPerDrop: 84.73 },
+        "Skull Coin": { cidersPerDrop: 75263.42 },
+        "Aquamarine": { cidersPerDrop: 55.59 },
+        "Stone": { cidersPerDrop: 11.46 },
+        "Snail": { cidersPerDrop: 507.50 },
+        "Dice": { cidersPerDrop: 1086.44 },
+        "Spectacles": { cidersPerDrop: 1089.82 },
+        "Wood": { cidersPerDrop: 11.47 },
+        "Small Chest 01": { cidersPerDrop: 7297.85 },
+        "Pearl Berries": { cidersPerDrop: 28857.25 },
       },
-      "Feathers": {
-        rq0cs0: 11.46,
-        rq0cs1: 9.17,
-        rq1cs0: 11.81,
-        rq1cs1: 9.45
+      rq0cs1: {
+        "Mushroom": { cidersPerDrop: 21.12 },
+        "Feathers": { cidersPerDrop: 9.17 },
+        "Apple": { cidersPerDrop: 67.78 },
+        "Skull Coin": { cidersPerDrop: 60210.74 },
+        "Aquamarine": { cidersPerDrop: 44.47 },
+        "Stone": { cidersPerDrop: 9.17 },
+        "Snail": { cidersPerDrop: 406.00 },
+        "Dice": { cidersPerDrop: 869.15 },
+        "Spectacles": { cidersPerDrop: 871.86 },
+        "Wood": { cidersPerDrop: 9.17 },
+        "Small Chest 01": { cidersPerDrop: 5838.28 },
+        "Pearl Berries": { cidersPerDrop: 23085.80 },
       },
-      "Apple": {
-        rq0cs0: 84.73,
-        rq0cs1: 67.78,
-        rq1cs0: 71.99,
-        rq1cs1: 57.59
+      rq1cs0: {
+        "Mushroom": { cidersPerDrop: 27.09 },
+        "Feathers": { cidersPerDrop: 11.81 },
+        "Apple": { cidersPerDrop: 71.99 },
+        "Skull Coin": { cidersPerDrop: 59008.65 },
+        "Aquamarine": { cidersPerDrop: 42.07 },
+        "Stone": { cidersPerDrop: 11.82 },
+        "Snail": { cidersPerDrop: 414.04 },
+        "Dice": { cidersPerDrop: 891.38 },
+        "Spectacles": { cidersPerDrop: 892.54 },
+        "Wood": { cidersPerDrop: 11.81 },
+        "Small Chest 01": { cidersPerDrop: 5965.76 },
+        "Pearl Berries": { cidersPerDrop: 27176.37 },
       },
-      "Skull Coin": {
-        rq0cs0: 75263.42,
-        rq0cs1: 60210.74,
-        rq1cs0: 59008.65,
-        rq1cs1: 47206.92
-      },
-      "Aquamarine": {
-        rq0cs0: 55.59,
-        rq0cs1: 44.47,
-        rq1cs0: 42.07,
-        rq1cs1: 33.66
-      },
-      "Stone": {
-        rq0cs0: 11.46,
-        rq0cs1: 9.17,
-        rq1cs0: 11.82,
-        rq1cs1: 9.46
-      },
-      "Snail": {
-        rq0cs0: 507.50,
-        rq0cs1: 406.00,
-        rq1cs0: 414.04,
-        rq1cs1: 331.23
-      },
-      "Dice": {
-        rq0cs0: 1086.44,
-        rq0cs1: 869.15,
-        rq1cs0: 891.38,
-        rq1cs1: 713.10
-      },
-      "Spectacles": {
-        rq0cs0: 1089.82,
-        rq0cs1: 871.86,
-        rq1cs0: 892.54,
-        rq1cs1: 714.03
-      },
-      "Wood": {
-        rq0cs0: 11.47,
-        rq0cs1: 9.17,
-        rq1cs0: 11.81,
-        rq1cs1: 9.45
-      },
-      "Small Chest 01": {
-        rq0cs0: 7297.85,
-        rq0cs1: 5838.28,
-        rq1cs0: 5965.76,
-        rq1cs1: 4772.61
-      },
-      "Pearl Berries": {
-        rq0cs0: 28857.25,
-        rq0cs1: 23085.80,
-        rq1cs0: 27176.37,
-        rq1cs1: 21741.10
+      rq1cs1: {
+        "Mushroom": { cidersPerDrop: 21.67 },
+        "Feathers": { cidersPerDrop: 9.45 },
+        "Apple": { cidersPerDrop: 57.59 },
+        "Skull Coin": { cidersPerDrop: 47206.92 },
+        "Aquamarine": { cidersPerDrop: 33.66 },
+        "Stone": { cidersPerDrop: 9.46 },
+        "Snail": { cidersPerDrop: 331.23 },
+        "Dice": { cidersPerDrop: 713.10 },
+        "Spectacles": { cidersPerDrop: 714.03 },
+        "Wood": { cidersPerDrop: 9.45 },
+        "Small Chest 01": { cidersPerDrop: 4772.61 },
+        "Pearl Berries": { cidersPerDrop: 21741.10 },
       },
     },
     "Highland Hills": {
-      "Runestone 14": {
-        rq0cs0: 20896.46,
-        rq0cs1: 16717.17,
-        rq1cs0: 17106.44,
-        rq1cs1: 13685.16
+      rq0cs0: {
+        "Runestone 14": { cidersPerDrop: 20896.46 },
+        "Stone": { cidersPerDrop: 21.02 },
+        "Wood": { cidersPerDrop: 21.01 },
+        "Feathers": { cidersPerDrop: 21.01 },
+        "Strange Letter": { cidersPerDrop: 1876.96 },
+        "Purple Flower": { cidersPerDrop: 21.02 },
+        "Fern Leaf": { cidersPerDrop: 21.02 },
+        "Amethyst": { cidersPerDrop: 96.65 },
+        "Medium Chest 01": { cidersPerDrop: 37488.28 },
+        "Caterpillar": { cidersPerDrop: 874.76 },
       },
-      "Stone": {
-        rq0cs0: 21.02,
-        rq0cs1: 16.82,
-        rq1cs0: 21.36,
-        rq1cs1: 17.09
+      rq0cs1: {
+        "Runestone 14": { cidersPerDrop: 16717.17 },
+        "Stone": { cidersPerDrop: 16.82 },
+        "Wood": { cidersPerDrop: 16.81 },
+        "Feathers": { cidersPerDrop: 16.81 },
+        "Strange Letter": { cidersPerDrop: 1501.56 },
+        "Purple Flower": { cidersPerDrop: 16.82 },
+        "Fern Leaf": { cidersPerDrop: 16.82 },
+        "Amethyst": { cidersPerDrop: 77.32 },
+        "Medium Chest 01": { cidersPerDrop: 29990.63 },
+        "Caterpillar": { cidersPerDrop: 699.81 },
       },
-      "Wood": {
-        rq0cs0: 21.01,
-        rq0cs1: 16.81,
-        rq1cs0: 21.37,
-        rq1cs1: 17.09
+      rq1cs0: {
+        "Runestone 14": { cidersPerDrop: 17106.44 },
+        "Stone": { cidersPerDrop: 21.36 },
+        "Wood": { cidersPerDrop: 21.37 },
+        "Feathers": { cidersPerDrop: 21.36 },
+        "Strange Letter": { cidersPerDrop: 1521.78 },
+        "Purple Flower": { cidersPerDrop: 21.35 },
+        "Fern Leaf": { cidersPerDrop: 21.37 },
+        "Amethyst": { cidersPerDrop: 72.56 },
+        "Medium Chest 01": { cidersPerDrop: 31029.40 },
+        "Caterpillar": { cidersPerDrop: 707.20 },
       },
-      "Feathers": {
-        rq0cs0: 21.01,
-        rq0cs1: 16.81,
-        rq1cs0: 21.36,
-        rq1cs1: 17.09
-      },
-      "Strange Letter": {
-        rq0cs0: 1876.96,
-        rq0cs1: 1501.56,
-        rq1cs0: 1521.78,
-        rq1cs1: 1217.42
-      },
-      "Purple Flower": {
-        rq0cs0: 21.02,
-        rq0cs1: 16.82,
-        rq1cs0: 21.35,
-        rq1cs1: 17.08
-      },
-      "Fern Leaf": {
-        rq0cs0: 21.02,
-        rq0cs1: 16.82,
-        rq1cs0: 21.37,
-        rq1cs1: 17.09
-      },
-      "Amethyst": {
-        rq0cs0: 96.65,
-        rq0cs1: 77.32,
-        rq1cs0: 72.56,
-        rq1cs1: 58.05
-      },
-      "Medium Chest 01": {
-        rq0cs0: 37488.28,
-        rq0cs1: 29990.63,
-        rq1cs0: 31029.40,
-        rq1cs1: 24823.52
-      },
-      "Caterpillar": {
-        rq0cs0: 874.76,
-        rq0cs1: 699.81,
-        rq1cs0: 707.20,
-        rq1cs1: 565.76
+      rq1cs1: {
+        "Runestone 14": { cidersPerDrop: 13685.16 },
+        "Stone": { cidersPerDrop: 17.09 },
+        "Wood": { cidersPerDrop: 17.09 },
+        "Feathers": { cidersPerDrop: 17.09 },
+        "Strange Letter": { cidersPerDrop: 1217.42 },
+        "Purple Flower": { cidersPerDrop: 17.08 },
+        "Fern Leaf": { cidersPerDrop: 17.09 },
+        "Amethyst": { cidersPerDrop: 58.05 },
+        "Medium Chest 01": { cidersPerDrop: 24823.52 },
+        "Caterpillar": { cidersPerDrop: 565.76 },
       },
     },
     "Cane Pole Ridge": {
-      "Lima Bean": {
-        rq0cs0: 103519.67,
-        rq0cs1: 82815.73,
-        rq1cs0: 85116.73,
-        rq1cs1: 68093.39
+      rq0cs0: {
+        "Lima Bean": { cidersPerDrop: 103519.67 },
+        "Iron": { cidersPerDrop: 16.94 },
+        "Lemon Quartz": { cidersPerDrop: 78.85 },
+        "Horned Beetle": { cidersPerDrop: 714.45 },
+        "Mushroom": { cidersPerDrop: 37.79 },
+        "Unpolished Shimmer Stone": { cidersPerDrop: 16.94 },
+        "Stone": { cidersPerDrop: 16.94 },
+        "Tea Leaves": { cidersPerDrop: 119.89 },
+        "Wood": { cidersPerDrop: 16.93 },
+        "Pocket Watch": { cidersPerDrop: 1535.96 },
       },
-      "Iron": {
-        rq0cs0: 16.94,
-        rq0cs1: 13.55,
-        rq1cs0: 17.34,
-        rq1cs1: 13.87
+      rq0cs1: {
+        "Lima Bean": { cidersPerDrop: 82815.73 },
+        "Iron": { cidersPerDrop: 13.55 },
+        "Lemon Quartz": { cidersPerDrop: 63.08 },
+        "Horned Beetle": { cidersPerDrop: 571.56 },
+        "Mushroom": { cidersPerDrop: 30.23 },
+        "Unpolished Shimmer Stone": { cidersPerDrop: 13.55 },
+        "Stone": { cidersPerDrop: 13.55 },
+        "Tea Leaves": { cidersPerDrop: 95.91 },
+        "Wood": { cidersPerDrop: 13.54 },
+        "Pocket Watch": { cidersPerDrop: 1228.77 },
       },
-      "Lemon Quartz": {
-        rq0cs0: 78.85,
-        rq0cs1: 63.08,
-        rq1cs0: 59.60,
-        rq1cs1: 47.68
+      rq1cs0: {
+        "Lima Bean": { cidersPerDrop: 85116.73 },
+        "Iron": { cidersPerDrop: 17.34 },
+        "Lemon Quartz": { cidersPerDrop: 59.60 },
+        "Horned Beetle": { cidersPerDrop: 579.96 },
+        "Mushroom": { cidersPerDrop: 38.58 },
+        "Unpolished Shimmer Stone": { cidersPerDrop: 17.34 },
+        "Stone": { cidersPerDrop: 17.35 },
+        "Tea Leaves": { cidersPerDrop: 101.48 },
+        "Wood": { cidersPerDrop: 17.34 },
+        "Pocket Watch": { cidersPerDrop: 1254.73 },
       },
-      "Horned Beetle": {
-        rq0cs0: 714.45,
-        rq0cs1: 571.56,
-        rq1cs0: 579.96,
-        rq1cs1: 463.97
-      },
-      "Mushroom": {
-        rq0cs0: 37.79,
-        rq0cs1: 30.23,
-        rq1cs0: 38.58,
-        rq1cs1: 30.86
-      },
-      "Unpolished Shimmer Stone": {
-        rq0cs0: 16.94,
-        rq0cs1: 13.55,
-        rq1cs0: 17.34,
-        rq1cs1: 13.87
-      },
-      "Stone": {
-        rq0cs0: 16.94,
-        rq0cs1: 13.55,
-        rq1cs0: 17.35,
-        rq1cs1: 13.88
-      },
-      "Tea Leaves": {
-        rq0cs0: 119.89,
-        rq0cs1: 95.91,
-        rq1cs0: 101.48,
-        rq1cs1: 81.19
-      },
-      "Wood": {
-        rq0cs0: 16.93,
-        rq0cs1: 13.54,
-        rq1cs0: 17.34,
-        rq1cs1: 13.87
-      },
-      "Pocket Watch": {
-        rq0cs0: 1535.96,
-        rq0cs1: 1228.77,
-        rq1cs0: 1254.73,
-        rq1cs1: 1003.78
+      rq1cs1: {
+        "Lima Bean": { cidersPerDrop: 68093.39 },
+        "Iron": { cidersPerDrop: 13.87 },
+        "Lemon Quartz": { cidersPerDrop: 47.68 },
+        "Horned Beetle": { cidersPerDrop: 463.97 },
+        "Mushroom": { cidersPerDrop: 30.86 },
+        "Unpolished Shimmer Stone": { cidersPerDrop: 13.87 },
+        "Stone": { cidersPerDrop: 13.88 },
+        "Tea Leaves": { cidersPerDrop: 81.19 },
+        "Wood": { cidersPerDrop: 13.87 },
+        "Pocket Watch": { cidersPerDrop: 1003.78 },
       },
     },
     "Misty Forest": {
-      "Unpolished Ruby": {
-        rq0cs0: 85.32,
-        rq0cs1: 68.25,
-        rq1cs0: 64.74,
-        rq1cs1: 51.79
+      rq0cs0: {
+        "Unpolished Ruby": { cidersPerDrop: 85.32 },
+        "Mushroom": { cidersPerDrop: 41.20 },
+        "4-leaf Clover": { cidersPerDrop: 217.54 },
+        "Pine Cone": { cidersPerDrop: 173.66 },
+        "Acorn": { cidersPerDrop: 18.93 },
+        "Shiny Beetle": { cidersPerDrop: 767.38 },
+        "Wood": { cidersPerDrop: 18.93 },
+        "Blue Feathers": { cidersPerDrop: 18.93 },
+        "Frog": { cidersPerDrop: 17561.32 },
+        "Fern Leaf": { cidersPerDrop: 18.93 },
+        "Spider": { cidersPerDrop: 766.60 },
+        "Amber": { cidersPerDrop: 110011.00 },
+        "3-leaf Clover": { cidersPerDrop: 41.21 },
+        "Sweet Root": { cidersPerDrop: 41.22 },
+        "Runestone 05": { cidersPerDrop: 6578.51 },
+        "Straw": { cidersPerDrop: 41.19 },
+        "Gold Feather": { cidersPerDrop: 15515.90 },
       },
-      "Mushroom": {
-        rq0cs0: 41.20,
-        rq0cs1: 32.96,
-        rq1cs0: 42.16,
-        rq1cs1: 33.73
+      rq0cs1: {
+        "Unpolished Ruby": { cidersPerDrop: 68.25 },
+        "Mushroom": { cidersPerDrop: 32.96 },
+        "4-leaf Clover": { cidersPerDrop: 174.03 },
+        "Pine Cone": { cidersPerDrop: 138.93 },
+        "Acorn": { cidersPerDrop: 15.14 },
+        "Shiny Beetle": { cidersPerDrop: 613.90 },
+        "Wood": { cidersPerDrop: 15.15 },
+        "Blue Feathers": { cidersPerDrop: 15.15 },
+        "Frog": { cidersPerDrop: 14049.05 },
+        "Fern Leaf": { cidersPerDrop: 15.14 },
+        "Spider": { cidersPerDrop: 613.28 },
+        "Amber": { cidersPerDrop: 88008.80 },
+        "3-leaf Clover": { cidersPerDrop: 32.97 },
+        "Sweet Root": { cidersPerDrop: 32.98 },
+        "Runestone 05": { cidersPerDrop: 5262.81 },
+        "Straw": { cidersPerDrop: 32.95 },
+        "Gold Feather": { cidersPerDrop: 12412.72 },
       },
-      "4-leaf Clover": {
-        rq0cs0: 217.54,
-        rq0cs1: 174.03,
-        rq1cs0: 177.22,
-        rq1cs1: 141.78
+      rq1cs0: {
+        "Unpolished Ruby": { cidersPerDrop: 64.74 },
+        "Mushroom": { cidersPerDrop: 42.16 },
+        "4-leaf Clover": { cidersPerDrop: 177.22 },
+        "Pine Cone": { cidersPerDrop: 132.28 },
+        "Acorn": { cidersPerDrop: 19.40 },
+        "Shiny Beetle": { cidersPerDrop: 626.76 },
+        "Wood": { cidersPerDrop: 19.39 },
+        "Blue Feathers": { cidersPerDrop: 19.40 },
+        "Frog": { cidersPerDrop: 14482.96 },
+        "Fern Leaf": { cidersPerDrop: 19.39 },
+        "Spider": { cidersPerDrop: 625.64 },
+        "Amber": { cidersPerDrop: 89285.71 },
+        "3-leaf Clover": { cidersPerDrop: 42.11 },
+        "Sweet Root": { cidersPerDrop: 42.17 },
+        "Runestone 05": { cidersPerDrop: 5389.19 },
+        "Straw": { cidersPerDrop: 42.14 },
+        "Gold Feather": { cidersPerDrop: 12440.91 },
       },
-      "Pine Cone": {
-        rq0cs0: 173.66,
-        rq0cs1: 138.93,
-        rq1cs0: 132.28,
-        rq1cs1: 105.83
-      },
-      "Acorn": {
-        rq0cs0: 18.93,
-        rq0cs1: 15.14,
-        rq1cs0: 19.40,
-        rq1cs1: 15.52
-      },
-      "Shiny Beetle": {
-        rq0cs0: 767.38,
-        rq0cs1: 613.90,
-        rq1cs0: 626.76,
-        rq1cs1: 501.41
-      },
-      "Wood": {
-        rq0cs0: 18.93,
-        rq0cs1: 15.15,
-        rq1cs0: 19.39,
-        rq1cs1: 15.51
-      },
-      "Blue Feathers": {
-        rq0cs0: 18.93,
-        rq0cs1: 15.15,
-        rq1cs0: 19.40,
-        rq1cs1: 15.52
-      },
-      "Frog": {
-        rq0cs0: 17561.32,
-        rq0cs1: 14049.05,
-        rq1cs0: 14482.96,
-        rq1cs1: 11586.37
-      },
-      "Fern Leaf": {
-        rq0cs0: 18.93,
-        rq0cs1: 15.14,
-        rq1cs0: 19.39,
-        rq1cs1: 15.51
-      },
-      "Spider": {
-        rq0cs0: 766.60,
-        rq0cs1: 613.28,
-        rq1cs0: 625.64,
-        rq1cs1: 500.51
-      },
-      "Amber": {
-        rq0cs0: 110011.00,
-        rq0cs1: 88008.80,
-        rq1cs0: 89285.71,
-        rq1cs1: 71428.57
-      },
-      "3-leaf Clover": {
-        rq0cs0: 41.21,
-        rq0cs1: 32.97,
-        rq1cs0: 42.11,
-        rq1cs1: 33.69
-      },
-      "Sweet Root": {
-        rq0cs0: 41.22,
-        rq0cs1: 32.98,
-        rq1cs0: 42.17,
-        rq1cs1: 33.74
-      },
-      "Runestone 05": {
-        rq0cs0: 6578.51,
-        rq0cs1: 5262.81,
-        rq1cs0: 5389.19,
-        rq1cs1: 4311.35
-      },
-      "Straw": {
-        rq0cs0: 41.19,
-        rq0cs1: 32.95,
-        rq1cs0: 42.14,
-        rq1cs1: 33.71
-      },
-      "Gold Feather": {
-        rq0cs0: 15515.90,
-        rq0cs1: 12412.72,
-        rq1cs0: 12440.91,
-        rq1cs1: 9952.72
+      rq1cs1: {
+        "Unpolished Ruby": { cidersPerDrop: 51.79 },
+        "Mushroom": { cidersPerDrop: 33.73 },
+        "4-leaf Clover": { cidersPerDrop: 141.78 },
+        "Pine Cone": { cidersPerDrop: 105.83 },
+        "Acorn": { cidersPerDrop: 15.52 },
+        "Shiny Beetle": { cidersPerDrop: 501.41 },
+        "Wood": { cidersPerDrop: 15.51 },
+        "Blue Feathers": { cidersPerDrop: 15.52 },
+        "Frog": { cidersPerDrop: 11586.37 },
+        "Fern Leaf": { cidersPerDrop: 15.51 },
+        "Spider": { cidersPerDrop: 500.51 },
+        "Amber": { cidersPerDrop: 71428.57 },
+        "3-leaf Clover": { cidersPerDrop: 33.69 },
+        "Sweet Root": { cidersPerDrop: 33.74 },
+        "Runestone 05": { cidersPerDrop: 4311.35 },
+        "Straw": { cidersPerDrop: 33.71 },
+        "Gold Feather": { cidersPerDrop: 9952.72 },
       },
     },
     "Black Rock Canyon": {
-      "Orange Gecko": {
-        rq0cs0: 8590.33,
-        rq0cs1: 6872.26,
-        rq1cs0: 7388.62,
-        rq1cs1: 5910.89
+      rq0cs0: {
+        "Orange Gecko": { cidersPerDrop: 8590.33 },
+        "Horn": { cidersPerDrop: 51.65 },
+        "Runestone 13": { cidersPerDrop: 8436.45 },
+        "Sandstone": { cidersPerDrop: 7.68 },
+        "Giant Centipede": { cidersPerDrop: 375.97 },
+        "Medium Chest 02": { cidersPerDrop: 21677.87 },
+        "Runestone 09": { cidersPerDrop: 5774.34 },
+        "Ruby Scorpion": { cidersPerDrop: 811.78 },
+        "Ancient Coin": { cidersPerDrop: 268.25 },
+        "Salt Rock": { cidersPerDrop: 29.93 },
+        "Shimmer Quartz": { cidersPerDrop: 84.10 },
+        "Large Chest 02": { cidersPerDrop: 16184.72 },
+        "Coal": { cidersPerDrop: 7.68 },
       },
-      "Horn": {
-        rq0cs0: 51.65,
-        rq0cs1: 41.32,
-        rq1cs0: 43.84,
-        rq1cs1: 35.07
+      rq0cs1: {
+        "Orange Gecko": { cidersPerDrop: 6872.26 },
+        "Horn": { cidersPerDrop: 41.32 },
+        "Runestone 13": { cidersPerDrop: 6749.16 },
+        "Sandstone": { cidersPerDrop: 6.14 },
+        "Giant Centipede": { cidersPerDrop: 300.78 },
+        "Medium Chest 02": { cidersPerDrop: 17342.29 },
+        "Runestone 09": { cidersPerDrop: 4619.47 },
+        "Ruby Scorpion": { cidersPerDrop: 649.42 },
+        "Ancient Coin": { cidersPerDrop: 214.60 },
+        "Salt Rock": { cidersPerDrop: 23.94 },
+        "Shimmer Quartz": { cidersPerDrop: 67.28 },
+        "Large Chest 02": { cidersPerDrop: 12947.78 },
+        "Coal": { cidersPerDrop: 6.14 },
       },
-      "Runestone 13": {
-        rq0cs0: 8436.45,
-        rq0cs1: 6749.16,
-        rq1cs0: 7208.07,
-        rq1cs1: 5766.46
+      rq1cs0: {
+        "Orange Gecko": { cidersPerDrop: 7388.62 },
+        "Horn": { cidersPerDrop: 43.84 },
+        "Runestone 13": { cidersPerDrop: 7208.07 },
+        "Sandstone": { cidersPerDrop: 8.42 },
+        "Giant Centipede": { cidersPerDrop: 322.39 },
+        "Medium Chest 02": { cidersPerDrop: 18372.22 },
+        "Runestone 09": { cidersPerDrop: 5014.88 },
+        "Ruby Scorpion": { cidersPerDrop: 691.49 },
+        "Ancient Coin": { cidersPerDrop: 229.27 },
+        "Salt Rock": { cidersPerDrop: 20.52 },
+        "Shimmer Quartz": { cidersPerDrop: 67.08 },
+        "Large Chest 02": { cidersPerDrop: 14054.16 },
+        "Coal": { cidersPerDrop: 8.43 },
       },
-      "Sandstone": {
-        rq0cs0: 7.68,
-        rq0cs1: 6.14,
-        rq1cs0: 8.42,
-        rq1cs1: 6.74
-      },
-      "Giant Centipede": {
-        rq0cs0: 375.97,
-        rq0cs1: 300.78,
-        rq1cs0: 322.39,
-        rq1cs1: 257.91
-      },
-      "Medium Chest 02": {
-        rq0cs0: 21677.87,
-        rq0cs1: 17342.29,
-        rq1cs0: 18372.22,
-        rq1cs1: 14697.78
-      },
-      "Runestone 09": {
-        rq0cs0: 5774.34,
-        rq0cs1: 4619.47,
-        rq1cs0: 5014.88,
-        rq1cs1: 4011.90
-      },
-      "Ruby Scorpion": {
-        rq0cs0: 811.78,
-        rq0cs1: 649.42,
-        rq1cs0: 691.49,
-        rq1cs1: 553.19
-      },
-      "Ancient Coin": {
-        rq0cs0: 268.25,
-        rq0cs1: 214.60,
-        rq1cs0: 229.27,
-        rq1cs1: 183.41
-      },
-      "Salt Rock": {
-        rq0cs0: 29.93,
-        rq0cs1: 23.94,
-        rq1cs0: 20.52,
-        rq1cs1: 16.42
-      },
-      "Shimmer Quartz": {
-        rq0cs0: 84.10,
-        rq0cs1: 67.28,
-        rq1cs0: 67.08,
-        rq1cs1: 53.66
-      },
-      "Large Chest 02": {
-        rq0cs0: 16184.72,
-        rq0cs1: 12947.78,
-        rq1cs0: 14054.16,
-        rq1cs1: 11243.32
-      },
-      "Coal": {
-        rq0cs0: 7.68,
-        rq0cs1: 6.14,
-        rq1cs0: 8.43,
-        rq1cs1: 6.74
+      rq1cs1: {
+        "Orange Gecko": { cidersPerDrop: 5910.89 },
+        "Horn": { cidersPerDrop: 35.07 },
+        "Runestone 13": { cidersPerDrop: 5766.46 },
+        "Sandstone": { cidersPerDrop: 6.74 },
+        "Giant Centipede": { cidersPerDrop: 257.91 },
+        "Medium Chest 02": { cidersPerDrop: 14697.78 },
+        "Runestone 09": { cidersPerDrop: 4011.90 },
+        "Ruby Scorpion": { cidersPerDrop: 553.19 },
+        "Ancient Coin": { cidersPerDrop: 183.41 },
+        "Salt Rock": { cidersPerDrop: 16.42 },
+        "Shimmer Quartz": { cidersPerDrop: 53.66 },
+        "Large Chest 02": { cidersPerDrop: 11243.32 },
+        "Coal": { cidersPerDrop: 6.74 },
       },
     },
     "Mount Banon": {
-      "Unpolished Emerald": {
-        rq0cs0: 47.71,
-        rq0cs1: 38.17,
-        rq1cs0: 32.79,
-        rq1cs1: 26.23
+      rq0cs0: {
+        "Unpolished Emerald": { cidersPerDrop: 47.71 },
+        "Stone": { cidersPerDrop: 13.75 },
+        "Gold Feather": { cidersPerDrop: 11744.90 },
+        "Coal": { cidersPerDrop: 13.74 },
+        "Bacon": { cidersPerDrop: 16878.59 },
+        "Iron": { cidersPerDrop: 13.75 },
+        "Carbon Sphere": { cidersPerDrop: 47.73 },
+        "Magna Quartz": { cidersPerDrop: 4173.62 },
+        "Runestone 19": { cidersPerDrop: 18923.86 },
+        "Small Chest 02": { cidersPerDrop: 16923.34 },
+        "Unpolished Shimmer Stone": { cidersPerDrop: 13.75 },
+        "Dragon Skull": { cidersPerDrop: 86430.42 },
       },
-      "Stone": {
-        rq0cs0: 13.75,
-        rq0cs1: 11.00,
-        rq1cs0: 14.72,
-        rq1cs1: 11.78
+      rq0cs1: {
+        "Unpolished Emerald": { cidersPerDrop: 38.17 },
+        "Stone": { cidersPerDrop: 11.00 },
+        "Gold Feather": { cidersPerDrop: 9395.92 },
+        "Coal": { cidersPerDrop: 10.99 },
+        "Bacon": { cidersPerDrop: 13502.87 },
+        "Iron": { cidersPerDrop: 11.00 },
+        "Carbon Sphere": { cidersPerDrop: 38.19 },
+        "Magna Quartz": { cidersPerDrop: 3338.90 },
+        "Runestone 19": { cidersPerDrop: 15139.09 },
+        "Small Chest 02": { cidersPerDrop: 13538.67 },
+        "Unpolished Shimmer Stone": { cidersPerDrop: 11.00 },
+        "Dragon Skull": { cidersPerDrop: 69144.34 },
       },
-      "Gold Feather": {
-        rq0cs0: 11744.90,
-        rq0cs1: 9395.92,
-        rq1cs0: 10002.33,
-        rq1cs1: 8001.87
+      rq1cs0: {
+        "Unpolished Emerald": { cidersPerDrop: 32.79 },
+        "Stone": { cidersPerDrop: 14.72 },
+        "Gold Feather": { cidersPerDrop: 10002.33 },
+        "Coal": { cidersPerDrop: 14.72 },
+        "Bacon": { cidersPerDrop: 14265.34 },
+        "Iron": { cidersPerDrop: 14.72 },
+        "Carbon Sphere": { cidersPerDrop: 32.77 },
+        "Magna Quartz": { cidersPerDrop: 3571.64 },
+        "Runestone 19": { cidersPerDrop: 16220.60 },
+        "Small Chest 02": { cidersPerDrop: 14271.44 },
+        "Unpolished Shimmer Stone": { cidersPerDrop: 14.72 },
+        "Dragon Skull": { cidersPerDrop: 70704.69 },
       },
-      "Coal": {
-        rq0cs0: 13.74,
-        rq0cs1: 10.99,
-        rq1cs0: 14.72,
-        rq1cs1: 11.78
-      },
-      "Bacon": {
-        rq0cs0: 16878.59,
-        rq0cs1: 13502.87,
-        rq1cs0: 14265.34,
-        rq1cs1: 11412.27
-      },
-      "Iron": {
-        rq0cs0: 13.75,
-        rq0cs1: 11.00,
-        rq1cs0: 14.72,
-        rq1cs1: 11.78
-      },
-      "Carbon Sphere": {
-        rq0cs0: 47.73,
-        rq0cs1: 38.19,
-        rq1cs0: 32.77,
-        rq1cs1: 26.21
-      },
-      "Magna Quartz": {
-        rq0cs0: 4173.62,
-        rq0cs1: 3338.90,
-        rq1cs0: 3571.64,
-        rq1cs1: 2857.31
-      },
-      "Runestone 19": {
-        rq0cs0: 18923.86,
-        rq0cs1: 15139.09,
-        rq1cs0: 16220.60,
-        rq1cs1: 12976.48
-      },
-      "Small Chest 02": {
-        rq0cs0: 16923.34,
-        rq0cs1: 13538.67,
-        rq1cs0: 14271.44,
-        rq1cs1: 11417.15
-      },
-      "Unpolished Shimmer Stone": {
-        rq0cs0: 13.75,
-        rq0cs1: 11.00,
-        rq1cs0: 14.72,
-        rq1cs1: 11.78
-      },
-      "Dragon Skull": {
-        rq0cs0: 86430.42,
-        rq0cs1: 69144.34,
-        rq1cs0: 70704.69,
-        rq1cs1: 56563.75
+      rq1cs1: {
+        "Unpolished Emerald": { cidersPerDrop: 26.23 },
+        "Stone": { cidersPerDrop: 11.78 },
+        "Gold Feather": { cidersPerDrop: 8001.87 },
+        "Coal": { cidersPerDrop: 11.78 },
+        "Bacon": { cidersPerDrop: 11412.27 },
+        "Iron": { cidersPerDrop: 11.78 },
+        "Carbon Sphere": { cidersPerDrop: 26.21 },
+        "Magna Quartz": { cidersPerDrop: 2857.31 },
+        "Runestone 19": { cidersPerDrop: 12976.48 },
+        "Small Chest 02": { cidersPerDrop: 11417.15 },
+        "Unpolished Shimmer Stone": { cidersPerDrop: 11.78 },
+        "Dragon Skull": { cidersPerDrop: 56563.75 },
       },
     },
     "Ember Lagoon": {
-      "Ancient Coin": {
-        rq0cs0: 190.68,
-        rq0cs1: 152.54,
-        rq1cs0: 168.84,
-        rq1cs1: 135.07
+      rq0cs0: {
+        "Ancient Coin": { cidersPerDrop: 190.68 },
+        "Stone": { cidersPerDrop: 4.42 },
+        "Glass Orb": { cidersPerDrop: 20.81 },
+        "Emberstone": { cidersPerDrop: 28.58 },
+        "Runestone 17": { cidersPerDrop: 7854.64 },
+        "Diamond": { cidersPerDrop: 39082.86 },
+        "Moonstone": { cidersPerDrop: 771.63 },
+        "Large Chest 01": { cidersPerDrop: 11634.67 },
+        "Magicite": { cidersPerDrop: 1933.28 },
+        "Prism Shard": { cidersPerDrop: 59.60 },
       },
-      "Stone": {
-        rq0cs0: 4.42,
-        rq0cs1: 3.54,
-        rq1cs0: 5.19,
-        rq1cs1: 4.15
+      rq0cs1: {
+        "Ancient Coin": { cidersPerDrop: 152.54 },
+        "Stone": { cidersPerDrop: 3.54 },
+        "Glass Orb": { cidersPerDrop: 16.65 },
+        "Emberstone": { cidersPerDrop: 22.86 },
+        "Runestone 17": { cidersPerDrop: 6283.71 },
+        "Diamond": { cidersPerDrop: 31266.28 },
+        "Moonstone": { cidersPerDrop: 617.30 },
+        "Large Chest 01": { cidersPerDrop: 9307.74 },
+        "Magicite": { cidersPerDrop: 1546.62 },
+        "Prism Shard": { cidersPerDrop: 47.68 },
       },
-      "Glass Orb": {
-        rq0cs0: 20.81,
-        rq0cs1: 16.65,
-        rq1cs0: 14.55,
-        rq1cs1: 11.64
+      rq1cs0: {
+        "Ancient Coin": { cidersPerDrop: 168.84 },
+        "Stone": { cidersPerDrop: 5.19 },
+        "Glass Orb": { cidersPerDrop: 14.55 },
+        "Emberstone": { cidersPerDrop: 23.21 },
+        "Runestone 17": { cidersPerDrop: 6999.53 },
+        "Diamond": { cidersPerDrop: 34002.04 },
+        "Moonstone": { cidersPerDrop: 683.03 },
+        "Large Chest 01": { cidersPerDrop: 10294.07 },
+        "Magicite": { cidersPerDrop: 1709.40 },
+        "Prism Shard": { cidersPerDrop: 48.95 },
       },
-      "Emberstone": {
-        rq0cs0: 28.58,
-        rq0cs1: 22.86,
-        rq1cs0: 23.21,
-        rq1cs1: 18.57
-      },
-      "Runestone 17": {
-        rq0cs0: 7854.64,
-        rq0cs1: 6283.71,
-        rq1cs0: 6999.53,
-        rq1cs1: 5599.63
-      },
-      "Diamond": {
-        rq0cs0: 39082.86,
-        rq0cs1: 31266.28,
-        rq1cs0: 34002.04,
-        rq1cs1: 27201.63
-      },
-      "Moonstone": {
-        rq0cs0: 771.63,
-        rq0cs1: 617.30,
-        rq1cs0: 683.03,
-        rq1cs1: 546.42
-      },
-      "Large Chest 01": {
-        rq0cs0: 11634.67,
-        rq0cs1: 9307.74,
-        rq1cs0: 10294.07,
-        rq1cs1: 8235.25
-      },
-      "Magicite": {
-        rq0cs0: 1933.28,
-        rq0cs1: 1546.62,
-        rq1cs0: 1709.40,
-        rq1cs1: 1367.52
-      },
-      "Prism Shard": {
-        rq0cs0: 59.60,
-        rq0cs1: 47.68,
-        rq1cs0: 48.95,
-        rq1cs1: 39.16
+      rq1cs1: {
+        "Ancient Coin": { cidersPerDrop: 135.07 },
+        "Stone": { cidersPerDrop: 4.15 },
+        "Glass Orb": { cidersPerDrop: 11.64 },
+        "Emberstone": { cidersPerDrop: 18.57 },
+        "Runestone 17": { cidersPerDrop: 5599.63 },
+        "Diamond": { cidersPerDrop: 27201.63 },
+        "Moonstone": { cidersPerDrop: 546.42 },
+        "Large Chest 01": { cidersPerDrop: 8235.25 },
+        "Magicite": { cidersPerDrop: 1367.52 },
+        "Prism Shard": { cidersPerDrop: 39.16 },
       },
     },
     "Whispering Creek": {
-      "Striped Feather": {
-        rq0cs0: 130.35,
-        rq0cs1: 104.28,
-        rq1cs0: 116.49,
-        rq1cs1: 93.19
+      rq0cs0: {
+        "Striped Feather": { cidersPerDrop: 130.35 },
+        "Salt Rock": { cidersPerDrop: 36.73 },
+        "Slimestone": { cidersPerDrop: 23.26 },
+        "Unpolished Garnet": { cidersPerDrop: 50.16 },
+        "Red Berries": { cidersPerDrop: 130.35 },
+        "Blue Gel": { cidersPerDrop: 63.56 },
+        "Raptor Claw": { cidersPerDrop: 205592.11 },
+        "Sour Root": { cidersPerDrop: 130.20 },
+        "Oak": { cidersPerDrop: 8.95 },
+        "Thorns": { cidersPerDrop: 130.26 },
+        "Orange": { cidersPerDrop: 397.51 },
+        "Herbs": { cidersPerDrop: 3346.60 },
+        "Raptor Egg": { cidersPerDrop: 136314.07 },
+        "Lemon": { cidersPerDrop: 397.01 },
+        "Apple": { cidersPerDrop: 76.91 },
       },
-      "Salt Rock": {
-        rq0cs0: 36.73,
-        rq0cs1: 29.39,
-        rq1cs0: 26.39,
-        rq1cs1: 21.11
+      rq0cs1: {
+        "Striped Feather": { cidersPerDrop: 104.28 },
+        "Salt Rock": { cidersPerDrop: 29.39 },
+        "Slimestone": { cidersPerDrop: 18.61 },
+        "Unpolished Garnet": { cidersPerDrop: 40.13 },
+        "Red Berries": { cidersPerDrop: 104.28 },
+        "Blue Gel": { cidersPerDrop: 50.85 },
+        "Raptor Claw": { cidersPerDrop: 164473.68 },
+        "Sour Root": { cidersPerDrop: 104.16 },
+        "Oak": { cidersPerDrop: 7.16 },
+        "Thorns": { cidersPerDrop: 104.21 },
+        "Orange": { cidersPerDrop: 318.01 },
+        "Herbs": { cidersPerDrop: 2677.28 },
+        "Raptor Egg": { cidersPerDrop: 109051.25 },
+        "Lemon": { cidersPerDrop: 317.61 },
+        "Apple": { cidersPerDrop: 61.53 },
       },
-      "Slimestone": {
-        rq0cs0: 23.26,
-        rq0cs1: 18.61,
-        rq1cs0: 26.39,
-        rq1cs1: 21.11
+      rq1cs0: {
+        "Striped Feather": { cidersPerDrop: 116.49 },
+        "Salt Rock": { cidersPerDrop: 26.39 },
+        "Slimestone": { cidersPerDrop: 26.39 },
+        "Unpolished Garnet": { cidersPerDrop: 41.48 },
+        "Red Berries": { cidersPerDrop: 116.33 },
+        "Blue Gel": { cidersPerDrop: 56.47 },
+        "Raptor Claw": { cidersPerDrop: 175315.57 },
+        "Sour Root": { cidersPerDrop: 116.23 },
+        "Oak": { cidersPerDrop: 10.56 },
+        "Thorns": { cidersPerDrop: 116.19 },
+        "Orange": { cidersPerDrop: 355.71 },
+        "Herbs": { cidersPerDrop: 3002.67 },
+        "Raptor Egg": { cidersPerDrop: 115991.34 },
+        "Lemon": { cidersPerDrop: 356.21 },
+        "Apple": { cidersPerDrop: 71.41 },
       },
-      "Unpolished Garnet": {
-        rq0cs0: 50.16,
-        rq0cs1: 40.13,
-        rq1cs0: 41.48,
-        rq1cs1: 33.18
-      },
-      "Red Berries": {
-        rq0cs0: 130.35,
-        rq0cs1: 104.28,
-        rq1cs0: 116.33,
-        rq1cs1: 93.06
-      },
-      "Blue Gel": {
-        rq0cs0: 63.56,
-        rq0cs1: 50.85,
-        rq1cs0: 56.47,
-        rq1cs1: 45.17
-      },
-      "Raptor Claw": {
-        rq0cs0: 205592.11,
-        rq0cs1: 164473.68,
-        rq1cs0: 175315.57,
-        rq1cs1: 140252.45
-      },
-      "Sour Root": {
-        rq0cs0: 130.20,
-        rq0cs1: 104.16,
-        rq1cs0: 116.23,
-        rq1cs1: 92.98
-      },
-      "Oak": {
-        rq0cs0: 8.95,
-        rq0cs1: 7.16,
-        rq1cs0: 10.56,
-        rq1cs1: 8.45
-      },
-      "Thorns": {
-        rq0cs0: 130.26,
-        rq0cs1: 104.21,
-        rq1cs0: 116.19,
-        rq1cs1: 92.95
-      },
-      "Orange": {
-        rq0cs0: 397.51,
-        rq0cs1: 318.01,
-        rq1cs0: 355.71,
-        rq1cs1: 284.57
-      },
-      "Herbs": {
-        rq0cs0: 3346.60,
-        rq0cs1: 2677.28,
-        rq1cs0: 3002.67,
-        rq1cs1: 2402.13
-      },
-      "Raptor Egg": {
-        rq0cs0: 136314.07,
-        rq0cs1: 109051.25,
-        rq1cs0: 115991.34,
-        rq1cs1: 92793.07
-      },
-      "Lemon": {
-        rq0cs0: 397.01,
-        rq0cs1: 317.61,
-        rq1cs0: 356.21,
-        rq1cs1: 284.97
-      },
-      "Apple": {
-        rq0cs0: 76.91,
-        rq0cs1: 61.53,
-        rq1cs0: 71.41,
-        rq1cs1: 57.13
+      rq1cs1: {
+        "Striped Feather": { cidersPerDrop: 93.19 },
+        "Salt Rock": { cidersPerDrop: 21.11 },
+        "Slimestone": { cidersPerDrop: 21.11 },
+        "Unpolished Garnet": { cidersPerDrop: 33.18 },
+        "Red Berries": { cidersPerDrop: 93.06 },
+        "Blue Gel": { cidersPerDrop: 45.17 },
+        "Raptor Claw": { cidersPerDrop: 140252.45 },
+        "Sour Root": { cidersPerDrop: 92.98 },
+        "Oak": { cidersPerDrop: 8.45 },
+        "Thorns": { cidersPerDrop: 92.95 },
+        "Orange": { cidersPerDrop: 284.57 },
+        "Herbs": { cidersPerDrop: 2402.13 },
+        "Raptor Egg": { cidersPerDrop: 92793.07 },
+        "Lemon": { cidersPerDrop: 284.97 },
+        "Apple": { cidersPerDrop: 57.13 },
       },
     },
     "Jundland Desert": {
-      "Sand": {
-        rq0cs0: 7.70,
-        rq0cs1: 6.16,
-        rq1cs0: 8.79,
-        rq1cs1: 7.03
+      rq0cs0: {
+        "Sand": { cidersPerDrop: 7.70 },
+        "Copper Wire": { cidersPerDrop: 297.74 },
+        "Small Bolt": { cidersPerDrop: 201.33 },
+        "Pulley": { cidersPerDrop: 297.47 },
+        "Broken Pipe": { cidersPerDrop: 177.63 },
+        "Monster Skull": { cidersPerDrop: 777.60 },
+        "Onyx Scorpion": { cidersPerDrop: 900.41 },
+        "Transistor": { cidersPerDrop: 81.13 },
+        "Langstaff Crest": { cidersPerDrop: 231767.61 },
+        "Scrap Metal": { cidersPerDrop: 20.73 },
+        "Scrap Wire": { cidersPerDrop: 32.88 },
+        "Machine Part": { cidersPerDrop: 57.03 },
+        "Prickly Pear": { cidersPerDrop: 117.23 },
       },
-      "Copper Wire": {
-        rq0cs0: 297.74,
-        rq0cs1: 238.19,
-        rq1cs0: 259.39,
-        rq1cs1: 207.51
+      rq0cs1: {
+        "Sand": { cidersPerDrop: 6.16 },
+        "Copper Wire": { cidersPerDrop: 238.19 },
+        "Small Bolt": { cidersPerDrop: 161.06 },
+        "Pulley": { cidersPerDrop: 237.98 },
+        "Broken Pipe": { cidersPerDrop: 142.10 },
+        "Monster Skull": { cidersPerDrop: 622.08 },
+        "Onyx Scorpion": { cidersPerDrop: 720.33 },
+        "Transistor": { cidersPerDrop: 64.90 },
+        "Langstaff Crest": { cidersPerDrop: 185414.09 },
+        "Scrap Metal": { cidersPerDrop: 16.58 },
+        "Scrap Wire": { cidersPerDrop: 26.30 },
+        "Machine Part": { cidersPerDrop: 45.63 },
+        "Prickly Pear": { cidersPerDrop: 93.79 },
       },
-      "Small Bolt": {
-        rq0cs0: 201.33,
-        rq0cs1: 161.06,
-        rq1cs0: 194.06,
-        rq1cs1: 155.25
+      rq1cs0: {
+        "Sand": { cidersPerDrop: 8.79 },
+        "Copper Wire": { cidersPerDrop: 259.39 },
+        "Small Bolt": { cidersPerDrop: 194.06 },
+        "Pulley": { cidersPerDrop: 259.65 },
+        "Broken Pipe": { cidersPerDrop: 154.47 },
+        "Monster Skull": { cidersPerDrop: 681.56 },
+        "Onyx Scorpion": { cidersPerDrop: 785.45 },
+        "Transistor": { cidersPerDrop: 75.61 },
+        "Langstaff Crest": { cidersPerDrop: 214530.89 },
+        "Scrap Metal": { cidersPerDrop: 22.87 },
+        "Scrap Wire": { cidersPerDrop: 22.87 },
+        "Machine Part": { cidersPerDrop: 49.31 },
+        "Prickly Pear": { cidersPerDrop: 102.00 },
       },
-      "Pulley": {
-        rq0cs0: 297.47,
-        rq0cs1: 237.98,
-        rq1cs0: 259.65,
-        rq1cs1: 207.72
-      },
-      "Broken Pipe": {
-        rq0cs0: 177.63,
-        rq0cs1: 142.10,
-        rq1cs0: 154.47,
-        rq1cs1: 123.58
-      },
-      "Monster Skull": {
-        rq0cs0: 777.60,
-        rq0cs1: 622.08,
-        rq1cs0: 681.56,
-        rq1cs1: 545.25
-      },
-      "Onyx Scorpion": {
-        rq0cs0: 900.41,
-        rq0cs1: 720.33,
-        rq1cs0: 785.45,
-        rq1cs1: 628.36
-      },
-      "Transistor": {
-        rq0cs0: 81.13,
-        rq0cs1: 64.90,
-        rq1cs0: 75.61,
-        rq1cs1: 60.49
-      },
-      "Langstaff Crest": {
-        rq0cs0: 231767.61,
-        rq0cs1: 185414.09,
-        rq1cs0: 214530.89,
-        rq1cs1: 171624.71
-      },
-      "Scrap Metal": {
-        rq0cs0: 20.73,
-        rq0cs1: 16.58,
-        rq1cs0: 22.87,
-        rq1cs1: 18.29
-      },
-      "Scrap Wire": {
-        rq0cs0: 32.88,
-        rq0cs1: 26.30,
-        rq1cs0: 22.87,
-        rq1cs1: 18.30
-      },
-      "Machine Part": {
-        rq0cs0: 57.03,
-        rq0cs1: 45.63,
-        rq1cs0: 49.31,
-        rq1cs1: 39.45
-      },
-      "Prickly Pear": {
-        rq0cs0: 117.23,
-        rq0cs1: 93.79,
-        rq1cs0: 102.00,
-        rq1cs1: 81.60
+      rq1cs1: {
+        "Sand": { cidersPerDrop: 7.03 },
+        "Copper Wire": { cidersPerDrop: 207.51 },
+        "Small Bolt": { cidersPerDrop: 155.25 },
+        "Pulley": { cidersPerDrop: 207.72 },
+        "Broken Pipe": { cidersPerDrop: 123.58 },
+        "Monster Skull": { cidersPerDrop: 545.25 },
+        "Onyx Scorpion": { cidersPerDrop: 628.36 },
+        "Transistor": { cidersPerDrop: 60.49 },
+        "Langstaff Crest": { cidersPerDrop: 171624.71 },
+        "Scrap Metal": { cidersPerDrop: 18.29 },
+        "Scrap Wire": { cidersPerDrop: 18.30 },
+        "Machine Part": { cidersPerDrop: 39.45 },
+        "Prickly Pear": { cidersPerDrop: 81.60 },
       },
     },
     "Gary's Crushroom": {
-      "Piece 30": {
-        rq0cs0: 12514.39,
-        rq0cs1: 10011.51,
-        rq1cs0: 12477.54,
-        rq1cs1: 9982.03
+      rq0cs0: {
+        "Piece 30": { cidersPerDrop: 12514.39 },
+        "Gary's Diary Page 36": { cidersPerDrop: 20833333.33 },
+        "Gary's Diary Page 77": { cidersPerDrop: 19230769.23 },
+        "Mushroom": { cidersPerDrop: 2.50 },
       },
-      "Gary's Diary Page 36": {
-        rq0cs0: 20833333.33,
-        rq0cs1: 16666666.67,
-        rq1cs0: 19230769.23,
-        rq1cs1: 15384615.38
+      rq0cs1: {
+        "Piece 30": { cidersPerDrop: 10011.51 },
+        "Gary's Diary Page 36": { cidersPerDrop: 16666666.67 },
+        "Gary's Diary Page 77": { cidersPerDrop: 15384615.38 },
+        "Mushroom": { cidersPerDrop: 2.00 },
       },
-      "Gary's Diary Page 77": {
-        rq0cs0: 19230769.23,
-        rq0cs1: 15384615.38,
-        rq1cs0: 20833333.33,
-        rq1cs1: 16666666.67
+      rq1cs0: {
+        "Piece 30": { cidersPerDrop: 12477.54 },
+        "Gary's Diary Page 36": { cidersPerDrop: 19230769.23 },
+        "Gary's Diary Page 77": { cidersPerDrop: 20833333.33 },
+        "Mushroom": { cidersPerDrop: 2.50 },
       },
-      "Mushroom": {
-        rq0cs0: 2.50,
-        rq0cs1: 2.00,
-        rq1cs0: 2.50,
-        rq1cs1: 2.00
+      rq1cs1: {
+        "Piece 30": { cidersPerDrop: 9982.03 },
+        "Gary's Diary Page 36": { cidersPerDrop: 15384615.38 },
+        "Gary's Diary Page 77": { cidersPerDrop: 16666666.67 },
+        "Mushroom": { cidersPerDrop: 2.00 },
       },
     },
     "Haunted House": {
-      "Apple": {
-        rq0cs0: 45.01,
-        rq0cs1: 36.01,
-        rq1cs0: 39.83,
-        rq1cs1: 31.87
+      rq0cs0: {
+        "Apple": { cidersPerDrop: 45.01 },
+        "Witch Hat": { cidersPerDrop: 586.65 },
+        "Treat Bag 03": { cidersPerDrop: 1967.40 },
+        "Chattering Teeth": { cidersPerDrop: 587.75 },
+        "Candy Corn": { cidersPerDrop: 76.57 },
+        "Spider": { cidersPerDrop: 273.86 },
+        "Hockey Mask": { cidersPerDrop: 39541.32 },
+        "Taffy": { cidersPerDrop: 21.34 },
+        "Treat Bag 02": { cidersPerDrop: 1966.89 },
+        "Bat Wing": { cidersPerDrop: 587.35 },
+        "Treat Bag 01": { cidersPerDrop: 1961.39 },
+        "Lollipop": { cidersPerDrop: 13.42 },
+        "Jack-o-lantern": { cidersPerDrop: 785.90 },
+        "Candy": { cidersPerDrop: 4.84 },
       },
-      "Witch Hat": {
-        rq0cs0: 586.65,
-        rq0cs1: 469.32,
-        rq1cs0: 502.16,
-        rq1cs1: 401.73
+      rq0cs1: {
+        "Apple": { cidersPerDrop: 36.01 },
+        "Witch Hat": { cidersPerDrop: 469.32 },
+        "Treat Bag 03": { cidersPerDrop: 1573.92 },
+        "Chattering Teeth": { cidersPerDrop: 470.20 },
+        "Candy Corn": { cidersPerDrop: 61.25 },
+        "Spider": { cidersPerDrop: 219.09 },
+        "Hockey Mask": { cidersPerDrop: 31633.06 },
+        "Taffy": { cidersPerDrop: 17.07 },
+        "Treat Bag 02": { cidersPerDrop: 1573.51 },
+        "Bat Wing": { cidersPerDrop: 469.88 },
+        "Treat Bag 01": { cidersPerDrop: 1569.11 },
+        "Lollipop": { cidersPerDrop: 10.73 },
+        "Jack-o-lantern": { cidersPerDrop: 628.72 },
+        "Candy": { cidersPerDrop: 3.87 },
       },
-      "Treat Bag 03": {
-        rq0cs0: 1967.40,
-        rq0cs1: 1573.92,
-        rq1cs0: 1689.24,
-        rq1cs1: 1351.39
+      rq1cs0: {
+        "Apple": { cidersPerDrop: 39.83 },
+        "Witch Hat": { cidersPerDrop: 502.16 },
+        "Treat Bag 03": { cidersPerDrop: 1689.24 },
+        "Chattering Teeth": { cidersPerDrop: 503.59 },
+        "Candy Corn": { cidersPerDrop: 82.01 },
+        "Spider": { cidersPerDrop: 233.24 },
+        "Hockey Mask": { cidersPerDrop: 33991.93 },
+        "Taffy": { cidersPerDrop: 14.47 },
+        "Treat Bag 02": { cidersPerDrop: 1678.55 },
+        "Bat Wing": { cidersPerDrop: 502.90 },
+        "Treat Bag 01": { cidersPerDrop: 1682.50 },
+        "Lollipop": { cidersPerDrop: 14.47 },
+        "Jack-o-lantern": { cidersPerDrop: 837.83 },
+        "Candy": { cidersPerDrop: 5.37 },
       },
-      "Chattering Teeth": {
-        rq0cs0: 587.75,
-        rq0cs1: 470.20,
-        rq1cs0: 503.59,
-        rq1cs1: 402.88
-      },
-      "Candy Corn": {
-        rq0cs0: 76.57,
-        rq0cs1: 61.25,
-        rq1cs0: 82.01,
-        rq1cs1: 65.61
-      },
-      "Spider": {
-        rq0cs0: 273.86,
-        rq0cs1: 219.09,
-        rq1cs0: 233.24,
-        rq1cs1: 186.59
-      },
-      "Hockey Mask": {
-        rq0cs0: 39541.32,
-        rq0cs1: 31633.06,
-        rq1cs0: 33991.93,
-        rq1cs1: 27193.54
-      },
-      "Taffy": {
-        rq0cs0: 21.34,
-        rq0cs1: 17.07,
-        rq1cs0: 14.47,
-        rq1cs1: 11.58
-      },
-      "Treat Bag 02": {
-        rq0cs0: 1966.89,
-        rq0cs1: 1573.51,
-        rq1cs0: 1678.55,
-        rq1cs1: 1342.84
-      },
-      "Bat Wing": {
-        rq0cs0: 587.35,
-        rq0cs1: 469.88,
-        rq1cs0: 502.90,
-        rq1cs1: 402.32
-      },
-      "Treat Bag 01": {
-        rq0cs0: 1961.39,
-        rq0cs1: 1569.11,
-        rq1cs0: 1682.50,
-        rq1cs1: 1346.00
-      },
-      "Lollipop": {
-        rq0cs0: 13.42,
-        rq0cs1: 10.73,
-        rq1cs0: 14.47,
-        rq1cs1: 11.57
-      },
-      "Jack-o-lantern": {
-        rq0cs0: 785.90,
-        rq0cs1: 628.72,
-        rq1cs0: 837.83,
-        rq1cs1: 670.26
-      },
-      "Candy": {
-        rq0cs0: 4.84,
-        rq0cs1: 3.87,
-        rq1cs0: 5.37,
-        rq1cs1: 4.30
+      rq1cs1: {
+        "Apple": { cidersPerDrop: 31.87 },
+        "Witch Hat": { cidersPerDrop: 401.73 },
+        "Treat Bag 03": { cidersPerDrop: 1351.39 },
+        "Chattering Teeth": { cidersPerDrop: 402.88 },
+        "Candy Corn": { cidersPerDrop: 65.61 },
+        "Spider": { cidersPerDrop: 186.59 },
+        "Hockey Mask": { cidersPerDrop: 27193.54 },
+        "Taffy": { cidersPerDrop: 11.58 },
+        "Treat Bag 02": { cidersPerDrop: 1342.84 },
+        "Bat Wing": { cidersPerDrop: 402.32 },
+        "Treat Bag 01": { cidersPerDrop: 1346.00 },
+        "Lollipop": { cidersPerDrop: 11.57 },
+        "Jack-o-lantern": { cidersPerDrop: 670.26 },
+        "Candy": { cidersPerDrop: 4.30 },
       },
     },
     "Santa's Workshop": {
-      "Purple Ornament": {
-        rq0cs0: 25.47,
-        rq0cs1: 20.38,
-        rq1cs0: 26.36,
-        rq1cs1: 21.09
+      rq0cs0: {
+        "Purple Ornament": { cidersPerDrop: 25.47 },
+        "Iron": { cidersPerDrop: 25.49 },
+        "Blue Ornament": { cidersPerDrop: 25.48 },
+        "Yellow Ornament": { cidersPerDrop: 25.48 },
+        "Nails": { cidersPerDrop: 25.49 },
+        "Red Ornament": { cidersPerDrop: 25.49 },
+        "Board": { cidersPerDrop: 25.47 },
+        "Orange Ornament": { cidersPerDrop: 25.48 },
+        "Green Ornament": { cidersPerDrop: 25.48 },
+        "Rudolph": { cidersPerDrop: 67593.67 },
+        "Candy Roll": { cidersPerDrop: 53.41 },
+        "Carbon Sphere": { cidersPerDrop: 81.30 },
+        "Milk and Cookies": { cidersPerDrop: 139888.09 },
+        "Antler": { cidersPerDrop: 137.01 },
+        "Star": { cidersPerDrop: 109.15 },
+        "Yarn": { cidersPerDrop: 109.14 },
+        "Candy Cane": { cidersPerDrop: 53.48 },
       },
-      "Iron": {
-        rq0cs0: 25.49,
-        rq0cs1: 20.39,
-        rq1cs0: 26.37,
-        rq1cs1: 21.10
+      rq0cs1: {
+        "Purple Ornament": { cidersPerDrop: 20.38 },
+        "Iron": { cidersPerDrop: 20.39 },
+        "Blue Ornament": { cidersPerDrop: 20.39 },
+        "Yellow Ornament": { cidersPerDrop: 20.39 },
+        "Nails": { cidersPerDrop: 20.39 },
+        "Red Ornament": { cidersPerDrop: 20.39 },
+        "Board": { cidersPerDrop: 20.38 },
+        "Orange Ornament": { cidersPerDrop: 20.38 },
+        "Green Ornament": { cidersPerDrop: 20.38 },
+        "Rudolph": { cidersPerDrop: 54074.93 },
+        "Candy Roll": { cidersPerDrop: 42.73 },
+        "Carbon Sphere": { cidersPerDrop: 65.04 },
+        "Milk and Cookies": { cidersPerDrop: 111910.47 },
+        "Antler": { cidersPerDrop: 109.61 },
+        "Star": { cidersPerDrop: 87.32 },
+        "Yarn": { cidersPerDrop: 87.31 },
+        "Candy Cane": { cidersPerDrop: 42.78 },
       },
-      "Blue Ornament": {
-        rq0cs0: 25.48,
-        rq0cs1: 20.39,
-        rq1cs0: 26.35,
-        rq1cs1: 21.08
+      rq1cs0: {
+        "Purple Ornament": { cidersPerDrop: 26.36 },
+        "Iron": { cidersPerDrop: 26.37 },
+        "Blue Ornament": { cidersPerDrop: 26.35 },
+        "Yellow Ornament": { cidersPerDrop: 26.36 },
+        "Nails": { cidersPerDrop: 26.35 },
+        "Red Ornament": { cidersPerDrop: 26.35 },
+        "Board": { cidersPerDrop: 26.35 },
+        "Orange Ornament": { cidersPerDrop: 26.36 },
+        "Green Ornament": { cidersPerDrop: 26.36 },
+        "Rudolph": { cidersPerDrop: 58937.44 },
+        "Candy Roll": { cidersPerDrop: 55.18 },
+        "Carbon Sphere": { cidersPerDrop: 55.20 },
+        "Milk and Cookies": { cidersPerDrop: 116201.86 },
+        "Antler": { cidersPerDrop: 112.59 },
+        "Star": { cidersPerDrop: 83.89 },
+        "Yarn": { cidersPerDrop: 83.90 },
+        "Candy Cane": { cidersPerDrop: 55.15 },
       },
-      "Yellow Ornament": {
-        rq0cs0: 25.48,
-        rq0cs1: 20.39,
-        rq1cs0: 26.36,
-        rq1cs1: 21.09
-      },
-      "Nails": {
-        rq0cs0: 25.49,
-        rq0cs1: 20.39,
-        rq1cs0: 26.35,
-        rq1cs1: 21.08
-      },
-      "Red Ornament": {
-        rq0cs0: 25.49,
-        rq0cs1: 20.39,
-        rq1cs0: 26.35,
-        rq1cs1: 21.08
-      },
-      "Board": {
-        rq0cs0: 25.47,
-        rq0cs1: 20.38,
-        rq1cs0: 26.35,
-        rq1cs1: 21.08
-      },
-      "Orange Ornament": {
-        rq0cs0: 25.48,
-        rq0cs1: 20.38,
-        rq1cs0: 26.36,
-        rq1cs1: 21.09
-      },
-      "Green Ornament": {
-        rq0cs0: 25.48,
-        rq0cs1: 20.38,
-        rq1cs0: 26.36,
-        rq1cs1: 21.09
-      },
-      "Rudolph": {
-        rq0cs0: 67593.67,
-        rq0cs1: 54074.93,
-        rq1cs0: 58937.44,
-        rq1cs1: 47149.95
-      },
-      "Candy Roll": {
-        rq0cs0: 53.41,
-        rq0cs1: 42.73,
-        rq1cs0: 55.18,
-        rq1cs1: 44.14
-      },
-      "Carbon Sphere": {
-        rq0cs0: 81.30,
-        rq0cs1: 65.04,
-        rq1cs0: 55.20,
-        rq1cs1: 44.16
-      },
-      "Milk and Cookies": {
-        rq0cs0: 139888.09,
-        rq0cs1: 111910.47,
-        rq1cs0: 116201.86,
-        rq1cs1: 92961.49
-      },
-      "Antler": {
-        rq0cs0: 137.01,
-        rq0cs1: 109.61,
-        rq1cs0: 112.59,
-        rq1cs1: 90.07
-      },
-      "Star": {
-        rq0cs0: 109.15,
-        rq0cs1: 87.32,
-        rq1cs0: 83.89,
-        rq1cs1: 67.11
-      },
-      "Yarn": {
-        rq0cs0: 109.14,
-        rq0cs1: 87.31,
-        rq1cs0: 83.90,
-        rq1cs1: 67.12
-      },
-      "Candy Cane": {
-        rq0cs0: 53.48,
-        rq0cs1: 42.78,
-        rq1cs0: 55.15,
-        rq1cs1: 44.12
+      rq1cs1: {
+        "Purple Ornament": { cidersPerDrop: 21.09 },
+        "Iron": { cidersPerDrop: 21.10 },
+        "Blue Ornament": { cidersPerDrop: 21.08 },
+        "Yellow Ornament": { cidersPerDrop: 21.09 },
+        "Nails": { cidersPerDrop: 21.08 },
+        "Red Ornament": { cidersPerDrop: 21.08 },
+        "Board": { cidersPerDrop: 21.08 },
+        "Orange Ornament": { cidersPerDrop: 21.09 },
+        "Green Ornament": { cidersPerDrop: 21.09 },
+        "Rudolph": { cidersPerDrop: 47149.95 },
+        "Candy Roll": { cidersPerDrop: 44.14 },
+        "Carbon Sphere": { cidersPerDrop: 44.16 },
+        "Milk and Cookies": { cidersPerDrop: 92961.49 },
+        "Antler": { cidersPerDrop: 90.07 },
+        "Star": { cidersPerDrop: 67.11 },
+        "Yarn": { cidersPerDrop: 67.12 },
+        "Candy Cane": { cidersPerDrop: 44.12 },
       },
     },
   }

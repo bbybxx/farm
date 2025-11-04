@@ -2348,6 +2348,7 @@ body.no-visual-scrollbar,
   background: color-mix(in oklab, #ffffff 4%, transparent);
   border: 1px solid color-mix(in oklab, #ffffff 8%, transparent);
   border-radius: 10px;
+  gap: 8px;
 }
 
 .folder-config-info {
@@ -2355,12 +2356,16 @@ body.no-visual-scrollbar,
   flex-direction: column;
   gap: 4px;
   flex: 1;
+  min-width: 0;
 }
 
 .folder-config-name {
   font-weight: 600;
   font-size: 14px;
   color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .folder-config-count {
@@ -2372,6 +2377,7 @@ body.no-visual-scrollbar,
 .folder-config-actions {
   display: flex;
   gap: 6px;
+  flex-shrink: 0;
 }
 
 .folder-config-btn {
@@ -2409,6 +2415,7 @@ body.no-visual-scrollbar,
   align-items: center;
   gap: 8px;
   flex: 1;
+  min-width: 0;
 }
 
 .folder-name-input {
@@ -2518,6 +2525,8 @@ body.no-visual-scrollbar,
   border: 1px solid color-mix(in oklab, #fa5252 25%, transparent);
   border-radius: 8px;
   animation: slideIn 0.15s ease-out;
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 .folder-delete-message {
@@ -2525,6 +2534,9 @@ body.no-visual-scrollbar,
   color: var(--text);
   white-space: nowrap;
   margin-right: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
 }
 
 @keyframes slideIn {
@@ -2547,6 +2559,38 @@ body.no-visual-scrollbar,
   .folder-tab {
     padding: 6px 10px;
     font-size: 12px;
+  }
+
+  .folder-config-modal {
+    width: calc(100vw - 16px);
+  }
+
+  .folder-config-item {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .folder-config-info {
+    width: 100%;
+  }
+
+  .folder-config-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .folder-edit-input-wrapper {
+    width: 100%;
+  }
+
+  .folder-delete-confirm {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .folder-delete-message {
+    max-width: none;
+    flex: 1;
   }
   
   .folder-config-modal {

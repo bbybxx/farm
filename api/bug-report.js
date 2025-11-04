@@ -52,14 +52,11 @@ export default async function handler(req, res) {
       maxFileSize: 20 * 1024 * 1024, // 20MB
       maxFiles: 8,
       keepExtensions: true,
+      multiples: true, // Allow multiple files with same field name
     });
 
-    const [fields, files] = await new Promise((resolve, reject) => {
-      form.parse(req, (err, fields, files) => {
-        if (err) reject(err);
-        else resolve([fields, files]);
-      });
-    });
+    // In formidable v3, use the promisified parse
+    const { fields, files } = await form.parse(req);
 
     console.log('📦 Received fields:', Object.keys(fields));
     console.log('📦 Received files object keys:', Object.keys(files));

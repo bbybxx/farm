@@ -56,12 +56,20 @@ const craftableItems = items.filter(item =>
 console.log(`Craftable items with recipes: ${craftableItems.length}`);
 
 // Build recipes-api.json structure
-console.log('\nBuilding recipes-api.json structure...');
-const recipesApi = {};
+console.log('Building recipes-api.json structure...');
+
+// Read existing recipes-api.json if it exists
+const recipesApiPath = path.join(__dirname, '..', 'src', 'data', 'recipes-api.json');
+let recipesApi = {};
+if (fs.existsSync(recipesApiPath)) {
+  recipesApi = JSON.parse(fs.readFileSync(recipesApiPath, 'utf8'));
+  console.log(`Loaded ${Object.keys(recipesApi).length} existing recipes`);
+}
 
 // Sort items alphabetically
 craftableItems.sort((a, b) => a.name.localeCompare(b.name));
 
+// Add/update recipes from API (but don't remove existing ones)
 craftableItems.forEach(item => {
   const ingredients = {};
   item.recipeItems.forEach(recipeItem => {
@@ -75,13 +83,23 @@ craftableItems.forEach(item => {
   };
 });
 
+console.log(`Total recipes after merge: ${Object.keys(recipesApi).length}`);
+
 // Build items-api.json structure
 console.log('Building items-api.json structure...');
-const itemsApi = {};
+
+// Read existing items-api.json if it exists
+const itemsApiPath = path.join(__dirname, '..', 'src', 'data', 'items-api.json');
+let itemsApi = {};
+if (fs.existsSync(itemsApiPath)) {
+  itemsApi = JSON.parse(fs.readFileSync(itemsApiPath, 'utf8'));
+  console.log(`Loaded ${Object.keys(itemsApi).length} existing items`);
+}
 
 // Sort all items alphabetically
 items.sort((a, b) => a.name.localeCompare(b.name));
 
+// Add/update items from API (but don't remove existing ones)
 items.forEach(item => {
   itemsApi[item.name] = {
     name: item.name,
@@ -92,9 +110,9 @@ items.forEach(item => {
   };
 });
 
+console.log(`Total items after merge: ${Object.keys(itemsApi).length}`);
+
 // Save files
-const recipesApiPath = path.join(__dirname, '..', 'src', 'data', 'recipes-api.json');
-const itemsApiPath = path.join(__dirname, '..', 'src', 'data', 'items-api.json');
 
 console.log('\nSaving files...');
 

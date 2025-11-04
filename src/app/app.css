@@ -2573,22 +2573,21 @@ body.no-visual-scrollbar,
   }
 
   .folder-config-item {
-    padding: 10px 8px;
+    padding: 8px 6px;
     gap: 6px;
+    flex-wrap: nowrap !important;
   }
 
-  /* Only wrap when NOT editing */
-  .folder-config-item:not(:has(.folder-edit-input-wrapper)) {
-    flex-wrap: wrap;
+  .folder-config-info {
+    flex: 1;
+    min-width: 0;
+    width: auto !important;
   }
 
-  .folder-config-item:not(:has(.folder-edit-input-wrapper)) .folder-config-info {
-    width: 100%;
-  }
-
-  .folder-config-item:not(:has(.folder-edit-input-wrapper)) .folder-config-actions {
-    width: 100%;
-    justify-content: flex-end;
+  .folder-config-actions {
+    flex-shrink: 0;
+    gap: 4px;
+    width: auto !important;
   }
 
   .folder-edit-input-wrapper {

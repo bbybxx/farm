@@ -261,7 +261,6 @@ export default function App() {
     loadFromStorage('craftCalculator_activePinnedFolder', 'default')
   )
   const [isFolderConfigOpen, setIsFolderConfigOpen] = useState(false)
-  const [folderMenuData, setFolderMenuData] = useState(null) // { x, y, itemId } for folder selection menu
   const [useThousandsFormat, setUseThousandsFormat] = useState(() => loadFromStorage('craftCalculator_useThousandsFormat', true))
   const [recentlyAddedItems, setRecentlyAddedItems] = useState(new Set())
   const [showClearConfirm, setShowClearConfirm] = useState(false)
@@ -785,32 +784,9 @@ export default function App() {
   }, [pinnedEnabled, historyEnabled, sidebarActiveTab])
 
   // Pinned resources functions
-  const addToPinned = (resourceName, quantity, parentRecipe = null, event = null) => {
-    // If multiple folders exist, show folder selection menu
-    if (pinnedFolders.length > 1 && event) {
-      const rect = event.currentTarget.getBoundingClientRect()
-      setFolderMenuData({
-        x: rect.left,
-        y: rect.top - 8, // Position above the button
-        resourceName,
-        quantity,
-        parentRecipe
-      })
-      return
-    }
-    
-    // Otherwise add to active folder
-    const result = addToPinnedWithFolder(resourceName, quantity, parentRecipe)
-    if (result && result.showFolderMenu && event) {
-      const rect = event.currentTarget.getBoundingClientRect()
-      setFolderMenuData({
-        x: rect.left,
-        y: rect.top - 8,
-        resourceName,
-        quantity,
-        parentRecipe
-      })
-    }
+  const addToPinned = (resourceName, quantity, parentRecipe = null) => {
+    // Always add to the active folder
+    addToPinnedWithFolder(resourceName, quantity, parentRecipe, activePinnedFolder || 'default')
   }
 
   const removeFromPinned = (index) => {
@@ -851,19 +827,7 @@ export default function App() {
   }
 
   const addToPinnedWithFolder = (resourceName, quantity, parentRecipe = null, folderId = null) => {
-    // Determine which folder to add to
-    let targetFolder = folderId
-    
-    // If no folder specified and we have multiple folders, show menu
-    if (!targetFolder && pinnedFolders.length > 1) {
-      // Store pending add and show folder selection menu
-      return { showFolderMenu: true, resourceName, quantity, parentRecipe }
-    }
-    
-    // Default to active folder or 'default'
-    if (!targetFolder) {
-      targetFolder = activePinnedFolder || 'default'
-    }
+    const targetFolder = folderId || activePinnedFolder || 'default'
     
     hapticFeedback('light')
     
@@ -918,8 +882,6 @@ export default function App() {
       }, 2000)
       recentlyAddedTimersRef.current.add(timerId)
     }
-    
-    return { showFolderMenu: false }
   }
 
   // Save pinned resources to localStorage
@@ -2291,7 +2253,7 @@ export default function App() {
                               return (
                                 <button
                                   className={`pin-btn ${recentlyAddedItems.has(`${it}_${qtyForPin}_${selectedLocation || item}`) ? 'success' : ''}`}
-                                  onClick={(e) => { e.stopPropagation(); addToPinned(it, qtyForPin, selectedLocation || item, e) }}
+                                  onClick={(e) => { e.stopPropagation(); addToPinned(it, qtyForPin, selectedLocation || item) }}
                                   type="button"
                                   title={`Pin ${it}`}
                                 >
@@ -2452,7 +2414,7 @@ export default function App() {
                           return (
                             <button
                               className={`pin-btn ${recentlyAddedItems.has(`${c.name}_${qtyForCraftPin}_${item}`) ? 'success' : ''}`}
-                              onClick={(e) => { e.stopPropagation(); addToPinned(c.name, qtyForCraftPin, item, e) }}
+                              onClick={(e) => { e.stopPropagation(); addToPinned(c.name, qtyForCraftPin, item) }}
                               type="button"
                               title={`Pin ${c.name}`}
                             >
@@ -2621,53 +2583,6 @@ export default function App() {
                 </div>
               </motion.div>
             </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Folder Selection Menu */}
-        <AnimatePresence>
-          {folderMenuData && (
-            <>
-              <motion.div
-                className="folder-menu-overlay"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setFolderMenuData(null)}
-              />
-              <motion.div
-                className="folder-menu"
-                style={{
-                  position: 'fixed',
-                  left: folderMenuData.x,
-                  top: folderMenuData.y,
-                  transform: 'translateY(-100%)'
-                }}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.15 }}
-              >
-                <div className="folder-menu-title">Pin to folder:</div>
-                {pinnedFolders.map(folder => (
-                  <button
-                    key={folder.id}
-                    className="folder-menu-item"
-                    onClick={() => {
-                      addToPinnedWithFolder(
-                        folderMenuData.resourceName,
-                        folderMenuData.quantity,
-                        folderMenuData.parentRecipe,
-                        folder.id
-                      )
-                      setFolderMenuData(null)
-                    }}
-                  >
-                    {folder.name}
-                  </button>
-                ))}
-              </motion.div>
-            </>
           )}
         </AnimatePresence>
 

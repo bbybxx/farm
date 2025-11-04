@@ -35,8 +35,11 @@ function BugReportModal({ isOpen, onClose, onSubmit }) {
           onClose();
         }, 2000);
       } else {
-        // Handle error - you could show an error message here}
-    } catch (error) {} finally {
+        // Handle error - you could show an error message here
+      }
+    } catch (error) {
+      // Error handling removed
+    } finally {
       setIsSubmitting(false);
     }
   };

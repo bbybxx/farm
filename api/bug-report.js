@@ -96,14 +96,23 @@ export default async function handler(req, res) {
     telegramMessage += `📶 Online: ${metadata.onLine ? 'Yes' : 'No'}\n\n`;
     telegramMessage += `📝 Report:\n${message.trim()}`;
 
+    // Debug: log what we received
+    console.log('Received files object:', JSON.stringify(Object.keys(files), null, 2));
+    console.log('Files.files exists:', !!files.files);
+    console.log('All file keys:', Object.keys(files));
+
     // Send files first if any
+    // formidable returns files in format: { fieldName: File | File[] }
     const uploadedFiles = files.files ? (Array.isArray(files.files) ? files.files : [files.files]) : [];
+    
+    console.log('Uploaded files count:', uploadedFiles.length);
     
     if (uploadedFiles.length > 0) {
       const fs = await import('fs');
       const FormData = (await import('form-data')).default;
 
       for (const file of uploadedFiles) {
+        console.log('Processing file:', file.originalFilename, file.mimetype, file.size);
         try {
           const formData = new FormData();
           formData.append('chat_id', CHAT_ID);
@@ -120,10 +129,13 @@ export default async function handler(req, res) {
             contentType: file.mimetype,
           });
 
-          await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/${endpoint}`, {
+          const uploadResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/${endpoint}`, {
             method: 'POST',
             body: formData,
           });
+
+          const uploadResult = await uploadResponse.json();
+          console.log('File upload result:', uploadResult.ok ? 'SUCCESS' : 'FAILED', uploadResult);
 
           // Clean up temp file
           fs.unlinkSync(file.filepath);

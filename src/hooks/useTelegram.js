@@ -180,11 +180,15 @@ export function useTelegram() {
         form.append('message', message);
         form.append('metadata', JSON.stringify(bugReportData));
 
-        if (Array.isArray(files)) {
+        if (Array.isArray(files) && files.length > 0) {
+          devLog('📎 Attaching files:', files.length);
           files.slice(0, 8).forEach((f, idx) => {
+            devLog(`  File ${idx + 1}:`, f.name, f.type, `${(f.size / 1024).toFixed(1)} KB`);
             // append files under 'files' field
             form.append('files', f, f.name);
           });
+        } else {
+          devLog('⚠️ No files to attach');
         }
 
   const endpoint = apiBase ? apiBase + '/api/bug-report' : '/api/bug-report';
@@ -195,13 +199,18 @@ export function useTelegram() {
     endpoint,
     hostname: window.location.hostname,
     protocol: window.location.protocol,
-    hasFiles: files?.length || 0
+    hasFiles: files?.length || 0,
+    formDataEntries: Array.from(form.entries()).map(([k, v]) => 
+      v instanceof File ? `${k}: ${v.name} (${v.size} bytes)` : `${k}: ${typeof v}`
+    )
   });
   
   response = await fetch(endpoint, {
           method: 'POST',
           body: form
         });
+        
+        devLog('📬 Response status:', response.status, response.statusText);
       } else {
         // Локально отправляем напрямую через Telegram Bot API.
         // We'll upload attachments first (images -> sendPhoto, others -> sendDocument), then send text message.

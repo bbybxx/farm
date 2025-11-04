@@ -213,6 +213,15 @@ export function useTelegram() {
         });
         
         console.log('📬 Response status:', response.status, response.statusText);
+        
+        // Log response body
+        const responseClone = response.clone();
+        try {
+          const responseData = await responseClone.json();
+          console.log('📥 Response data:', responseData);
+        } catch (e) {
+          console.log('📥 Response is not JSON');
+        }
       } else {
         // Локально отправляем напрямую через Telegram Bot API.
         // We'll upload attachments first (images -> sendPhoto, others -> sendDocument), then send text message.

@@ -61,6 +61,13 @@ export default async function handler(req, res) {
       });
     });
 
+    console.log('📦 Received fields:', Object.keys(fields));
+    console.log('📦 Received files object keys:', Object.keys(files));
+    console.log('📦 files.files exists?', !!files.files);
+    console.log('📦 All files keys and types:', Object.entries(files).map(([k, v]) => 
+      `${k}: ${Array.isArray(v) ? `Array(${v.length})` : typeof v}`
+    ));
+
     // Extract data
     const message = Array.isArray(fields.message) ? fields.message[0] : fields.message;
     const metadataStr = Array.isArray(fields.metadata) ? fields.metadata[0] : fields.metadata;
@@ -103,17 +110,23 @@ export default async function handler(req, res) {
     
     if (files.files) {
       uploadedFiles = Array.isArray(files.files) ? files.files : [files.files];
+      console.log('✅ Found files.files:', uploadedFiles.length);
     } else {
+      console.log('⚠️ files.files not found, checking all keys...');
       // Fallback: check all keys in files object
       Object.keys(files).forEach(key => {
         const fileOrFiles = files[key];
         if (Array.isArray(fileOrFiles)) {
+          console.log(`  Found ${fileOrFiles.length} files under key "${key}"`);
           uploadedFiles.push(...fileOrFiles);
         } else if (fileOrFiles) {
+          console.log(`  Found 1 file under key "${key}"`);
           uploadedFiles.push(fileOrFiles);
         }
       });
     }
+    
+    console.log('📎 Total uploaded files to process:', uploadedFiles.length);
     
     if (uploadedFiles.length > 0) {
       const fs = await import('fs');

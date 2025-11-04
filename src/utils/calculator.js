@@ -165,9 +165,21 @@ export function calculateAllResources(itemName, amount, activePerks, recipes = n
         neededQty /= (1 + resourceSaverPercent);
       }
       
+      if (itemName === 'Pitchfork' && component === 'Emberstone') {
+        console.log(`DEBUG Pitchfork -> Emberstone: componentQty=${componentQty}, amount=${amount}, neededQty=${neededQty}, ceil=${Math.ceil(neededQty)}`);
+      }
+      
       const materials = getMaterials(component, Math.ceil(neededQty));
+      
+      if (itemName === 'Pitchfork' && component === 'Emberstone') {
+        console.log(`DEBUG materials from getMaterials:`, materials);
+      }
+      
       for (const [mat, qty] of Object.entries(materials)) {
         totals.base[mat] = (totals.base[mat] || 0) + qty;
+        if (itemName === 'Pitchfork' && mat === 'Emberstone') {
+          console.log(`DEBUG Adding to totals.base: mat=${mat}, qty=${qty}, totals.base[mat]=${totals.base[mat]}`);
+        }
       }
     }
   }

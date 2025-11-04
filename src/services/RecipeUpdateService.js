@@ -189,7 +189,8 @@ class RecipeUpdateService {
           if (!response.ok) {
             const errorText = await response.text()
             const error = new Error(`HTTP error! status: ${response.status}, text: ${errorText}`)
-            error.urlTried = urlthrow error
+            error.urlTried = url
+            throw error
           }
 
           const data = await response.json()
@@ -207,7 +208,8 @@ class RecipeUpdateService {
           if (data.errors) {
             const error = new Error('GraphQL errors occurred')
             error.errors = data.errors
-            error.urlTried = urlthrow error
+            error.urlTried = url
+            throw error
           }
 
           this._lastSuccessfulUrl = url
@@ -216,18 +218,23 @@ class RecipeUpdateService {
           devLog('✅ Items received:', items.length, 'via', url)
           devLog('🔍 First 5 items:', items.slice(0, 5).map(item => item.name) || [])
 
-          if (items.length === 0) {}
+          if (items.length === 0) {
+            // API returned empty items array
+          }
 
           return items
         } catch (error) {
-          lastError = error}
+          lastError = error
+        }
       }
 
-      if (lastError) {throw lastError
+      if (lastError) {
+        throw lastError
       }
 
       throw new Error('All API endpoints failed')
-    } catch (error) {throw error
+    } catch (error) {
+      throw error
     }
   }
 
@@ -235,7 +242,8 @@ class RecipeUpdateService {
   processAndSaveRecipes(items) {
     devLog('🔧 Processing recipes from', items?.length || 0, 'items')
     
-    if (!items || items.length === 0) {return { recipes: {}, items: {} }
+    if (!items || items.length === 0) {
+      return { recipes: {}, items: {} }
     }
 
     const recipes = {};

@@ -77,7 +77,7 @@ export function calculateAllResources(itemName, amount, activePerks, recipes = n
 
   function getMaterials(item, qty, path = []) {
     // Cycle detection
-    if (path.includes(item)) {);
+    if (path.includes(item)) {
       return {};
     }
 

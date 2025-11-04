@@ -164,7 +164,6 @@ export default async function handler(req, res) {
     
     if (uploadedFiles.length > 0) {
       const fs = await import('fs');
-      const FormData = (await import('form-data')).default;
 
       for (const file of uploadedFiles) {
         try {
@@ -174,9 +173,6 @@ export default async function handler(req, res) {
             continue;
           }
 
-          const formData = new FormData();
-          formData.append('chat_id', CHAT_ID);
-          
           // Detect if image or document
           const isImage = file.mimetype && file.mimetype.startsWith('image/');
           const endpoint = isImage ? 'sendPhoto' : 'sendDocument';
@@ -187,41 +183,37 @@ export default async function handler(req, res) {
           
           console.log(`📤 Uploading file: ${filename} (${file.size} bytes) to ${endpoint}`);
           
-          // Read file as Buffer (more reliable than stream)
+          // Read file as Buffer
           const fileBuffer = fs.readFileSync(file.filepath);
           console.log(`📦 Buffer created: ${fileBuffer.length} bytes`);
           
-          formData.append(fieldName, fileBuffer, {
-            filename: filename,
-            contentType: file.mimetype || 'application/octet-stream',
+          // Create Blob from Buffer (for native FormData)
+          const blob = new Blob([fileBuffer], { 
+            type: file.mimetype || 'application/octet-stream' 
           });
-
-          // Wait for form-data to calculate content-length
-          await new Promise((resolve) => {
-            formData.getLength((err, length) => {
-              if (err) {
-                console.error('Error calculating form-data length:', err);
-              } else {
-                console.log(`📏 FormData total length: ${length} bytes`);
-              }
-              resolve();
-            });
-          });
-
-          // form-data package requires headers to be set manually with fetch
-          const headers = formData.getHeaders();
-          console.log(`📋 Headers:`, headers);
+          console.log(`📦 Blob created: ${blob.size} bytes, type: ${blob.type}`);
+          
+          // Use native FormData (Node.js 18+)
+          const formData = new FormData();
+          formData.append('chat_id', CHAT_ID);
+          formData.append(fieldName, blob, filename);
+          
+          console.log(`📋 FormData ready with ${fieldName} field`);
           
           const uploadResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/${endpoint}`, {
             method: 'POST',
             body: formData,
-            headers: headers,
+            // DON'T set Content-Type header - let fetch/FormData handle it automatically
           });
 
           console.log(`📡 Upload response status: ${uploadResponse.status}`);
           
           const responseText = await uploadResponse.text();
           console.log(`📡 Upload response body length: ${responseText.length}`);
+          
+          if (responseText.length > 0) {
+            console.log(`📡 Upload response text: ${responseText}`);
+          }
           
           let uploadResult;
           try {

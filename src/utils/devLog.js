@@ -16,7 +16,8 @@ export const devError = (...args) => {
 }
 
 // In production, silence ALL console output globally
-if (!isDev) {
+// TEMPORARILY DISABLED FOR BUG REPORT DEBUGGING
+if (false && !isDev) {
   const noop = () => {}
   console.log = noop
   console.warn = noop

@@ -189,9 +189,7 @@ class RecipeUpdateService {
           if (!response.ok) {
             const errorText = await response.text()
             const error = new Error(`HTTP error! status: ${response.status}, text: ${errorText}`)
-            error.urlTried = url
-            console.error('❌ HTTP error:', error)
-            throw error
+            error.urlTried = urlthrow error
           }
 
           const data = await response.json()
@@ -209,9 +207,7 @@ class RecipeUpdateService {
           if (data.errors) {
             const error = new Error('GraphQL errors occurred')
             error.errors = data.errors
-            error.urlTried = url
-            console.error('❌ GraphQL errors:', data.errors)
-            throw error
+            error.urlTried = urlthrow error
           }
 
           this._lastSuccessfulUrl = url
@@ -220,26 +216,18 @@ class RecipeUpdateService {
           devLog('✅ Items received:', items.length, 'via', url)
           devLog('🔍 First 5 items:', items.slice(0, 5).map(item => item.name) || [])
 
-          if (items.length === 0) {
-            console.warn('⚠️ API returned 0 items!')
-          }
+          if (items.length === 0) {}
 
           return items
         } catch (error) {
-          lastError = error
-          console.error('❌ Ошибка при запросе к', error.urlTried || url, ':', error)
-        }
+          lastError = error}
       }
 
-      if (lastError) {
-        console.error('❌ All URLs failed, last error:', lastError)
-        throw lastError
+      if (lastError) {throw lastError
       }
 
       throw new Error('All API endpoints failed')
-    } catch (error) {
-      console.error('❌ Ошибка при получении рецептов:', error)
-      throw error
+    } catch (error) {throw error
     }
   }
 
@@ -247,9 +235,7 @@ class RecipeUpdateService {
   processAndSaveRecipes(items) {
     devLog('🔧 Processing recipes from', items?.length || 0, 'items')
     
-    if (!items || items.length === 0) {
-      console.error('❌ No items to process!')
-      return { recipes: {}, items: {} }
+    if (!items || items.length === 0) {return { recipes: {}, items: {} }
     }
 
     const recipes = {};
@@ -381,9 +367,7 @@ class RecipeUpdateService {
         items: items ? JSON.parse(items) : {}
       };
     } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('❌ Ошибка при чтении кэша:', error);
-      }
+      if (import.meta.env.DEV) {}
       return { recipes: {}, items: {} };
     }
   }
@@ -407,9 +391,7 @@ class RecipeUpdateService {
 
       return result;
     } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('❌ Не удалось обновить рецепты, используем кэш:', error);
-      }
+      if (import.meta.env.DEV) {}
       return this.getCachedRecipes();
     }
   }
@@ -424,9 +406,7 @@ class RecipeUpdateService {
         if (typeof onUpdate === 'function') {
           onUpdate(data);
         }
-      } catch (error) {
-        console.error('❌ API update failed:', error)
-        if (typeof onUpdate === 'function') {
+      } catch (error) {if (typeof onUpdate === 'function') {
           const cached = this.getCachedRecipes();
           onUpdate({ ...cached, error: error.message || 'Unknown error' });
         }
@@ -493,3 +473,4 @@ class RecipeUpdateService {
 }
 
 export default RecipeUpdateService;
+

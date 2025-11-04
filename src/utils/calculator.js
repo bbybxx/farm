@@ -77,8 +77,7 @@ export function calculateAllResources(itemName, amount, activePerks, recipes = n
 
   function getMaterials(item, qty, path = []) {
     // Cycle detection
-    if (path.includes(item)) {
-      console.warn('Circular dependency detected:', [...path, item].join(' -> '));
+    if (path.includes(item)) {);
       return {};
     }
 

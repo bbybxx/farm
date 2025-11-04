@@ -332,28 +332,4 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = { APPLE_CIDER_DATA, AppleCiderCalculator, AppleCiderIntegration };
 }
 
-// ===== ДЕМО (только в dev режиме) =====
-if (import.meta.env?.DEV) {
-  console.log('🍎 APPLE CIDER COMPLETE DATABASE LOADED');
-  console.log('📊 Sample calculation:');
-
-  const testCalc = AppleCiderCalculator.calculateExplores(24, true, true, true);
-  console.log(`24 effectiveness + Sprint I+II + Cinnamon = ${testCalc} explores`);
-
-  const testStamina = AppleCiderCalculator.calculateStamina(testCalc, [1,2,3,4], true);
-  console.log(`Stamina needed: ${testStamina} (with all 4 Wanderer perks + Neigh)`);
-
-  console.log('\n🎯 Wanderer Perks breakdown:');
-  console.log('Wanderer I: -4% stamina');
-  console.log('Wanderer II: -7% stamina'); 
-  console.log('Wanderer III: -9% stamina');
-  console.log('Wanderer IV: -13% stamina');
-  console.log('Total: -33% stamina (additive)');
-  console.log('With Neigh Neigh: -46.4% total (33% + 20% multiplicative)');
-
-  console.log('\n🎯 Best zones for Apple Cider:');
-  const bestZones = AppleCiderCalculator.findBestZones();
-  bestZones.slice(0, 5).forEach(zone => {
-    console.log(`${zone.zone}: +${zone.improvement}% drop rate improvement`);
-  });
-}
+// Demo code removed to reduce production bundle size

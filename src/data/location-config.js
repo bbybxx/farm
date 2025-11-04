@@ -18,9 +18,7 @@ function loadRaw() {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       return raw ? JSON.parse(raw) : {};
-    } catch (e) {
-      console.warn('location-config: failed to parse localStorage data', e);
-      return {};
+    } catch (e) {return {};
     }
   }
 
@@ -33,9 +31,7 @@ function saveRaw(obj) {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
       return;
-    } catch (e) {
-      console.warn('location-config: failed to write to localStorage', e);
-    }
+    } catch (e) {}
   }
   memoryStore = obj;
 }
@@ -139,3 +135,4 @@ export {
   applyLocationOverrides,
   applyItemOverrideForVariant,
 };
+

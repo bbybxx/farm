@@ -275,9 +275,7 @@ export default function FindSourcesModal({ isOpen, onClose, resourceName, amount
       </AnimatePresence>
     )
   } catch (err) {
-    // Prevent modal from crashing the entire app; log and show safe fallback
-    console.error('FindSourcesModal render error:', err)
-    return (
+    // Prevent modal from crashing the entire app; log and show safe fallbackreturn (
       <div className="modal-wrapper glass modal-content" role="dialog">
         <h2>Find sources — {resourceName} ×{amount}</h2>
         <div style={{ padding: 12, color: '#a33' }}>Error while computing sources. Please check console for details.</div>
@@ -288,3 +286,4 @@ export default function FindSourcesModal({ isOpen, onClose, resourceName, amount
     )
   }
 }
+

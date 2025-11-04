@@ -304,29 +304,8 @@ const ArnoldPalmerCalculator = {
 // ===== ЭКСПОРТ =====
 export { ARNOLD_PALMER_DATA, ArnoldPalmerCalculator };
 
-// ===== ДЕМО =====
-console.log('🍹 ARNOLD PALMER DATABASE LOADED');
-console.log('📊 Sample calculations:');
+// ===== ДЕМО =====const baseItems = ArnoldPalmerCalculator.calculateItems(false, false, false);const maxItems = ArnoldPalmerCalculator.calculateItems(true, true, true);const bulkItems = ArnoldPalmerCalculator.calculateBulkItems(true, true, true);: ${bulkItems} items per click`);const dropAnalysis = ArnoldPalmerCalculator.calculateEquivalentDropRate(true);} effective drop rate`);
 
-const baseItems = ArnoldPalmerCalculator.calculateItems(false, false, false);
-console.log(`Base Arnold Palmer: ${baseItems} items`);
+const dropAnalysisBase = ArnoldPalmerCalculator.calculateEquivalentDropRate(false);} effective drop rate`);
 
-const maxItems = ArnoldPalmerCalculator.calculateItems(true, true, true);
-console.log(`Max Arnold Palmer: ${maxItems} items`);
-
-const bulkItems = ArnoldPalmerCalculator.calculateBulkItems(true, true, true);
-console.log(`Bulk (5x): ${bulkItems} items per click`);
-
-console.log(`\n📈 Drop Rate Analysis:`);
-const dropAnalysis = ArnoldPalmerCalculator.calculateEquivalentDropRate(true);
-console.log(`With Lemon Squeezer: ${dropAnalysis.arnoldPalmerItems} items = ${dropAnalysis.equivalentDropRate.toFixed(3)} effective drop rate`);
-
-const dropAnalysisBase = ArnoldPalmerCalculator.calculateEquivalentDropRate(false);
-console.log(`Without Lemon Squeezer: ${dropAnalysisBase.arnoldPalmerItems} items = ${dropAnalysisBase.equivalentDropRate.toFixed(3)} effective drop rate`);
-
-const zoneComparison = ArnoldPalmerCalculator.compareDropRates("Highland Hills");
-console.log(`\n🎯 Highland Hills Comparison:`);
-console.log(`Zone base rate: ${zoneComparison.zoneBaseDropRate}`);
-console.log(`Apple Cider: ${zoneComparison.appleCider.items} items (${zoneComparison.appleCider.dropRate} rate)`);
-console.log(`Arnold Palmer + Lemon: ${zoneComparison.arnoldPalmer.withLemonSqueezer.items} items (equivalent!)`);
-console.log(`Arnold Palmer base: ${zoneComparison.arnoldPalmer.withoutLemonSqueezer.items} items`);
+const zoneComparison = ArnoldPalmerCalculator.compareDropRates("Highland Hills");`);`);

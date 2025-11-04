@@ -35,9 +35,7 @@ export default function LocationImage({ name, size = 20, className = '', alt = '
 
   // Debug info: helps when running the dev server to see whether the lookup succeeded
   if (typeof console !== 'undefined' && console.debug) {
-    try {
-      console.debug('[LocationImage] name=%s file=%s resolved=%s', name, file, src)
-    } catch (e) {
+    try {} catch (e) {
       // ignore
     }
   }
@@ -55,3 +53,4 @@ export default function LocationImage({ name, size = 20, className = '', alt = '
     />
   )
 }
+

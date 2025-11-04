@@ -35,12 +35,8 @@ function BugReportModal({ isOpen, onClose, onSubmit }) {
           onClose();
         }, 2000);
       } else {
-        // Handle error - you could show an error message here
-        console.error('Failed to submit bug report:', result.error);
-      }
-    } catch (error) {
-      console.error('Error submitting bug report:', error);
-    } finally {
+        // Handle error - you could show an error message here}
+    } catch (error) {} finally {
       setIsSubmitting(false);
     }
   };
@@ -189,3 +185,4 @@ function BugReportModal({ isOpen, onClose, onSubmit }) {
 }
 
 export default BugReportModal;
+

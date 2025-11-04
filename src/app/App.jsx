@@ -264,6 +264,8 @@ export default function App() {
   const [folderNameInput, setFolderNameInput] = useState('')
   const [editingFolderId, setEditingFolderId] = useState(null)
   const [isCreatingFolder, setIsCreatingFolder] = useState(false)
+  const [isCreatingFolderInTabs, setIsCreatingFolderInTabs] = useState(false)
+  const [deletingFolderId, setDeletingFolderId] = useState(null)
   const [useThousandsFormat, setUseThousandsFormat] = useState(() => loadFromStorage('craftCalculator_useThousandsFormat', true))
   const [recentlyAddedItems, setRecentlyAddedItems] = useState(new Set())
   const [showClearConfirm, setShowClearConfirm] = useState(false)
@@ -763,6 +765,18 @@ export default function App() {
       document.removeEventListener('mousedown', onDoc)
       document.removeEventListener('keydown', onKey)
     }
+  }, [])
+
+  // Close inline inputs on ESC
+  useEffect(() => {
+    function onKey(e) {
+      if (e.key === 'Escape') {
+        setIsCreatingFolderInTabs(false)
+        setDeletingFolderId(null)
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
   }, [])
 
   useEffect(() => {
@@ -1343,20 +1357,73 @@ export default function App() {
                       </button>
                     )
                   })}
-                  <button
-                    className="folder-tab new-folder"
-                    onClick={() => {
-                      const name = prompt('Enter folder name:')
-                      if (name && name.trim()) {
-                        const newId = createFolder(name)
-                        setActivePinnedFolder(newId)
-                      }
-                    }}
-                    type="button"
-                    title="Create new folder"
-                  >
-                    + New Folder
-                  </button>
+                  {!isCreatingFolderInTabs ? (
+                    <button
+                      className="folder-tab new-folder"
+                      onClick={() => {
+                        setIsCreatingFolderInTabs(true)
+                        setFolderNameInput('')
+                      }}
+                      type="button"
+                      title="Create new folder"
+                    >
+                      + New Folder
+                    </button>
+                  ) : (
+                    <div className="folder-tab-input-wrapper">
+                      <input
+                        type="text"
+                        className="folder-name-input folder-tab-input"
+                        value={folderNameInput}
+                        onChange={(e) => setFolderNameInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && folderNameInput.trim()) {
+                            const newId = createFolder(folderNameInput.trim())
+                            setActivePinnedFolder(newId)
+                            setIsCreatingFolderInTabs(false)
+                            setFolderNameInput('')
+                          } else if (e.key === 'Escape') {
+                            setIsCreatingFolderInTabs(false)
+                            setFolderNameInput('')
+                          }
+                        }}
+                        placeholder="Folder name..."
+                        autoFocus
+                      />
+                      <button
+                        className="folder-input-btn folder-input-confirm"
+                        onClick={() => {
+                          if (folderNameInput.trim()) {
+                            const newId = createFolder(folderNameInput.trim())
+                            setActivePinnedFolder(newId)
+                            setIsCreatingFolderInTabs(false)
+                            setFolderNameInput('')
+                          }
+                        }}
+                        disabled={!folderNameInput.trim()}
+                        title="Create folder"
+                        type="button"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </button>
+                      <button
+                        className="folder-input-btn folder-input-cancel"
+                        onClick={() => {
+                          setIsCreatingFolderInTabs(false)
+                          setFolderNameInput('')
+                        }}
+                        title="Cancel"
+                        type="button"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="18" y1="6" x2="6" y2="18"></line>
+                          <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -2609,20 +2676,44 @@ export default function App() {
                                 </svg>
                               </button>
                               {folder.id !== 'default' && (
-                                <button
-                                  className="folder-config-btn danger"
-                                  onClick={() => {
-                                    if (confirm(`Delete folder "${folder.name}"? All items in it will be removed.`)) {
-                                      deleteFolder(folder.id)
-                                    }
-                                  }}
-                                  title="Delete folder"
-                                >
-                                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                  </svg>
-                                </button>
+                                deletingFolderId === folder.id ? (
+                                  <div className="folder-delete-confirm">
+                                    <span className="folder-delete-message">Delete "{folder.name}"?</span>
+                                    <button
+                                      className="folder-input-btn folder-input-confirm"
+                                      onClick={() => {
+                                        deleteFolder(folder.id)
+                                        setDeletingFolderId(null)
+                                      }}
+                                      title="Confirm delete"
+                                    >
+                                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                      </svg>
+                                    </button>
+                                    <button
+                                      className="folder-input-btn folder-input-cancel"
+                                      onClick={() => setDeletingFolderId(null)}
+                                      title="Cancel"
+                                    >
+                                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                      </svg>
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <button
+                                    className="folder-config-btn danger"
+                                    onClick={() => setDeletingFolderId(folder.id)}
+                                    title="Delete folder"
+                                  >
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                      <polyline points="3 6 5 6 21 6"></polyline>
+                                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                  </button>
+                                )
                               )}
                             </div>
                           </>

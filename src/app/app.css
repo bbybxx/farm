@@ -2479,6 +2479,65 @@ body.no-visual-scrollbar,
   border-color: color-mix(in oklab, var(--accent) 20%, transparent);
 }
 
+/* Folder tab inline input */
+.folder-tab-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: color-mix(in oklab, var(--accent) 8%, transparent);
+  border: 1px solid color-mix(in oklab, var(--accent) 25%, transparent);
+  border-radius: 8px;
+  min-width: 200px;
+}
+
+.folder-tab-input {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 6px;
+  font-size: 13px;
+  background: color-mix(in oklab, #000000 20%, transparent);
+  border: 1px solid color-mix(in oklab, #ffffff 15%, transparent);
+  border-radius: 5px;
+  color: var(--text);
+  outline: none;
+}
+
+.folder-tab-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 15%, transparent);
+}
+
+/* Folder delete confirmation */
+.folder-delete-confirm {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: color-mix(in oklab, #fa5252 10%, transparent);
+  border: 1px solid color-mix(in oklab, #fa5252 25%, transparent);
+  border-radius: 8px;
+  animation: slideIn 0.15s ease-out;
+}
+
+.folder-delete-message {
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+  margin-right: 4px;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* Mobile adjustments for folders */
 @media (max-width: 480px) {
   .folder-tabs {

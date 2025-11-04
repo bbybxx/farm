@@ -114,8 +114,6 @@ export function useTelegram() {
 
   // message: string, userInfo: optional, files: optional array of File objects
   const sendBugReport = async (message, userInfo = null, files = []) => {
-    console.log('🚀 sendBugReport called!', { messageLength: message?.length, filesCount: files?.length });
-    
     try {
       // Отправляем напрямую через Telegram Bot API
       let BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
@@ -183,45 +181,17 @@ export function useTelegram() {
         form.append('metadata', JSON.stringify(bugReportData));
 
         if (Array.isArray(files) && files.length > 0) {
-          console.log('📎 Attaching files:', files.length);
-          files.slice(0, 8).forEach((f, idx) => {
-            console.log(`  File ${idx + 1}:`, f.name, f.type, `${(f.size / 1024).toFixed(1)} KB`);
-            // append files under 'files' field
+          files.slice(0, 8).forEach((f) => {
             form.append('files', f, f.name);
           });
-        } else {
-          console.log('⚠️ No files to attach');
         }
 
-  const endpoint = apiBase ? apiBase + '/api/bug-report' : '/api/bug-report';
+        const endpoint = apiBase ? apiBase + '/api/bug-report' : '/api/bug-report';
   
-  // Always log bug report submission details for debugging
-  console.log('🐛 Bug Report Submission:', {
-    isProduction,
-    endpoint,
-    hostname: window.location.hostname,
-    protocol: window.location.protocol,
-    hasFiles: files?.length || 0,
-    formDataEntries: Array.from(form.entries()).map(([k, v]) => 
-      v instanceof File ? `${k}: ${v.name} (${v.size} bytes)` : `${k}: ${typeof v}`
-    )
-  });
-  
-  response = await fetch(endpoint, {
+        response = await fetch(endpoint, {
           method: 'POST',
           body: form
         });
-        
-        console.log('📬 Response status:', response.status, response.statusText);
-        
-        // Log response body
-        const responseClone = response.clone();
-        try {
-          const responseData = await responseClone.json();
-          console.log('📥 Response data:', responseData);
-        } catch (e) {
-          console.log('📥 Response is not JSON');
-        }
       } else {
         // Локально отправляем напрямую через Telegram Bot API.
         // We'll upload attachments first (images -> sendPhoto, others -> sendDocument), then send text message.

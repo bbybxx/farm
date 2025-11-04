@@ -965,13 +965,9 @@ export default function App() {
 
   // Accept either a string message or an object { message, files }
   const handleBugReportSubmit = async (payload) => {
-    console.log('📝 handleBugReportSubmit called', { payload });
-    
     try {
       const message = typeof payload === 'string' ? payload : (payload?.message || '');
       const files = typeof payload === 'object' ? payload.files || [] : [];
-      
-      console.log('📤 Calling sendBugReport with:', { messageLength: message.length, filesCount: files.length });
 
       const result = await sendBugReport(message, user, files)
       

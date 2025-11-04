@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './BugReportModal.css';
 
@@ -8,6 +8,7 @@ function BugReportModal({ isOpen, onClose, onSubmit }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitResult, setSubmitResult] = useState(null);
+  const fileInputRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +28,10 @@ function BugReportModal({ isOpen, onClose, onSubmit }) {
         setSubmitSuccess(true);
         setSubmitResult(result);
         setMessage('');
+        setFiles([]); // Clear files after successful submission
+        if (fileInputRef.current) {
+          fileInputRef.current.value = ''; // Clear file input field
+        }
         
         // Close modal after showing success message
         setTimeout(() => {
@@ -50,6 +55,9 @@ function BugReportModal({ isOpen, onClose, onSubmit }) {
       setFiles([]);
       setSubmitSuccess(false);
       setSubmitResult(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''; // Clear file input field
+      }
       onClose();
     }
   };
@@ -132,6 +140,7 @@ function BugReportModal({ isOpen, onClose, onSubmit }) {
                   <div style={{ marginTop: 12 }}>
                     <label className="bug-report-label" htmlFor="bug-files">Attach files (images, logs, etc.) — up to 8 files</label>
                     <input
+                      ref={fileInputRef}
                       id="bug-files"
                       type="file"
                       multiple

@@ -114,6 +114,8 @@ export function useTelegram() {
 
   // message: string, userInfo: optional, files: optional array of File objects
   const sendBugReport = async (message, userInfo = null, files = []) => {
+    console.log('🚀 sendBugReport called!', { messageLength: message?.length, filesCount: files?.length });
+    
     try {
       // Отправляем напрямую через Telegram Bot API
       let BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;

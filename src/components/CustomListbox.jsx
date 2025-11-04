@@ -21,9 +21,24 @@ export default function CustomListbox({ options = [], value = '', onChange, aria
   useEffect(() => {
     if (open && listRef.current) {
       const el = listRef.current.querySelector('[data-index="' + active + '"]')
-      el && el.scrollIntoView({ block: 'nearest' })
+      el && el.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
     }
   }, [open, active])
+
+  // Scroll to selected element when opening
+  useEffect(() => {
+    if (open && listRef.current && value) {
+      const selectedIdx = options.indexOf(value)
+      if (selectedIdx >= 0) {
+        const el = listRef.current.querySelector('[data-index="' + selectedIdx + '"]')
+        if (el) {
+          setTimeout(() => {
+            el.scrollIntoView({ block: 'center', behavior: 'smooth' })
+          }, 50)
+        }
+      }
+    }
+  }, [open])
 
   function toggle() {
     setOpen(o => !o)

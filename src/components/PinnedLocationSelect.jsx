@@ -4,6 +4,7 @@ import LocationImage from './LocationImage.jsx'
 export default function PinnedLocationSelect({ options = [], value = '', onChange }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
+  const listRef = useRef(null)
 
   useEffect(() => {
     function onDoc(e) {
@@ -13,6 +14,22 @@ export default function PinnedLocationSelect({ options = [], value = '', onChang
     document.addEventListener('mousedown', onDoc)
     return () => document.removeEventListener('mousedown', onDoc)
   }, [])
+
+  // Scroll to selected element when opening
+  useEffect(() => {
+    if (open && listRef.current && value) {
+      const selectedIdx = options.indexOf(value)
+      if (selectedIdx >= 0) {
+        const buttons = listRef.current.querySelectorAll('button[role="option"]')
+        const selectedButton = buttons[selectedIdx]
+        if (selectedButton) {
+          setTimeout(() => {
+            selectedButton.scrollIntoView({ block: 'center', behavior: 'smooth' })
+          }, 50)
+        }
+      }
+    }
+  }, [open])
 
   const label = value || options[0] || ''
 
@@ -41,7 +58,7 @@ export default function PinnedLocationSelect({ options = [], value = '', onChang
         </div>
       </button>
 
-      <div className="pinned-loc-list" role="listbox" aria-hidden={!open}>
+      <div ref={listRef} className="pinned-loc-list" role="listbox" aria-hidden={!open}>
         {options.map((opt, idx) => {
           return (
             <button

@@ -233,6 +233,7 @@ export default function App() {
   const [isItemSelectOpen, setIsItemSelectOpen] = useState(false)
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   const [modeOpen, setModeOpen] = useState(false)
+  const itemSelectListRef = useRef(null)
   
   const [craftChain, setCraftChain] = useState(() => {
     const storedChain = loadFromStorage('craftCalculator_craftChain', null)
@@ -1067,6 +1068,18 @@ export default function App() {
     return () => body.classList.remove('no-scroll')
   }, [sidebarOpen, isItemSelectOpen, isHistoryOpen, isBugReportOpen])
 
+  // Scroll to selected item when item select modal opens
+  useEffect(() => {
+    if (isItemSelectOpen && itemSelectListRef.current) {
+      setTimeout(() => {
+        const activeButton = itemSelectListRef.current?.querySelector('button.active')
+        if (activeButton) {
+          activeButton.scrollIntoView({ block: 'center', behavior: 'smooth' })
+        }
+      }, 100)
+    }
+  }, [isItemSelectOpen])
+
   // Hide visual scrollbars site-wide and for sidebar/lists (user requested)
   useEffect(() => {
     const body = document.body
@@ -1799,7 +1812,7 @@ export default function App() {
                     />
                   </div>
                 </div>
-                <div className="item-select-list">
+                <div ref={itemSelectListRef} className="item-select-list">
                   {(locationsMode ? (locationsForConfig || []) : (itemsForSelect || [])).filter(i => {
                     const label = locationsMode ? (i.name || '') : (i || '')
                     if (!itemSelectFilter) return true

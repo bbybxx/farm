@@ -177,9 +177,6 @@ export default async function handler(req, res) {
           const formData = new FormData();
           formData.append('chat_id', CHAT_ID);
           
-          // Read file from temp location
-          const fileBuffer = fs.readFileSync(file.filepath);
-          
           // Detect if image or document
           const isImage = file.mimetype && file.mimetype.startsWith('image/');
           const endpoint = isImage ? 'sendPhoto' : 'sendDocument';
@@ -188,7 +185,13 @@ export default async function handler(req, res) {
           // Get filename from originalFilename or newFilename
           const filename = file.originalFilename || file.newFilename || 'file';
           
-          formData.append(fieldName, fileBuffer, {
+          console.log(`📤 Uploading file: ${filename} (${file.size} bytes) to ${endpoint}`);
+          
+          // Use createReadStream instead of readFileSync for better memory efficiency
+          // and compatibility with form-data
+          const fileStream = fs.createReadStream(file.filepath);
+          
+          formData.append(fieldName, fileStream, {
             filename: filename,
             contentType: file.mimetype || 'application/octet-stream',
           });

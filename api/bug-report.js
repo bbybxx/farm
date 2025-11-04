@@ -196,9 +196,11 @@ export default async function handler(req, res) {
             contentType: file.mimetype || 'application/octet-stream',
           });
 
+          // form-data package requires headers to be set manually with fetch
           const uploadResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/${endpoint}`, {
             method: 'POST',
             body: formData,
+            headers: formData.getHeaders(), // Critical: set multipart boundary header
           });
 
           const uploadResult = await uploadResponse.json();

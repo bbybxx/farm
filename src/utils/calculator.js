@@ -158,8 +158,17 @@ export function calculateAllResources(itemName, amount, activePerks, recipes = n
 
   // Calculate required components for the top-level item, applying resource saver
   const topIngredients = getRecipeIngredients(topRecipe);
+  
+  if (itemName === 'Pitchfork') {
+    console.log(`DEBUG Pitchfork topIngredients:`, topIngredients);
+  }
+  
   if (topIngredients) {
     for (const [component, componentQty] of Object.entries(topIngredients)) {
+      if (itemName === 'Pitchfork') {
+        console.log(`DEBUG Pitchfork processing component: ${component}, qty=${componentQty}`);
+      }
+      
       let neededQty = componentQty * amount;
       if (resourceSaverPercent > 0) {
         neededQty /= (1 + resourceSaverPercent);

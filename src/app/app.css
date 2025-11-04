@@ -2399,6 +2399,86 @@ body.no-visual-scrollbar,
   border-color: color-mix(in oklab, #ff6b6b 30%, transparent);
 }
 
+.folder-config-btn svg {
+  display: block;
+}
+
+/* Folder inline editing */
+.folder-edit-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.folder-name-input {
+  appearance: none;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-stroke);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 500;
+  flex: 1;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.folder-name-input:focus {
+  border-color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 5%, transparent);
+}
+
+.folder-name-input::placeholder {
+  color: var(--muted);
+  opacity: 0.5;
+}
+
+.folder-input-btn {
+  appearance: none;
+  background: color-mix(in oklab, #ffffff 8%, transparent);
+  border: 1px solid color-mix(in oklab, #ffffff 12%, transparent);
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.folder-input-btn svg {
+  display: block;
+}
+
+.folder-input-btn.confirm {
+  color: #51cf66;
+}
+
+.folder-input-btn.confirm:hover {
+  background: color-mix(in oklab, #51cf66 15%, transparent);
+  border-color: color-mix(in oklab, #51cf66 30%, transparent);
+  transform: scale(1.05);
+}
+
+.folder-input-btn.cancel {
+  color: var(--muted);
+}
+
+.folder-input-btn.cancel:hover {
+  background: color-mix(in oklab, #ffffff 12%, transparent);
+  color: var(--text);
+  transform: scale(1.05);
+}
+
+.folder-config-item.creating {
+  background: color-mix(in oklab, var(--accent) 8%, transparent);
+  border-color: color-mix(in oklab, var(--accent) 20%, transparent);
+}
+
 /* Mobile adjustments for folders */
 @media (max-width: 480px) {
   .folder-tabs {

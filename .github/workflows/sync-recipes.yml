@@ -9,6 +9,8 @@ on:
 jobs:
   sync-recipes:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Разрешаем запись для коммитов
     
     steps:
       - name: Checkout repository

@@ -533,7 +533,7 @@ select.input option {
   display: flex;
   align-items: flex-start; /* anchor modal near top so it shrinks upward */
   justify-content: center;
-  z-index: 40;
+  z-index: 100;
   background: #0007;
   /* push modal down a bit so it isn't glued to the very top, but keep its top anchored */
   padding: 8vh 12px 12px 12px;
@@ -1059,6 +1059,9 @@ select.input option {
   border: 1px solid color-mix(in oklab, #ffffff 8%, transparent);
   transition: all 0.2s;
   width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .social-link:hover {
@@ -1076,6 +1079,12 @@ select.input option {
   width: 20px;
   height: 20px;
   object-fit: contain;
+  flex-shrink: 0;
+}
+
+.social-link svg.social-icon {
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
 }
 

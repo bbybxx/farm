@@ -14,7 +14,7 @@ export default defineConfig({
           resolve(__dirname, 'public/service-worker.js'),
           resolve(__dirname, 'dist/service-worker.js')
         )
-        console.log('✅ Service worker copied to dist/')
+        console.log('[SUCCESS] Service worker copied to dist/')
       }
     }
   ],
@@ -31,6 +31,7 @@ export default defineConfig({
   },
   build: {
     minify: 'terser',
+    chunkSizeWarningLimit: 2000, // Increase for large JSON files
     terserOptions: {
       compress: {
         drop_console: true,
@@ -39,7 +40,15 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        manualChunks: undefined
+        manualChunks: (id) => {
+          // Split large quest data into separate chunk
+          if (id.includes('quests-api.json')) {
+            return 'quests-data'
+          }
+          if (id.includes('node_modules')) {
+            return 'vendor'
+          }
+        }
       }
     }
   }

@@ -21,6 +21,23 @@ const buildImageSources = (item) => {
 };
 
 const ItemDisplay = ({ itemName, itemsData = {}, children }) => {
+  // Special handling for Silver (currency, not an item)
+  if (itemName === 'Silver') {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <img
+          src="/img/items/silver.png"
+          alt="Silver"
+          title="Silver"
+          style={{ width: '24px', height: '24px', objectFit: 'contain' }}
+          loading="lazy"
+        />
+        <span style={{ fontSize: '14px' }}>Silver</span>
+        {children}
+      </div>
+    );
+  }
+
   const item = itemsData[itemName];
   const sources = useMemo(() => buildImageSources(item), [item]);
   const [sourceIndex, setSourceIndex] = useState(0);

@@ -103,19 +103,19 @@ class RecipeUpdateService {
   async fetchRecipes() {
     try {
       // Логируем всегда для отладки в нативном приложении
-      devLog('🔄 Обновляем рецепты из buddy.farm API...')
-      devLog('🌐 Native environment:', this._nativeEnvironment)
-      devLog('🌐 API candidates:', this._apiCandidates)
-      devLog('🛠️ Development mode:', import.meta.env.DEV)
+      devLog('[UPDATE] Обновляем рецепты из buddy.farm API...')
+      devLog('[ENV] Native environment:', this._nativeEnvironment)
+      devLog('[ENV] API candidates:', this._apiCandidates)
+      devLog('[ENV] Development mode:', import.meta.env.DEV)
 
       const urlsToTry = [...(this._lastSuccessfulUrl ? [this._lastSuccessfulUrl] : []), ...this._apiCandidates]
       let lastError = null
 
-      devLog('📋 URLs to try:', urlsToTry)
+      devLog('[INFO] URLs to try:', urlsToTry)
 
       for (const url of urlsToTry) {
         try {
-          devLog('🔗 Trying URL:', url)
+          devLog('[FETCH] Trying URL:', url)
           
           const response = await fetch(url, {
             method: 'POST',
@@ -125,8 +125,8 @@ class RecipeUpdateService {
             body: JSON.stringify({ query: this.query })
           })
 
-          devLog('📡 Response status:', response.status, 'url:', url)
-          devLog('📡 Response ok:', response.ok)
+          devLog('[RESPONSE] Response status:', response.status, 'url:', url)
+          devLog('[RESPONSE] Response ok:', response.ok)
 
           if (!response.ok) {
             const errorText = await response.text()
@@ -137,7 +137,7 @@ class RecipeUpdateService {
 
           const data = await response.json()
 
-          devLog('📦 Raw API response:', JSON.stringify(data).substring(0, 500))
+          devLog('[DATA] Raw API response:', JSON.stringify(data).substring(0, 500))
           const responseInfo = {
             hasData: !!data.data,
             hasItems: !!(data.data?.items),
@@ -145,7 +145,7 @@ class RecipeUpdateService {
             hasErrors: !!data.errors,
             url: url
           }
-          devLog('📦 Response structure:', responseInfo)
+          devLog('[DATA] Response structure:', responseInfo)
 
           if (data.errors) {
             const error = new Error('GraphQL errors occurred')
@@ -157,8 +157,8 @@ class RecipeUpdateService {
           this._lastSuccessfulUrl = url
 
           const items = data.data?.items || []
-          devLog('✅ Items received:', items.length, 'via', url)
-          devLog('🔍 First 5 items:', items.slice(0, 5).map(item => item.name) || [])
+          devLog('[SUCCESS] Items received:', items.length, 'via', url)
+          devLog('[INFO] First 5 items:', items.slice(0, 5).map(item => item.name) || [])
 
           if (items.length === 0) {
             // API returned empty items array
@@ -182,7 +182,7 @@ class RecipeUpdateService {
 
   // Обрабатывает и сохраняет рецепты
   processAndSaveRecipes(items) {
-    devLog('🔧 Processing recipes from', items?.length || 0, 'items')
+    devLog('[PROCESS] Processing recipes from', items?.length || 0, 'items')
     
     if (!items || items.length === 0) {
       return { recipes: {}, items: {} }
@@ -198,7 +198,7 @@ class RecipeUpdateService {
       item.recipeItems.length > 0
     );
 
-    devLog('🔨 Craftable items found:', craftableItems.length)
+    devLog('[INFO] Craftable items found:', craftableItems.length)
 
     craftableItems.forEach(item => {
       // Создаем рецепт
@@ -291,8 +291,8 @@ class RecipeUpdateService {
     }
 
     if (import.meta.env.DEV) {
-      devLog(`✅ Обновлено ${Object.keys(sortedRecipes).length} рецептов`);
-      devLog(`✅ Обновлено ${Object.keys(sortedItemData).length} предметов`);
+      devLog(`[SUCCESS] Обновлено ${Object.keys(sortedRecipes).length} рецептов`);
+      devLog(`[SUCCESS] Обновлено ${Object.keys(sortedItemData).length} предметов`);
     }
 
     return { recipes: sortedRecipes, items: sortedItemData };
@@ -327,7 +327,7 @@ class RecipeUpdateService {
     try {
       if (!this.shouldUpdate()) {
         if (import.meta.env.DEV) {
-          devLog('📅 Обновление рецептов не требуется');
+          devLog('[INFO] Обновление рецептов не требуется');
         }
         return this.getCachedRecipes();
       }
@@ -336,7 +336,7 @@ class RecipeUpdateService {
       const result = this.processAndSaveRecipes(items);
       
       if (import.meta.env.DEV) {
-        devLog('✅ Рецепты успешно обновлены!');
+        devLog('[SUCCESS] Рецепты успешно обновлены!');
       }
 
       return result;
@@ -350,9 +350,9 @@ class RecipeUpdateService {
   startAutoUpdate(onUpdate) {
     const runUpdate = async () => {
       try {
-        devLog('🔄 Starting API update...')
+        devLog('[UPDATE] Starting API update...')
         const data = await this.updateRecipes();
-        devLog('✅ API update successful, got data:', !!data)
+        devLog('[SUCCESS] API update successful, got data:', !!data)
         if (typeof onUpdate === 'function') {
           onUpdate(data);
         }

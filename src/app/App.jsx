@@ -7,6 +7,8 @@ import RecipeUpdateService from '../services/RecipeUpdateService'
 import perks from '../data/perks.json'
 import { useTelegram } from '../hooks/useTelegram'
 import BugReportModal from '../components/BugReportModal'
+import DevLogs from '../components/DevLogs'
+import QuestsPanel from '../components/QuestsPanel'
 import LocationConfigPanel from '../components/LocationConfigPanel'
 import { APPLE_CIDER_REAL_DROP_RATES } from '../data/apple-cider-real-drop-rates.js'
 import { computePinnedEstimate, getItemLocations } from '../utils/exploringUtils.js'
@@ -305,6 +307,8 @@ export default function App() {
   const [showClearConfirm, setShowClearConfirm] = useState(false)
   const [showClearSuccess, setShowClearSuccess] = useState(false)
   const [isBugReportOpen, setIsBugReportOpen] = useState(false)
+  const [isDevLogsOpen, setIsDevLogsOpen] = useState(false)
+  const [isQuestsPanelOpen, setIsQuestsPanelOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [apiLoadStatus, setApiLoadStatus] = useState({ loading: false, error: null, lastUpdate: null })
   const recentlyAddedTimersRef = useRef(new Set())
@@ -319,6 +323,8 @@ export default function App() {
   // Locations mode: show locations list and location-specific drops
   const [locationsMode, setLocationsMode] = useState(() => loadFromStorage('craftCalculator_locationsMode', false))
   const [selectedLocation, setSelectedLocation] = useState(() => loadFromStorage('craftCalculator_selectedLocation', 'Forest'))
+  // Quests mode: show quests and quest chains
+  const [questsMode, setQuestsMode] = useState(() => loadFromStorage('craftCalculator_questsMode', false))
   // Target quantities for items in location mode (itemName -> targetQuantity)
   const [locationItemTargets, setLocationItemTargets] = useState({})
   // Track which item input is currently being edited
@@ -326,14 +332,14 @@ export default function App() {
   // Remember last selection per mode (modeKey -> { item, amount, craftChain, selectedLocation })
   const [lastSelectionByMode, setLastSelectionByMode] = useState(() => loadFromStorage('craftCalculator_lastSelectionByMode', {}))
 
-  const getModeKeyFor = (rev, loc, exp) => {
-    const modeName = loc ? 'locations' : (rev ? 'baseToCraft' : 'craftToBase')
+  const getModeKeyFor = (rev, loc, qst, exp) => {
+    const modeName = qst ? 'quests' : (loc ? 'locations' : (rev ? 'baseToCraft' : 'craftToBase'))
     return `${modeName}|${exp || ''}`
   }
 
   const saveCurrentSelection = () => {
     try {
-      const key = getModeKeyFor(reverseMode, locationsMode, exploringMode)
+      const key = getModeKeyFor(reverseMode, locationsMode, questsMode, exploringMode)
       const data = { item, amount, craftChain, selectedLocation }
       setLastSelectionByMode(prev => {
         const next = { ...(prev || {}), [key]: data }
@@ -345,9 +351,9 @@ export default function App() {
     }
   }
 
-  const restoreSelectionFor = (rev, loc, exp) => {
+  const restoreSelectionFor = (rev, loc, qst, exp) => {
     try {
-      const key = getModeKeyFor(rev, loc, exp)
+      const key = getModeKeyFor(rev, loc, qst, exp)
       const stored = loadFromStorage('craftCalculator_lastSelectionByMode', lastSelectionByMode || {})
       const data = stored && stored[key]
       if (data) {
@@ -445,6 +451,10 @@ export default function App() {
   useEffect(() => {
     saveToStorage('craftCalculator_selectedLocation', selectedLocation)
   }, [selectedLocation])
+
+  useEffect(() => {
+    saveToStorage('craftCalculator_questsMode', questsMode)
+  }, [questsMode])
 
   // When in reverse mode, compute crafts that use the currently selected `item` as an ingredient
   const availableCrafts = useMemo(() => {
@@ -608,7 +618,7 @@ export default function App() {
       ? `\n\nPerks:\n${activePerks.map(p => `• ${p}`).join('\n')}` 
       : ''
     
-    return `🔨 Craft Calculator Results\n\n📦 Item: ${item} (×${formatNumber(typeof amount === 'string' ? amount.replace(/\s/g, '') : amount)})\n\n📋 Resources needed:\n${resourcesText}${perksText}\n\n🔗 Calculate your own: [Open Craft Calculator]`
+    return `Craft Calculator Results\n\nItem: ${item} (×${formatNumber(typeof amount === 'string' ? amount.replace(/\s/g, '') : amount)})\n\nResources needed:\n${resourcesText}${perksText}\n\nCalculate your own: [Open Craft Calculator]`
   }
 
   // Function to handle main button click (share results)
@@ -722,13 +732,13 @@ export default function App() {
       clearTimeout(loadingTimeout)
       
       if (data && data.error) {
-        devLog('❌ API update error:', data.error)
+        devLog('[ERROR] API update error:', data.error)
         setApiLoadStatus({ loading: false, error: data.error, lastUpdate: new Date() })
         return
       }
       
       if (!data) {
-        devLog('⚠️ No data received from API')
+        devLog('[WARNING] No data received from API')
         setApiLoadStatus({ loading: false, error: 'No data received', lastUpdate: null })
         return
       }
@@ -737,11 +747,11 @@ export default function App() {
       const itemsCount = Object.keys(nextItems).length
       
       if (itemsCount > 0) {
-        devLog('✅ Successfully loaded', itemsCount, 'items from API')
+        devLog('[SUCCESS] Successfully loaded', itemsCount, 'items from API')
         mergeItemsData(nextItems)
         setApiLoadStatus({ loading: false, error: null, lastUpdate: new Date() })
       } else {
-        devLog('⚠️ Received empty items data')
+        devLog('[WARNING] Received empty items data')
         setApiLoadStatus({ loading: false, error: 'Empty data received', lastUpdate: null })
       }
     })
@@ -1867,16 +1877,22 @@ export default function App() {
               <div className="social-links">
                 <div className="social-link-wrapper">
                   <span className="social-label">Updates</span>
-                  <a 
-                    href="https://www.reddit.com/u/ConferenceSingle236" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
+                  <button
+                    onClick={() => setIsDevLogsOpen(true)}
                     className="social-link"
-                    title="Reddit"
+                    title="Development Logs"
+                    type="button"
+                    style={{ cursor: 'pointer' }}
                   >
-                    <img src="/reddit-logo-2436.png" alt="Reddit" className="social-icon" />
-                    Reddit
-                  </a>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="social-icon">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                      <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    Dev Logs
+                  </button>
                 </div>
                 <div className="social-link-wrapper">
                   <span className="social-label">My Profile</span>
@@ -1925,7 +1941,7 @@ export default function App() {
             aria-label="Open perks"
             aria-controls="perks-sidebar"
             aria-expanded={sidebarOpen}
-          >☰</button>
+          >≡</button>
           
           <div className="craft-chain" onClick={(e) => e.stopPropagation()}>
             {/* Show breadcrumbs only when chain has more than one node; otherwise show current mode */}
@@ -1994,7 +2010,7 @@ export default function App() {
               </nav>
             ) : (
               <div className="breadcrumb-mode" aria-label="Mode">
-                {locationsMode ? 'Locations' : (reverseMode ? 'Base to Craft' : 'Craft to Base')}
+                {questsMode ? 'Quests' : (locationsMode ? 'Locations' : (reverseMode ? 'Base to Craft' : 'Craft to Base'))}
               </div>
             )}
           </div>
@@ -2017,19 +2033,27 @@ export default function App() {
                     exit={{ opacity: 0, y: -6, scale: 0.98 }}
                     transition={{ duration: 0.12 }}
                   >
-                  {locationsMode ? (
-                    // When on Locations page: offer both craft↔base options
+                  {questsMode ? (
+                    // When in Quests mode: offer all other modes
                     <>
                       <button
                         className={`mode-option`}
                         type="button"
                         onClick={() => {
                           saveCurrentSelection()
-                          setReverseMode(true); setLocationsMode(false); setModeOpen(false);
-                          // try to restore previous selection for new mode
-                          if (!restoreSelectionFor(true, false, exploringMode)) {
-                            // leave current selection as-is
-                          }
+                          setQuestsMode(false); setReverseMode(false); setLocationsMode(false); setModeOpen(false);
+                          if (!restoreSelectionFor(false, false, false, exploringMode)) {}
+                        }}
+                      >
+                        Craft to Base
+                      </button>
+                      <button
+                        className={`mode-option`}
+                        type="button"
+                        onClick={() => {
+                          saveCurrentSelection()
+                          setQuestsMode(false); setReverseMode(true); setLocationsMode(false); setModeOpen(false);
+                          if (!restoreSelectionFor(true, false, false, exploringMode)) {}
                         }}
                       >
                         Base to Craft
@@ -2039,72 +2063,128 @@ export default function App() {
                         type="button"
                         onClick={() => {
                           saveCurrentSelection()
-                          setReverseMode(false); setLocationsMode(false); setModeOpen(false);
-                          if (!restoreSelectionFor(false, false, exploringMode)) {
-                          }
-                        }}
-                      >
-                        Craft to Base
-                      </button>
-                    </>
-                  ) : reverseMode ? (
-                    // When on Base to Craft: offer Craft to Base and Locations
-                    <>
-                      <button
-                        className={`mode-option`}
-                        type="button"
-                        onClick={() => {
-                          saveCurrentSelection()
-                          setReverseMode(false); setLocationsMode(false); setModeOpen(false);
-                          if (!restoreSelectionFor(false, false, exploringMode)) {
-                          }
-                        }}
-                      >
-                        Craft to Base
-                      </button>
-                        <button
-                          className={`mode-option ${locationsMode ? 'active' : ''}`}
-                          type="button"
-                          onClick={() => {
-                            saveCurrentSelection()
-                            setLocationsMode(true); setReverseMode(false); setModeOpen(false);
-                            // try to restore previous selection for locations mode
-                            if (!restoreSelectionFor(false, true, exploringMode)) {
-                              // if nothing saved, keep existing selections but ensure there's a selectedLocation
-                              if (!selectedLocation) setSelectedLocation('Forest')
-                            }
-                          }}
-                        >
-                          Locations
-                        </button>
-                    </>
-                  ) : (
-                    // Default (Craft to Base): offer Base to Craft and Locations
-                    <>
-                      <button
-                        className={`mode-option`}
-                        type="button"
-                        onClick={() => {
-                          saveCurrentSelection()
-                          setReverseMode(true); setLocationsMode(false); setModeOpen(false);
-                          if (!restoreSelectionFor(true, false, exploringMode)) {
-                          }
-                        }}
-                      >
-                        Base to Craft
-                      </button>
-                      <button
-                        className={`mode-option ${locationsMode ? 'active' : ''}`}
-                        type="button"
-                        onClick={() => {
-                          saveCurrentSelection()
-                          setLocationsMode(true); setReverseMode(false); setModeOpen(false);
-                          if (!restoreSelectionFor(false, true, exploringMode)) {
+                          setQuestsMode(false); setLocationsMode(true); setReverseMode(false); setModeOpen(false);
+                          if (!restoreSelectionFor(false, true, false, exploringMode)) {
                             if (!selectedLocation) setSelectedLocation('Forest')
                           }
                         }}
                       >
                         Locations
+                      </button>
+                    </>
+                  ) : locationsMode ? (
+                    // When on Locations page: offer both craft↔base options and Quests
+                    <>
+                      <button
+                        className={`mode-option`}
+                        type="button"
+                        onClick={() => {
+                          saveCurrentSelection()
+                          setQuestsMode(false); setReverseMode(false); setLocationsMode(false); setModeOpen(false);
+                          if (!restoreSelectionFor(false, false, false, exploringMode)) {}
+                        }}
+                      >
+                        Craft to Base
+                      </button>
+                      <button
+                        className={`mode-option`}
+                        type="button"
+                        onClick={() => {
+                          saveCurrentSelection()
+                          setQuestsMode(false); setReverseMode(true); setLocationsMode(false); setModeOpen(false);
+                          if (!restoreSelectionFor(true, false, false, exploringMode)) {}
+                        }}
+                      >
+                        Base to Craft
+                      </button>
+                      <button
+                        className={`mode-option`}
+                        type="button"
+                        onClick={() => {
+                          saveCurrentSelection()
+                          setQuestsMode(true); setLocationsMode(false); setReverseMode(false); setModeOpen(false);
+                          if (!restoreSelectionFor(false, false, true, exploringMode)) {}
+                        }}
+                      >
+                        Quests
+                      </button>
+                    </>
+                  ) : reverseMode ? (
+                    // When on Base to Craft: offer Craft to Base, Locations and Quests
+                    <>
+                      <button
+                        className={`mode-option`}
+                        type="button"
+                        onClick={() => {
+                          saveCurrentSelection()
+                          setQuestsMode(false); setReverseMode(false); setLocationsMode(false); setModeOpen(false);
+                          if (!restoreSelectionFor(false, false, false, exploringMode)) {}
+                        }}
+                      >
+                        Craft to Base
+                      </button>
+                      <button
+                        className={`mode-option`}
+                        type="button"
+                        onClick={() => {
+                          saveCurrentSelection()
+                          setQuestsMode(false); setLocationsMode(true); setReverseMode(false); setModeOpen(false);
+                          if (!restoreSelectionFor(false, true, false, exploringMode)) {
+                            if (!selectedLocation) setSelectedLocation('Forest')
+                          }
+                        }}
+                      >
+                        Locations
+                      </button>
+                      <button
+                        className={`mode-option`}
+                        type="button"
+                        onClick={() => {
+                          saveCurrentSelection()
+                          setQuestsMode(true); setLocationsMode(false); setReverseMode(false); setModeOpen(false);
+                          if (!restoreSelectionFor(false, false, true, exploringMode)) {}
+                        }}
+                      >
+                        Quests
+                      </button>
+                    </>
+                  ) : (
+                    // Default (Craft to Base): offer Base to Craft, Locations and Quests
+                    <>
+                      <button
+                        className={`mode-option`}
+                        type="button"
+                        onClick={() => {
+                          saveCurrentSelection()
+                          setQuestsMode(false); setReverseMode(true); setLocationsMode(false); setModeOpen(false);
+                          if (!restoreSelectionFor(true, false, false, exploringMode)) {}
+                        }}
+                      >
+                        Base to Craft
+                      </button>
+                      <button
+                        className={`mode-option`}
+                        type="button"
+                        onClick={() => {
+                          saveCurrentSelection()
+                          setQuestsMode(false); setLocationsMode(true); setReverseMode(false); setModeOpen(false);
+                          if (!restoreSelectionFor(false, true, false, exploringMode)) {
+                            if (!selectedLocation) setSelectedLocation('Forest')
+                          }
+                        }}
+                      >
+                        Locations
+                      </button>
+                      <button
+                        className={`mode-option`}
+                        type="button"
+                        onClick={() => {
+                          saveCurrentSelection()
+                          setQuestsMode(true); setLocationsMode(false); setReverseMode(false); setModeOpen(false);
+                          if (!restoreSelectionFor(false, false, true, exploringMode)) {}
+                        }}
+                      >
+                        Quests
                       </button>
                     </>
                   )}
@@ -2115,6 +2195,10 @@ export default function App() {
           </div>
         </header>
 
+        {questsMode ? (
+          <QuestsPanel itemsData={itemsData} />
+        ) : (
+          <>
         <section className="glass controls">
           <label className="field">
             <span className="label">{locationsMode ? 'Location' : 'Item'}</span>
@@ -2765,7 +2849,7 @@ export default function App() {
                 transition={{ duration: 0.2 }}
               >
                 <div className="modal-header">
-                  <h3>🗑️ Clear All Data</h3>
+                  <h3>Clear All Data</h3>
                 </div>
                 <div className="modal-body">
                   <p>Are you sure you want to clear all saved data?</p>
@@ -2805,7 +2889,7 @@ export default function App() {
               }}
             >
               <div className="notification-content">
-                <span className="notification-icon">✅</span>
+                <span className="notification-icon">[OK]</span>
                 <span>All data cleared! App reset to defaults.</span>
               </div>
             </motion.div>
@@ -3133,12 +3217,25 @@ export default function App() {
           )}
         </AnimatePresence>
 
+        </>
+        )}
+
         {/* Bug Report Modal */}
         <BugReportModal
           isOpen={isBugReportOpen}
           onClose={handleBugReportClose}
           onSubmit={handleBugReportSubmit}
         />
+        
+        {/* Dev Logs Modal */}
+        <AnimatePresence>
+          {isDevLogsOpen && (
+            <DevLogs
+              isOpen={isDevLogsOpen}
+              onClose={() => setIsDevLogsOpen(false)}
+            />
+          )}
+        </AnimatePresence>
   {/* Vercel Web Analytics */}
   <Analytics />
   {/* debug overlay removed */}

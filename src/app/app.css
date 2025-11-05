@@ -2647,22 +2647,17 @@ body.no-visual-scrollbar,
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   color: #fff;
-  font-family: inherit;
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
   font-size: 14px;
   font-weight: 500;
   padding: 6px 10px;
   text-align: right;
-  width: 80px;
+  min-width: 100px;
+  max-width: 140px;
+  width: auto;
   transition: all 0.2s ease;
   appearance: none;
   -webkit-appearance: none;
-  -moz-appearance: textfield;
-}
-
-.location-item-input::-webkit-outer-spin-button,
-.location-item-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
 }
 
 .location-item-input:hover {

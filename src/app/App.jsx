@@ -314,6 +314,8 @@ export default function App() {
   const [selectedLocation, setSelectedLocation] = useState(() => loadFromStorage('craftCalculator_selectedLocation', 'Forest'))
   // Target quantities for items in location mode (itemName -> targetQuantity)
   const [locationItemTargets, setLocationItemTargets] = useState({})
+  // Track which item input is currently being edited
+  const [editingLocationItem, setEditingLocationItem] = useState(null)
   // Remember last selection per mode (modeKey -> { item, amount, craftChain, selectedLocation })
   const [lastSelectionByMode, setLastSelectionByMode] = useState(() => loadFromStorage('craftCalculator_lastSelectionByMode', {}))
 
@@ -518,6 +520,18 @@ export default function App() {
   const roundToTwo = (n) => {
     if (n === null || n === undefined || Number.isNaN(n)) return null
     return Math.round(Number(n) * 100) / 100
+  }
+
+  // Format number with thousand separators
+  const formatNumber = (n) => {
+    if (n === null || n === undefined || n === '') return ''
+    const num = Number(n)
+    if (Number.isNaN(num)) return n
+    // Round to 2 decimals
+    const rounded = roundToTwo(num)
+    if (rounded === null) return ''
+    // Add thousand separators
+    return rounded.toLocaleString('en-US', { maximumFractionDigits: 2 })
   }
 
   // Function to handle clicking on a craftable resource
@@ -969,20 +983,40 @@ export default function App() {
   // Reset location item targets when location changes or leaving location mode
   useEffect(() => {
     setLocationItemTargets({})
+    setEditingLocationItem(null)
   }, [selectedLocation, locationsMode])
 
-  // Handle location item target change - recalculate amount (consumables) based on desired item quantity
-  const handleLocationItemTargetChange = (itemName, targetQuantity) => {
-    // Update the target for this item
+  // Recalculate all location item targets when amount changes (but not if user is editing)
+  useEffect(() => {
+    if (locationsMode && !editingLocationItem && selectedLocation) {
+      // Clear targets to force recalculation from amount
+      setLocationItemTargets({})
+    }
+  }, [amount, activePerks, exploringMode])
+
+  // Handle location item input change (just update the local state, don't recalculate amount yet)
+  const handleLocationItemInputChange = (itemName, value) => {
     setLocationItemTargets(prev => ({
       ...prev,
-      [itemName]: targetQuantity
+      [itemName]: value
     }))
+  }
+
+  // Handle location item blur or Enter - recalculate amount (consumables) based on desired item quantity
+  const handleLocationItemCommit = (itemName, targetQuantity) => {
+    setEditingLocationItem(null)
+    
+    if (!targetQuantity || targetQuantity <= 0) {
+      // If empty or zero, just clear and recalculate from amount
+      setLocationItemTargets(prev => {
+        const next = { ...prev }
+        delete next[itemName]
+        return next
+      })
+      return
+    }
 
     // Calculate required amount (consumables) based on target quantity
-    // We need to reverse the calculation: if targetQuantity items = X consumables, solve for X
-    // Formula: numericValue = amount * dropsPerConsumable
-    // Reverse: amount = numericValue / dropsPerConsumable
     try {
       const perUnit = computePinnedEstimate(
         { name: itemName, location: selectedLocation },
@@ -2456,21 +2490,56 @@ export default function App() {
                               </ItemDisplay>
                             </span>
                             <input
-                              type="number"
+                              type="text"
+                              inputMode="decimal"
                               className="location-item-input"
-                              value={locationItemTargets[it] !== undefined ? locationItemTargets[it] : (display !== '—' ? display : '')}
+                              value={
+                                editingLocationItem === it
+                                  ? (locationItemTargets[it] !== undefined ? locationItemTargets[it] : '')
+                                  : (locationItemTargets[it] !== undefined 
+                                      ? formatNumber(locationItemTargets[it]) 
+                                      : (display !== '—' ? formatNumber(display) : ''))
+                              }
                               onChange={(e) => {
                                 e.stopPropagation()
-                                const val = e.target.value
+                                const val = e.target.value.replace(/,/g, '') // Remove commas for parsing
                                 if (val === '' || !isNaN(val)) {
-                                  handleLocationItemTargetChange(it, val === '' ? 0 : parseFloat(val))
+                                  handleLocationItemInputChange(it, val)
                                 }
                               }}
                               onClick={(e) => e.stopPropagation()}
-                              onFocus={(e) => e.target.select()}
-                              placeholder={display !== '—' ? display : '0'}
-                              min="0"
-                              step="0.01"
+                              onFocus={(e) => {
+                                setEditingLocationItem(it)
+                                // Set raw value without formatting for editing
+                                const currentVal = locationItemTargets[it] !== undefined ? locationItemTargets[it] : display
+                                if (currentVal && currentVal !== '—') {
+                                  handleLocationItemInputChange(it, String(currentVal).replace(/,/g, ''))
+                                }
+                                setTimeout(() => e.target.select(), 0)
+                              }}
+                              onBlur={(e) => {
+                                const val = e.target.value.replace(/,/g, '')
+                                const numVal = val === '' ? 0 : parseFloat(val)
+                                if (!isNaN(numVal)) {
+                                  handleLocationItemCommit(it, numVal)
+                                } else {
+                                  setEditingLocationItem(null)
+                                }
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.target.blur()
+                                } else if (e.key === 'Escape') {
+                                  setEditingLocationItem(null)
+                                  setLocationItemTargets(prev => {
+                                    const next = { ...prev }
+                                    delete next[it]
+                                    return next
+                                  })
+                                  e.target.blur()
+                                }
+                              }}
+                              placeholder={display !== '—' ? formatNumber(display) : '0'}
                             />
                           </div>
                           {pinnedEnabled && (

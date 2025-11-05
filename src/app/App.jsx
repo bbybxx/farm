@@ -49,7 +49,7 @@ function saveToStorage(key, data) {
   }
 }
 
-// Format numbers with spaces for better readability
+// Format numbers with spaces for thousands separator and dot for decimals
 function formatNumber(num) {
   if (num === null || num === undefined || num === '') return ''
 
@@ -67,15 +67,22 @@ function formatNumber(num) {
     if (!Number.isFinite(numericFromString)) {
       return num
     }
-    if (numericFromString === 0) return '0'
-    return numericFromString.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+    num = numericFromString
   }
 
   if (typeof num !== 'number' || Number.isNaN(num)) {
     return ''
   }
   if (num === 0) return '0'
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+  
+  // Split into integer and decimal parts
+  const [integerPart, decimalPart] = num.toString().split('.')
+  
+  // Format integer part with spaces
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+  
+  // Return with dot as decimal separator if there's a decimal part
+  return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger
 }
 
 function loadFromStorage(key, defaultValue) {
@@ -522,7 +529,7 @@ export default function App() {
     return Math.round(Number(n) * 100) / 100
   }
 
-  // Format number with thousand separators
+  // Format number with thousand separators (spaces) and dot for decimals
   const formatNumber = (n) => {
     if (n === null || n === undefined || n === '') return ''
     const num = Number(n)
@@ -530,8 +537,15 @@ export default function App() {
     // Round to 2 decimals
     const rounded = roundToTwo(num)
     if (rounded === null) return ''
-    // Add thousand separators
-    return rounded.toLocaleString('en-US', { maximumFractionDigits: 2 })
+    
+    // Split into integer and decimal parts
+    const [integerPart, decimalPart] = rounded.toString().split('.')
+    
+    // Format integer part with spaces
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+    
+    // Return with dot as decimal separator if there's a decimal part
+    return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger
   }
 
   // Function to handle clicking on a craftable resource
@@ -2122,7 +2136,7 @@ export default function App() {
               type="text" 
               min={1} 
               max={9999999999999999}
-              value={formatNumber(amount)} 
+              value={locationsMode && typeof amount === 'number' ? String(Math.ceil(amount)) : String(amount)} 
               placeholder="Enter amount (e.g., 1 000)"
               onChange={e => {
                 const inputValue = e.target.value
@@ -2502,7 +2516,8 @@ export default function App() {
                               }
                               onChange={(e) => {
                                 e.stopPropagation()
-                                const val = e.target.value.replace(/,/g, '') // Remove commas for parsing
+                                // Remove spaces for parsing
+                                const val = e.target.value.replace(/\s/g, '')
                                 if (val === '' || !isNaN(val)) {
                                   handleLocationItemInputChange(it, val)
                                 }
@@ -2513,12 +2528,13 @@ export default function App() {
                                 // Set raw value without formatting for editing
                                 const currentVal = locationItemTargets[it] !== undefined ? locationItemTargets[it] : display
                                 if (currentVal && currentVal !== '—') {
-                                  handleLocationItemInputChange(it, String(currentVal).replace(/,/g, ''))
+                                  handleLocationItemInputChange(it, String(currentVal).replace(/\s/g, ''))
                                 }
                                 setTimeout(() => e.target.select(), 0)
                               }}
                               onBlur={(e) => {
-                                const val = e.target.value.replace(/,/g, '')
+                                // Remove spaces for parsing
+                                const val = e.target.value.replace(/\s/g, '')
                                 const numVal = val === '' ? 0 : parseFloat(val)
                                 if (!isNaN(numVal)) {
                                   handleLocationItemCommit(it, numVal)

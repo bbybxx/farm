@@ -2647,7 +2647,7 @@ body.no-visual-scrollbar,
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   color: #fff;
-  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  font-family: ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
   font-size: 14px;
   font-weight: 500;
   padding: 6px 10px;

@@ -188,22 +188,25 @@ export default function App() {
 
   // Combine all items (recipes + base resources) for Quick Pin
   const allItems = useMemo(() => {
-    // Get all items that appear in recipes (craft items)
-    const craftItems = Object.keys(combinedRecipes || {})
+    const itemsSet = new Set()
     
-    // Get all base resources that are used in recipes
-    const baseResources = new Set()
+    // Add all recipe results (craft items)
+    Object.keys(combinedRecipes || {}).forEach(itemName => {
+      itemsSet.add(itemName)
+    })
+    
+    // Add all resources used in any recipe (base resources)
     Object.values(combinedRecipes || {}).forEach(recipe => {
-      if (recipe.resources) {
-        Object.keys(recipe.resources).forEach(resource => {
-          baseResources.add(resource)
+      // Check both "ingredients" (API format) and "из" (local format)
+      const resources = recipe.ingredients || recipe.из
+      if (resources) {
+        Object.keys(resources).forEach(resource => {
+          itemsSet.add(resource)
         })
       }
     })
     
-    // Combine craft items and base resources used in recipes
-    const combined = new Set([...craftItems, ...baseResources])
-    return Array.from(combined).sort()
+    return Array.from(itemsSet).sort()
   }, [combinedRecipes])
   
   const { 

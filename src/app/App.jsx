@@ -2277,6 +2277,10 @@ export default function App() {
           </label>
         </section>
 
+        </>
+        )}
+
+        {/* Modals - accessible in all modes */}
         <AnimatePresence>
           {isItemSelectOpen && (
             <motion.div
@@ -3216,9 +3220,6 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
-
-        </>
-        )}
 
         {/* Bug Report Modal */}
         <BugReportModal

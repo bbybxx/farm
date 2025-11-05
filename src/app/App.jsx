@@ -312,6 +312,8 @@ export default function App() {
   // Locations mode: show locations list and location-specific drops
   const [locationsMode, setLocationsMode] = useState(() => loadFromStorage('craftCalculator_locationsMode', false))
   const [selectedLocation, setSelectedLocation] = useState(() => loadFromStorage('craftCalculator_selectedLocation', 'Forest'))
+  // Target quantities for items in location mode (itemName -> targetQuantity)
+  const [locationItemTargets, setLocationItemTargets] = useState({})
   // Remember last selection per mode (modeKey -> { item, amount, craftChain, selectedLocation })
   const [lastSelectionByMode, setLastSelectionByMode] = useState(() => loadFromStorage('craftCalculator_lastSelectionByMode', {}))
 
@@ -963,6 +965,67 @@ export default function App() {
       setQuickPinQuantity('')
     }
   }, [isQuickPinModalOpen])
+
+  // Reset location item targets when location changes or leaving location mode
+  useEffect(() => {
+    setLocationItemTargets({})
+  }, [selectedLocation, locationsMode])
+
+  // Handle location item target change - recalculate amount (consumables) based on desired item quantity
+  const handleLocationItemTargetChange = (itemName, targetQuantity) => {
+    // Update the target for this item
+    setLocationItemTargets(prev => ({
+      ...prev,
+      [itemName]: targetQuantity
+    }))
+
+    // Calculate required amount (consumables) based on target quantity
+    // We need to reverse the calculation: if targetQuantity items = X consumables, solve for X
+    // Formula: numericValue = amount * dropsPerConsumable
+    // Reverse: amount = numericValue / dropsPerConsumable
+    try {
+      const perUnit = computePinnedEstimate(
+        { name: itemName, location: selectedLocation },
+        1,
+        activePerks,
+        exploringMode
+      )
+
+      if (exploringMode === 'Apple Cider' && perUnit && perUnit.mode === 'AC' && typeof perUnit.effectiveDropsPerCider === 'number') {
+        const dropsPerCider = perUnit.effectiveDropsPerCider
+        if (dropsPerCider > 0) {
+          const requiredAmount = targetQuantity / dropsPerCider
+          setAmount(Math.ceil(requiredAmount))
+        }
+      } else if (exploringMode === 'Arnold Palmer' && perUnit && perUnit.mode === 'AP' && typeof perUnit.itemsPerAP === 'number') {
+        const itemsPerAP = perUnit.itemsPerAP
+        if (itemsPerAP > 0) {
+          const requiredAmount = targetQuantity / itemsPerAP
+          setAmount(Math.ceil(requiredAmount))
+        }
+      } else {
+        // Fallback: try to get raw drop rate from location data
+        const locObj = APPLE_CIDER_REAL_DROP_RATES.locations && APPLE_CIDER_REAL_DROP_RATES.locations[selectedLocation]
+        if (locObj) {
+          const raw = locObj['rq0cs0'] && locObj['rq0cs0'][itemName]
+          if (raw) {
+            let dropsPerConsumable = null
+            if (typeof raw === 'object') {
+              dropsPerConsumable = raw.dropsPerCider || (raw.cidersPerDrop ? 1010 / raw.cidersPerDrop : null)
+            } else if (typeof raw === 'number') {
+              dropsPerConsumable = raw
+            }
+            if (dropsPerConsumable && dropsPerConsumable > 0) {
+              const requiredAmount = targetQuantity / dropsPerConsumable
+              setAmount(Math.ceil(requiredAmount))
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Error calculating required amount:', e)
+    }
+  }
 
   // Save pinned resources to localStorage
 
@@ -2392,7 +2455,23 @@ export default function App() {
                                 )}
                               </ItemDisplay>
                             </span>
-                            <span className="v">{display}</span>
+                            <input
+                              type="number"
+                              className="location-item-input"
+                              value={locationItemTargets[it] !== undefined ? locationItemTargets[it] : (display !== '—' ? display : '')}
+                              onChange={(e) => {
+                                e.stopPropagation()
+                                const val = e.target.value
+                                if (val === '' || !isNaN(val)) {
+                                  handleLocationItemTargetChange(it, val === '' ? 0 : parseFloat(val))
+                                }
+                              }}
+                              onClick={(e) => e.stopPropagation()}
+                              onFocus={(e) => e.target.select()}
+                              placeholder={display !== '—' ? display : '0'}
+                              min="0"
+                              step="0.01"
+                            />
                           </div>
                           {pinnedEnabled && (
                             (() => {

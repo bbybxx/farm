@@ -2640,3 +2640,43 @@ body.no-visual-scrollbar,
     font-size: 11px;
   }
 }
+
+/* Location item input field */
+.location-item-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 10px;
+  text-align: right;
+  width: 80px;
+  transition: all 0.2s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+
+.location-item-input::-webkit-outer-spin-button,
+.location-item-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.location-item-input:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.location-item-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(130, 180, 255, 0.5);
+  box-shadow: 0 0 0 3px rgba(130, 180, 255, 0.1);
+}
+
+.location-item-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}

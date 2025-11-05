@@ -2843,7 +2843,7 @@ export default function App() {
                   <h2 className="item-select-title">Quick Pin</h2>
                 </div>
                 <div className="item-select-list">
-                  {allItems.map((itm) => (
+                  {items.map((itm) => (
                     <button
                       key={itm}
                       onClick={() => handleQuickPin(itm)}

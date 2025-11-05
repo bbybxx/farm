@@ -185,6 +185,14 @@ export default function App() {
       return updated ? next : prev
     })
   }, [])
+
+  // Combine all items (recipes + base resources) for Quick Pin
+  const allItems = useMemo(() => {
+    const recipeItems = Object.keys(combinedRecipes || {})
+    const baseItems = Object.keys(itemsData || {})
+    const combined = new Set([...recipeItems, ...baseItems])
+    return Array.from(combined).sort()
+  }, [combinedRecipes, itemsData])
   
   const { 
     isReady, 
@@ -2879,7 +2887,7 @@ export default function App() {
                       </div>
                     </div>
                     <div className="item-select-list">
-                      {items.filter(itm => {
+                      {allItems.filter(itm => {
                         if (!quickPinFilter) return true
                         return String(itm).toLowerCase().includes(quickPinFilter.toLowerCase())
                       }).map((itm) => (

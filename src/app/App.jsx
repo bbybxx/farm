@@ -266,6 +266,7 @@ export default function App() {
   const [isCreatingFolder, setIsCreatingFolder] = useState(false)
   const [isCreatingFolderInTabs, setIsCreatingFolderInTabs] = useState(false)
   const [deletingFolderId, setDeletingFolderId] = useState(null)
+  const [isQuickPinModalOpen, setIsQuickPinModalOpen] = useState(false)
   const [useThousandsFormat, setUseThousandsFormat] = useState(() => loadFromStorage('craftCalculator_useThousandsFormat', true))
   const [recentlyAddedItems, setRecentlyAddedItems] = useState(new Set())
   const [showClearConfirm, setShowClearConfirm] = useState(false)
@@ -901,6 +902,21 @@ export default function App() {
     }
   }
 
+  // Quick pin handler - opens modal to select any item
+  const handleQuickPin = (selectedItem) => {
+    const quantity = prompt(`How many ${selectedItem} to pin?`)
+    if (quantity && !isNaN(quantity) && parseInt(quantity) > 0) {
+      addToPinnedWithFolder({
+        item: selectedItem,
+        quantity: parseInt(quantity),
+        type: 'manual',
+        timestamp: Date.now()
+      }, activePinnedFolder)
+      hapticFeedback('success')
+    }
+    setIsQuickPinModalOpen(false)
+  }
+
   // Save pinned resources to localStorage
 
   // Save pinned resources to localStorage
@@ -1429,19 +1445,32 @@ export default function App() {
 
               <div className="section-header">
                 <h3>Pinned Resources</h3>
-                {pinnedResources.filter(item => (item.folderId || 'default') === activePinnedFolder).length > 0 && (
+                <div style={{ display: 'flex', gap: '6px' }}>
                   <button 
-                    className="chip danger"
+                    className="chip"
                     onClick={() => {
-                      hapticFeedback('medium')
-                      setPinnedResources(prev => prev.filter(item => (item.folderId || 'default') !== activePinnedFolder))
+                      hapticFeedback('light')
+                      setIsQuickPinModalOpen(true)
                     }}
                     type="button"
-                    title="Clear this folder"
+                    title="Pin any item"
                   >
-                    Clear
+                    + Pin
                   </button>
-                )}
+                  {pinnedResources.filter(item => (item.folderId || 'default') === activePinnedFolder).length > 0 && (
+                    <button 
+                      className="chip danger"
+                      onClick={() => {
+                        hapticFeedback('medium')
+                        setPinnedResources(prev => prev.filter(item => (item.folderId || 'default') !== activePinnedFolder))
+                      }}
+                      type="button"
+                      title="Clear this folder"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
               </div>
               
               {pinnedResources.filter(item => (item.folderId || 'default') === activePinnedFolder).length === 0 ? (
@@ -2786,6 +2815,43 @@ export default function App() {
                       + Create New Folder
                     </button>
                   )}
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Quick Pin Modal */}
+        <AnimatePresence>
+          {isQuickPinModalOpen && (
+            <motion.div
+              className="modal-wrapper"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsQuickPinModalOpen(false)}
+              style={{ zIndex: 50 }}
+            >
+              <motion.div
+                className="item-select-content glass"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="item-select-header">
+                  <h2 className="item-select-title">Quick Pin</h2>
+                </div>
+                <div className="item-select-list">
+                  {allItems.map((itm) => (
+                    <button
+                      key={itm}
+                      onClick={() => handleQuickPin(itm)}
+                      type="button"
+                    >
+                      {itm}
+                    </button>
+                  ))}
                 </div>
               </motion.div>
             </motion.div>

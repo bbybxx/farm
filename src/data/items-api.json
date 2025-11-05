@@ -6401,7 +6401,7 @@
     "name": "Pumpkin Spiced Milk",
     "type": "item",
     "image": "/img/items/Psm2.png",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 40
   },
   "Purple Bag": {
@@ -7703,7 +7703,7 @@
     "name": "Spooky Scarecrow",
     "type": "item",
     "image": "/img/items/scarecrow.png",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 80
   },
   "Spooky Slime": {

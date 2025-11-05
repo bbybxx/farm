@@ -26,6 +26,8 @@ function parsePerks(activePerks = []) {
   hasLemonSqueezer: has('Lemon Squeezer'),
   // New Runecube-related perk: Eagle Eye (Runecube)
   hasEagleEyeRunecube: has('Eagle Eye (Runecube)'),
+  // Cockatrice Ether Source - doubles drop rate for specific insects
+  hasCockatriceEtherSource: has('Cockatrice Ether Source'),
   // Arnold Palmer meals
   hasLemonSeltzerMeal: has('Lemon Seltzer'),
   hasQuandaryChowderMeal: has('Quandary Chowder'),
@@ -166,6 +168,19 @@ export function computePinnedEstimate(pinnedItem, quantity, activePerks, explori
         dropsPerCider = itemEntry
       }
       if (!dropsPerCider) continue
+      
+      // Apply Cockatrice Ether Source perk - doubles drop rate for specific insects
+      if (perks.hasCockatriceEtherSource) {
+        const cockatriceItems = [
+          'Fire Ant', 'Caterpillar', 'Spider', 'Horned Beetle', 
+          'Shiny Beetle', 'Snail', 'Giant Centipede', 
+          'Ruby Scorpion', 'Onyx Scorpion'
+        ]
+        if (cockatriceItems.includes(itemName)) {
+          dropsPerCider *= 2
+        }
+      }
+      
   // computes explores per cider for this location: we need EE from location config
   const locCfg = getLocationConfig(loc.name) || { exploringEffectiveness: 1, multiplier: 1 }
   const ee = locCfg.exploringEffectiveness || 0

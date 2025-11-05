@@ -1158,7 +1158,8 @@ export default function App() {
     {
       title: 'Exploring',
       perks: [
-        'Eagle Eye (Runecube)'
+        'Eagle Eye (Runecube)',
+        'Cockatrice Ether Source'
       ]
     },
     {

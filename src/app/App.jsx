@@ -1126,7 +1126,7 @@ export default function App() {
       // Create craft chain for location mode too
       setCraftChain([
         { name: questName || 'Quests', amount: 1, isPlaceholder: true },
-        { name: bestLocation, amount: 1, isLocation: true }
+        { name: bestLocation, amount: quantity, isLocation: true, targetItem: itemName, targetQuantity: quantity }
       ])
       
       setQuestsMode(false)
@@ -2517,14 +2517,21 @@ export default function App() {
                           }
                           // If this breadcrumb represents a location node, switch back into Locations mode
                           else if (target && typeof target === 'object' && target.isLocation) {
+                            setQuestsMode(false)
                             setLocationsMode(true)
                             setReverseMode(false)
                             setSelectedLocation(target.name)
-                            // restore amount user had while viewing this location, if saved
-                            const restored = (typeof target.savedAmount !== 'undefined' && target.savedAmount !== null) ? target.savedAmount : 1
-                            setItem('Board')
-                            setAmount(restored)
+                            
+                            // Restore the target item and quantity if saved
+                            if (target.targetItem && target.targetQuantity) {
+                              setLocationItemTargets({ [target.targetItem]: target.targetQuantity })
+                              handleLocationItemCommit(target.targetItem, target.targetQuantity)
+                            }
                           } else {
+                            // Regular craft mode navigation
+                            setQuestsMode(false)
+                            setLocationsMode(false)
+                            setReverseMode(false)
                             const targetName = (typeof target === 'string') ? target : (target && target.name) || ''
                             const targetAmt = (typeof target === 'object' && target && target.amount) ? target.amount : 1
                             if (targetName) setItem(targetName)
@@ -3250,6 +3257,10 @@ export default function App() {
                   {(showAllBase ? Object.entries(result.filteredResources) : Object.entries(result.filteredResources).slice(0, 8)).map(([k, v]) => {
                     const mailableItems = ['Acorn', 'Apple', 'Apple Cider', 'Aquamarine', 'Arnold Palmer', 'Arrowhead', 'Axe', 'Black Powder', 'Blue Dye', 'Blue Feathers', 'Bone', 'Bouquet of Flowers', 'Bucket', 'Carbon Sphere', 'Caterpillar', 'Coal', 'Eggs', 'Explosive', 'Feathers', 'Fern Leaf', 'Fire Ant', 'Fishing Net', 'Fruit Punch', 'Glass Orb', 'Grapes', 'Green Dye', 'Green Parchment', 'Grubs', 'Hammer', 'Heart Container', 'Hide', 'Horn', 'Iced Tea', 'Iron Cup', 'Ladder', 'Large Net', 'Leather', 'Leather Diary', 'Lemon', 'Lemonade', 'Milk', 'Minnows', 'Mushroom', 'Mushroom Paste', 'Oak', 'Old Boot', 'Orange', 'Orange Juice', 'Peach', 'Peach Juice', 'Potato', 'Purple Dye', 'Purple Flower', 'Purple Parchment', 'Red Dye', 'Rope', 'Scrap Metal', 'Scrap Wire', 'Shimmer Stone', 'Shovel', 'Slimestone', 'Spider', 'Stone', 'Twine', 'Unpolished Shimmer Stone', 'Wood', 'Wooden Box', 'Wooden Button', 'Wooden Table', 'Worms', 'Yarn']
                     const isMailable = mailableItems.includes(k)
+                    const canCraft = isCraftable(k)
+                    const locations = getItemLocations(k)
+                    const canFind = locations && locations.length > 0
+                    const isClickable = canCraft || canFind
                     
                     return (
                       <motion.li 
@@ -3258,14 +3269,58 @@ export default function App() {
                         className="resource-item"
                       >
                         <div 
-                          className={`resource-content ${isCraftable(k) ? 'clickable' : ''}`}
-                          onClick={() => isCraftable(k) && handleResourceClick(k, v)}
-                          style={isCraftable(k) ? { cursor: 'pointer' } : {}}
-                          title={isCraftable(k) ? `Click to craft ${k}` : undefined}
+                          className={`resource-content ${isClickable ? 'clickable' : ''}`}
+                          onClick={() => {
+                            if (canCraft) {
+                              handleResourceClick(k, v)
+                            } else if (canFind) {
+                              // Switch to location mode
+                              // Find best location
+                              let bestLocation = locations[0].name
+                              try {
+                                const estimate = computePinnedEstimate(
+                                  { name: k, quantity: 1 },
+                                  1,
+                                  activePerks,
+                                  exploringMode
+                                )
+                                if (estimate && estimate.location) {
+                                  bestLocation = estimate.location
+                                }
+                              } catch (e) {
+                                // Use first location as fallback
+                              }
+                              
+                              // Create craft chain
+                              const currentChain = craftChain.length > 0 ? [...craftChain] : [{ name: item, amount: amount }]
+                              setCraftChain([...currentChain, { 
+                                name: bestLocation, 
+                                amount: v, 
+                                isLocation: true,
+                                targetItem: k,
+                                targetQuantity: v
+                              }])
+                              
+                              setQuestsMode(false)
+                              setLocationsMode(true)
+                              setReverseMode(false)
+                              setSelectedLocation(bestLocation)
+                              
+                              // Set the target quantity for this specific item
+                              setLocationItemTargets({ [k]: v })
+                              
+                              // Calculate required consumables
+                              handleLocationItemCommit(k, v)
+                              
+                              hapticFeedback('light')
+                            }
+                          }}
+                          style={isClickable ? { cursor: 'pointer' } : {}}
+                          title={canCraft ? `Click to craft ${k}` : (canFind ? `Click to find ${k} in locations` : undefined)}
                         >
                           <span className="k">
                             <ItemDisplay itemName={k} itemsData={itemsData}>
-                              {isCraftable(k) && (
+                              {isClickable && (
                                 <span className="craft-indicator">
                                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                                     <path 
@@ -3558,24 +3613,29 @@ export default function App() {
                             <div className="folder-config-info">
                               <span className="folder-config-name">{folder.name}</span>
                               <span className="folder-config-count">
-                                {pinnedResources.filter(item => (item.folderId || 'default') === folder.id).length} items
+                                {folder.id === 'quests' 
+                                  ? `${pinnedQuests.filter(q => (q.folderId || 'quests') === 'quests').length} quests`
+                                  : `${pinnedResources.filter(item => (item.folderId || 'default') === folder.id).length} items`
+                                }
                               </span>
                             </div>
                             <div className="folder-config-actions">
-                              <button
-                                className="folder-config-btn"
-                                onClick={() => {
-                                  setEditingFolderId(folder.id)
-                                  setFolderNameInput(folder.name)
-                                }}
-                                title="Rename folder"
-                              >
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                              </button>
-                              {folder.id !== 'default' && (
+                              {!folder.isSystemFolder && (
+                                <button
+                                  className="folder-config-btn"
+                                  onClick={() => {
+                                    setEditingFolderId(folder.id)
+                                    setFolderNameInput(folder.name)
+                                  }}
+                                  title="Rename folder"
+                                >
+                                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                  </svg>
+                                </button>
+                              )}
+                              {folder.id !== 'default' && !folder.isSystemFolder && (
                                 deletingFolderId === folder.id ? (
                                   <div className="folder-delete-confirm">
                                     <span className="folder-delete-message">Delete "{folder.name}"?</span>

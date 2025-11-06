@@ -2627,10 +2627,18 @@ export default function App() {
                             setReverseMode(false)
                             setSelectedLocation(target.name)
                             
+                            // Restore saved amount if available
+                            if (target.savedAmount !== undefined && target.savedAmount !== null) {
+                              setAmount(target.savedAmount)
+                            }
+                            
                             // Restore the target item and quantity if saved
                             if (target.targetItem && target.targetQuantity) {
                               setLocationItemTargets({ [target.targetItem]: target.targetQuantity })
-                              handleLocationItemCommit(target.targetItem, target.targetQuantity)
+                              // Don't call handleLocationItemCommit if we have savedAmount
+                              if (target.savedAmount === undefined || target.savedAmount === null) {
+                                handleLocationItemCommit(target.targetItem, target.targetQuantity)
+                              }
                             }
                           } else {
                             // Regular craft mode navigation

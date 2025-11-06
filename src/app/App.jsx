@@ -1005,12 +1005,26 @@ export default function App() {
 
       const locs = getItemLocations(resourceName) || []
       const hasLast = lastPinnedLocation && locs.some(l => l.name === lastPinnedLocation)
+      
+      // Determine the origin mode
+      let originMode = 'quick-pin' // default for quick pin
+      if (questsMode) {
+        originMode = 'quests'
+      } else if (locationsMode) {
+        originMode = 'locations'
+      } else if (reverseMode) {
+        originMode = 'base-to-craft'
+      } else {
+        originMode = 'craft-to-base'
+      }
+      
       const newEntry = {
         name: resourceName,
         quantity: qty,
         parentRecipe: parentRecipe || item,
         folderId: targetFolder,
         craftChain: craftChain && craftChain.length > 0 ? [...craftChain] : [],
+        originMode: originMode, // Save the mode from which it was pinned
         ...(hasLast ? { location: lastPinnedLocation } : {})
       }
       return [...prev, newEntry]
@@ -2196,86 +2210,77 @@ export default function App() {
                         <div 
                           className="pinned-card-content"
                           onClick={() => {
-                            // Navigate to this pinned item with smarter routing based on origin
-                            const name = pinnedItem.name
-                            const qty = pinnedItem.quantity
-                            const parent = pinnedItem.parentRecipe
-                            const chain = pinnedItem.craftChain || []
-                            const fromQuick = parent === 'Quick Pin'
-                            const fromQuest = typeof parent === 'string' && (parent.includes('(Quest)') || parent.includes('(Total)'))
-                            const fromLocationExplicit = !!pinnedItem.location
-                            const fromLocationParent = typeof parent === 'string' && parent && pinnedItem.location == null && parent !== name && parent !== 'Quick Pin'
-
-                            // Helper to open craft mode and restore chain (fallback to simple chain)
-                            const openCraft = (useChain) => {
-                              setItem(name)
-                              setAmount(qty)
-                              if (useChain && chain && chain.length > 0) setCraftChain(chain)
-                              else setCraftChain([{ name, amount: qty }])
-                              setQuestsMode(false)
-                              setLocationsMode(false)
-                              setReverseMode(false)
-                            }
-
-                            // Helper to open locations mode and restore state
-                            const openLocations = (locationName) => {
-                              setItem(name)
-                              setAmount(qty)
-                              // craftChain contains a placeholder -> restore a location-style chain if available
-                              if (chain && chain.length > 0) setCraftChain(chain)
-                              else setCraftChain([{ name: 'Locations', amount: 1, isPlaceholder: true }, { name: locationName || '', amount: qty, isLocation: true, targetItem: name, targetQuantity: qty }])
-                              setQuestsMode(false)
-                              setLocationsMode(true)
-                              setReverseMode(false)
-                              if (locationName) setSelectedLocation(locationName)
-                              setLocationItemTargets({ [name]: qty })
-                              // Calculate required consumables for chosen location
-                              try { handleLocationItemCommit(name, qty) } catch (e) { /* ignore */ }
-                            }
-
-                            // Decision tree:
-                            // 1) If pinned explicitly from a location (has pinnedItem.location) -> open locations and restore
-                            // 2) Else if parent indicates a location name (best-effort) -> open locations
-                            // 3) Else if pinned came from a craft chain (and not quick/quest origin) -> restore craft chain
-                            // 4) Else (quick pin or quest pin) -> prefer craft if craftable, otherwise locations
-
-                            const locationsForItem = getItemLocations(name) || []
-                            const canCraft = combinedRecipes && combinedRecipes[name]
-                            const canFind = locationsForItem && locationsForItem.length > 0
-
-                            if (fromLocationExplicit) {
-                              openLocations(pinnedItem.location)
-                            } else if (fromLocationParent) {
-                              // parent looks like a location name; use it
-                              openLocations(parent)
-                            } else if (!fromQuick && !fromQuest && chain && chain.length > 0 && !(chain.length === 1 && chain[0].name === name)) {
-                              // pinned from craft/ctb/btc context - restore chain
-                              openCraft(true)
-                            } else {
-                              // Quick pin or quest pin: decide by capability (prioritize craft)
-                              if (canCraft) {
-                                openCraft(false)
-                              } else if (canFind) {
-                                // pick best location (reuse estimate logic)
-                                let bestLocation = locationsForItem[0] && locationsForItem[0].name
-                                try {
-                                  for (const loc of locationsForItem) {
-                                    const estimate = computePinnedEstimate({ name, quantity: 1 }, 1, activePerks, exploringMode)
-                                    if (estimate && estimate.location === loc.name) {
-                                      bestLocation = loc.name
-                                      break
-                                    }
-                                  }
-                                } catch (e) {}
-                                openLocations(bestLocation)
+                            // Smart routing based on origin and capability
+                            const canCraft = combinedRecipes && combinedRecipes[pinnedItem.name]
+                            const locations = getItemLocations(pinnedItem.name)
+                            const canFind = locations && locations.length > 0
+                            
+                            // If pinned from craft-to-base, base-to-craft, or locations - restore that mode with chain
+                            if (pinnedItem.originMode === 'craft-to-base' || 
+                                pinnedItem.originMode === 'base-to-craft' || 
+                                pinnedItem.originMode === 'locations') {
+                              
+                              setItem(pinnedItem.name)
+                              setAmount(pinnedItem.quantity)
+                              
+                              // Restore craft chain if it exists
+                              if (pinnedItem.craftChain && pinnedItem.craftChain.length > 0) {
+                                setCraftChain(pinnedItem.craftChain)
                               } else {
-                                // fallback to craft mode simple chain
-                                openCraft(false)
+                                setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
+                              }
+                              
+                              // Restore the original mode
+                              if (pinnedItem.originMode === 'locations') {
+                                setQuestsMode(false)
+                                setLocationsMode(true)
+                                setReverseMode(false)
+                                if (pinnedItem.location) {
+                                  setSelectedLocation(pinnedItem.location)
+                                }
+                              } else if (pinnedItem.originMode === 'base-to-craft') {
+                                setQuestsMode(false)
+                                setLocationsMode(false)
+                                setReverseMode(true)
+                              } else {
+                                setQuestsMode(false)
+                                setLocationsMode(false)
+                                setReverseMode(false)
                               }
                             }
-
+                            // If pinned from quests or quick-pin - smart routing
+                            else {
+                              setItem(pinnedItem.name)
+                              setAmount(pinnedItem.quantity)
+                              setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
+                              
+                              // Priority: craft-to-base if craftable, otherwise locations if findable
+                              if (canCraft) {
+                                setQuestsMode(false)
+                                setLocationsMode(false)
+                                setReverseMode(false)
+                              } else if (canFind) {
+                                setQuestsMode(false)
+                                setLocationsMode(true)
+                                setReverseMode(false)
+                                if (pinnedItem.location) {
+                                  setSelectedLocation(pinnedItem.location)
+                                } else if (locations[0]) {
+                                  setSelectedLocation(locations[0].name)
+                                }
+                              } else {
+                                // Fallback to craft-to-base
+                                setQuestsMode(false)
+                                setLocationsMode(false)
+                                setReverseMode(false)
+                              }
+                            }
+                            
                             // Close sidebar on mobile
-                            if (window.innerWidth <= 768) setSidebarOpen(false)
+                            if (window.innerWidth <= 768) {
+                              setSidebarOpen(false)
+                            }
+                            
                             hapticFeedback('light')
                           }}
                           style={{ cursor: 'pointer' }}
@@ -2650,7 +2655,7 @@ export default function App() {
               </button>
               <AnimatePresence>
                 {modeOpen && (
-                  <motion.div className="mode-dropdown glass" style={{ position: 'absolute', right: 0, marginTop: 8, minWidth: 160, zIndex: 40 }}
+                  <motion.div className="mode-dropdown glass" style={{ position: 'absolute', right: 0, marginTop: 8, minWidth: 160, zIndex: 9999 }}
                     initial={{ opacity: 0, y: -6, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -6, scale: 0.98 }}

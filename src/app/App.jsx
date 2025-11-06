@@ -1025,7 +1025,9 @@ export default function App() {
         folderId: targetFolder,
         craftChain: craftChain && craftChain.length > 0 ? [...craftChain] : [],
         originMode: originMode, // Save the mode from which it was pinned
-        ...(hasLast ? { location: lastPinnedLocation } : {})
+        ...(hasLast ? { location: lastPinnedLocation } : {}),
+        // Save current amount (consumable quantity) if in locations mode
+        ...(locationsMode ? { savedAmount: amount } : {})
       }
       return [...prev, newEntry]
     })
@@ -2238,6 +2240,10 @@ export default function App() {
                                       }
                                       // Set item to the pinned item name for context
                                       setItem(pinnedItem.name)
+                                      // Restore saved amount (consumable) if it exists
+                                      if (pinnedItem.savedAmount !== undefined && pinnedItem.savedAmount !== null) {
+                                        setAmount(pinnedItem.savedAmount)
+                                      }
                                       // Set craft chain for proper tracking
                                       if (pinnedItem.craftChain && pinnedItem.craftChain.length > 0) {
                                         setCraftChain(pinnedItem.craftChain)
@@ -2248,8 +2254,10 @@ export default function App() {
                                       // Use setTimeout to ensure state updates after mode switch
                                       setTimeout(() => {
                                         setLocationItemTargets({ [pinnedItem.name]: pinnedItem.quantity })
-                                        // Trigger recalculation of consumables needed
-                                        handleLocationItemCommit(pinnedItem.name, pinnedItem.quantity)
+                                        // Only recalculate if we don't have savedAmount
+                                        if (pinnedItem.savedAmount === undefined || pinnedItem.savedAmount === null) {
+                                          handleLocationItemCommit(pinnedItem.name, pinnedItem.quantity)
+                                        }
                                       }, 0)
                                     } else {
                                       // For craft-to-base and base-to-craft modes
@@ -2627,9 +2635,14 @@ export default function App() {
                             }
                           } else {
                             // Regular craft mode navigation
+                            // If we came from locations mode, the chain represents base->craft (reverse) flow
+                            // Check if there's a location node in the chain to determine mode
+                            const hasLocationInChain = craftChain.some(n => n && typeof n === 'object' && n.isLocation)
+                            
                             setQuestsMode(false)
                             setLocationsMode(false)
-                            setReverseMode(false)
+                            setReverseMode(hasLocationInChain) // Use reverse mode if came from locations
+                            
                             const targetName = (typeof target === 'string') ? target : (target && target.name) || ''
                             const targetAmt = (typeof target === 'object' && target && target.amount) ? target.amount : 1
                             if (targetName) setItem(targetName)

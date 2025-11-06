@@ -1852,7 +1852,7 @@ export default function App() {
                         >
                           <div className="pinned-item-name">
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                              <span style={{ fontWeight: 600 }}>{quest.name}</span>
+                              <span style={{ fontWeight: 600 }}>{quest.name.replace(/<br\s*\/?>/gi, ' ')}</span>
                             </div>
                           </div>
                           <div className="pinned-item-details">
@@ -1868,7 +1868,7 @@ export default function App() {
                                 fontStyle: 'italic',
                                 letterSpacing: '0.3px'
                               }}>
-                                {quest.questlineName}
+                                {quest.questlineName.replace(/<br\s*\/?>/gi, ' ')}
                               </div>
                             )}
                             {quest.description && (
@@ -2196,28 +2196,86 @@ export default function App() {
                         <div 
                           className="pinned-card-content"
                           onClick={() => {
-                            // Navigate to this item
-                            setItem(pinnedItem.name)
-                            setAmount(pinnedItem.quantity)
-                            
-                            // Restore craft chain if it exists
-                            if (pinnedItem.craftChain && pinnedItem.craftChain.length > 0) {
-                              setCraftChain(pinnedItem.craftChain)
+                            // Navigate to this pinned item with smarter routing based on origin
+                            const name = pinnedItem.name
+                            const qty = pinnedItem.quantity
+                            const parent = pinnedItem.parentRecipe
+                            const chain = pinnedItem.craftChain || []
+                            const fromQuick = parent === 'Quick Pin'
+                            const fromQuest = typeof parent === 'string' && (parent.includes('(Quest)') || parent.includes('(Total)'))
+                            const fromLocationExplicit = !!pinnedItem.location
+                            const fromLocationParent = typeof parent === 'string' && parent && pinnedItem.location == null && parent !== name && parent !== 'Quick Pin'
+
+                            // Helper to open craft mode and restore chain (fallback to simple chain)
+                            const openCraft = (useChain) => {
+                              setItem(name)
+                              setAmount(qty)
+                              if (useChain && chain && chain.length > 0) setCraftChain(chain)
+                              else setCraftChain([{ name, amount: qty }])
+                              setQuestsMode(false)
+                              setLocationsMode(false)
+                              setReverseMode(false)
+                            }
+
+                            // Helper to open locations mode and restore state
+                            const openLocations = (locationName) => {
+                              setItem(name)
+                              setAmount(qty)
+                              // craftChain contains a placeholder -> restore a location-style chain if available
+                              if (chain && chain.length > 0) setCraftChain(chain)
+                              else setCraftChain([{ name: 'Locations', amount: 1, isPlaceholder: true }, { name: locationName || '', amount: qty, isLocation: true, targetItem: name, targetQuantity: qty }])
+                              setQuestsMode(false)
+                              setLocationsMode(true)
+                              setReverseMode(false)
+                              if (locationName) setSelectedLocation(locationName)
+                              setLocationItemTargets({ [name]: qty })
+                              // Calculate required consumables for chosen location
+                              try { handleLocationItemCommit(name, qty) } catch (e) { /* ignore */ }
+                            }
+
+                            // Decision tree:
+                            // 1) If pinned explicitly from a location (has pinnedItem.location) -> open locations and restore
+                            // 2) Else if parent indicates a location name (best-effort) -> open locations
+                            // 3) Else if pinned came from a craft chain (and not quick/quest origin) -> restore craft chain
+                            // 4) Else (quick pin or quest pin) -> prefer craft if craftable, otherwise locations
+
+                            const locationsForItem = getItemLocations(name) || []
+                            const canCraft = combinedRecipes && combinedRecipes[name]
+                            const canFind = locationsForItem && locationsForItem.length > 0
+
+                            if (fromLocationExplicit) {
+                              openLocations(pinnedItem.location)
+                            } else if (fromLocationParent) {
+                              // parent looks like a location name; use it
+                              openLocations(parent)
+                            } else if (!fromQuick && !fromQuest && chain && chain.length > 0 && !(chain.length === 1 && chain[0].name === name)) {
+                              // pinned from craft/ctb/btc context - restore chain
+                              openCraft(true)
                             } else {
-                              // Create a simple chain with just the item
-                              setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
+                              // Quick pin or quest pin: decide by capability (prioritize craft)
+                              if (canCraft) {
+                                openCraft(false)
+                              } else if (canFind) {
+                                // pick best location (reuse estimate logic)
+                                let bestLocation = locationsForItem[0] && locationsForItem[0].name
+                                try {
+                                  for (const loc of locationsForItem) {
+                                    const estimate = computePinnedEstimate({ name, quantity: 1 }, 1, activePerks, exploringMode)
+                                    if (estimate && estimate.location === loc.name) {
+                                      bestLocation = loc.name
+                                      break
+                                    }
+                                  }
+                                } catch (e) {}
+                                openLocations(bestLocation)
+                              } else {
+                                // fallback to craft mode simple chain
+                                openCraft(false)
+                              }
                             }
-                            
-                            // Switch to craft mode
-                            setQuestsMode(false)
-                            setLocationsMode(false)
-                            setReverseMode(false)
-                            
+
                             // Close sidebar on mobile
-                            if (window.innerWidth <= 768) {
-                              setSidebarOpen(false)
-                            }
-                            
+                            if (window.innerWidth <= 768) setSidebarOpen(false)
                             hapticFeedback('light')
                           }}
                           style={{ cursor: 'pointer' }}

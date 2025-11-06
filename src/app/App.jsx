@@ -2248,6 +2248,8 @@ export default function App() {
                                       // Use setTimeout to ensure state updates after mode switch
                                       setTimeout(() => {
                                         setLocationItemTargets({ [pinnedItem.name]: pinnedItem.quantity })
+                                        // Trigger recalculation of consumables needed
+                                        handleLocationItemCommit(pinnedItem.name, pinnedItem.quantity)
                                       }, 0)
                                     } else {
                                       // For craft-to-base and base-to-craft modes
@@ -2297,6 +2299,8 @@ export default function App() {
                                       // In locations mode, set locationItemTargets with a delay
                                       setTimeout(() => {
                                         setLocationItemTargets({ [pinnedItem.name]: pinnedItem.quantity })
+                                        // Trigger recalculation of consumables needed
+                                        handleLocationItemCommit(pinnedItem.name, pinnedItem.quantity)
                                       }, 0)
                                     }
                                   }

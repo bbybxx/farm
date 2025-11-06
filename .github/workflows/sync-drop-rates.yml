@@ -44,4 +44,5 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add src/data/apple-cider-real-drop-rates.js src/data/apple-cider-real-drop-rates-updated.js
           git commit -m "chore: auto-sync drop rates from buddy.farm API [skip ci]"
+          git pull --rebase origin main
           git push

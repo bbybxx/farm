@@ -44,6 +44,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add src/data/quests-api.json
           git commit -m "chore: auto-sync quests from buddy.farm API [skip ci]"
+          git pull --rebase origin main
           git push
       
       - name: Summary

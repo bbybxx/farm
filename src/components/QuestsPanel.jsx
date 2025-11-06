@@ -324,9 +324,17 @@ export default function QuestsPanel({
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'space-between',
-                marginBottom: '24px'
+                marginBottom: '24px',
+                gap: '12px'
               }}>
-                <h2 style={{ margin: 0, fontSize: '24px' }}>
+                <h2 style={{ 
+                  margin: 0, 
+                  fontSize: '24px',
+                  wordBreak: 'break-word',
+                  overflowWrap: 'break-word',
+                  flex: '1',
+                  minWidth: 0
+                }}>
                   {selectedQuestline.name}
                 </h2>
                 {pinnedEnabled && addQuestToPinned && (
@@ -640,9 +648,17 @@ export default function QuestsPanel({
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'space-between',
-            marginBottom: '8px'
+            marginBottom: '8px',
+            gap: '12px'
           }}>
-            <h2 style={{ margin: 0, fontSize: '24px' }}>
+            <h2 style={{ 
+              margin: 0, 
+              fontSize: '24px',
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word',
+              flex: '1',
+              minWidth: 0
+            }}>
               {selectedQuest.name}
             </h2>
             {pinnedEnabled && addQuestToPinned && (() => {

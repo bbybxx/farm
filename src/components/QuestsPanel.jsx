@@ -318,22 +318,25 @@ export default function QuestsPanel({
           const totals = getQuestlineTotals(selectedQuestline)
           const questlinePinKey = `quest_questline_${selectedQuestline.id}`
           return (
-            <section className="glass card">
+            <section className="glass card" style={{ maxWidth: '100%', overflowX: 'hidden' }}>
               {/* Questline Name with Pin Button */}
               <div style={{ 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'space-between',
                 marginBottom: '24px',
-                gap: '12px'
+                gap: '12px',
+                maxWidth: '100%'
               }}>
                 <h2 style={{ 
                   margin: 0, 
                   fontSize: '24px',
                   wordBreak: 'break-word',
                   overflowWrap: 'break-word',
-                  flex: '1',
-                  minWidth: 0
+                  hyphens: 'auto',
+                  flex: '1 1 0',
+                  minWidth: 0,
+                  maxWidth: '100%'
                 }}>
                   {selectedQuestline.name}
                 </h2>
@@ -642,22 +645,25 @@ export default function QuestsPanel({
         })()
       ) : selectedQuest ? (
         /* QUEST PAGE */
-        <section className="glass card">
+        <section className="glass card" style={{ maxWidth: '100%', overflowX: 'hidden' }}>
           {/* Quest Name with Pin Button */}
           <div style={{ 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'space-between',
             marginBottom: '8px',
-            gap: '12px'
+            gap: '12px',
+            maxWidth: '100%'
           }}>
             <h2 style={{ 
               margin: 0, 
               fontSize: '24px',
               wordBreak: 'break-word',
               overflowWrap: 'break-word',
-              flex: '1',
-              minWidth: 0
+              hyphens: 'auto',
+              flex: '1 1 0',
+              minWidth: 0,
+              maxWidth: '100%'
             }}>
               {selectedQuest.name}
             </h2>

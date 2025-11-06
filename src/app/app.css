@@ -134,6 +134,8 @@ body {
 	border: 1px solid var(--glass-stroke);
 	border-radius: var(--radius);
 	box-shadow: var(--shadow);
+	max-width: 100%;
+	overflow-x: hidden;
 }
 
 .header { 
@@ -319,12 +321,13 @@ body {
   background: color-mix(in oklab, #ff6b6b 35%, transparent);
 }
 
-.layout { display: grid; grid-template-columns: 1fr; gap: 8px; width: 100%; }
-.main { display: grid; gap: 8px; width: 100%; padding-top: 60px; }
+.layout { display: grid; grid-template-columns: 1fr; gap: 8px; width: 100%; max-width: 100%; overflow-x: hidden; }
+.main { display: grid; gap: 8px; width: 100%; max-width: 100%; padding-top: 60px; overflow-x: hidden; }
 .stack { 
   display: flex;
   flex-direction: column;
   gap: 12px;
+  max-width: 100%;
 }
 
 /* Panel columns for desktop: show three columns */
@@ -430,7 +433,12 @@ body {
 .icon.menu { font-size: 18px; }
 .icon.close { border: none; background: none; padding: 6px; }
 
-.card { padding: 12px; }
+.card { 
+  padding: 12px; 
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
 .card.compact { padding: 10px; }
 .card h2 { 
   margin: 0 0 8px; 
@@ -440,11 +448,38 @@ body {
   overflow-wrap: break-word;
 }
 .card summary { font-weight: 700; font-size: 20px; margin: 0 0 8px; cursor: pointer; }
-.list { list-style: none; margin: 0; padding: 0; }
-.list li { display: flex; justify-content: space-between; padding: 8px 0; font-size: 18px; font-weight: 600; }
+.list { 
+  list-style: none; 
+  margin: 0; 
+  padding: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+.list li { 
+  display: flex; 
+  justify-content: space-between; 
+  padding: 8px 0; 
+  font-size: 18px; 
+  font-weight: 600;
+  max-width: 100%;
+  overflow-x: hidden;
+}
 .list li + li { border-top: 1px solid var(--glass-stroke); }
-.k { opacity: .85; font-weight: 600; }
-.v { text-align: right; font-weight: 700; }
+.k { 
+  opacity: .85; 
+  font-weight: 600;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
+  flex: 1;
+}
+.v { 
+  text-align: right; 
+  font-weight: 700;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  flex-shrink: 0;
+}
 
 .totals-row { display: flex; gap: 10px; flex-wrap: wrap; }
 .pill { padding: 10px 14px; border-radius: 12px; background: color-mix(in oklab, #ffffff 8%, transparent); border: 1px solid var(--glass-stroke); font-size: 18px; font-weight: 700; }

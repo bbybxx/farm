@@ -1577,7 +1577,7 @@ export default function App() {
                 onClick={() => setSidebarActiveTab('pinned')}
                 type="button"
               >
-                Pinned {pinnedResources.length > 0 && `(${pinnedResources.length})`}
+                Pinned {(pinnedResources.length + pinnedQuests.length) > 0 && `(${pinnedResources.length + pinnedQuests.length})`}
               </button>
             )}
             {historyEnabled && (
@@ -3620,21 +3620,19 @@ export default function App() {
                               </span>
                             </div>
                             <div className="folder-config-actions">
-                              {!folder.isSystemFolder && (
-                                <button
-                                  className="folder-config-btn"
-                                  onClick={() => {
-                                    setEditingFolderId(folder.id)
-                                    setFolderNameInput(folder.name)
-                                  }}
-                                  title="Rename folder"
-                                >
-                                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                  </svg>
-                                </button>
-                              )}
+                              <button
+                                className="folder-config-btn"
+                                onClick={() => {
+                                  setEditingFolderId(folder.id)
+                                  setFolderNameInput(folder.name)
+                                }}
+                                title="Rename folder"
+                              >
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                              </button>
                               {folder.id !== 'default' && !folder.isSystemFolder && (
                                 deletingFolderId === folder.id ? (
                                   <div className="folder-delete-confirm">

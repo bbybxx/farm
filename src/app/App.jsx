@@ -2246,6 +2246,8 @@ export default function App() {
                                       if (pinnedItem.location) {
                                         setSelectedLocation(pinnedItem.location)
                                       }
+                                      // Set the target quantity for the item
+                                      setLocationItemTargets({ [pinnedItem.name]: pinnedItem.quantity })
                                     } else if (pinnedItem.originMode === 'base-to-craft') {
                                       setQuestsMode(false)
                                       setLocationsMode(false)
@@ -2276,6 +2278,8 @@ export default function App() {
                                       } else if (locations[0]) {
                                         setSelectedLocation(locations[0].name)
                                       }
+                                      // Set the target quantity for the item
+                                      setLocationItemTargets({ [pinnedItem.name]: pinnedItem.quantity })
                                     }
                                   }
                                   

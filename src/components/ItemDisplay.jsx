@@ -71,12 +71,14 @@ const ItemDisplay = ({ itemName, itemsData = {}, children }) => {
         src={currentSrc || PLACEHOLDER_SRC}
         alt={item.name}
         title={item.name}
-        style={{ width: '24px', height: '24px', objectFit: 'contain' }}
+        style={{ width: '24px', height: '24px', objectFit: 'contain', flexShrink: 0 }}
         loading="lazy"
         onError={handleImageError}
       />
-      <span style={{ fontSize: '14px' }}>{item.name}</span>
-      {children}
+      <span style={{ fontSize: '14px', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap', minWidth: 0 }}>
+        <span>{item.name}</span>
+        {children}
+      </span>
     </div>
   );
 };

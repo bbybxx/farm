@@ -835,6 +835,8 @@ select.input option {
   align-items: center;
   opacity: 0.4;
   transition: opacity 0.2s ease;
+  margin-left: 4px;
+  flex-shrink: 0;
 }
 
 .craft-indicator svg {

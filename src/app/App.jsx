@@ -2236,18 +2236,19 @@ export default function App() {
                                       if (pinnedItem.location) {
                                         setSelectedLocation(pinnedItem.location)
                                       }
-                                      // In locations mode, amount is for the consumable (AC/AP), not the item
-                                      // We set locationItemTargets for the item quantity
-                                      setLocationItemTargets({ [pinnedItem.name]: pinnedItem.quantity })
                                       // Set item to the pinned item name for context
                                       setItem(pinnedItem.name)
-                                      // Don't set amount here - keep the consumable amount as is
                                       // Set craft chain for proper tracking
                                       if (pinnedItem.craftChain && pinnedItem.craftChain.length > 0) {
                                         setCraftChain(pinnedItem.craftChain)
                                       } else {
                                         setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
                                       }
+                                      // In locations mode, we set locationItemTargets for the item quantity
+                                      // Use setTimeout to ensure state updates after mode switch
+                                      setTimeout(() => {
+                                        setLocationItemTargets({ [pinnedItem.name]: pinnedItem.quantity })
+                                      }, 0)
                                     } else {
                                       // For craft-to-base and base-to-craft modes
                                       setItem(pinnedItem.name)
@@ -2290,11 +2291,13 @@ export default function App() {
                                       } else if (locations[0]) {
                                         setSelectedLocation(locations[0].name)
                                       }
-                                      // In locations mode, don't set amount to item quantity
-                                      // Set locationItemTargets instead
-                                      setLocationItemTargets({ [pinnedItem.name]: pinnedItem.quantity })
+                                      // Set item and craft chain
                                       setItem(pinnedItem.name)
                                       setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
+                                      // In locations mode, set locationItemTargets with a delay
+                                      setTimeout(() => {
+                                        setLocationItemTargets({ [pinnedItem.name]: pinnedItem.quantity })
+                                      }, 0)
                                     }
                                   }
                                   

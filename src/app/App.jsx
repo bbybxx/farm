@@ -2240,10 +2240,6 @@ export default function App() {
                                       }
                                       // Set item to the pinned item name for context
                                       setItem(pinnedItem.name)
-                                      // Restore saved amount (consumable) if it exists
-                                      if (pinnedItem.savedAmount !== undefined && pinnedItem.savedAmount !== null) {
-                                        setAmount(pinnedItem.savedAmount)
-                                      }
                                       // Set craft chain for proper tracking
                                       if (pinnedItem.craftChain && pinnedItem.craftChain.length > 0) {
                                         setCraftChain(pinnedItem.craftChain)
@@ -2254,8 +2250,11 @@ export default function App() {
                                       // Use setTimeout to ensure state updates after mode switch
                                       setTimeout(() => {
                                         setLocationItemTargets({ [pinnedItem.name]: pinnedItem.quantity })
-                                        // Only recalculate if we don't have savedAmount
-                                        if (pinnedItem.savedAmount === undefined || pinnedItem.savedAmount === null) {
+                                        // Restore saved amount or recalculate
+                                        if (pinnedItem.savedAmount !== undefined && pinnedItem.savedAmount !== null) {
+                                          setAmount(pinnedItem.savedAmount)
+                                        } else {
+                                          // Only recalculate if we don't have savedAmount
                                           handleLocationItemCommit(pinnedItem.name, pinnedItem.quantity)
                                         }
                                       }, 0)

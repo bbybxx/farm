@@ -2228,17 +2228,7 @@ export default function App() {
                                       pinnedItem.originMode === 'base-to-craft' || 
                                       pinnedItem.originMode === 'locations') {
                                     
-                                    setItem(pinnedItem.name)
-                                    setAmount(pinnedItem.quantity)
-                                    
-                                    // Restore craft chain if it exists
-                                    if (pinnedItem.craftChain && pinnedItem.craftChain.length > 0) {
-                                      setCraftChain(pinnedItem.craftChain)
-                                    } else {
-                                      setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
-                                    }
-                                    
-                                    // Restore the original mode
+                                    // Restore the original mode first
                                     if (pinnedItem.originMode === 'locations') {
                                       setQuestsMode(false)
                                       setLocationsMode(true)
@@ -2247,19 +2237,38 @@ export default function App() {
                                         setSelectedLocation(pinnedItem.location)
                                       }
                                       // In locations mode, amount is for the consumable (AC/AP), not the item
-                                      // So we don't set amount to pinnedItem.quantity
-                                      // Instead, we set locationItemTargets
+                                      // We set locationItemTargets for the item quantity
                                       setLocationItemTargets({ [pinnedItem.name]: pinnedItem.quantity })
                                       // Set item to the pinned item name for context
                                       setItem(pinnedItem.name)
-                                    } else if (pinnedItem.originMode === 'base-to-craft') {
-                                      setQuestsMode(false)
-                                      setLocationsMode(false)
-                                      setReverseMode(true)
+                                      // Don't set amount here - keep the consumable amount as is
+                                      // Set craft chain for proper tracking
+                                      if (pinnedItem.craftChain && pinnedItem.craftChain.length > 0) {
+                                        setCraftChain(pinnedItem.craftChain)
+                                      } else {
+                                        setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
+                                      }
                                     } else {
-                                      setQuestsMode(false)
-                                      setLocationsMode(false)
-                                      setReverseMode(false)
+                                      // For craft-to-base and base-to-craft modes
+                                      setItem(pinnedItem.name)
+                                      setAmount(pinnedItem.quantity)
+                                      
+                                      // Restore craft chain if it exists
+                                      if (pinnedItem.craftChain && pinnedItem.craftChain.length > 0) {
+                                        setCraftChain(pinnedItem.craftChain)
+                                      } else {
+                                        setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
+                                      }
+                                      
+                                      if (pinnedItem.originMode === 'base-to-craft') {
+                                        setQuestsMode(false)
+                                        setLocationsMode(false)
+                                        setReverseMode(true)
+                                      } else {
+                                        setQuestsMode(false)
+                                        setLocationsMode(false)
+                                        setReverseMode(false)
+                                      }
                                     }
                                   }
                                   // If pinned from quests or quick-pin - smart routing

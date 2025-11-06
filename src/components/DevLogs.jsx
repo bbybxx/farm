@@ -7,6 +7,18 @@ export default function DevLogs({ isOpen, onClose }) {
 
   const logs = [
     {
+      id: 5,
+      date: '2025-11-06',
+      title: 'Quest Pinning & Navigation',
+      content: 'Auto-created "Quests" folder, Pin buttons for quests and questlines, Quick Pin modal for questlines, Clickable pinned quests, Clickable items in quests with blue arrow indicators, Navigation from quests to Craft/Locations mode, Craft chain with quest placeholder, Quest name truncation in breadcrumbs, Quantity display repositioned'
+    },
+        {
+      id: 4,
+      date: '2025-11-05',
+      title: 'Quest mode',
+      content: 'Add full Quests reference mode with questlines and individual quest pages, Quest data from buddy.farm API (296 questlines, 1999 quests), Two-page navigation system: questline totals + quest details, Search questlines with dropdown selector, Previous/Next quest navigation, Silver displayed as item with icon'
+    },
+    {
       id: 3,
       date: '2025-11-05',
       title: 'New features added',

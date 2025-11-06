@@ -1,16 +1,32 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, useRef } from 'react'
 import ItemDisplay from './ItemDisplay'
 import questsApiData from '../data/quests-api.json'
+import '../app/app.css'
 
-export default function QuestsPanel({ itemsData }) {
+export default function QuestsPanel({ 
+  itemsData, 
+  savedQuestlineId, 
+  savedQuestId, 
+  onQuestlineChange, 
+  onQuestChange,
+  pinnedEnabled,
+  addToPinned,
+  addQuestToPinned,
+  recentlyAddedItems,
+  onItemClick,
+  combinedRecipes,
+  getItemLocations
+}) {
   const [selectedQuestline, setSelectedQuestline] = useState(null)
   const [selectedQuest, setSelectedQuest] = useState(null)
+  const [expandedDescriptions, setExpandedDescriptions] = useState({})
   const [searchFilter, setSearchFilter] = useState('')
   const [questChains, setQuestChains] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [isQuestSelectOpen, setIsQuestSelectOpen] = useState(false)
   const [viewMode, setViewMode] = useState('quest') // 'questline' or 'quest'
+  const questSelectListRef = useRef(null)
 
   // Load and transform quests data
   useEffect(() => {
@@ -110,13 +126,32 @@ export default function QuestsPanel({ itemsData }) {
         
         setQuestChains(chains)
         
-        // Auto-open "Feathers I" questline and first quest
-        const feathersQuestline = chains.find(c => c.name === 'Feathers')
-        if (feathersQuestline) {
-          setSelectedQuestline(feathersQuestline)
-          if (feathersQuestline.quests.length > 0) {
-            setSelectedQuest(feathersQuestline.quests[0])
+        // Restore saved questline and quest, or auto-open "Feathers"
+        let restoredQuestline = null
+        let restoredQuest = null
+        
+        if (savedQuestlineId) {
+          restoredQuestline = chains.find(c => c.id === savedQuestlineId)
+          if (restoredQuestline && savedQuestId) {
+            restoredQuest = restoredQuestline.quests.find(q => q.id === savedQuestId)
+          }
+        }
+        
+        // Fallback to "Feathers" questline if nothing saved
+        if (!restoredQuestline) {
+          restoredQuestline = chains.find(c => c.name === 'Feathers')
+          if (restoredQuestline && restoredQuestline.quests.length > 0) {
+            restoredQuest = restoredQuestline.quests[0]
+          }
+        }
+        
+        if (restoredQuestline) {
+          setSelectedQuestline(restoredQuestline)
+          if (restoredQuest) {
+            setSelectedQuest(restoredQuest)
             setViewMode('quest')
+          } else {
+            setViewMode('questline')
           }
         }
         
@@ -130,6 +165,18 @@ export default function QuestsPanel({ itemsData }) {
     
     loadQuests()
   }, [])
+
+  // Scroll to selected questline when modal opens
+  useEffect(() => {
+    if (isQuestSelectOpen && questSelectListRef.current && selectedQuestline) {
+      setTimeout(() => {
+        const activeButton = questSelectListRef.current?.querySelector('button[data-selected="true"]')
+        if (activeButton) {
+          activeButton.scrollIntoView({ block: 'center', behavior: 'smooth' })
+        }
+      }, 100)
+    }
+  }, [isQuestSelectOpen, selectedQuestline])
 
   const getItemImage = (itemName) => {
     const cleaned = itemName.toLowerCase().replace(/[^a-z0-9]/g, '')
@@ -175,7 +222,10 @@ export default function QuestsPanel({ itemsData }) {
   const navigateToQuest = (questId) => {
     if (!questId || !selectedQuestline) return
     const quest = selectedQuestline.quests.find(q => q.id === questId)
-    if (quest) setSelectedQuest(quest)
+    if (quest) {
+      setSelectedQuest(quest)
+      if (onQuestChange) onQuestChange(quest.id)
+    }
   }
 
   // Filter questlines by search (only questlines, not individual quests)
@@ -195,17 +245,21 @@ export default function QuestsPanel({ itemsData }) {
       setSelectedQuest(quest)
       setViewMode('quest')
       setIsQuestSelectOpen(false)
+      if (onQuestlineChange) onQuestlineChange(questline.id)
+      if (onQuestChange) onQuestChange(quest.id)
     }
   }
 
   const handleQuestlineClick = () => {
     setViewMode('questline')
     setSelectedQuest(null)
+    if (onQuestChange) onQuestChange(null)
   }
 
   const handleQuestClickFromList = (quest) => {
     setSelectedQuest(quest)
     setViewMode('quest')
+    if (onQuestChange) onQuestChange(quest.id)
   }
 
   // Early return for loading state
@@ -262,12 +316,43 @@ export default function QuestsPanel({ itemsData }) {
         /* QUESTLINE PAGE */
         (() => {
           const totals = getQuestlineTotals(selectedQuestline)
+          const questlinePinKey = `quest_questline_${selectedQuestline.id}`
           return (
             <section className="glass card">
-              {/* Questline Name */}
-              <h2 style={{ margin: '0 0 24px 0', fontSize: '24px' }}>
-                {selectedQuestline.name}
-              </h2>
+              {/* Questline Name with Pin Button */}
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                marginBottom: '24px'
+              }}>
+                <h2 style={{ margin: 0, fontSize: '24px' }}>
+                  {selectedQuestline.name}
+                </h2>
+                {pinnedEnabled && addQuestToPinned && (
+                  <button
+                    className={`pin-btn ${recentlyAddedItems?.has(questlinePinKey) ? 'success' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      addQuestToPinned({
+                        type: 'questline',
+                        id: selectedQuestline.id,
+                        name: selectedQuestline.name,
+                        description: selectedQuestline.description,
+                        requirements: totals.requirements,
+                        rewards: totals.rewards
+                      }, e)
+                    }}
+                    type="button"
+                    title={`Pin questline: ${selectedQuestline.name}`}
+                  >
+                    <div className="pin-icon">
+                      <div className={`pin-line pin-line-horizontal ${recentlyAddedItems?.has(questlinePinKey) ? 'checked' : ''}`}></div>
+                      <div className={`pin-line pin-line-vertical ${recentlyAddedItems?.has(questlinePinKey) ? 'checked' : ''}`}></div>
+                    </div>
+                  </button>
+                )}
+              </div>
 
               {/* Total Requirements */}
               {(Object.keys(totals.requirements.items).length > 0 || 
@@ -309,27 +394,74 @@ export default function QuestsPanel({ itemsData }) {
 
                   {Object.keys(totals.requirements.items).length > 0 && (
                     <ul className="list" style={{ marginBottom: '16px' }}>
-                      {Object.entries(totals.requirements.items).map(([name, quantity]) => (
-                        <li key={name} style={{ 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          gap: '12px',
-                          padding: '10px 0'
-                        }}>
-                          <ItemDisplay
-                            itemName={name}
-                            itemsData={itemsData}
-                            size="medium"
-                          />
-                          <span style={{ 
-                            fontSize: '16px', 
-                            fontWeight: 600,
-                            color: 'rgba(255,255,255,0.9)'
+                      {Object.entries(totals.requirements.items).map(([name, quantity]) => {
+                        const pinKey = `${name}_${quantity}_${selectedQuestline.name} (Total)`
+                        const canCraft = combinedRecipes && combinedRecipes[name]
+                        const canFind = getItemLocations && getItemLocations(name)?.length > 0
+                        const isClickable = onItemClick && (canCraft || canFind)
+                        
+                        return (
+                          <li key={name} style={{ 
+                            display: 'flex', 
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '10px 0'
                           }}>
-                            × {quantity.toLocaleString()}
-                          </span>
-                        </li>
-                      ))}
+                            <div 
+                              style={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                gap: '12px',
+                                cursor: isClickable ? 'pointer' : 'default',
+                                flex: 1
+                              }}
+                              onClick={() => {
+                                if (isClickable) {
+                                  onItemClick(name, quantity, selectedQuestline.name)
+                                }
+                              }}
+                            >
+                              <ItemDisplay
+                                itemName={name}
+                                itemsData={itemsData}
+                                size="medium"
+                              >
+                                {isClickable && (
+                                  <span className="craft-indicator">
+                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                      <path d="M2 8L6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                  </span>
+                                )}
+                              </ItemDisplay>
+                            </div>
+                            <span style={{ 
+                              fontSize: '16px', 
+                              fontWeight: 600,
+                              color: 'rgba(255,255,255,0.9)',
+                              marginRight: pinnedEnabled && addToPinned ? '8px' : '0'
+                            }}>
+                              × {quantity.toLocaleString()}
+                            </span>
+                            {pinnedEnabled && addToPinned && (
+                              <button
+                                className={`pin-btn ${recentlyAddedItems?.has(pinKey) ? 'success' : ''}`}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  addToPinned(name, quantity, `${selectedQuestline.name} (Total)`, e)
+                                }}
+                                type="button"
+                                title={`Pin ${name} from ${selectedQuestline.name}`}
+                              >
+                                <div className="pin-icon">
+                                  <div className={`pin-line pin-line-horizontal ${recentlyAddedItems?.has(pinKey) ? 'checked' : ''}`}></div>
+                                  <div className={`pin-line pin-line-vertical ${recentlyAddedItems?.has(pinKey) ? 'checked' : ''}`}></div>
+                                </div>
+                              </button>
+                            )}
+                          </li>
+                        )
+                      })}
                     </ul>
                   )}
 
@@ -500,24 +632,68 @@ export default function QuestsPanel({ itemsData }) {
             </section>
           )
         })()
-      ) : (
+      ) : selectedQuest ? (
         /* QUEST PAGE */
         <section className="glass card">
-          {/* Quest Name */}
-          <h2 style={{ margin: '0 0 8px 0', fontSize: '24px' }}>
-            {selectedQuest.name}
-          </h2>
+          {/* Quest Name with Pin Button */}
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            marginBottom: '8px'
+          }}>
+            <h2 style={{ margin: 0, fontSize: '24px' }}>
+              {selectedQuest.name}
+            </h2>
+            {pinnedEnabled && addQuestToPinned && (() => {
+              const questPinKey = `quest_quest_${selectedQuest.id}`
+              return (
+                <button
+                  className={`pin-btn ${recentlyAddedItems?.has(questPinKey) ? 'success' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    addQuestToPinned({
+                      type: 'quest',
+                      id: selectedQuest.id,
+                      questlineId: selectedQuestline?.id,
+                      questlineName: selectedQuestline?.name,
+                      name: selectedQuest.name,
+                      description: selectedQuest.description,
+                      npc: selectedQuest.npc,
+                      requirements: selectedQuest.requirements,
+                      rewards: selectedQuest.rewards
+                    }, e)
+                  }}
+                  type="button"
+                  title={`Pin quest: ${selectedQuest.name}`}
+                >
+                  <div className="pin-icon">
+                    <div className={`pin-line pin-line-horizontal ${recentlyAddedItems?.has(questPinKey) ? 'checked' : ''}`}></div>
+                    <div className={`pin-line pin-line-vertical ${recentlyAddedItems?.has(questPinKey) ? 'checked' : ''}`}></div>
+                  </div>
+                </button>
+              )
+            })()}
+          </div>
 
           {/* Questline link */}
           {selectedQuestline && (
-            <div style={{ marginBottom: '16px' }}>
+            <div style={{ 
+              marginBottom: '16px',
+              padding: '8px 12px',
+              background: 'rgba(139, 92, 246, 0.04)',
+              borderRadius: '6px',
+              borderLeft: '2px solid rgba(139, 92, 246, 0.3)',
+              display: 'inline-block'
+            }}>
               <span style={{ 
-                fontSize: '13px', 
-                color: 'rgba(255,255,255,0.5)',
+                fontSize: '11px', 
+                color: 'rgba(255,255,255,0.4)',
                 textTransform: 'uppercase',
-                letterSpacing: '0.5px'
+                letterSpacing: '0.8px',
+                fontWeight: 600
               }}>
-                Questline:{' '}
+                Questline
               </span>
               <button
                 onClick={handleQuestlineClick}
@@ -526,18 +702,22 @@ export default function QuestsPanel({ itemsData }) {
                   border: 'none',
                   padding: 0,
                   cursor: 'pointer',
-                  fontSize: '14px', 
-                  color: 'rgba(139, 92, 246, 0.9)',
-                  fontWeight: 600,
-                  textDecoration: 'underline',
-                  textDecorationStyle: 'dotted',
-                  textUnderlineOffset: '3px'
+                  fontSize: '13px', 
+                  color: 'rgba(139, 92, 246, 0.85)',
+                  fontWeight: 500,
+                  textDecoration: 'none',
+                  marginLeft: '8px',
+                  fontStyle: 'italic',
+                  transition: 'color 0.2s'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = 'rgba(139, 92, 246, 1)'
+                  e.currentTarget.style.textDecoration = 'underline'
+                  e.currentTarget.style.textDecorationStyle = 'dotted'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'rgba(139, 92, 246, 0.9)'
+                  e.currentTarget.style.color = 'rgba(139, 92, 246, 0.85)'
+                  e.currentTarget.style.textDecoration = 'none'
                 }}
               >
                 {selectedQuestline.name}
@@ -563,9 +743,90 @@ export default function QuestsPanel({ itemsData }) {
               borderRadius: '4px',
               fontSize: '15px',
               lineHeight: '1.6',
-              color: 'rgba(255,255,255,0.85)'
+              color: 'rgba(255,255,255,0.85)',
+              position: 'relative'
             }}>
-              {selectedQuest.description}
+              <div style={{
+                maxHeight: expandedDescriptions[selectedQuest.id] ? '1000px' : '4.8em',
+                overflow: 'hidden',
+                position: 'relative',
+                paddingBottom: expandedDescriptions[selectedQuest.id] ? '0' : '8px',
+                transition: 'max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}>
+                {selectedQuest.description}
+                {!expandedDescriptions[selectedQuest.id] && (
+                  <div style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: '1.6em',
+                    background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.03))',
+                    pointerEvents: 'none',
+                    transition: 'opacity 0.3s ease'
+                  }} />
+                )}
+              </div>
+              {selectedQuest.description.length > 150 && (
+                <button
+                  onClick={() => setExpandedDescriptions(prev => ({
+                    ...prev,
+                    [selectedQuest.id]: !prev[selectedQuest.id]
+                  }))}
+                  style={{
+                    marginTop: '12px',
+                    padding: '8px 16px',
+                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(147, 51, 234, 0.12))',
+                    border: '1px solid rgba(59, 130, 246, 0.25)',
+                    borderRadius: '6px',
+                    color: 'rgba(147, 197, 253, 1)',
+                    fontSize: '13px',
+                    fontWeight: '500',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    boxShadow: '0 2px 8px rgba(59, 130, 246, 0.1)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2))'
+                    e.target.style.borderColor = 'rgba(59, 130, 246, 0.4)'
+                    e.target.style.transform = 'translateY(-1px)'
+                    e.target.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.2)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(147, 51, 234, 0.12))'
+                    e.target.style.borderColor = 'rgba(59, 130, 246, 0.25)'
+                    e.target.style.transform = 'translateY(0)'
+                    e.target.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.1)'
+                  }}
+                  onMouseDown={(e) => {
+                    e.target.style.transform = 'translateY(0) scale(0.98)'
+                  }}
+                  onMouseUp={(e) => {
+                    e.target.style.transform = 'translateY(-1px) scale(1)'
+                  }}
+                >
+                  <svg 
+                    width="14" 
+                    height="14" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2.5" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                    style={{
+                      transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      transform: expandedDescriptions[selectedQuest.id] ? 'rotate(180deg)' : 'rotate(0deg)'
+                    }}
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                  {expandedDescriptions[selectedQuest.id] ? 'Show less' : 'Show more'}
+                </button>
+              )}
             </div>
           )}
 
@@ -608,27 +869,74 @@ export default function QuestsPanel({ itemsData }) {
               )}
 
               <ul className="list">
-                {selectedQuest.requirements.items.map(item => (
-                  <li key={item.name} style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '12px',
-                    padding: '10px 0'
-                  }}>
-                    <ItemDisplay
-                      itemName={item.name}
-                      itemsData={itemsData}
-                      size="medium"
-                    />
-                    <span style={{ 
-                      fontSize: '16px', 
-                      fontWeight: 600,
-                      color: 'rgba(255,255,255,0.9)'
+                {selectedQuest.requirements.items.map(item => {
+                  const pinKey = `${item.name}_${item.quantity}_${selectedQuestline.name} (Quest)`
+                  const canCraft = combinedRecipes && combinedRecipes[item.name]
+                  const canFind = getItemLocations && getItemLocations(item.name)?.length > 0
+                  const isClickable = onItemClick && (canCraft || canFind)
+                  
+                  return (
+                    <li key={item.name} style={{ 
+                      display: 'flex', 
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '10px 0'
                     }}>
-                      × {item.quantity.toLocaleString()}
-                    </span>
-                  </li>
-                ))}
+                      <div 
+                        style={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          gap: '12px',
+                          cursor: isClickable ? 'pointer' : 'default',
+                          flex: 1
+                        }}
+                        onClick={() => {
+                          if (isClickable) {
+                            onItemClick(item.name, item.quantity, selectedQuest.name)
+                          }
+                        }}
+                      >
+                        <ItemDisplay
+                          itemName={item.name}
+                          itemsData={itemsData}
+                          size="medium"
+                        >
+                          {isClickable && (
+                            <span className="craft-indicator">
+                              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                <path d="M2 8L6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                            </span>
+                          )}
+                        </ItemDisplay>
+                      </div>
+                      <span style={{ 
+                        fontSize: '16px', 
+                        fontWeight: 600,
+                        color: 'rgba(255,255,255,0.9)',
+                        marginRight: pinnedEnabled && addToPinned ? '8px' : '0'
+                      }}>
+                        × {item.quantity.toLocaleString()}
+                      </span>
+                      {pinnedEnabled && addToPinned && (
+                        <button
+                          className={`pin-btn ${recentlyAddedItems?.has(pinKey) ? 'success' : ''}`}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            addToPinned(item.name, item.quantity, `${selectedQuestline.name} (Quest)`, e)
+                          }}
+                          type="button"
+                          title={`Pin ${item.name} from ${selectedQuestline.name}`}
+                        >
+                          <div className="pin-icon">
+                            <div className={`pin-line pin-line-horizontal ${recentlyAddedItems?.has(pinKey) ? 'checked' : ''}`}></div>
+                            <div className={`pin-line pin-line-vertical ${recentlyAddedItems?.has(pinKey) ? 'checked' : ''}`}></div>
+                          </div>
+                        </button>
+                      )}
+                    </li>
+                  )
+                })}
                 {selectedQuest.requirements.silver > 0 && (
                   <li style={{ 
                     display: 'flex', 
@@ -672,7 +980,7 @@ export default function QuestsPanel({ itemsData }) {
               {selectedQuest.rewards.items.map(item => (
                 <li key={item.name} style={{ 
                   display: 'flex', 
-                  alignItems: 'center', 
+                  alignItems: 'center',
                   gap: '12px',
                   padding: '10px 0'
                 }}>
@@ -812,6 +1120,13 @@ export default function QuestsPanel({ itemsData }) {
             </button>
           </div>
         </section>
+      ) : (
+        /* NO QUEST SELECTED */
+        <section className="glass" style={{ textAlign: 'center', padding: '40px' }}>
+          <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.6)' }}>
+            Select a quest to view details
+          </div>
+        </section>
       )}
 
       {/* Quest Select Modal */}
@@ -827,62 +1142,38 @@ export default function QuestsPanel({ itemsData }) {
             bottom: 0,
             background: 'rgba(0,0,0,0.5)',
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'flex-start',
             justifyContent: 'center',
-            zIndex: 1000
+            zIndex: 1000,
+            paddingTop: '40px'
           }}
         >
           <div 
-            className="glass"
+            className="glass item-select-content"
             onClick={(e) => e.stopPropagation()}
             style={{
               width: '90%',
               maxWidth: '600px',
-              maxHeight: '80vh',
+              maxHeight: 'calc(100vh - 80px)',
               display: 'flex',
               flexDirection: 'column'
             }}
           >
-            <div style={{ 
-              padding: '16px 24px',
-              borderBottom: '1px solid rgba(255,255,255,0.1)',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}>
-              <h2 style={{ margin: 0, fontSize: '18px' }}>Select Questline</h2>
-              <button
-                onClick={() => setIsQuestSelectOpen(false)}
-                style={{
-                  background: 'rgba(255,255,255,0.1)',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '4px 12px',
-                  cursor: 'pointer',
-                  color: 'rgba(255,255,255,0.6)',
-                  fontSize: '16px'
-                }}
-              >
-                ×
-              </button>
+            <div className="item-select-header">
+              <h2 className="item-select-title">Select Questline</h2>
+              <div className="item-select-search-wrapper">
+                <input
+                  type="text"
+                  className="calc-input item-select-search"
+                  placeholder="Search questlines..."
+                  value={searchFilter}
+                  onChange={(e) => setSearchFilter(e.target.value)}
+                  autoFocus
+                />
+              </div>
             </div>
 
-            <div style={{ padding: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-              <input
-                type="text"
-                className="input"
-                placeholder="Search questlines..."
-                value={searchFilter}
-                onChange={(e) => setSearchFilter(e.target.value)}
-                autoFocus
-              />
-            </div>
-
-            <div style={{ 
-              flex: 1,
-              overflow: 'auto',
-              padding: '8px'
-            }}>
+            <div ref={questSelectListRef} className="item-select-list">
               {filteredQuestlines.length === 0 ? (
                 <div style={{ 
                   textAlign: 'center', 
@@ -893,47 +1184,28 @@ export default function QuestsPanel({ itemsData }) {
                   No questlines found
                 </div>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  {filteredQuestlines.map(questline => (
-                    <button
-                      key={questline.id}
-                      onClick={() => {
-                        setSelectedQuestline(questline)
-                        setViewMode('questline')
-                        setIsQuestSelectOpen(false)
-                      }}
-                      style={{
-                        padding: '12px 16px',
-                        background: selectedQuestline?.id === questline.id ? 'rgba(59, 130, 246, 0.15)' : 'rgba(255,255,255,0.05)',
-                        border: `1px solid ${selectedQuestline?.id === questline.id ? 'rgba(59, 130, 246, 0.3)' : 'rgba(255,255,255,0.08)'}`,
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        textAlign: 'left',
-                        transition: 'all 0.2s',
-                        color: '#fff'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (selectedQuestline?.id !== questline.id) {
-                          e.currentTarget.style.background = 'rgba(255,255,255,0.08)'
-                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (selectedQuestline?.id !== questline.id) {
-                          e.currentTarget.style.background = 'rgba(255,255,255,0.05)'
-                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
-                        }
-                      }}
-                    >
-                      <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '4px' }}>
-                        {questline.name}
-                      </div>
-                      <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>
-                        {questline.quests.length} quests
-                      </div>
-                    </button>
-                  ))}
-                </div>
+                filteredQuestlines.map(questline => (
+                  <button
+                    key={questline.id}
+                    data-selected={selectedQuestline?.id === questline.id}
+                    className={selectedQuestline?.id === questline.id ? 'active' : ''}
+                    onClick={() => {
+                      setSelectedQuestline(questline)
+                      setViewMode('questline')
+                      setIsQuestSelectOpen(false)
+                      if (onQuestlineChange) onQuestlineChange(questline.id)
+                      if (onQuestChange) onQuestChange(null)
+                    }}
+                    type="button"
+                  >
+                    <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '4px' }}>
+                      {questline.name}
+                    </div>
+                    <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>
+                      {questline.quests.length} quests
+                    </div>
+                  </button>
+                ))
               )}
             </div>
           </div>

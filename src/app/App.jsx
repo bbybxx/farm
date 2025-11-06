@@ -12,6 +12,7 @@ import QuestsPanel from '../components/QuestsPanel'
 import LocationConfigPanel from '../components/LocationConfigPanel'
 import { APPLE_CIDER_REAL_DROP_RATES } from '../data/apple-cider-real-drop-rates.js'
 import { computePinnedEstimate, getItemLocations } from '../utils/exploringUtils.js'
+import questsApiData from '../data/quests-api.json'
 // Vercel Web Analytics (React)
 import { Analytics } from '@vercel/analytics/react'
 import PinnedLocationSelect from '../components/PinnedLocationSelect.jsx'
@@ -282,6 +283,8 @@ export default function App() {
   const [historyLimit, setHistoryLimit] = useState(() => loadFromStorage('craftCalculator_historyLimit', 50))
   // Pinned resources system (replaces cart)
   const [pinnedResources, setPinnedResources] = useState(() => loadFromStorage('craftCalculator_pinnedResources', []))
+  const [pinnedQuests, setPinnedQuests] = useState(() => loadFromStorage('craftCalculator_pinnedQuests', []))
+  const [expandedPinnedQuests, setExpandedPinnedQuests] = useState(new Set())
   const [lastPinnedLocation, setLastPinnedLocation] = useState(() => loadFromStorage('craftCalculator_lastPinnedLocation', ''))
   const [isPinnedOpen, setIsPinnedOpen] = useState(false)
   
@@ -773,6 +776,10 @@ export default function App() {
   }, [pinnedResources])
 
   useEffect(() => {
+    saveToStorage('craftCalculator_pinnedQuests', pinnedQuests)
+  }, [pinnedQuests])
+
+  useEffect(() => {
     saveToStorage('craftCalculator_lastPinnedLocation', lastPinnedLocation)
   }, [lastPinnedLocation])
 
@@ -868,14 +875,80 @@ export default function App() {
   }, [pinnedEnabled, historyEnabled, sidebarActiveTab])
 
   // Pinned resources functions
-  const addToPinned = (resourceName, quantity, parentRecipe = null) => {
-    // Always add to the active folder
-    addToPinnedWithFolder(resourceName, quantity, parentRecipe, activePinnedFolder || 'default')
+  const addToPinned = (resourceName, quantity, parentRecipe = null, event = null) => {
+    // Stop propagation if event is provided
+    if (event) {
+      event.stopPropagation()
+    }
+    // If active folder is 'quests', fallback to 'default' for regular items
+    const targetFolder = activePinnedFolder === 'quests' ? 'default' : (activePinnedFolder || 'default')
+    addToPinnedWithFolder(resourceName, quantity, parentRecipe, targetFolder)
+  }
+
+  // Function to add quests/questlines to pinned
+  const addQuestToPinned = (questData, event = null) => {
+    if (event) {
+      event.stopPropagation()
+    }
+    
+    hapticFeedback('light')
+    
+    // Ensure Quests folder exists
+    let questsFolderId = pinnedFolders.find(f => f.id === 'quests')?.id
+    if (!questsFolderId) {
+      const questsFolder = {
+        id: 'quests',
+        name: 'Quests',
+        createdAt: Date.now(),
+        isSystemFolder: true
+      }
+      setPinnedFolders(prev => {
+        // Insert after 'default' (Main) folder
+        const defaultIndex = prev.findIndex(f => f.id === 'default')
+        if (defaultIndex !== -1) {
+          return [
+            ...prev.slice(0, defaultIndex + 1),
+            questsFolder,
+            ...prev.slice(defaultIndex + 1)
+          ]
+        }
+        return [questsFolder, ...prev]
+      })
+      questsFolderId = 'quests'
+    }
+    
+    // Always add quest to 'quests' folder regardless of active folder
+    setPinnedQuests(prev => [...prev, { ...questData, folderId: 'quests' }])
+    
+    // Show success animation
+    const itemKey = `quest_${questData.type}_${questData.id}`
+    setRecentlyAddedItems(prev => {
+      const next = new Set(prev)
+      next.add(itemKey)
+      return next
+    })
+    
+    if (typeof window !== 'undefined') {
+      const timerId = window.setTimeout(() => {
+        setRecentlyAddedItems(prev => {
+          const next = new Set(prev)
+          next.delete(itemKey)
+          return next
+        })
+        recentlyAddedTimersRef.current.delete(timerId)
+      }, 2000)
+      recentlyAddedTimersRef.current.add(timerId)
+    }
   }
 
   const removeFromPinned = (index) => {
     hapticFeedback('light')
     setPinnedResources(prev => prev.filter((_, i) => i !== index))
+  }
+
+  const removeQuestFromPinned = (index) => {
+    hapticFeedback('light')
+    setPinnedQuests(prev => prev.filter((_, i) => i !== index))
   }
 
   // Folder management functions
@@ -894,6 +967,11 @@ export default function App() {
     
     // Remove all items in this folder
     setPinnedResources(prev => prev.filter(item => item.folderId !== folderId))
+    
+    // Remove all quests in this folder
+    if (folderId === 'quests') {
+      setPinnedQuests(prev => prev.filter(quest => quest.folderId !== folderId))
+    }
     
     // Remove the folder
     setPinnedFolders(prev => prev.filter(f => f.id !== folderId))
@@ -932,6 +1010,7 @@ export default function App() {
         quantity: qty,
         parentRecipe: parentRecipe || item,
         folderId: targetFolder,
+        craftChain: craftChain && craftChain.length > 0 ? [...craftChain] : [],
         ...(hasLast ? { location: lastPinnedLocation } : {})
       }
       return [...prev, newEntry]
@@ -948,7 +1027,7 @@ export default function App() {
       if (typeof q !== 'number' || Number.isNaN(q) || !Number.isFinite(q) || q <= 0) q = 1
       return Math.round(q * 100) / 100
     })()
-    const itemKey = `${resourceName}_${coercedQty}_${parentRecipe || item}`
+    const itemKey = `${resourceName}_${coercedQty}_${parentRecipe || item || 'unknown'}`
     setRecentlyAddedItems(prev => {
       const next = new Set(prev)
       next.add(itemKey)
@@ -993,6 +1072,74 @@ export default function App() {
   const cancelQuickPin = () => {
     setQuickPinSelectedItem(null)
     setQuickPinQuantity('')
+  }
+
+  // Handle item click from quests - switch to appropriate mode with item and quantity
+  const handleQuestItemClick = (itemName, quantity, questName) => {
+    hapticFeedback('light')
+    
+    // Check if item can be crafted
+    const canCraft = combinedRecipes && combinedRecipes[itemName]
+    // Check if item can be found in locations
+    const locations = getItemLocations(itemName)
+    const canFind = locations && locations.length > 0
+    
+    if (canCraft) {
+      // Switch to craft mode with craft chain
+      // Create a two-element chain to show breadcrumb: quest name -> current item
+      // First set the item and chain
+      setItem(itemName)
+      setAmount(quantity)
+      // Add quest/questline name and the target item to make breadcrumb visible (needs 2+ elements)
+      setCraftChain([
+        { name: questName || 'Quests', amount: 1, isPlaceholder: true },
+        { name: itemName, amount: quantity }
+      ])
+      
+      // Then switch modes
+      setQuestsMode(false)
+      setLocationsMode(false)
+      setReverseMode(false)
+    } else if (canFind) {
+      // Switch to location mode with the best location
+      // Find location with best drop rate
+      let bestLocation = locations[0].name
+      let bestRate = 0
+      
+      try {
+        for (const loc of locations) {
+          const estimate = computePinnedEstimate(
+            { name: itemName, quantity: 1 },
+            1,
+            activePerks,
+            exploringMode
+          )
+          if (estimate && estimate.location === loc.name) {
+            bestLocation = loc.name
+            break
+          }
+        }
+      } catch (e) {
+        // Use first location as fallback
+      }
+      
+      // Create craft chain for location mode too
+      setCraftChain([
+        { name: questName || 'Quests', amount: 1, isPlaceholder: true },
+        { name: bestLocation, amount: 1, isLocation: true }
+      ])
+      
+      setQuestsMode(false)
+      setLocationsMode(true)
+      setReverseMode(false)
+      setSelectedLocation(bestLocation)
+      
+      // Set the target quantity for this specific item
+      setLocationItemTargets({ [itemName]: quantity })
+      
+      // Calculate required consumables based on target quantity
+      handleLocationItemCommit(itemName, quantity)
+    }
   }
 
   // Reset Quick Pin filter when modal closes
@@ -1530,6 +1677,8 @@ export default function App() {
                 <div className="folder-tabs">
                   {pinnedFolders.map(folder => {
                     const folderItems = pinnedResources.filter(item => (item.folderId || 'default') === folder.id)
+                    const folderQuests = folder.id === 'quests' ? pinnedQuests.filter(q => (q.folderId || 'quests') === 'quests') : []
+                    const totalCount = folderItems.length + folderQuests.length
                     return (
                       <button
                         key={folder.id}
@@ -1538,7 +1687,7 @@ export default function App() {
                         type="button"
                       >
                         {folder.name}
-                        <span className="folder-count">({folderItems.length})</span>
+                        <span className="folder-count">({totalCount})</span>
                       </button>
                     )
                   })}
@@ -1626,12 +1775,16 @@ export default function App() {
                   >
                     + Pin
                   </button>
-                  {pinnedResources.filter(item => (item.folderId || 'default') === activePinnedFolder).length > 0 && (
+                  {(pinnedResources.filter(item => (item.folderId || 'default') === activePinnedFolder).length > 0 ||
+                    (activePinnedFolder === 'quests' && pinnedQuests.filter(q => (q.folderId || 'quests') === 'quests').length > 0)) && (
                     <button 
                       className="chip danger"
                       onClick={() => {
                         hapticFeedback('medium')
                         setPinnedResources(prev => prev.filter(item => (item.folderId || 'default') !== activePinnedFolder))
+                        if (activePinnedFolder === 'quests') {
+                          setPinnedQuests([])
+                        }
                       }}
                       type="button"
                       title="Clear this folder"
@@ -1642,13 +1795,376 @@ export default function App() {
                 </div>
               </div>
               
-              {pinnedResources.filter(item => (item.folderId || 'default') === activePinnedFolder).length === 0 ? (
+              {(pinnedResources.filter(item => (item.folderId || 'default') === activePinnedFolder).length === 0 &&
+                (activePinnedFolder !== 'quests' || pinnedQuests.filter(q => (q.folderId || 'quests') === 'quests').length === 0)) ? (
                 <div className="empty-state">
-                  <p>No pinned resources in this folder.</p>
-                  <p>Pin resources from any recipe by clicking the "+" button next to them.</p>
+                  <p>No pinned {activePinnedFolder === 'quests' ? 'quests' : 'resources'} in this folder.</p>
+                  <p>{activePinnedFolder === 'quests' 
+                    ? 'Pin quests or questlines from the Quests mode.' 
+                    : 'Pin resources from any recipe by clicking the "+" button next to them.'}</p>
                 </div>
               ) : (
                 <div className="pinned-items">
+                  {/* Show pinned quests if in Quests folder */}
+                  {activePinnedFolder === 'quests' && pinnedQuests.map((quest, index) => (
+                    <div key={`quest-${index}`} className="pinned-card">
+                      <button
+                        className="pinned-close-btn"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          removeQuestFromPinned(index)
+                        }}
+                        type="button"
+                        title="Remove from pinned"
+                      >
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="18" y1="6" x2="6" y2="18"></line>
+                          <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                      </button>
+
+                      <div className="pinned-card-content">
+                        <div 
+                          onClick={() => {
+                            // Switch to quests mode and close sidebar on mobile
+                            saveCurrentSelection()
+                            setQuestsMode(true)
+                            setLocationsMode(false)
+                            setReverseMode(false)
+                            
+                            // Save the quest info to localStorage so QuestsPanel can restore it
+                            if (quest.type === 'questline') {
+                              localStorage.setItem('selectedQuestlineId', quest.id)
+                              localStorage.setItem('selectedQuestId', '')
+                            } else if (quest.type === 'quest') {
+                              localStorage.setItem('selectedQuestlineId', quest.questlineId || '')
+                              localStorage.setItem('selectedQuestId', quest.id)
+                            }
+                            
+                            // Close sidebar on mobile
+                            if (window.innerWidth <= 768) {
+                              setSidebarOpen(false)
+                            }
+                            
+                            hapticFeedback('light')
+                          }}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <div className="pinned-item-name">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                              <span style={{ fontWeight: 600 }}>{quest.name}</span>
+                            </div>
+                          </div>
+                          <div className="pinned-item-details">
+                            {quest.type === 'quest' && quest.questlineName && (
+                              <div style={{
+                                fontSize: '11px',
+                                color: 'rgba(255,255,255,0.35)',
+                                marginTop: '6px',
+                                padding: '4px 8px',
+                                background: 'rgba(255,255,255,0.02)',
+                                borderRadius: '4px',
+                                borderLeft: '2px solid rgba(255,255,255,0.1)',
+                                fontStyle: 'italic',
+                                letterSpacing: '0.3px'
+                              }}>
+                                {quest.questlineName}
+                              </div>
+                            )}
+                            {quest.description && (
+                              <div style={{
+                                fontSize: '12px',
+                                color: 'rgba(255,255,255,0.6)',
+                                marginTop: '4px',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical'
+                              }}>
+                                {quest.description}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Toggle button for requirements/rewards */}
+                        {((quest.requirements?.items && (Array.isArray(quest.requirements.items) ? quest.requirements.items.length > 0 : Object.keys(quest.requirements.items).length > 0)) ||
+                          (quest.rewards?.items && (Array.isArray(quest.rewards.items) ? quest.rewards.items.length > 0 : Object.keys(quest.rewards.items).length > 0)) ||
+                          quest.requirements?.silver > 0 ||
+                          quest.rewards?.silver > 0) && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              const questKey = `${quest.type}_${quest.id}`
+                              setExpandedPinnedQuests(prev => {
+                                const next = new Set(prev)
+                                if (next.has(questKey)) {
+                                  next.delete(questKey)
+                                } else {
+                                  next.add(questKey)
+                                }
+                                return next
+                              })
+                              hapticFeedback('light')
+                            }}
+                            style={{
+                              marginTop: '8px',
+                              padding: '4px 8px',
+                              fontSize: '11px',
+                              color: 'rgba(255,255,255,0.4)',
+                              background: 'none',
+                              border: 'none',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              transition: 'color 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.7)'}
+                            onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
+                            type="button"
+                          >
+                            <svg 
+                              width="10" 
+                              height="10" 
+                              viewBox="0 0 24 24" 
+                              fill="none" 
+                              stroke="currentColor" 
+                              strokeWidth="2.5" 
+                              strokeLinecap="round" 
+                              strokeLinejoin="round"
+                              style={{
+                                transform: expandedPinnedQuests.has(`${quest.type}_${quest.id}`) ? 'rotate(180deg)' : 'rotate(0deg)',
+                                transition: 'transform 0.2s'
+                              }}
+                            >
+                              <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                            {expandedPinnedQuests.has(`${quest.type}_${quest.id}`) ? 'Hide items' : 'Show items'}
+                          </button>
+                        )}
+
+                        {/* Display requirements */}
+                        <AnimatePresence>
+                          {expandedPinnedQuests.has(`${quest.type}_${quest.id}`) && quest.requirements && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2, ease: 'easeInOut' }}
+                              style={{ overflow: 'hidden', marginTop: '12px' }}
+                            >
+                            {/* Items */}
+                            {(() => {
+                              // Handle both formats: object {itemName: quantity} or array [{name, quantity, image}]
+                              const itemsToDisplay = quest.requirements.items
+                              const itemsArray = Array.isArray(itemsToDisplay) 
+                                ? itemsToDisplay.map(item => [item.name, item.quantity])
+                                : Object.entries(itemsToDisplay || {})
+                              
+                              if (itemsArray.length === 0) return null
+                              
+                              return (
+                                <div style={{ marginBottom: '8px' }}>
+                                  <div style={{ 
+                                    fontSize: '11px', 
+                                    color: 'rgba(255,255,255,0.5)', 
+                                    marginBottom: '4px',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.5px'
+                                  }}>
+                                    Requirements
+                                  </div>
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                    {itemsArray.map(([itemName, quantity]) => {
+                                      const canCraft = combinedRecipes && combinedRecipes[itemName]
+                                      const locations = getItemLocations(itemName)
+                                      const canFind = locations && locations.length > 0
+                                      const isClickable = canCraft || canFind
+
+                                      return (
+                                        <div
+                                          key={itemName}
+                                          onClick={(e) => {
+                                            if (isClickable) {
+                                              e.stopPropagation()
+                                              handleQuestItemClick(itemName, quantity, quest.name)
+                                              // Close sidebar on mobile
+                                              if (window.innerWidth <= 768) {
+                                                setSidebarOpen(false)
+                                              }
+                                            }
+                                          }}
+                                          style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '6px',
+                                            fontSize: '13px',
+                                            padding: '4px 6px',
+                                            borderRadius: '4px',
+                                            backgroundColor: 'rgba(255,255,255,0.03)',
+                                            cursor: isClickable ? 'pointer' : 'default',
+                                            transition: 'background-color 0.2s'
+                                          }}
+                                          onMouseEnter={(e) => {
+                                            if (isClickable) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            if (isClickable) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)'
+                                          }}
+                                        >
+                                          <ItemDisplay itemName={itemName} itemsData={itemsData} />
+                                          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <span style={{ color: 'rgba(255,255,255,0.7)' }}>×{formatNumber(quantity)}</span>
+                                            {isClickable && (
+                                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A9EFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <polyline points="9 18 15 12 9 6"></polyline>
+                                              </svg>
+                                            )}
+                                          </div>
+                                        </div>
+                                      )
+                                    })}
+                                  </div>
+                                </div>
+                              )
+                            })()}
+
+                            {/* Silver */}
+                            {quest.requirements.silver > 0 && (
+                              <div style={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                gap: '6px',
+                                fontSize: '13px',
+                                padding: '4px 6px',
+                                borderRadius: '4px',
+                                backgroundColor: 'rgba(255,255,255,0.03)',
+                                marginTop: '4px'
+                              }}>
+                                <ItemDisplay itemName="Silver" itemsData={itemsData} />
+                                <span style={{ marginLeft: 'auto', color: 'rgba(255,255,255,0.7)' }}>
+                                  ×{formatNumber(quest.requirements.silver)}
+                                </span>
+                              </div>
+                            )}
+                          </motion.div>
+                        )}
+                        </AnimatePresence>
+
+                        {/* Display rewards */}
+                        <AnimatePresence>
+                          {expandedPinnedQuests.has(`${quest.type}_${quest.id}`) && quest.rewards && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2, ease: 'easeInOut' }}
+                              style={{ overflow: 'hidden', marginTop: '12px' }}
+                            >
+                            {/* Items */}
+                            {(() => {
+                              // Handle both formats: object {itemName: quantity} or array [{name, quantity, image}]
+                              const itemsToDisplay = quest.rewards.items
+                              const itemsArray = Array.isArray(itemsToDisplay) 
+                                ? itemsToDisplay.map(item => [item.name, item.quantity])
+                                : Object.entries(itemsToDisplay || {})
+                              
+                              if (itemsArray.length === 0) return null
+                              
+                              return (
+                                <div style={{ marginBottom: '8px' }}>
+                                  <div style={{ 
+                                    fontSize: '11px', 
+                                    color: 'rgba(255,255,255,0.5)', 
+                                    marginBottom: '4px',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.5px'
+                                  }}>
+                                    Rewards
+                                  </div>
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                    {itemsArray.map(([itemName, quantity]) => {
+                                      const canCraft = combinedRecipes && combinedRecipes[itemName]
+                                      const locations = getItemLocations(itemName)
+                                      const canFind = locations && locations.length > 0
+                                      const isClickable = canCraft || canFind
+
+                                      return (
+                                        <div
+                                          key={itemName}
+                                          onClick={(e) => {
+                                            if (isClickable) {
+                                              e.stopPropagation()
+                                              handleQuestItemClick(itemName, quantity, quest.name)
+                                              // Close sidebar on mobile
+                                              if (window.innerWidth <= 768) {
+                                                setSidebarOpen(false)
+                                              }
+                                            }
+                                          }}
+                                          style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '6px',
+                                            fontSize: '13px',
+                                            padding: '4px 6px',
+                                            borderRadius: '4px',
+                                            backgroundColor: 'rgba(255,255,255,0.03)',
+                                            cursor: isClickable ? 'pointer' : 'default',
+                                            transition: 'background-color 0.2s'
+                                          }}
+                                          onMouseEnter={(e) => {
+                                            if (isClickable) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            if (isClickable) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)'
+                                          }}
+                                        >
+                                          <ItemDisplay itemName={itemName} itemsData={itemsData} />
+                                          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <span style={{ color: 'rgba(255,255,255,0.7)' }}>×{formatNumber(quantity)}</span>
+                                            {isClickable && (
+                                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A9EFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <polyline points="9 18 15 12 9 6"></polyline>
+                                              </svg>
+                                            )}
+                                          </div>
+                                        </div>
+                                      )
+                                    })}
+                                  </div>
+                                </div>
+                              )
+                            })()}
+
+                            {/* Silver */}
+                            {quest.rewards.silver > 0 && (
+                              <div style={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                gap: '6px',
+                                fontSize: '13px',
+                                padding: '4px 6px',
+                                borderRadius: '4px',
+                                backgroundColor: 'rgba(255,255,255,0.03)',
+                                marginTop: '4px'
+                              }}>
+                                <ItemDisplay itemName="Silver" itemsData={itemsData} />
+                                <span style={{ marginLeft: 'auto', color: 'rgba(255,255,255,0.7)' }}>
+                                  ×{formatNumber(quest.rewards.silver)}
+                                </span>
+                              </div>
+                            )}
+                          </motion.div>
+                        )}
+                        </AnimatePresence>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {/* Show pinned resources */}
                   {pinnedResources.map((pinnedItem, index) => {
                     // Only show items in the active folder
                     if ((pinnedItem.folderId || 'default') !== activePinnedFolder) return null
@@ -1677,7 +2193,35 @@ export default function App() {
                           </svg>
                         </button>
 
-                        <div className="pinned-card-content">
+                        <div 
+                          className="pinned-card-content"
+                          onClick={() => {
+                            // Navigate to this item
+                            setItem(pinnedItem.name)
+                            setAmount(pinnedItem.quantity)
+                            
+                            // Restore craft chain if it exists
+                            if (pinnedItem.craftChain && pinnedItem.craftChain.length > 0) {
+                              setCraftChain(pinnedItem.craftChain)
+                            } else {
+                              // Create a simple chain with just the item
+                              setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
+                            }
+                            
+                            // Switch to craft mode
+                            setQuestsMode(false)
+                            setLocationsMode(false)
+                            setReverseMode(false)
+                            
+                            // Close sidebar on mobile
+                            if (window.innerWidth <= 768) {
+                              setSidebarOpen(false)
+                            }
+                            
+                            hapticFeedback('light')
+                          }}
+                          style={{ cursor: 'pointer' }}
+                        >
                           <div className="pinned-item-name">
                             {itemsData && itemsData[pinnedItem.name] ? (
                               <ItemDisplay itemName={pinnedItem.name} itemsData={itemsData} />
@@ -1949,6 +2493,11 @@ export default function App() {
               <nav ref={breadcrumbsRef} className="breadcrumbs" aria-label="Craft chain">
                 {craftChain.slice(0, Math.max(0, craftChain.length - 1)).map((node, idx) => {
                   const displayName = (typeof node === 'string') ? node : (node && node.name) || ''
+                  // Truncate long names: first 5 + ... + last 5 chars
+                  const truncatedName = displayName.length > 13 
+                    ? `${displayName.substring(0, 5)}...${displayName.substring(displayName.length - 5)}`
+                    : displayName
+                  
                   return (
                     <span key={idx}>
                       <button
@@ -1959,8 +2508,15 @@ export default function App() {
                           const newChain = craftChain.slice(0, idx + 1)
                           setCraftChain(newChain)
                           const target = newChain[idx]
+                          
+                          // If this breadcrumb is a placeholder (quest/questline), go back to Quests mode
+                          if (target && typeof target === 'object' && target.isPlaceholder) {
+                            setQuestsMode(true)
+                            setLocationsMode(false)
+                            setReverseMode(false)
+                          }
                           // If this breadcrumb represents a location node, switch back into Locations mode
-                          if (target && typeof target === 'object' && target.isLocation) {
+                          else if (target && typeof target === 'object' && target.isLocation) {
                             setLocationsMode(true)
                             setReverseMode(false)
                             setSelectedLocation(target.name)
@@ -1976,10 +2532,12 @@ export default function App() {
                           }
                         }}
                       >
-                        {typeof node === 'object' && node && node.isLocation ? (
+                        {typeof node === 'object' && node && node.isPlaceholder ? (
+                          <span style={{ fontWeight: 600 }}>{truncatedName}</span>
+                        ) : typeof node === 'object' && node && node.isLocation ? (
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                             <LocationImage name={node.name} size={20} />
-                            <span style={{ fontWeight: 600 }}>{node.name}</span>
+                            <span style={{ fontWeight: 600 }}>{truncatedName}</span>
                           </div>
                         ) : (
                           <ItemDisplay itemName={displayName} itemsData={itemsData} />
@@ -2196,7 +2754,20 @@ export default function App() {
         </header>
 
         {questsMode ? (
-          <QuestsPanel itemsData={itemsData} />
+          <QuestsPanel 
+            itemsData={itemsData}
+            savedQuestlineId={localStorage.getItem('selectedQuestlineId')}
+            savedQuestId={localStorage.getItem('selectedQuestId')}
+            onQuestlineChange={(id) => localStorage.setItem('selectedQuestlineId', id || '')}
+            onQuestChange={(id) => localStorage.setItem('selectedQuestId', id || '')}
+            pinnedEnabled={pinnedEnabled}
+            addToPinned={addToPinned}
+            addQuestToPinned={addQuestToPinned}
+            recentlyAddedItems={recentlyAddedItems}
+            onItemClick={handleQuestItemClick}
+            combinedRecipes={combinedRecipes}
+            getItemLocations={getItemLocations}
+          />
         ) : (
           <>
         <section className="glass controls">
@@ -2672,7 +3243,7 @@ export default function App() {
                 </ul>
               </motion.section>
             )}
-            {!locationsMode && !reverseMode && result && Object.keys(result.filteredResources).length > 0 && (
+            {!questsMode && !locationsMode && !reverseMode && result && Object.keys(result.filteredResources).length > 0 && (
               <motion.section className="glass card">
                 <h2>Resources</h2>
                 <ul className="list">
@@ -3142,11 +3713,11 @@ export default function App() {
                 {!quickPinSelectedItem ? (
                   <>
                     <div className="item-select-header">
-                      <h2 className="item-select-title">Quick Pin</h2>
+                      <h2 className="item-select-title">Quick Pin {activePinnedFolder === 'quests' ? 'Questline' : 'Item'}</h2>
                       <div className="item-select-search-wrapper">
                         <input
                           className="calc-input item-select-search"
-                          placeholder="Search items..."
+                          placeholder={activePinnedFolder === 'quests' ? "Search questlines..." : "Search items..."}
                           value={quickPinFilter}
                           onChange={(e) => setQuickPinFilter(e.target.value)}
                           aria-label="Filter items"
@@ -3155,18 +3726,101 @@ export default function App() {
                       </div>
                     </div>
                     <div className="item-select-list">
-                      {allItems.filter(itm => {
-                        if (!quickPinFilter) return true
-                        return String(itm).toLowerCase().includes(quickPinFilter.toLowerCase())
-                      }).map((itm) => (
-                        <button
-                          key={itm}
-                          onClick={() => handleQuickPin(itm)}
-                          type="button"
-                        >
-                          <ItemDisplay itemName={itm} itemsData={itemsData} />
-                        </button>
-                      ))}
+                      {activePinnedFolder === 'quests' ? (
+                        // Show questlines for Quests folder
+                        (() => {
+                          try {
+                            const questlines = questsApiData?.data?.questlines || []
+                            return questlines
+                              .filter(chain => {
+                                if (!quickPinFilter) return true
+                                return String(chain.title).toLowerCase().includes(quickPinFilter.toLowerCase())
+                              })
+                              .map((chain) => (
+                                <button
+                                  key={chain.id}
+                                  onClick={() => {
+                                    // Directly add questline without quantity selection
+                                    const totals = {
+                                      requirements: { items: {}, silver: 0, levels: {} },
+                                      rewards: { items: {}, silver: 0 }
+                                    }
+                                    
+                                    // Calculate totals
+                                    chain.steps?.forEach(step => {
+                                      const quest = step.quest
+                                      if (quest) {
+                                        // Requirements
+                                        quest.requiredItems?.forEach(req => {
+                                          if (req.item?.name) {
+                                            totals.requirements.items[req.item.name] = 
+                                              (totals.requirements.items[req.item.name] || 0) + (req.quantity || 1)
+                                          }
+                                        })
+                                        if (quest.requiredSilver) {
+                                          totals.requirements.silver += quest.requiredSilver
+                                        }
+                                        quest.levels?.forEach(lvl => {
+                                          if (lvl.skill && lvl.level) {
+                                            totals.requirements.levels[lvl.skill] = Math.max(
+                                              totals.requirements.levels[lvl.skill] || 0,
+                                              lvl.level
+                                            )
+                                          }
+                                        })
+                                        
+                                        // Rewards
+                                        quest.rewardItems?.forEach(rew => {
+                                          if (rew.item?.name) {
+                                            totals.rewards.items[rew.item.name] = 
+                                              (totals.rewards.items[rew.item.name] || 0) + (rew.quantity || 1)
+                                          }
+                                        })
+                                        if (quest.rewardSilver) {
+                                          totals.rewards.silver += quest.rewardSilver
+                                        }
+                                      }
+                                    })
+                                    
+                                    addQuestToPinned({
+                                      type: 'questline',
+                                      id: chain.id,
+                                      name: chain.title,
+                                      description: chain.description || '',
+                                      requirements: totals.requirements,
+                                      rewards: totals.rewards
+                                    })
+                                    hapticFeedback('success')
+                                    setIsQuickPinModalOpen(false)
+                                    setQuickPinFilter('')
+                                  }}
+                                  type="button"
+                                >
+                                  <span>{chain.title}</span>
+                                </button>
+                              ))
+                          } catch (e) {
+                            console.error('Failed to load questlines:', e)
+                            return <div style={{ padding: '20px', textAlign: 'center', color: 'rgba(255,255,255,0.5)' }}>
+                              Failed to load questlines: {e.message}
+                            </div>
+                          }
+                        })()
+                      ) : (
+                        // Show items for other folders
+                        allItems.filter(itm => {
+                          if (!quickPinFilter) return true
+                          return String(itm).toLowerCase().includes(quickPinFilter.toLowerCase())
+                        }).map((itm) => (
+                          <button
+                            key={itm}
+                            onClick={() => handleQuickPin(itm)}
+                            type="button"
+                          >
+                            <ItemDisplay itemName={itm} itemsData={itemsData} />
+                          </button>
+                        ))
+                      )}
                     </div>
                   </>
                 ) : (

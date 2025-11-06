@@ -319,6 +319,7 @@ export default function App() {
   // Feature toggles
   const [pinnedEnabled, setPinnedEnabled] = useState(() => loadFromStorage('craftCalculator_pinnedEnabled', true))
   const [historyEnabled, setHistoryEnabled] = useState(() => loadFromStorage('craftCalculator_historyEnabled', true))
+  const [buddyFarmLinksEnabled, setBuddyFarmLinksEnabled] = useState(() => loadFromStorage('craftCalculator_buddyFarmLinksEnabled', false))
   const [isLocationConfigOpen, setIsLocationConfigOpen] = useState(false)
 
   // Reverse-craft mode: when true the UI lists "source" resources and shows available crafts for the selected resource
@@ -864,6 +865,10 @@ export default function App() {
   useEffect(() => {
     saveToStorage('craftCalculator_historyEnabled', historyEnabled)
   }, [historyEnabled])
+
+  useEffect(() => {
+    saveToStorage('craftCalculator_buddyFarmLinksEnabled', buddyFarmLinksEnabled)
+  }, [buddyFarmLinksEnabled])
 
   // Auto-switch tab if current tab is disabled
   useEffect(() => {
@@ -2039,7 +2044,7 @@ export default function App() {
                                             if (isClickable) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)'
                                           }}
                                         >
-                                          <ItemDisplay itemName={itemName} itemsData={itemsData} />
+                                          <ItemDisplay itemName={itemName} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
                                           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}>
                                             <span style={{ color: 'rgba(255,255,255,0.7)' }}>×{formatNumber(quantity)}</span>
                                             {isClickable && (
@@ -2068,7 +2073,7 @@ export default function App() {
                                 backgroundColor: 'rgba(255,255,255,0.03)',
                                 marginTop: '4px'
                               }}>
-                                <ItemDisplay itemName="Silver" itemsData={itemsData} />
+                                <ItemDisplay itemName="Silver" itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
                                 <span style={{ marginLeft: 'auto', color: 'rgba(255,255,255,0.7)' }}>
                                   ×{formatNumber(quest.requirements.silver)}
                                 </span>
@@ -2147,7 +2152,7 @@ export default function App() {
                                             if (isClickable) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)'
                                           }}
                                         >
-                                          <ItemDisplay itemName={itemName} itemsData={itemsData} />
+                                          <ItemDisplay itemName={itemName} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
                                           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}>
                                             <span style={{ color: 'rgba(255,255,255,0.7)' }}>×{formatNumber(quantity)}</span>
                                             {isClickable && (
@@ -2176,7 +2181,7 @@ export default function App() {
                                 backgroundColor: 'rgba(255,255,255,0.03)',
                                 marginTop: '4px'
                               }}>
-                                <ItemDisplay itemName="Silver" itemsData={itemsData} />
+                                <ItemDisplay itemName="Silver" itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
                                 <span style={{ marginLeft: 'auto', color: 'rgba(255,255,255,0.7)' }}>
                                   ×{formatNumber(quest.rewards.silver)}
                                 </span>
@@ -2335,7 +2340,7 @@ export default function App() {
                               >
                                 <div className="pinned-item-name">
                                   {itemsData && itemsData[pinnedItem.name] ? (
-                                    <ItemDisplay itemName={pinnedItem.name} itemsData={itemsData} />
+                                    <ItemDisplay itemName={pinnedItem.name} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
                                   ) : (
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                       <LocationImage name={pinnedItem.name} size={24} />
@@ -2431,6 +2436,21 @@ export default function App() {
                 </label>
                 <p className="setting-description">
                   Track and save calculation history
+                </p>
+              </div>
+
+              <div className="setting-item">
+                <label className="setting-label">
+                  <input
+                    type="checkbox"
+                    checked={buddyFarmLinksEnabled}
+                    onChange={(e) => setBuddyFarmLinksEnabled(e.target.checked)}
+                    className="setting-checkbox"
+                  />
+                  Enable buddy.farm Links
+                </label>
+                <p className="setting-description">
+                  Make item icons clickable to open buddy.farm pages
                 </p>
               </div>
 
@@ -2674,7 +2694,7 @@ export default function App() {
                             <span style={{ fontWeight: 600 }}>{truncatedName}</span>
                           </div>
                         ) : (
-                          <ItemDisplay itemName={displayName} itemsData={itemsData} />
+                          <ItemDisplay itemName={displayName} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
                         )}
                       </button>
                       <span className="breadcrumb-separator">›</span>
@@ -2695,7 +2715,7 @@ export default function App() {
                           </div>
                         )
                       }
-                      return <ItemDisplay itemName={lastName} itemsData={itemsData} />
+                      return <ItemDisplay itemName={lastName} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
                     })()}
                   </span>
                 )}
@@ -2889,7 +2909,7 @@ export default function App() {
 
         {questsMode ? (
           <QuestsPanel 
-            itemsData={itemsData}
+            itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled}
             savedQuestlineId={localStorage.getItem('selectedQuestlineId')}
             savedQuestId={localStorage.getItem('selectedQuestId')}
             onQuestlineChange={(id) => localStorage.setItem('selectedQuestlineId', id || '')}
@@ -2909,7 +2929,7 @@ export default function App() {
             <span className="label">{locationsMode ? 'Location' : 'Item'}</span>
             { !locationsMode ? (
               <button className="input" onClick={() => setIsItemSelectOpen(true)} type="button">
-                <ItemDisplay itemName={item} itemsData={itemsData} />
+                <ItemDisplay itemName={item} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
               </button>
             ) : (
               <button className="input" onClick={() => setIsItemSelectOpen(true)} type="button" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -3044,7 +3064,7 @@ export default function App() {
                                   <LocationImage name={label} size={22} />
                                   <span>{label}</span>
                                 </div>
-                              ) : <ItemDisplay itemName={i} itemsData={itemsData} />}
+                              ) : <ItemDisplay itemName={i} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />}
                       </button>
                     )
                   })}
@@ -3100,9 +3120,9 @@ export default function App() {
                         type="button"
                       >
                         <div className="history-main">
-                          <span className="from"><ItemDisplay itemName={entry.fromItem} itemsData={itemsData} /></span>
+                          <span className="from"><ItemDisplay itemName={entry.fromItem} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} /></span>
                           <span className="arrow">→</span>
-                          <span className="to"><ItemDisplay itemName={entry.toItem} itemsData={itemsData} /></span>
+                          <span className="to"><ItemDisplay itemName={entry.toItem} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} /></span>
                           <span className="amount">×{entry.toAmount}</span>
                         </div>
                         <div className="history-time">
@@ -3286,7 +3306,7 @@ export default function App() {
                             title={craftable ? `Open crafts that use ${it}` : undefined}
                           >
                             <span className="k">
-                              <ItemDisplay itemName={it} itemsData={itemsData}>
+                              <ItemDisplay itemName={it} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled}>
                                 {craftable && (
                                   <span className="craft-indicator">
                                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -3446,7 +3466,7 @@ export default function App() {
                           title={canCraft ? `Click to craft ${k}` : (canFind ? `Click to find ${k} in locations` : undefined)}
                         >
                           <span className="k">
-                            <ItemDisplay itemName={k} itemsData={itemsData}>
+                            <ItemDisplay itemName={k} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled}>
                               {isClickable && (
                                 <span className="craft-indicator">
                                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -3545,7 +3565,7 @@ export default function App() {
                           title={canNavigate ? `Open recipe for ${c.name}` : undefined}
                         >
                           <span className="k">
-                            <ItemDisplay itemName={c.name} itemsData={itemsData}>
+                            <ItemDisplay itemName={c.name} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled}>
                               {canNavigate && (
                                 <span className="craft-indicator">
                                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -4002,7 +4022,7 @@ export default function App() {
                             onClick={() => handleQuickPin(itm)}
                             type="button"
                           >
-                            <ItemDisplay itemName={itm} itemsData={itemsData} />
+                            <ItemDisplay itemName={itm} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
                           </button>
                         ))
                       )}

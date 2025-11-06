@@ -20,7 +20,7 @@ const buildImageSources = (item) => {
   return deduped;
 };
 
-const ItemDisplay = ({ itemName, itemsData = {}, children }) => {
+const ItemDisplay = ({ itemName, itemsData = {}, children, enableBuddyFarmLinks = false }) => {
   // Special handling for Silver (currency, not an item)
   if (itemName === 'Silver') {
     return (
@@ -64,17 +64,49 @@ const ItemDisplay = ({ itemName, itemsData = {}, children }) => {
     });
   };
 
+  // Generate buddy.farm URL from item name
+  const getBuddyFarmUrl = (name) => {
+    if (!name) return null;
+    // Convert item name to URL slug: lowercase, replace spaces with hyphens
+    const slug = name.toLowerCase().replace(/\s+/g, '-');
+    return `https://buddy.farm/i/${slug}/`;
+  };
+
+  const buddyFarmUrl = enableBuddyFarmLinks ? getBuddyFarmUrl(item.name) : null;
+
+  const imageElement = (
+    <img
+      key={`${itemName}-img-${currentSrc}`}
+      src={currentSrc || PLACEHOLDER_SRC}
+      alt={item.name}
+      title={item.name}
+      style={{ 
+        width: '24px', 
+        height: '24px', 
+        objectFit: 'contain', 
+        flexShrink: 0,
+        cursor: enableBuddyFarmLinks ? 'pointer' : 'default'
+      }}
+      loading="lazy"
+      onError={handleImageError}
+    />
+  );
+
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <img
-        key={`${itemName}-img-${currentSrc}`}
-        src={currentSrc || PLACEHOLDER_SRC}
-        alt={item.name}
-        title={item.name}
-        style={{ width: '24px', height: '24px', objectFit: 'contain', flexShrink: 0 }}
-        loading="lazy"
-        onError={handleImageError}
-      />
+      {enableBuddyFarmLinks && buddyFarmUrl ? (
+        <a 
+          href={buddyFarmUrl} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          style={{ display: 'flex', lineHeight: 0 }}
+          title={`Open ${item.name} on buddy.farm`}
+        >
+          {imageElement}
+        </a>
+      ) : (
+        imageElement
+      )}
       <span style={{ fontSize: '14px', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap', minWidth: 0 }}>
         <span>{item.name}</span>
         {children}

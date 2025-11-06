@@ -142,6 +142,49 @@ craft-calculator/
 └── vercel.json               # Vercel deployment config
 ```
 
+## 🤖 Automation & Data Sync
+
+The project uses **GitHub Actions** to automatically sync game data from [buddy.farm API](https://api.buddy.farm/graphql):
+
+### 📅 Scheduled Syncs
+- **🍳 Recipes** - Daily at 3:00 UTC (6:00 MSK)
+  - Script: `scripts/sync-recipes-node.mjs`
+  - Workflow: `.github/workflows/sync-recipes.yml`
+  - Updates: `items-api.json`, `recipes-api.json`
+
+- **📍 Drop Rates** - Daily at 3:30 UTC (6:30 MSK)
+  - Script: `scripts/sync-drop-rates.mjs`
+  - Workflow: `.github/workflows/sync-drop-rates.yml`
+  - Updates: Exploration location drop rates
+
+- **🎯 Quests** - Daily at 4:00 UTC (7:00 MSK)
+  - Script: `scripts/sync-quests.mjs`
+  - Workflow: `.github/workflows/sync-quests.yml`
+  - Updates: `quests-api.json` (296 questlines, 1999 quests)
+
+- **🖼️ Item Images** - Weekly on Sundays at 2:00 UTC
+  - Script: `scripts/download-images.mjs`
+  - Workflow: `.github/workflows/download-images.yml`
+  - Downloads: Missing item icons from buddy.farm
+
+### 🔄 Manual Triggers
+All workflows can be triggered manually via GitHub Actions interface (`workflow_dispatch`).
+
+### 🛠️ Run Scripts Locally
+```bash
+# Sync recipes and items
+node scripts/sync-recipes-node.mjs
+
+# Sync drop rates
+node scripts/sync-drop-rates.mjs
+
+# Sync quests
+node scripts/sync-quests.mjs
+
+# Download missing images
+node scripts/download-images.mjs
+```
+
 ## 🔧 Configuration
 
 ### Environment Variables

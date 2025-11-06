@@ -1842,12 +1842,6 @@ export default function App() {
                       <div className="pinned-card-content">
                         <div 
                           onClick={() => {
-                            // Switch to quests mode and close sidebar on mobile
-                            saveCurrentSelection()
-                            setQuestsMode(true)
-                            setLocationsMode(false)
-                            setReverseMode(false)
-                            
                             // Save the quest info to localStorage so QuestsPanel can restore it
                             if (quest.type === 'questline') {
                               localStorage.setItem('selectedQuestlineId', quest.id)
@@ -1855,6 +1849,21 @@ export default function App() {
                             } else if (quest.type === 'quest') {
                               localStorage.setItem('selectedQuestlineId', quest.questlineId || '')
                               localStorage.setItem('selectedQuestId', quest.id)
+                            }
+                            
+                            // Force QuestsPanel to reload by toggling questsMode
+                            const wasInQuestsMode = questsMode
+                            if (wasInQuestsMode) {
+                              setQuestsMode(false)
+                              setTimeout(() => {
+                                setQuestsMode(true)
+                              }, 0)
+                            } else {
+                              // Switch to quests mode
+                              saveCurrentSelection()
+                              setQuestsMode(true)
+                              setLocationsMode(false)
+                              setReverseMode(false)
                             }
                             
                             // Close sidebar on mobile

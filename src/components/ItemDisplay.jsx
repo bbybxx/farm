@@ -92,6 +92,11 @@ const ItemDisplay = ({ itemName, itemsData = {}, children, enableBuddyFarmLinks 
     />
   );
 
+  const handleLinkClick = (e) => {
+    // Prevent event from bubbling up to parent handlers (craft chain navigation)
+    e.stopPropagation();
+  };
+
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
       {enableBuddyFarmLinks && buddyFarmUrl ? (
@@ -101,6 +106,7 @@ const ItemDisplay = ({ itemName, itemsData = {}, children, enableBuddyFarmLinks 
           rel="noopener noreferrer"
           style={{ display: 'flex', lineHeight: 0 }}
           title={`Open ${item.name} on buddy.farm`}
+          onClick={handleLinkClick}
         >
           {imageElement}
         </a>

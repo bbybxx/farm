@@ -2246,8 +2246,12 @@ export default function App() {
                                       if (pinnedItem.location) {
                                         setSelectedLocation(pinnedItem.location)
                                       }
-                                      // Set the target quantity for the item
+                                      // In locations mode, amount is for the consumable (AC/AP), not the item
+                                      // So we don't set amount to pinnedItem.quantity
+                                      // Instead, we set locationItemTargets
                                       setLocationItemTargets({ [pinnedItem.name]: pinnedItem.quantity })
+                                      // Set item to the pinned item name for context
+                                      setItem(pinnedItem.name)
                                     } else if (pinnedItem.originMode === 'base-to-craft') {
                                       setQuestsMode(false)
                                       setLocationsMode(false)
@@ -2260,12 +2264,11 @@ export default function App() {
                                   }
                                   // If pinned from quests or quick-pin - smart routing
                                   else {
-                                    setItem(pinnedItem.name)
-                                    setAmount(pinnedItem.quantity)
-                                    setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
-                                    
                                     // Priority: craft-to-base if craftable, otherwise locations if findable
                                     if (canCraft) {
+                                      setItem(pinnedItem.name)
+                                      setAmount(pinnedItem.quantity)
+                                      setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
                                       setQuestsMode(false)
                                       setLocationsMode(false)
                                       setReverseMode(false)
@@ -2278,8 +2281,11 @@ export default function App() {
                                       } else if (locations[0]) {
                                         setSelectedLocation(locations[0].name)
                                       }
-                                      // Set the target quantity for the item
+                                      // In locations mode, don't set amount to item quantity
+                                      // Set locationItemTargets instead
                                       setLocationItemTargets({ [pinnedItem.name]: pinnedItem.quantity })
+                                      setItem(pinnedItem.name)
+                                      setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
                                     }
                                   }
                                   

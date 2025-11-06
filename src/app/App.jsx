@@ -2207,122 +2207,131 @@ export default function App() {
                           </svg>
                         </button>
 
-                        <div 
-                          className="pinned-card-content"
-                          onClick={() => {
-                            // Smart routing based on origin and capability
-                            const canCraft = combinedRecipes && combinedRecipes[pinnedItem.name]
-                            const locations = getItemLocations(pinnedItem.name)
-                            const canFind = locations && locations.length > 0
-                            
-                            // If pinned from craft-to-base, base-to-craft, or locations - restore that mode with chain
-                            if (pinnedItem.originMode === 'craft-to-base' || 
-                                pinnedItem.originMode === 'base-to-craft' || 
-                                pinnedItem.originMode === 'locations') {
-                              
-                              setItem(pinnedItem.name)
-                              setAmount(pinnedItem.quantity)
-                              
-                              // Restore craft chain if it exists
-                              if (pinnedItem.craftChain && pinnedItem.craftChain.length > 0) {
-                                setCraftChain(pinnedItem.craftChain)
-                              } else {
-                                setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
-                              }
-                              
-                              // Restore the original mode
-                              if (pinnedItem.originMode === 'locations') {
-                                setQuestsMode(false)
-                                setLocationsMode(true)
-                                setReverseMode(false)
-                                if (pinnedItem.location) {
-                                  setSelectedLocation(pinnedItem.location)
-                                }
-                              } else if (pinnedItem.originMode === 'base-to-craft') {
-                                setQuestsMode(false)
-                                setLocationsMode(false)
-                                setReverseMode(true)
-                              } else {
-                                setQuestsMode(false)
-                                setLocationsMode(false)
-                                setReverseMode(false)
-                              }
-                            }
-                            // If pinned from quests or quick-pin - smart routing
-                            else {
-                              setItem(pinnedItem.name)
-                              setAmount(pinnedItem.quantity)
-                              setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
-                              
-                              // Priority: craft-to-base if craftable, otherwise locations if findable
-                              if (canCraft) {
-                                setQuestsMode(false)
-                                setLocationsMode(false)
-                                setReverseMode(false)
-                              } else if (canFind) {
-                                setQuestsMode(false)
-                                setLocationsMode(true)
-                                setReverseMode(false)
-                                if (pinnedItem.location) {
-                                  setSelectedLocation(pinnedItem.location)
-                                } else if (locations[0]) {
-                                  setSelectedLocation(locations[0].name)
-                                }
-                              } else {
-                                // Fallback to craft-to-base
-                                setQuestsMode(false)
-                                setLocationsMode(false)
-                                setReverseMode(false)
-                              }
-                            }
-                            
-                            // Close sidebar on mobile
-                            if (window.innerWidth <= 768) {
-                              setSidebarOpen(false)
-                            }
-                            
-                            hapticFeedback('light')
-                          }}
-                          style={{ cursor: 'pointer' }}
-                        >
-                          <div className="pinned-item-name">
-                            {itemsData && itemsData[pinnedItem.name] ? (
-                              <ItemDisplay itemName={pinnedItem.name} itemsData={itemsData} />
-                            ) : (
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                <LocationImage name={pinnedItem.name} size={24} />
-                                <span style={{ fontWeight: 600 }}>{pinnedItem.name}</span>
+                        {(() => {
+                          // Check if item is clickable
+                          const canCraft = combinedRecipes && combinedRecipes[pinnedItem.name]
+                          const locations = getItemLocations(pinnedItem.name)
+                          const canFind = locations && locations.length > 0
+                          const isClickable = canCraft || canFind
+
+                          return (
+                            <>
+                              <div 
+                                className="pinned-card-content"
+                                onClick={() => {
+                                  if (!isClickable) return // Don't do anything if not clickable
+                                  
+                                  // Smart routing based on origin and capability
+                                  
+                                  // If pinned from craft-to-base, base-to-craft, or locations - restore that mode with chain
+                                  if (pinnedItem.originMode === 'craft-to-base' || 
+                                      pinnedItem.originMode === 'base-to-craft' || 
+                                      pinnedItem.originMode === 'locations') {
+                                    
+                                    setItem(pinnedItem.name)
+                                    setAmount(pinnedItem.quantity)
+                                    
+                                    // Restore craft chain if it exists
+                                    if (pinnedItem.craftChain && pinnedItem.craftChain.length > 0) {
+                                      setCraftChain(pinnedItem.craftChain)
+                                    } else {
+                                      setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
+                                    }
+                                    
+                                    // Restore the original mode
+                                    if (pinnedItem.originMode === 'locations') {
+                                      setQuestsMode(false)
+                                      setLocationsMode(true)
+                                      setReverseMode(false)
+                                      if (pinnedItem.location) {
+                                        setSelectedLocation(pinnedItem.location)
+                                      }
+                                    } else if (pinnedItem.originMode === 'base-to-craft') {
+                                      setQuestsMode(false)
+                                      setLocationsMode(false)
+                                      setReverseMode(true)
+                                    } else {
+                                      setQuestsMode(false)
+                                      setLocationsMode(false)
+                                      setReverseMode(false)
+                                    }
+                                  }
+                                  // If pinned from quests or quick-pin - smart routing
+                                  else {
+                                    setItem(pinnedItem.name)
+                                    setAmount(pinnedItem.quantity)
+                                    setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
+                                    
+                                    // Priority: craft-to-base if craftable, otherwise locations if findable
+                                    if (canCraft) {
+                                      setQuestsMode(false)
+                                      setLocationsMode(false)
+                                      setReverseMode(false)
+                                    } else if (canFind) {
+                                      setQuestsMode(false)
+                                      setLocationsMode(true)
+                                      setReverseMode(false)
+                                      if (pinnedItem.location) {
+                                        setSelectedLocation(pinnedItem.location)
+                                      } else if (locations[0]) {
+                                        setSelectedLocation(locations[0].name)
+                                      }
+                                    }
+                                  }
+                                  
+                                  // Close sidebar on mobile
+                                  if (window.innerWidth <= 768) {
+                                    setSidebarOpen(false)
+                                  }
+                                  
+                                  hapticFeedback('light')
+                                }}
+                                style={{ 
+                                  cursor: isClickable ? 'pointer' : 'default',
+                                  opacity: isClickable ? 1 : 0.6
+                                }}
+                              >
+                                <div className="pinned-item-name">
+                                  {itemsData && itemsData[pinnedItem.name] ? (
+                                    <ItemDisplay itemName={pinnedItem.name} itemsData={itemsData} />
+                                  ) : (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                      <LocationImage name={pinnedItem.name} size={24} />
+                                      <span style={{ fontWeight: 600 }}>{pinnedItem.name}</span>
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="pinned-item-details">
+                                  <span className="pinned-item-quantity">×{formatNumber(pinnedItem.quantity)}</span>
+                                  {pinnedItem.parentRecipe && <span className="parent-recipe">from {pinnedItem.parentRecipe}</span>}
+
+                                  {est && (() => {
+                                    if (typeof est.apNeeded !== 'undefined' && est.apNeeded !== null) {
+                                      return (<div className="pinned-ap-line">{`${formatNumber(est.apNeeded)} AP`}</div>)
+                                    }
+                                    if (est.mode === 'EXP') return (<div style={{ fontSize: 12, color: '#99a', marginTop: 6 }}>{formatNumber(est.explores)} EXP • {formatNumber(est.stamina)} STA</div>)
+                                    if (est.mode === 'AC') return (<div style={{ fontSize: 12, color: '#99a', marginTop: 6 }}>{formatNumber(est.cidersNeeded)} AC • {formatNumber(est.totalStamina)} STA</div>)
+                                    return null
+                                  })()}
+                                </div>
                               </div>
-                            )}
-                          </div>
-                          <div className="pinned-item-details">
-                            <span className="pinned-item-quantity">×{formatNumber(pinnedItem.quantity)}</span>
-                            {pinnedItem.parentRecipe && <span className="parent-recipe">from {pinnedItem.parentRecipe}</span>}
 
-                            {est && (() => {
-                              if (typeof est.apNeeded !== 'undefined' && est.apNeeded !== null) {
-                                return (<div className="pinned-ap-line">{`${formatNumber(est.apNeeded)} AP`}</div>)
-                              }
-                              if (est.mode === 'EXP') return (<div style={{ fontSize: 12, color: '#99a', marginTop: 6 }}>{formatNumber(est.explores)} EXP • {formatNumber(est.stamina)} STA</div>)
-                              if (est.mode === 'AC') return (<div style={{ fontSize: 12, color: '#99a', marginTop: 6 }}>{formatNumber(est.cidersNeeded)} AC • {formatNumber(est.totalStamina)} STA</div>)
-                              return null
-                            })()}
-                          </div>
-                        </div>
-
-                        <div className="pinned-loc-select">
-                          {locs.length === 0 ? null : (
-                            <PinnedLocationSelect
-                              options={locs.map(l => l.name)}
-                              value={selectorValue}
-                              onChange={(newLoc) => {
-                                setPinnedResources(prev => prev.map((p, i) => i === index ? { ...p, location: newLoc } : p))
-                                // persist last-picked location so subsequent pins default to it
-                                setLastPinnedLocation(newLoc)
-                              }}
-                            />
-                          )}
-                        </div>
+                              <div className="pinned-loc-select">
+                                {locs.length === 0 ? null : (
+                                  <PinnedLocationSelect
+                                    options={locs.map(l => l.name)}
+                                    value={selectorValue}
+                                    onChange={(newLoc) => {
+                                      setPinnedResources(prev => prev.map((p, i) => i === index ? { ...p, location: newLoc } : p))
+                                      // persist last-picked location so subsequent pins default to it
+                                      setLastPinnedLocation(newLoc)
+                                    }}
+                                  />
+                                )}
+                              </div>
+                            </>
+                          )
+                        })()}
                       </div>
                     )
                   })}

@@ -1,0 +1,57 @@
+name: Sync Quests from buddy.farm API
+
+on:
+  schedule:
+    # Запускается каждый день в 4:00 UTC (7:00 MSK)
+    - cron: '0 4 * * *'
+  workflow_dispatch: # Позволяет запустить вручную
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/sync-quests.mjs'  # Запускается только при изменении самого скрипта
+      - '.github/workflows/sync-quests.yml'  # Или при изменении workflow
+
+jobs:
+  sync-quests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Разрешаем запись для коммитов
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Sync quests from API
+        run: node scripts/sync-quests.mjs
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --quiet src/data/quests-api.json || echo "changed=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit and push if changed
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add src/data/quests-api.json
+          git commit -m "chore: auto-sync quests from buddy.farm API [skip ci]"
+          git push
+      
+      - name: Summary
+        run: |
+          echo "### Quests Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.check_changes.outputs.changed }}" == "true" ]; then
+            echo "✅ Quests data has been updated and committed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ No changes detected in quests data" >> $GITHUB_STEP_SUMMARY
+          fi

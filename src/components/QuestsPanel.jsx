@@ -297,7 +297,7 @@ export default function QuestsPanel({
             style={{ textAlign: 'left' }}
           >
             {selectedQuestline ? (
-              <span>{selectedQuestline.name}</span>
+              <span>{selectedQuestline.name.replace(/<br\s*\/?>/gi, ' ')}</span>
             ) : (
               <span style={{ opacity: 0.5 }}>Select a questline...</span>
             )}
@@ -338,7 +338,7 @@ export default function QuestsPanel({
                   minWidth: 0,
                   maxWidth: '100%'
                 }}>
-                  {selectedQuestline.name}
+                  {selectedQuestline.name.replace(/<br\s*\/?>/gi, ' ')}
                 </h2>
                 {pinnedEnabled && addQuestToPinned && (
                   <button
@@ -607,7 +607,8 @@ export default function QuestsPanel({
                         transition: 'all 0.2s',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '12px'
+                        gap: '12px',
+                        minWidth: 0
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.background = 'rgba(255,255,255,0.08)'
@@ -628,11 +629,20 @@ export default function QuestsPanel({
                       }}>
                         {index + 1}.
                       </span>
-                      <span style={{ flex: 1, fontSize: '15px', fontWeight: 500 }}>
-                        {quest.name}
+                      <span style={{ flex: 1, fontSize: '15px', fontWeight: 500, minWidth: 0, wordBreak: 'break-word' }}>
+                        {quest.name.replace(/<br\s*\/?>/gi, ' ')}
                       </span>
                       {quest.npc && (
-                        <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)' }}>
+                        <span style={{ 
+                          fontSize: '13px', 
+                          color: 'rgba(255,255,255,0.5)',
+                          flexShrink: 0,
+                          marginLeft: '8px',
+                          maxWidth: '120px',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
+                        }}>
                           {quest.npc}
                         </span>
                       )}
@@ -665,7 +675,7 @@ export default function QuestsPanel({
               minWidth: 0,
               maxWidth: '100%'
             }}>
-              {selectedQuest.name}
+              {selectedQuest.name.replace(/<br\s*\/?>/gi, ' ')}
             </h2>
             {pinnedEnabled && addQuestToPinned && (() => {
               const questPinKey = `quest_quest_${selectedQuest.id}`
@@ -742,7 +752,7 @@ export default function QuestsPanel({
                   e.currentTarget.style.textDecoration = 'none'
                 }}
               >
-                {selectedQuestline.name}
+                {selectedQuestline.name.replace(/<br\s*\/?>/gi, ' ')}
               </button>
               {selectedQuest.npc && (
                 <>
@@ -1221,7 +1231,7 @@ export default function QuestsPanel({
                     type="button"
                   >
                     <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '4px' }}>
-                      {questline.name}
+                      {questline.name.replace(/<br\s*\/?>/gi, ' ')}
                     </div>
                     <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>
                       {questline.quests.length} quests

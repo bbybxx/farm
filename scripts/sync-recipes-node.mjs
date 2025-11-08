@@ -119,11 +119,11 @@ console.log('\nSaving files...');
 fs.writeFileSync(recipesApiPath, JSON.stringify(recipesApi, null, 2), 'utf8');
 fs.writeFileSync(itemsApiPath, JSON.stringify(itemsApi, null, 2), 'utf8');
 
-console.log(`✅ Saved recipes-api.json (${Object.keys(recipesApi).length} recipes)`);
-console.log(`✅ Saved items-api.json (${Object.keys(itemsApi).length} items)`);
+console.log(`Saved recipes-api.json (${Object.keys(recipesApi).length} recipes)`);
+console.log(`Saved items-api.json (${Object.keys(itemsApi).length} items)`);
 
 // Summary
 console.log('\n=== Summary ===');
 console.log(`Recipes synced: ${Object.keys(recipesApi).length}`);
 console.log(`Items synced: ${Object.keys(itemsApi).length}`);
-console.log('\n✅ Sync complete!');
+console.log('\nSync complete!');

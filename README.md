@@ -1,20 +1,20 @@
-# 🧙‍♂️ Craft Calculator
+# Craft Calculator
 
 Progressive Web App crafting calculator for FarmRPG with automatic recipe updates and Telegram integration.
 
-## ✨ Key Features
+## Key Features
 
-- **📋 Crafting Calculator** - Calculate required resources for crafting items
-- **🗺️ Exploration Calculator** - Optimal farming locations based on drop rates
-- **🔄 Auto-update Recipes** - Sync with buddy.farm API every 3 days
-- **🎨 Perk System** - Account for perk bonuses in calculations
-- **📌 Resource Pinning** - Configure farming exclusions
-- **🐛 Bug Reports** - Submit reports with screenshots to Telegram
-- **📱 PWA** - Installable as native app on iOS/Android
-- **🌙 Dark Theme** - Optimized for comfortable use
-- **⚡ Offline Mode** - Service Worker for offline functionality
+- **Crafting Calculator** - Calculate required resources for crafting items
+- **Exploration Calculator** - Optimal farming locations based on drop rates
+- **Auto-update Recipes** - Sync with buddy.farm API every 3 days
+- **Perk System** - Account for perk bonuses in calculations
+- **Resource Pinning** - Configure farming exclusions
+- **Bug Reports** - Submit reports with screenshots to Telegram
+- **PWA** - Installable as native app on iOS/Android
+- **Dark Theme** - Optimized for comfortable use
+- **Offline Mode** - Service Worker for offline functionality
 
-## 🚀 Technologies
+## Technologies
 
 ### Frontend
 - **React 19.1** - UI library
@@ -32,7 +32,7 @@ Progressive Web App crafting calculator for FarmRPG with automatic recipe update
 - **GraphQL** - buddy.farm API queries
 - **Git** - Version control
 
-## 📦 Installation & Development
+## Installation & Development
 
 ### Clone Repository
 ```bash
@@ -82,7 +82,7 @@ npm start
 # Opens http://localhost:3000
 ```
 
-## 🌍 Production Deployment
+## Production Deployment
 
 Project auto-deploys to Vercel on push to `main` branch:
 - Frontend: `npm run build` → `dist/`
@@ -90,7 +90,7 @@ Project auto-deploys to Vercel on push to `main` branch:
 
 **Live URL:** [https://farm-pink-gamma.vercel.app/](https://farm-pink-gamma.vercel.app/)
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 craft-calculator/
@@ -142,35 +142,35 @@ craft-calculator/
 └── vercel.json               # Vercel deployment config
 ```
 
-## 🤖 Automation & Data Sync
+## Automation & Data Sync
 
 The project uses **GitHub Actions** to automatically sync game data from [buddy.farm API](https://api.buddy.farm/graphql):
 
-### 📅 Scheduled Syncs
-- **🍳 Recipes** - Daily at 3:00 UTC (6:00 MSK)
+### Scheduled Syncs
+- **Recipes** - Daily at 3:00 UTC (6:00 MSK)
   - Script: `scripts/sync-recipes-node.mjs`
   - Workflow: `.github/workflows/sync-recipes.yml`
   - Updates: `items-api.json`, `recipes-api.json`
 
-- **📍 Drop Rates** - Daily at 3:30 UTC (6:30 MSK)
+- **Drop Rates** - Daily at 3:30 UTC (6:30 MSK)
   - Script: `scripts/sync-drop-rates.mjs`
   - Workflow: `.github/workflows/sync-drop-rates.yml`
   - Updates: Exploration location drop rates
 
-- **🎯 Quests** - Daily at 4:00 UTC (7:00 MSK)
+- **Quests** - Daily at 4:00 UTC (7:00 MSK)
   - Script: `scripts/sync-quests.mjs`
   - Workflow: `.github/workflows/sync-quests.yml`
   - Updates: `quests-api.json` (296 questlines, 1999 quests)
 
-- **🖼️ Item Images** - Weekly on Sundays at 2:00 UTC
+- **Item Images** - Weekly on Sundays at 2:00 UTC
   - Script: `scripts/download-images.mjs`
   - Workflow: `.github/workflows/download-images.yml`
   - Downloads: Missing item icons from buddy.farm
 
-### 🔄 Manual Triggers
+### Manual Triggers
 All workflows can be triggered manually via GitHub Actions interface (`workflow_dispatch`).
 
-### 🛠️ Run Scripts Locally
+### Run Scripts Locally
 ```bash
 # Sync recipes and items
 node scripts/sync-recipes-node.mjs
@@ -185,7 +185,7 @@ node scripts/sync-quests.mjs
 node scripts/download-images.mjs
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 
@@ -228,10 +228,10 @@ getPWAMode() // detailed info
 ```
 
 **PWA Features:**
-- 📱 **PWA Indicator** - Shows 📱 icon in header when running as PWA
-- 🖼️ **Image Caching** - All location images cached for offline use
-- 💾 **Offline Mode** - Full functionality without internet
-- 🔄 **Auto-updates** - Service worker handles updates
+- **PWA Indicator** - Shows icon in header when running as PWA
+- **Image Caching** - All location images cached for offline use
+- **Offline Mode** - Full functionality without internet
+- **Auto-updates** - Service worker handles updates
 
 **usePWA() Hook:**
 ```javascript
@@ -248,7 +248,7 @@ function MyComponent() {
 }
 ```
 
-## 📱 Usage
+## Usage
 
 ### Installing PWA
 
@@ -264,12 +264,12 @@ function MyComponent() {
 
 ### Submitting Bug Report
 
-1. Click "🐛" button in top-right corner
+1. Click button in top-right corner
 2. Describe the issue
 3. Attach screenshots (optional, up to 8 files)
 4. Submit — report will be sent to developer via Telegram
 
-## 🎨 Game API Integration Features
+## Game API Integration Features
 
 Project ready for game API integration:
 - Player account linking
@@ -277,20 +277,20 @@ Project ready for game API integration:
 - Automatic import of available resources
 - Real-time crafting progress display
 
-## 🧹 Recent Changes
+## Recent Changes
 
 ### v0.3.0 (October 2025)
-- ✅ Full migration to PWA (removed Capacitor/Android)
-- ✅ Codebase cleanup: removed old components, parsing scripts, test files
-- ✅ Renamed `src/new-app/` → `src/app/`
-- ✅ iOS PWA fixes for Dynamic Island/notch
-- ✅ Serverless function for bug reports with Formidable
-- ✅ Service Worker with auto-update
-- ✅ Updated Haunted House drop rates
-- ✅ Arnold Palmer event auto-sync with Apple Cider
-- ✅ Git history cleanup: 1.24 GB → 181 MB (85% reduction)
+- Full migration to PWA (removed Capacitor/Android)
+- Codebase cleanup: removed old components, parsing scripts, test files
+- Renamed `src/new-app/` → `src/app/`
+- iOS PWA fixes for Dynamic Island/notch
+- Serverless function for bug reports with Formidable
+- Service Worker with auto-update
+- Updated Haunted House drop rates
+- Arnold Palmer event auto-sync with Apple Cider
+- Git history cleanup: 1.24 GB → 181 MB (85% reduction)
 
-## 📊 Statistics
+## Statistics
 
 - **191** crafting recipes
 - **1000+** game items
@@ -307,11 +307,11 @@ Project ready for game API integration:
 4. Push to branch (`git push origin feature/amazing-feature`)
 5. Open Pull Request
 
-## 📝 License
+## License
 
 MIT License - free to use for your projects.
 
-## 🔗 Links
+## Links
 
 - **Live Site:** [https://farm-pink-gamma.vercel.app/](https://farm-pink-gamma.vercel.app/)
 - **Repository:** [github.com/bbybxx/farm](https://github.com/bbybxx/farm)
@@ -319,4 +319,4 @@ MIT License - free to use for your projects.
 
 ---
 
-Made with ❤️ for FarmRPG community
+Made with love for FarmRPG community

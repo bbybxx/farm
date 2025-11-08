@@ -165,6 +165,17 @@ body {
   opacity: 1;
 }
 
+.offline-indicator {
+  font-size: 14px;
+  opacity: 0.7;
+  color: #ff6b35;
+  transition: opacity 0.2s ease;
+}
+
+.offline-indicator:hover {
+  opacity: 1;
+}
+
 .craft-chain {
 	flex: 1;
 	overflow: hidden;

@@ -26,7 +26,7 @@ const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'img', 'items');
 // Create output directory if it doesn't exist
 if (!fs.existsSync(OUTPUT_DIR)) {
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-  console.log(`✅ Created directory: ${OUTPUT_DIR}\n`);
+  console.log(`Created directory: ${OUTPUT_DIR}\n`);
 }
 
 // Fetch data from API
@@ -101,13 +101,13 @@ for (const item of itemsWithImages) {
     }
   } catch (error) {
     errors++;
-    console.error(`❌ Failed to download ${filename}: ${error.message}`);
+    console.error(`Failed to download ${filename}: ${error.message}`);
   }
 }
 
 console.log('\n=== Summary ===');
-console.log(`✅ Downloaded: ${downloaded}`);
-console.log(`⏭️  Skipped (already exists): ${skipped}`);
-console.log(`❌ Errors: ${errors}`);
-console.log(`📁 Total files in directory: ${fs.readdirSync(OUTPUT_DIR).length}`);
-console.log('\n✅ Image download complete!');
+console.log(`Downloaded: ${downloaded}`);
+console.log(`Skipped (already exists): ${skipped}`);
+console.log(`Errors: ${errors}`);
+console.log(`Total files in directory: ${fs.readdirSync(OUTPUT_DIR).length}`);
+console.log('\nImage download complete!');

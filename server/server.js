@@ -113,22 +113,22 @@ function formatBugReport(data) {
     cookieEnabled, timezone, isInTelegram, telegramVersion, telegramPlatform 
   } = data;
   
-  let formattedMessage = `🐛 <b>Bug Report</b>\n\n`;
+  let formattedMessage = `<b>Bug Report</b>\n\n`;
   
   // User info
   if (user) {
-    formattedMessage += `👤 <b>User:</b> ${user.first_name || 'Unknown'}`;
+    formattedMessage += `<b>User:</b> ${user.first_name || 'Unknown'}`;
     if (user.last_name) formattedMessage += ` ${user.last_name}`;
     if (user.username) formattedMessage += ` (@${user.username})`;
     formattedMessage += `\n`;
-    if (user.id) formattedMessage += `🆔 <b>User ID:</b> <code>${user.id}</code>\n`;
-    if (user.language_code) formattedMessage += `🌍 <b>User Language:</b> ${user.language_code}\n`;
+    if (user.id) formattedMessage += `<b>User ID:</b> <code>${user.id}</code>\n`;
+    if (user.language_code) formattedMessage += `<b>User Language:</b> ${user.language_code}\n`;
   }
   
   // Timestamp and timezone
   if (timestamp) {
     const date = new Date(timestamp);
-    formattedMessage += `⏰ <b>Time:</b> ${date.toLocaleString('en-US', { 
+    formattedMessage += `<b>Time:</b> ${date.toLocaleString('en-US', { 
       timeZone: 'UTC',
       year: 'numeric',
       month: '2-digit',
@@ -143,28 +143,28 @@ function formatBugReport(data) {
   
   // URL
   if (url) {
-    formattedMessage += `🔗 <b>URL:</b> <code>${url}</code>\n`;
+    formattedMessage += `<b>URL:</b> <code>${url}</code>\n`;
   }
   
   // Platform and environment info
-  formattedMessage += `\n� <b>Environment:</b>\n`;
+  formattedMessage += `\n<b>Environment:</b>\n`;
   if (isInTelegram) {
-    formattedMessage += `📱 <b>Platform:</b> Telegram Web App`;
+    formattedMessage += `<b>Platform:</b> Telegram Web App`;
     if (telegramVersion && telegramVersion !== 'N/A') formattedMessage += ` v${telegramVersion}`;
     if (telegramPlatform && telegramPlatform !== 'N/A') formattedMessage += ` (${telegramPlatform})`;
     formattedMessage += `\n`;
   } else {
-    formattedMessage += `🌐 <b>Platform:</b> Web Browser\n`;
+    formattedMessage += `<b>Platform:</b> Web Browser\n`;
   }
   
-  if (platform) formattedMessage += `🖥️ <b>OS:</b> ${platform}\n`;
-  if (language) formattedMessage += `🌍 <b>Browser Language:</b> ${language}\n`;
-  if (viewport) formattedMessage += `📐 <b>Viewport:</b> ${viewport}\n`;
-  if (screen) formattedMessage += `🖼️ <b>Screen:</b> ${screen}\n`;
-  if (typeof onLine === 'boolean') formattedMessage += `📶 <b>Online:</b> ${onLine ? 'Yes' : 'No'}\n`;
-  if (typeof cookieEnabled === 'boolean') formattedMessage += `🍪 <b>Cookies:</b> ${cookieEnabled ? 'Enabled' : 'Disabled'}\n`;
+  if (platform) formattedMessage += `<b>OS:</b> ${platform}\n`;
+  if (language) formattedMessage += `<b>Browser Language:</b> ${language}\n`;
+  if (viewport) formattedMessage += `<b>Viewport:</b> ${viewport}\n`;
+  if (screen) formattedMessage += `<b>Screen:</b> ${screen}\n`;
+  if (typeof onLine === 'boolean') formattedMessage += `<b>Online:</b> ${onLine ? 'Yes' : 'No'}\n`;
+  if (typeof cookieEnabled === 'boolean') formattedMessage += `<b>Cookies:</b> ${cookieEnabled ? 'Enabled' : 'Disabled'}\n`;
   
-  formattedMessage += `\n📝 <b>Report:</b>\n${message}`;
+  formattedMessage += `\n<b>Report:</b>\n${message}`;
   
   // User agent (collapsed for readability)
   if (userAgent) {
@@ -380,7 +380,7 @@ app.post('/api/graphql', async (req, res) => {
     const apiEndpoint = process.env.GRAPHQL_API_ENDPOINT || 'https://api.buddy.farm/graphql';
     
     if (process.env.NODE_ENV === 'development') {
-      console.log('🔄 Proxying GraphQL request...');
+      console.log('Proxying GraphQL request...');
     }
     
     const response = await fetch(apiEndpoint, {
@@ -406,13 +406,13 @@ app.post('/api/graphql', async (req, res) => {
     });
     
     if (process.env.NODE_ENV === 'development') {
-      console.log(`✅ GraphQL request successful, items received: ${data.data?.items?.length || 0}`);
+      console.log(`GraphQL request successful, items received: ${data.data?.items?.length || 0}`);
     }
     res.json(data);
     
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('❌ GraphQL proxy error:', error);
+      console.error('GraphQL proxy error:', error);
     }
     res.status(500).json({
       success: false,
@@ -451,9 +451,9 @@ app.use((req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Craft Calculator Bug Report Server running on port ${PORT}`);
-  console.log(`📱 Bot Token: ${BOT_TOKEN ? 'Configured' : 'Not configured'}`);
-  console.log(`💬 Chat ID: ${CHAT_ID || 'Not configured'}`);
-  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔒 CORS Origins: ${allowedOrigins.join(', ')}`);
+  console.log(`Craft Calculator Bug Report Server running on port ${PORT}`);
+  console.log(`Bot Token: ${BOT_TOKEN ? 'Configured' : 'Not configured'}`);
+  console.log(`Chat ID: ${CHAT_ID || 'Not configured'}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`CORS Origins: ${allowedOrigins.join(', ')}`);
 });

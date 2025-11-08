@@ -1,6 +1,6 @@
 # Как получить Chat ID для Telegram бота
 
-## Бот готов к работе! 🎉
+## Бот готов к работе!
 
 **Информация о боте:**
 - Имя: calc report
@@ -28,7 +28,7 @@ node test-bot.js
 
 Скрипт покажет ваш Chat ID, например:
 ```
-🎯 Use this Chat ID in your .env file:
+Use this Chat ID in your .env file:
 CHAT_ID=123456789
 ```
 

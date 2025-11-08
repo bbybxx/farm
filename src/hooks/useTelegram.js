@@ -154,7 +154,7 @@ export function useTelegram() {
       let telegramMessage = `Bug Report\n\n`;
       
       if (bugReportData.user) {
-        telegramMessage += `👤 User: ${bugReportData.user.first_name || 'Unknown'}`;
+        telegramMessage += `User: ${bugReportData.user.first_name || 'Unknown'}`;
         if (bugReportData.user.last_name) telegramMessage += ` ${bugReportData.user.last_name}`;
         if (bugReportData.user.username) telegramMessage += ` (@${bugReportData.user.username})`;
         telegramMessage += `\n`;
@@ -246,16 +246,16 @@ export function useTelegram() {
       }
       
       if (response.ok) {
-        devLog('✅ Bug report sent successfully via', isProduction ? 'api-endpoint' : 'direct-api');
+        devLog('Bug report sent successfully via', isProduction ? 'api-endpoint' : 'direct-api');
         return { success: true, method: isProduction ? 'api-endpoint' : 'direct-api' };
       } else {
         const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-        devLog('❌ Bug report failed:', response.status, errorData);
+        devLog('Bug report failed:', response.status, errorData);
         throw new Error(`API error: ${errorData.description || errorData.error || response.statusText}`);
       }
       
     } catch (error) {
-      devLog('❌ Failed to send bug report:', error);
+      devLog('Failed to send bug report:', error);
       devLog('Error details:', {
         name: error.name,
         message: error.message,
@@ -265,7 +265,7 @@ export function useTelegram() {
       // Fallback: попробуем через Telegram Web App если доступно
       if (tg?.sendData) {
         try {
-          devLog('🔄 Trying Telegram Web App fallback...');
+          devLog('Trying Telegram Web App fallback...');
           const fallbackData = {
             type: 'bug_report',
             message: message,
@@ -276,15 +276,15 @@ export function useTelegram() {
           };
           
           tg.sendData(JSON.stringify(fallbackData));
-          devLog('✅ Sent via Telegram Web App');
+          devLog('Sent via Telegram Web App');
           return { success: true, method: 'telegram-webapp' };
         } catch (webAppError) {
-          devLog('❌ Telegram Web App fallback failed:', webAppError);
+          devLog('Telegram Web App fallback failed:', webAppError);
         }
       }
       
       // Окончательный fallback - логируем в консоль
-      devLog('⚠️ Bug report logged locally (all send methods failed)');
+      devLog('Bug report logged locally (all send methods failed)');
       devLog('Bug report (fallback):', { message, user: userInfo || user });
       return { success: true, method: 'console-log', fallback: true, error: error.message };
     }

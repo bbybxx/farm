@@ -78,7 +78,7 @@ exploreLocations.forEach(location => {
   const withRunecube = location.dropRates.find(dr => dr.runecube && !dr.manualFishing);
   
   if (!withoutRunecube || !withRunecube) {
-    console.log(`  ⚠️  Missing drop rate variants, skipping`);
+    console.log(`  Missing drop rate variants, skipping`);
     return;
   }
   
@@ -117,7 +117,7 @@ exploreLocations.forEach(location => {
   
   if (uniqueItems.size > 0) {
     dropRatesData[location.name] = locationData;
-    console.log(`  ✅ Added ${uniqueItems.size} items`);
+    console.log(`  Added ${uniqueItems.size} items`);
   }
 });
 
@@ -174,7 +174,7 @@ export default APPLE_CIDER_REAL_DROP_RATES;
 `;
 
 fs.writeFileSync(outputPath, jsContent, 'utf8');
-console.log(`✅ Saved apple-cider-real-drop-rates.js`);
+console.log(`Saved apple-cider-real-drop-rates.js`);
 
 // Also create the updated format (dropsPerCider)
 console.log('\nBuilding apple-cider-real-drop-rates-updated.js...');
@@ -230,7 +230,7 @@ export default APPLE_CIDER_REAL_DROP_RATES_UPGRADED;
 `;
 
 fs.writeFileSync(outputPathUpdated, jsContentUpdated, 'utf8');
-console.log(`✅ Saved apple-cider-real-drop-rates-updated.js`);
+console.log(`Saved apple-cider-real-drop-rates-updated.js`);
 
 // Summary
 console.log('\n=== Summary ===');
@@ -240,4 +240,4 @@ Object.values(dropRatesData).forEach(items => {
   totalItems += Object.keys(items).length;
 });
 console.log(`Total items with drop rates: ${totalItems}`);
-console.log('\n✅ Drop rates sync complete!');
+console.log('\nDrop rates sync complete!');

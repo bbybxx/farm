@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 
-const CACHE_NAME = 'craft-calculator-v2';
+const CACHE_NAME = 'craft-calculator-v3';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -11,9 +11,9 @@ const urlsToCache = [
 ];
 
 // Cache names for different types of content
-const STATIC_CACHE = 'craft-calculator-static-v2';
-const IMAGES_CACHE = 'craft-calculator-images-v2';
-const API_CACHE = 'craft-calculator-api-v2';
+const STATIC_CACHE = 'craft-calculator-static-v3';
+const IMAGES_CACHE = 'craft-calculator-images-v3';
+const API_CACHE = 'craft-calculator-api-v3';
 
 // All location images to pre-cache
 const LOCATION_IMAGES = [
@@ -135,6 +135,25 @@ self.addEventListener('fetch', (event) => {
 
   // Skip cross-origin requests
   if (!event.request.url.startsWith(self.location.origin)) {
+    return;
+  }
+
+  // Handle navigation requests (PWA pages) - always serve from cache first
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      caches.match('/index.html')
+        .then((response) => {
+          if (response) {
+            return response;
+          }
+          // If not cached, try to fetch from network
+          return fetch(event.request);
+        })
+        .catch(() => {
+          // If both cache and network fail, return cached index.html
+          return caches.match('/index.html');
+        })
+    );
     return;
   }
 

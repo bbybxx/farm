@@ -91,7 +91,7 @@ Write-Host "New in API: $($newRecipes.Count)"
 Write-Host "Removed from API: $($removedRecipes.Count)"
 
 if ($newRecipes.Count -eq 0 -and $removedRecipes.Count -eq 0) {
-    Write-Host "`n✅ Local file matches API perfectly!" -ForegroundColor Green
+    Write-Host "`nLocal file matches API perfectly!" -ForegroundColor Green
 } else {
-    Write-Host "`n⚠️ Differences found between API and local file" -ForegroundColor Yellow
+    Write-Host "`nDifferences found between API and local file" -ForegroundColor Yellow
 }

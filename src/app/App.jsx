@@ -270,6 +270,7 @@ export default function App() {
   const [modeOpen, setModeOpen] = useState(false)
   const [isPWA, setIsPWA] = useState(false)
   const itemSelectListRef = useRef(null)
+  const [isOffline, setIsOffline] = useState(false)
   
   const [craftChain, setCraftChain] = useState(() => {
     const storedChain = loadFromStorage('craftCalculator_craftChain', null)
@@ -874,6 +875,23 @@ export default function App() {
       }
     } catch (error) {
       console.error('Error detecting PWA mode:', error)
+    }
+  }, [])
+
+  // Detect online/offline status
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false)
+    const handleOffline = () => setIsOffline(true)
+
+    // Set initial state
+    setIsOffline(!navigator.onLine)
+
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
+
+    return () => {
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
     }
   }, [])
 
@@ -2731,7 +2749,14 @@ export default function App() {
           {/* PWA indicator */}
           {isPWA && (
             <div className="pwa-indicator" title="Running as PWA">
-              📱
+              PWA
+            </div>
+          )}
+
+          {/* Offline indicator */}
+          {isOffline && (
+            <div className="offline-indicator" title="Working offline - all data cached locally">
+              OFFLINE
             </div>
           )}
           

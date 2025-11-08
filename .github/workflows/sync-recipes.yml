@@ -50,7 +50,7 @@ jobs:
       - name: Summary
         run: |
           if [ "${{ steps.check_changes.outputs.changed }}" == "true" ]; then
-            echo "✅ Recipes synced and pushed to repository"
+            echo "Recipes synced and pushed to repository"
           else
-            echo "✅ Recipes are up to date, no changes needed"
+            echo "Recipes are up to date, no changes needed"
           fi

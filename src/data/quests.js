@@ -6,7 +6,7 @@ export const questChains = [
     id: 'getting-started',
     name: 'Getting Started',
     description: 'Learn the basics of farming',
-    icon: '🌱',
+    icon: 'plant',
     quests: [
       {
         id: 'first-steps',
@@ -95,7 +95,7 @@ export const questChains = [
     id: 'explorer',
     name: 'Explorer',
     description: 'Discover all locations in the game',
-    icon: '🗺️',
+    icon: 'map',
     quests: [
       {
         id: 'forest-scout',
@@ -139,7 +139,7 @@ export const questChains = [
     id: 'fishing',
     name: 'Master Angler',
     description: 'Become a fishing expert',
-    icon: '🎣',
+    icon: 'fishing',
     quests: [
       {
         id: 'first-catch',
@@ -184,7 +184,7 @@ export const questChains = [
     id: 'cooking',
     name: 'Master Chef',
     description: 'Master the culinary arts',
-    icon: '👨‍🍳',
+    icon: 'chef',
     quests: [
       {
         id: 'first-meal',

@@ -374,7 +374,7 @@ class RecipeUpdateService {
       runUpdate();
     }, 30 * 60 * 1000);
 
-    devLog('🚀 Автообновление рецептов запущено (проверка каждые 30 минут)');
+    devLog('Auto-update recipes started (check every 30 minutes)');
 
     return () => {
       if (this._intervalId) {

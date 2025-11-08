@@ -52,7 +52,7 @@ jobs:
           echo "### Quests Sync Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.check_changes.outputs.changed }}" == "true" ]; then
-            echo "✅ Quests data has been updated and committed" >> $GITHUB_STEP_SUMMARY
+            echo "Quests data has been updated and committed" >> $GITHUB_STEP_SUMMARY
           else
-            echo "ℹ️ No changes detected in quests data" >> $GITHUB_STEP_SUMMARY
+            echo "No changes detected in quests data" >> $GITHUB_STEP_SUMMARY
           fi

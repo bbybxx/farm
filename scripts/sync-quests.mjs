@@ -103,7 +103,7 @@ const questsData = {
 const questsApiPath = path.join(__dirname, '..', 'src', 'data', 'quests-api.json');
 fs.writeFileSync(questsApiPath, JSON.stringify(questsData, null, 4), 'utf8');
 
-console.log(`\n✓ Written ${questlines.length} questlines to quests-api.json`);
+console.log(`\nWritten ${questlines.length} questlines to quests-api.json`);
 
 // Count total quests
 let totalQuests = 0;
@@ -111,5 +111,5 @@ questlines.forEach(questline => {
   totalQuests += questline.steps?.length || 0;
 });
 
-console.log(`✓ Total quests: ${totalQuests}`);
+console.log(`Total quests: ${totalQuests}`);
 console.log('\n=== Sync Complete ===\n');

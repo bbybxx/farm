@@ -60,11 +60,11 @@ $itemsJson = $itemsApi | ConvertTo-Json -Depth 10
 [System.IO.File]::WriteAllText($recipesApiPath, $recipesJson, [System.Text.UTF8Encoding]::new($false))
 [System.IO.File]::WriteAllText($itemsApiPath, $itemsJson, [System.Text.UTF8Encoding]::new($false))
 
-Write-Host "✅ Saved recipes-api.json ($($recipesApi.Count) recipes)" -ForegroundColor Green
-Write-Host "✅ Saved items-api.json ($($itemsApi.Count) items)" -ForegroundColor Green
+Write-Host "Saved recipes-api.json ($($recipesApi.Count) recipes)" -ForegroundColor Green
+Write-Host "Saved items-api.json ($($itemsApi.Count) items)" -ForegroundColor Green
 
 # Summary
 Write-Host "`n=== Summary ===" -ForegroundColor Green
 Write-Host "Recipes synced: $($recipesApi.Count)"
 Write-Host "Items synced: $($itemsApi.Count)"
-Write-Host "`n✅ Sync complete!" -ForegroundColor Green
+Write-Host "`nSync complete!" -ForegroundColor Green

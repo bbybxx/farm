@@ -1,9 +1,9 @@
 PS C:\работа\craft-calculator> node get-basic-item-data.cjs
-🔍 Getting basic item data...
+Getting basic item data...
 
-📊 Found 1234 items
+Found 1234 items
 
-💎 MANUAL FISHING ONLY ITEMS (Golden Fish):
+MANUAL FISHING ONLY ITEMS (Golden Fish):
 - Gold Sea Bass (ID: 465, Price: 3000)
 - Gold Catfish (ID: 458, Price: 750)
 - Gold Flier (ID: 462, Price: 2500)
@@ -18,7 +18,7 @@ PS C:\работа\craft-calculator> node get-basic-item-data.cjs
 - Gold Coral (ID: 459, Price: 100000)
 - Goldgill (ID: 463, Price: 750)
 
-💰 HIGHEST VALUE ITEMS (TOP 30):
+HIGHEST VALUE ITEMS (TOP 30):
 1. Gainite: 2147483647 silver
 2. Concord Grape Pie: 25000000 silver
 3. Red Berry Pie: 20000000 silver
@@ -50,7 +50,7 @@ PS C:\работа\craft-calculator> node get-basic-item-data.cjs
 29. Large Clam Shell: 250000 silver
 30. Frost Shield: 250000 silver
 
-📈 VALUE DISTRIBUTION:
+VALUE DISTRIBUTION:
 Low value (0-10 silver): 8 items
 Medium value (10-50 silver): 23 items
 High value (50-100 silver): 22 items
@@ -555,14 +555,14 @@ Ultra rare (500+ silver): 497 items
    - Scrap Metal: 500 silver
    - Butter Churn: 500 silver
 
-⚠️ Items without sell price: 596
+Items without sell price: 596
 
-📊 SUMMARY STATISTICS:
+SUMMARY STATISTICS:
 Total items: 1234
 Items with sell price: 638
 Manual fishing only items: 13
 Average item price: 3504764.41 silver
 
-🔮 RUNECUBE EFFECT HYPOTHESIS:
+RUNECUBE EFFECT HYPOTHESIS:
 Low value items (< 50 silver): 31
 High value items (≥ 50 silver): 607

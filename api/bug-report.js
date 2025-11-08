@@ -62,12 +62,12 @@ export default async function handler(req, res) {
       const result = await new Promise((resolve, reject) => {
         form.parse(req, (err, parsedFields, parsedFiles) => {
           if (err) {
-            console.error('❌ Formidable parse error:', err);
+            console.error('Formidable parse error:', err);
             reject(err);
           } else {
-            console.log('✅ Formidable parsed successfully');
-            console.log('📦 Fields:', JSON.stringify(parsedFields, null, 2));
-            console.log('📦 Files structure:', JSON.stringify(
+            console.log('Formidable parsed successfully');
+            console.log('Fields:', JSON.stringify(parsedFields, null, 2));
+            console.log('Files structure:', JSON.stringify(
               Object.keys(parsedFiles || {}).reduce((acc, key) => {
                 const fileData = parsedFiles[key];
                 if (Array.isArray(fileData)) {
@@ -120,22 +120,22 @@ export default async function handler(req, res) {
     }
 
     // Format bug report message
-    let telegramMessage = `🐛 Bug Report\n\n`;
+    let telegramMessage = `Bug Report\n\n`;
     
     if (metadata.user) {
-      telegramMessage += `👤 User: ${metadata.user.first_name || 'Unknown'}`;
+      telegramMessage += `User: ${metadata.user.first_name || 'Unknown'}`;
       if (metadata.user.last_name) telegramMessage += ` ${metadata.user.last_name}`;
       if (metadata.user.username) telegramMessage += ` (@${metadata.user.username})`;
       telegramMessage += `\n`;
     }
     
-    telegramMessage += `⏰ Time: ${metadata.timestamp ? new Date(metadata.timestamp).toLocaleString() : new Date().toLocaleString()}\n`;
-    telegramMessage += `🌐 URL: ${metadata.url || 'N/A'}\n`;
-    telegramMessage += `📱 Platform: ${metadata.platform || 'Unknown'}\n`;
-    telegramMessage += `🖥️ Viewport: ${metadata.viewport || 'Unknown'}\n`;
-    telegramMessage += `🌍 Language: ${metadata.language || 'Unknown'}\n`;
-    telegramMessage += `📶 Online: ${metadata.onLine ? 'Yes' : 'No'}\n\n`;
-    telegramMessage += `📝 Report:\n${message.trim()}`;
+    telegramMessage += `Time: ${metadata.timestamp ? new Date(metadata.timestamp).toLocaleString() : new Date().toLocaleString()}\n`;
+    telegramMessage += `URL: ${metadata.url || 'N/A'}\n`;
+    telegramMessage += `Platform: ${metadata.platform || 'Unknown'}\n`;
+    telegramMessage += `Viewport: ${metadata.viewport || 'Unknown'}\n`;
+    telegramMessage += `Language: ${metadata.language || 'Unknown'}\n`;
+    telegramMessage += `Online: ${metadata.onLine ? 'Yes' : 'No'}\n\n`;
+    telegramMessage += `Report:\n${message.trim()}`;
 
     // Send files first if any
     // formidable v3+ returns files in format: { fieldName: File | File[] }
@@ -144,9 +144,9 @@ export default async function handler(req, res) {
     
     if (files.files) {
       uploadedFiles = Array.isArray(files.files) ? files.files : [files.files];
-      console.log('✅ Found files.files:', uploadedFiles.length);
+      console.log('Found files.files:', uploadedFiles.length);
     } else {
-      console.log('⚠️ files.files not found, checking all keys...');
+      console.log('files.files not found, checking all keys...');
       // Fallback: check all keys in files object
       Object.keys(files).forEach(key => {
         const fileOrFiles = files[key];
@@ -160,7 +160,7 @@ export default async function handler(req, res) {
       });
     }
     
-    console.log('📎 Total uploaded files to process:', uploadedFiles.length);
+    console.log('Total uploaded files to process:', uploadedFiles.length);
     
     if (uploadedFiles.length > 0) {
       const fs = await import('fs');
@@ -181,24 +181,24 @@ export default async function handler(req, res) {
           // Get filename from originalFilename or newFilename
           const filename = file.originalFilename || file.newFilename || 'file';
           
-          console.log(`📤 Uploading file: ${filename} (${file.size} bytes) to ${endpoint}`);
+          console.log(`Uploading file: ${filename} (${file.size} bytes) to ${endpoint}`);
           
           // Read file as Buffer
           const fileBuffer = fs.readFileSync(file.filepath);
-          console.log(`📦 Buffer created: ${fileBuffer.length} bytes`);
+          console.log(`Buffer created: ${fileBuffer.length} bytes`);
           
           // Create Blob from Buffer (for native FormData)
           const blob = new Blob([fileBuffer], { 
             type: file.mimetype || 'application/octet-stream' 
           });
-          console.log(`📦 Blob created: ${blob.size} bytes, type: ${blob.type}`);
+          console.log(`Blob created: ${blob.size} bytes, type: ${blob.type}`);
           
           // Use native FormData (Node.js 18+)
           const formData = new FormData();
           formData.append('chat_id', CHAT_ID);
           formData.append(fieldName, blob, filename);
           
-          console.log(`📋 FormData ready with ${fieldName} field`);
+          console.log(`FormData ready with ${fieldName} field`);
           
           const uploadResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/${endpoint}`, {
             method: 'POST',
@@ -206,13 +206,13 @@ export default async function handler(req, res) {
             // DON'T set Content-Type header - let fetch/FormData handle it automatically
           });
 
-          console.log(`📡 Upload response status: ${uploadResponse.status}`);
+          console.log(`Upload response status: ${uploadResponse.status}`);
           
           const responseText = await uploadResponse.text();
-          console.log(`📡 Upload response body length: ${responseText.length}`);
+          console.log(`Upload response body length: ${responseText.length}`);
           
           if (responseText.length > 0) {
-            console.log(`📡 Upload response text: ${responseText}`);
+            console.log(`Upload response text: ${responseText}`);
           }
           
           let uploadResult;
@@ -226,7 +226,7 @@ export default async function handler(req, res) {
           if (!uploadResult.ok) {
             console.error('Telegram upload failed:', uploadResult);
           } else {
-            console.log('✅ File uploaded successfully to Telegram');
+            console.log('File uploaded successfully to Telegram');
           }
 
           // Clean up temp file

@@ -15,7 +15,8 @@ export default function QuestsPanel({
   recentlyAddedItems,
   onItemClick,
   combinedRecipes,
-  getItemLocations
+  getItemLocations,
+  enableBuddyFarmLinks
 }) {
   const [selectedQuestline, setSelectedQuestline] = useState(null)
   const [selectedQuest, setSelectedQuest] = useState(null)
@@ -436,6 +437,7 @@ export default function QuestsPanel({
                                 itemName={name}
                                 itemsData={itemsData}
                                 size="medium"
+                                enableBuddyFarmLinks={enableBuddyFarmLinks}
                               >
                                 {isClickable && (
                                   <span className="craft-indicator">
@@ -487,6 +489,7 @@ export default function QuestsPanel({
                         itemName="Silver"
                         itemsData={itemsData}
                         size="medium"
+                        enableBuddyFarmLinks={enableBuddyFarmLinks}
                       />
                       <span style={{ 
                         fontSize: '16px', 
@@ -527,6 +530,7 @@ export default function QuestsPanel({
                           itemName={name}
                           itemsData={itemsData}
                           size="medium"
+                          enableBuddyFarmLinks={enableBuddyFarmLinks}
                         />
                         <span style={{ 
                           fontSize: '16px', 
@@ -548,6 +552,7 @@ export default function QuestsPanel({
                           itemName="Silver"
                           itemsData={itemsData}
                           size="medium"
+                          enableBuddyFarmLinks={enableBuddyFarmLinks}
                         />
                         <span style={{ 
                           fontSize: '16px', 
@@ -932,6 +937,7 @@ export default function QuestsPanel({
                           itemName={item.name}
                           itemsData={itemsData}
                           size="medium"
+                          enableBuddyFarmLinks={enableBuddyFarmLinks}
                         >
                           {isClickable && (
                             <span className="craft-indicator">
@@ -980,6 +986,7 @@ export default function QuestsPanel({
                       itemName="Silver"
                       itemsData={itemsData}
                       size="medium"
+                      enableBuddyFarmLinks={enableBuddyFarmLinks}
                     />
                     <span style={{ 
                       fontSize: '16px', 
@@ -1020,6 +1027,7 @@ export default function QuestsPanel({
                     itemName={item.name}
                     itemsData={itemsData}
                     size="medium"
+                    enableBuddyFarmLinks={enableBuddyFarmLinks}
                   />
                   <span style={{ 
                     fontSize: '16px', 
@@ -1041,6 +1049,7 @@ export default function QuestsPanel({
                     itemName="Silver"
                     itemsData={itemsData}
                     size="medium"
+                    enableBuddyFarmLinks={enableBuddyFarmLinks}
                   />
                   <span style={{ 
                     fontSize: '16px', 

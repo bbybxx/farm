@@ -869,6 +869,18 @@ export default function App() {
       const pwaMode = isPWA()
       setIsPWA(pwaMode)
       
+      // Cache all resources for offline use when in PWA mode
+      if (pwaMode) {
+        console.log('PWA detected, starting comprehensive resource caching...')
+        serviceWorkerRegistration.cacheAllResources()
+          .then(() => {
+            console.log('All resources cached successfully for offline use')
+          })
+          .catch((error) => {
+            console.error('Failed to cache resources:', error)
+          })
+      }
+      
       // Log for debugging
       if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {
         console.log('PWA mode detected:', pwaMode)

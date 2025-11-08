@@ -92,3 +92,29 @@ export function cacheImages(imageUrls) {
   }
 }
 
+// Cache all essential resources for offline use
+export function cacheAllResources() {
+  return new Promise((resolve, reject) => {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      const messageChannel = new MessageChannel();
+      
+      messageChannel.port1.onmessage = (event) => {
+        if (event.data && event.data.type === 'CACHING_COMPLETE') {
+          resolve();
+        }
+      };
+      
+      navigator.serviceWorker.controller.postMessage({
+        type: 'CACHE_ALL_RESOURCES'
+      }, [messageChannel.port2]);
+      
+      // Timeout after 30 seconds
+      setTimeout(() => {
+        reject(new Error('Caching timeout'));
+      }, 30000);
+    } else {
+      reject(new Error('Service worker not available'));
+    }
+  });
+}
+

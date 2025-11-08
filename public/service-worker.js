@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 
-const CACHE_NAME = 'craft-calculator-v4';
+const CACHE_NAME = 'craft-calculator-v5';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -22,9 +22,9 @@ const DATA_FILES = [
 ];
 
 // Cache names for different types of content
-const STATIC_CACHE = 'craft-calculator-static-v4';
-const IMAGES_CACHE = 'craft-calculator-images-v4';
-const API_CACHE = 'craft-calculator-api-v4';
+const STATIC_CACHE = 'craft-calculator-static-v5';
+const IMAGES_CACHE = 'craft-calculator-images-v5';
+const API_CACHE = 'craft-calculator-api-v5';
 
 // All location images to pre-cache
 const LOCATION_IMAGES = [
@@ -156,16 +156,20 @@ self.addEventListener('fetch', (event) => {
 
   // Handle navigation requests (PWA pages) - always serve from cache first
   if (event.request.mode === 'navigate') {
+    console.log('[ServiceWorker] Navigation request:', event.request.url);
     event.respondWith(
       caches.match('/index.html')
         .then((response) => {
           if (response) {
+            console.log('[ServiceWorker] Serving navigation from cache');
             return response;
           }
+          console.log('[ServiceWorker] Navigation not cached, fetching from network');
           // If not cached, try to fetch from network
           return fetch(event.request);
         })
-        .catch(() => {
+        .catch((error) => {
+          console.error('[ServiceWorker] Navigation fetch failed:', error);
           // If both cache and network fail, return cached index.html
           return caches.match('/index.html');
         })
@@ -173,7 +177,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Handle images - cache them aggressively
+  // Handle images - cache them aggressively with better error handling
   if (event.request.destination === 'image' ||
       url.pathname.includes('/locations_img/') ||
       url.pathname.includes('/img/')) {
@@ -181,17 +185,26 @@ self.addEventListener('fetch', (event) => {
       caches.match(event.request)
         .then((response) => {
           if (response) {
+            console.log('[ServiceWorker] Serving image from cache:', url.pathname);
             return response;
           }
 
+          console.log('[ServiceWorker] Fetching image from network:', url.pathname);
           return fetch(event.request).then((response) => {
-            if (response.status === 200) {
+            if (response && response.status === 200) {
               const responseClone = response.clone();
               caches.open(IMAGES_CACHE).then((cache) => {
                 cache.put(event.request, responseClone);
+                console.log('[ServiceWorker] Cached image:', url.pathname);
+              }).catch((error) => {
+                console.error('[ServiceWorker] Failed to cache image:', url.pathname, error);
               });
             }
             return response;
+          }).catch((error) => {
+            console.error('[ServiceWorker] Failed to fetch image:', url.pathname, error);
+            // Return a placeholder or fallback for missing images
+            return new Response('', { status: 404 });
           });
         })
     );
@@ -295,37 +308,65 @@ self.addEventListener('message', (event) => {
     );
   }
 
-  if (event.data && event.data.type === 'CACHE_ALL_IMAGES') {
-    // Cache all location images and common items for instant access
-    const allImagesToCache = [
+  if (event.data && event.data.type === 'CACHE_ALL_RESOURCES') {
+    console.log('[ServiceWorker] Starting comprehensive resource caching');
+    
+    // Cache all essential resources for offline use
+    const allResourcesToCache = [
+      // Data files
+      '/src/data/quests-api.json',
+      '/src/data/recipes-api.json', 
+      '/src/data/items-api.json',
+      '/src/data/quests.js',
+      '/src/data/recipes.json',
+      '/src/data/perks.json',
+      '/src/data/location-config.js',
+      '/src/data/apple-cider-real-drop-rates.js',
+      '/src/data/apple-cider-real-drop-rates-updated.js',
+      
+      // Location images
       ...LOCATION_IMAGES,
-      ...COMMON_ITEM_IMAGES,
-      // Add more images as needed
-      '/img/items/wine.png',
-      '/img/items/bread.png',
-      '/img/items/cheese.png',
-      '/img/items/milk.png',
-      '/img/items/egg.png',
-      '/img/items/flour.png',
-      '/img/items/honey.png'
+      
+      // Common item images
+      ...COMMON_ITEM_IMAGES
     ];
 
     event.waitUntil(
-      caches.open(IMAGES_CACHE).then((cache) => {
-        console.log('[ServiceWorker] Caching all images for instant access');
-        return Promise.allSettled(
-          allImagesToCache.map(url =>
-            fetch(url).then(response => {
-              if (response.ok) {
-                return cache.put(url, response);
-              }
-            }).catch(() => {
-              // Ignore failed fetches
-            })
-          )
-        ).then(() => {
-          console.log('[ServiceWorker] All images cached');
-        });
+      Promise.all([
+        // Cache data files
+        caches.open(API_CACHE).then(cache => {
+          console.log('[ServiceWorker] Caching all data files');
+          return Promise.allSettled(
+            allResourcesToCache.filter(url => url.includes('/data/') || url.endsWith('.json') || url.endsWith('.js')).map(url =>
+              fetch(url).then(response => {
+                if (response.ok) {
+                  console.log('[ServiceWorker] Cached data file:', url);
+                  return cache.put(url, response);
+                }
+              }).catch(error => console.error('[ServiceWorker] Failed to cache data file:', url, error))
+            )
+          );
+        }),
+        
+        // Cache images
+        caches.open(IMAGES_CACHE).then(cache => {
+          console.log('[ServiceWorker] Caching all images');
+          return Promise.allSettled(
+            allResourcesToCache.filter(url => url.includes('/img/') || url.includes('/locations_img/')).map(url =>
+              fetch(url).then(response => {
+                if (response.ok) {
+                  console.log('[ServiceWorker] Cached image:', url);
+                  return cache.put(url, response);
+                }
+              }).catch(error => console.error('[ServiceWorker] Failed to cache image:', url, error))
+            )
+          );
+        })
+      ]).then(() => {
+        console.log('[ServiceWorker] Comprehensive resource caching completed');
+        
+        // Notify client that caching is complete
+        event.ports[0]?.postMessage({ type: 'CACHING_COMPLETE' });
       })
     );
   }

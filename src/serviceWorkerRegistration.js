@@ -93,13 +93,15 @@ export function cacheImages(imageUrls) {
 }
 
 // Cache all essential resources for offline use
-export function cacheAllResources(itemImageUrls = []) {
+export function cacheAllResources(itemImageUrls = [], onProgress) {
   return new Promise((resolve, reject) => {
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       const messageChannel = new MessageChannel();
       
       messageChannel.port1.onmessage = (event) => {
-        if (event.data && event.data.type === 'CACHING_COMPLETE') {
+        if (event.data && event.data.type === 'CACHING_PROGRESS') {
+          onProgress && onProgress(event.data.progress);
+        } else if (event.data && event.data.type === 'CACHING_COMPLETE') {
           resolve();
         }
       };

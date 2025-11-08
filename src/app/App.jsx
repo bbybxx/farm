@@ -272,6 +272,7 @@ export default function App() {
   const itemSelectListRef = useRef(null)
   const [isOffline, setIsOffline] = useState(false)
   const [isCaching, setIsCaching] = useState(false)
+  const [cachingProgress, setCachingProgress] = useState(0)
   
   const [craftChain, setCraftChain] = useState(() => {
     const storedChain = loadFromStorage('craftCalculator_craftChain', null)
@@ -901,14 +902,18 @@ export default function App() {
           })
         }
         
-        serviceWorkerRegistration.cacheAllResources([...new Set(itemImageUrls)])
+        serviceWorkerRegistration.cacheAllResources([...new Set(itemImageUrls)], (progress) => {
+          setCachingProgress(progress)
+        })
           .then(() => {
             console.log('All resources cached successfully for offline use')
             setIsCaching(false)
+            setCachingProgress(0)
           })
           .catch((error) => {
             console.error('Failed to cache resources:', error)
             setIsCaching(false)
+            setCachingProgress(0)
           })
       }
       
@@ -2776,7 +2781,7 @@ export default function App() {
       </aside>
 
       <div className="main">
-  <header className={"glass header" + (headerVisible ? '' : ' hidden') + (isCaching ? ' caching' : '')}>
+  <header className={"glass header" + (headerVisible ? '' : ' hidden') + (isCaching ? ' caching' : '')} style={isCaching ? { '--caching-progress': `${cachingProgress}%` } : {}}>
           <button
             className="icon menu"
             ref={menuBtnRef}

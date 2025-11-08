@@ -278,19 +278,35 @@ self.addEventListener('message', (event) => {
       ...itemImageUrls
     ];
 
+    const dataFiles = allResourcesToCache.filter(url => url.includes('/data/') || url.endsWith('.json') || url.endsWith('.js'));
+    const imageFiles = allResourcesToCache.filter(url => url.includes('/img/') || url.includes('/locations_img/'));
+    const totalFiles = dataFiles.length + imageFiles.length;
+    let completedFiles = 0;
+
+    const updateProgress = () => {
+      completedFiles++;
+      const progress = Math.round((completedFiles / totalFiles) * 100);
+      event.ports[0]?.postMessage({ type: 'CACHING_PROGRESS', progress });
+    };
+
     event.waitUntil(
       Promise.all([
         // Cache data files
         caches.open(API_CACHE).then(cache => {
           console.log('[ServiceWorker] Caching all data files');
           return Promise.allSettled(
-            allResourcesToCache.filter(url => url.includes('/data/') || url.endsWith('.json') || url.endsWith('.js')).map(url =>
+            dataFiles.map(url =>
               fetch(url).then(response => {
                 if (response.ok) {
                   console.log('[ServiceWorker] Cached data file:', url);
-                  return cache.put(url, response);
+                  return cache.put(url, response).then(() => updateProgress());
+                } else {
+                  updateProgress();
                 }
-              }).catch(error => console.error('[ServiceWorker] Failed to cache data file:', url, error))
+              }).catch(error => {
+                console.error('[ServiceWorker] Failed to cache data file:', url, error);
+                updateProgress();
+              })
             )
           );
         }),
@@ -299,13 +315,18 @@ self.addEventListener('message', (event) => {
         caches.open(IMAGES_CACHE).then(cache => {
           console.log('[ServiceWorker] Caching all images');
           return Promise.allSettled(
-            allResourcesToCache.filter(url => url.includes('/img/') || url.includes('/locations_img/')).map(url =>
+            imageFiles.map(url =>
               fetch(url).then(response => {
                 if (response.ok) {
                   console.log('[ServiceWorker] Cached image:', url);
-                  return cache.put(url, response);
+                  return cache.put(url, response).then(() => updateProgress());
+                } else {
+                  updateProgress();
                 }
-              }).catch(error => console.error('[ServiceWorker] Failed to cache image:', url, error))
+              }).catch(error => {
+                console.error('[ServiceWorker] Failed to cache image:', url, error);
+                updateProgress();
+              })
             )
           );
         })

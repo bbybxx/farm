@@ -44,62 +44,6 @@ const LOCATION_IMAGES = [
   '/locations_img/Whispering_Creek.png'
 ];
 
-// Common item images to pre-cache (subset of most used)
-const COMMON_ITEM_IMAGES = [
-  '/img/items/feathers.png',
-  '/img/items/duckfeather.png',
-  '/img/items/ducky.png',
-  '/img/items/eggsandwich.png',
-  '/img/items/steak.png',
-  '/img/items/bacon.png',
-  '/img/items/cornbread.png',
-  '/img/items/applepie2.png',
-  '/img/items/goldapple2.png',
-  '/img/items/king_apple3.png',
-  '/img/items/king_apple_gold.png',
-  '/img/items/coal.png',
-  '/img/items/ironring.png',
-  '/img/items/goldring.png',
-  '/img/items/silver.png',
-  '/img/items/goldbar.png',
-  '/img/items/silverbar.png',
-  '/img/items/emerald.png',
-  '/img/items/ruby.png',
-  '/img/items/diamond.png',
-  '/img/items/pearl.png',
-  '/img/items/coral.png',
-  '/img/items/shell.png',
-  '/img/items/fish.png',
-  '/img/items/lobster.png',
-  '/img/items/crab.png',
-  '/img/items/shrimp.png',
-  '/img/items/octopus.png',
-  '/img/items/squid.png',
-  '/img/items/seahorse.png',
-  '/img/items/starfish.png',
-  '/img/items/jellyfish.png',
-  '/img/items/turtle.png',
-  '/img/items/dolphin.png',
-  '/img/items/shark.png',
-  '/img/items/whale.png',
-  '/img/items/clam.png',
-  '/img/items/oyster.png',
-  '/img/items/mussel.png',
-  '/img/items/scallop.png',
-  '/img/items/abalone.png',
-  '/img/items/conch.png',
-  '/img/items/whelk.png',
-  '/img/items/periwinkle.png',
-  '/img/items/limpet.png',
-  '/img/items/barnacle.png',
-  '/img/items/urchin.png',
-  '/img/items/anemone.png',
-  '/img/items/sponge.png',
-  '/img/items/seaweed.png',
-  '/img/items/kelp.png',
-  '/img/items/algae.png'
-];
-
 // Install event - cache essential files
 self.addEventListener('install', (event) => {
   console.log('[ServiceWorker] Install');
@@ -311,6 +255,9 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'CACHE_ALL_RESOURCES') {
     console.log('[ServiceWorker] Starting comprehensive resource caching');
     
+    // Get item image URLs from the message
+    const itemImageUrls = event.data.itemImageUrls || [];
+    
     // Cache all essential resources for offline use
     const allResourcesToCache = [
       // Data files
@@ -327,8 +274,8 @@ self.addEventListener('message', (event) => {
       // Location images
       ...LOCATION_IMAGES,
       
-      // Common item images
-      ...COMMON_ITEM_IMAGES
+      // Item images (passed from the app)
+      ...itemImageUrls
     ];
 
     event.waitUntil(

@@ -93,7 +93,7 @@ export function cacheImages(imageUrls) {
 }
 
 // Cache all essential resources for offline use
-export function cacheAllResources() {
+export function cacheAllResources(itemImageUrls = []) {
   return new Promise((resolve, reject) => {
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       const messageChannel = new MessageChannel();
@@ -105,7 +105,8 @@ export function cacheAllResources() {
       };
       
       navigator.serviceWorker.controller.postMessage({
-        type: 'CACHE_ALL_RESOURCES'
+        type: 'CACHE_ALL_RESOURCES',
+        itemImageUrls: itemImageUrls
       }, [messageChannel.port2]);
       
       // Timeout after 30 seconds

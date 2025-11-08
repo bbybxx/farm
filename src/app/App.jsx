@@ -874,7 +874,34 @@ export default function App() {
       if (pwaMode) {
         console.log('PWA detected, starting comprehensive resource caching...')
         setIsCaching(true)
-        serviceWorkerRegistration.cacheAllResources()
+        
+        // Collect all item image paths from items data
+        const itemImageUrls = []
+        if (itemsData) {
+          Object.values(itemsData).forEach(item => {
+            if (item.image && item.image.startsWith('/img/items/')) {
+              itemImageUrls.push(item.image)
+            }
+            if (item.imageFallback && item.imageFallback.startsWith('/img/items/')) {
+              itemImageUrls.push(item.imageFallback)
+            }
+            if (item.imageRemote && item.imageRemote.startsWith('/img/items/')) {
+              itemImageUrls.push(item.imageRemote)
+            }
+            if (item.imageLocal && item.imageLocal.startsWith('/img/items/')) {
+              itemImageUrls.push(item.imageLocal)
+            }
+            if (Array.isArray(item.imageSources)) {
+              item.imageSources.forEach(src => {
+                if (src && src.startsWith('/img/items/')) {
+                  itemImageUrls.push(src)
+                }
+              })
+            }
+          })
+        }
+        
+        serviceWorkerRegistration.cacheAllResources([...new Set(itemImageUrls)])
           .then(() => {
             console.log('All resources cached successfully for offline use')
             setIsCaching(false)

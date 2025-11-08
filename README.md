@@ -217,6 +217,37 @@ PWA configured in `public/manifest.json`:
 
 iOS PWA fixes for Dynamic Island in `src/styles/ios-pwa-fix.css`.
 
+### PWA Detection
+
+App automatically detects if running as PWA or in browser:
+
+```javascript
+// Check in browser console
+isPWA() // true/false
+getPWAMode() // detailed info
+```
+
+**PWA Features:**
+- 📱 **PWA Indicator** - Shows 📱 icon in header when running as PWA
+- 🖼️ **Image Caching** - All location images cached for offline use
+- 💾 **Offline Mode** - Full functionality without internet
+- 🔄 **Auto-updates** - Service worker handles updates
+
+**usePWA() Hook:**
+```javascript
+import { usePWA } from './App'
+
+function MyComponent() {
+  const isPWAMode = usePWA()
+  
+  return (
+    <div>
+      {isPWAMode ? 'Running as PWA' : 'Running in browser'}
+    </div>
+  )
+}
+```
+
 ## 📱 Usage
 
 ### Installing PWA

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react'
 import ItemDisplay from './ItemDisplay'
-import questsApiData from '../data/quests-api.json'
 import '../app/app.css'
+import questsApiData from '../data/quests-api.json'
 
 export default function QuestsPanel({ 
   itemsData, 
@@ -31,141 +31,137 @@ export default function QuestsPanel({
 
   // Load and transform quests data
   useEffect(() => {
-    const loadQuests = async () => {
-      try {
-        setLoading(true)
-        setError(null)
-        
-        const data = questsApiData
-        
-        // Transform API data to our format
-        const chains = (data.data?.questlines || []).map(questline => {
-          const steps = questline.steps || []
-          return {
-            id: String(questline.id),
-            name: questline.title,
-            image: questline.image,
-            automatic: questline.automatic,
-            quests: steps
-              .sort((a, b) => (a.order || 0) - (b.order || 0))
-              .map((step, index) => {
-                const quest = step.quest
-                const requirements = {
-                  levels: [],
-                  items: [],
-                  silver: 0
-                }
-                
-                // Parse level requirements
-                const levelMap = {
-                  requiredFarmingLevel: 'Farming',
-                  requiredFishingLevel: 'Fishing',
-                  requiredCraftingLevel: 'Crafting',
-                  requiredExploringLevel: 'Exploring',
-                  requiredCookingLevel: 'Cooking',
-                  requiredTowerLevel: 'Tower'
-                }
-                
-                Object.entries(levelMap).forEach(([key, skill]) => {
-                  if (quest[key] && quest[key] > 0) {
-                    requirements.levels.push({ skill, level: quest[key] })
-                  }
-                })
-                
-                // Parse item requirements
-                if (quest.requiredItems && Array.isArray(quest.requiredItems)) {
-                  quest.requiredItems.forEach(req => {
-                    if (req.item && req.quantity > 0) {
-                      requirements.items.push({
-                        name: req.item.name,
-                        quantity: req.quantity,
-                        image: req.item.image
-                      })
-                    }
-                  })
-                }
-                
-                if (quest.requiredSilver && quest.requiredSilver > 0) {
-                  requirements.silver = quest.requiredSilver
-                }
-                
-                // Parse rewards
-                const rewards = {
-                  items: [],
-                  silver: quest.rewardSilver || 0,
-                  xp: 0,
-                  gold: quest.rewardGold || 0
-                }
-                
-                if (quest.rewardItems && Array.isArray(quest.rewardItems)) {
-                  quest.rewardItems.forEach(rew => {
-                    if (rew.item && rew.quantity > 0) {
-                      rewards.items.push({
-                        name: rew.item.name,
-                        quantity: rew.quantity,
-                        image: rew.item.image
-                      })
-                    }
-                  })
-                }
-                
-                return {
-                  id: String(quest.id),
-                  name: quest.title,
-                  description: quest.cleanDescription || quest.description || '',
-                  npc: quest.npc,
-                  image: quest.image,
-                  requirements,
-                  rewards,
-                  order: step.order || index,
-                  prevQuestId: index > 0 ? String(steps[index - 1].quest.id) : null,
-                  nextQuestId: index < steps.length - 1 ? String(steps[index + 1].quest.id) : null
+    try {
+      setLoading(true)
+      setError(null)
+
+      const data = questsApiData
+
+      // Transform API data to our format
+      const chains = (data.data?.questlines || []).map(questline => {
+        const steps = questline.steps || []
+        return {
+          id: String(questline.id),
+          name: questline.title,
+          image: questline.image,
+          automatic: questline.automatic,
+          quests: steps
+            .sort((a, b) => (a.order || 0) - (b.order || 0))
+            .map((step, index) => {
+              const quest = step.quest
+              const requirements = {
+                levels: [],
+                items: [],
+                silver: 0
+              }
+
+              // Parse level requirements
+              const levelMap = {
+                requiredFarmingLevel: 'Farming',
+                requiredFishingLevel: 'Fishing',
+                requiredCraftingLevel: 'Crafting',
+                requiredExploringLevel: 'Exploring',
+                requiredCookingLevel: 'Cooking',
+                requiredTowerLevel: 'Tower'
+              }
+
+              Object.entries(levelMap).forEach(([key, skill]) => {
+                if (quest[key] && quest[key] > 0) {
+                  requirements.levels.push({ skill, level: quest[key] })
                 }
               })
-          }
-        })
-        
-        setQuestChains(chains)
-        
-        // Restore saved questline and quest, or auto-open "Feathers"
-        let restoredQuestline = null
-        let restoredQuest = null
-        
-        if (savedQuestlineId) {
-          restoredQuestline = chains.find(c => c.id === savedQuestlineId)
-          if (restoredQuestline && savedQuestId) {
-            restoredQuest = restoredQuestline.quests.find(q => q.id === savedQuestId)
-          }
+
+              // Parse item requirements
+              if (quest.requiredItems && Array.isArray(quest.requiredItems)) {
+                quest.requiredItems.forEach(req => {
+                  if (req.item && req.quantity > 0) {
+                    requirements.items.push({
+                      name: req.item.name,
+                      quantity: req.quantity,
+                      image: req.item.image
+                    })
+                  }
+                })
+              }
+
+              if (quest.requiredSilver && quest.requiredSilver > 0) {
+                requirements.silver = quest.requiredSilver
+              }
+
+              // Parse rewards
+              const rewards = {
+                items: [],
+                silver: quest.rewardSilver || 0,
+                xp: 0,
+                gold: quest.rewardGold || 0
+              }
+
+              if (quest.rewardItems && Array.isArray(quest.rewardItems)) {
+                quest.rewardItems.forEach(rew => {
+                  if (rew.item && rew.quantity > 0) {
+                    rewards.items.push({
+                      name: rew.item.name,
+                      quantity: rew.quantity,
+                      image: rew.item.image
+                    })
+                  }
+                })
+              }
+
+              return {
+                id: String(quest.id),
+                name: quest.title,
+                description: quest.cleanDescription || quest.description || '',
+                npc: quest.npc,
+                image: quest.image,
+                requirements,
+                rewards,
+                order: step.order || index,
+                prevQuestId: index > 0 ? String(steps[index - 1].quest.id) : null,
+                nextQuestId: index < steps.length - 1 ? String(steps[index + 1].quest.id) : null
+              }
+            })
         }
-        
-        // Fallback to "Feathers" questline if nothing saved
-        if (!restoredQuestline) {
-          restoredQuestline = chains.find(c => c.name === 'Feathers')
-          if (restoredQuestline && restoredQuestline.quests.length > 0) {
-            restoredQuest = restoredQuestline.quests[0]
-          }
+      })
+
+      setQuestChains(chains)
+
+      // Restore saved questline and quest, or auto-open "Feathers"
+      let restoredQuestline = null
+      let restoredQuest = null
+
+      if (savedQuestlineId) {
+        restoredQuestline = chains.find(c => c.id === savedQuestlineId)
+        if (restoredQuestline && savedQuestId) {
+          restoredQuest = restoredQuestline.quests.find(q => q.id === savedQuestId)
         }
-        
-        if (restoredQuestline) {
-          setSelectedQuestline(restoredQuestline)
-          if (restoredQuest) {
-            setSelectedQuest(restoredQuest)
-            setViewMode('quest')
-          } else {
-            setViewMode('questline')
-          }
-        }
-        
-        setLoading(false)
-      } catch (err) {
-        console.error('Failed to load quests:', err)
-        setError(err.message)
-        setLoading(false)
       }
+
+      // Fallback to "Feathers" questline if nothing saved
+      if (!restoredQuestline) {
+        restoredQuestline = chains.find(c => c.name === 'Feathers')
+        if (restoredQuestline && restoredQuestline.quests.length > 0) {
+          restoredQuest = restoredQuestline.quests[0]
+        }
+      }
+
+      if (restoredQuestline) {
+        setSelectedQuestline(restoredQuestline)
+        if (restoredQuest) {
+          setSelectedQuest(restoredQuest)
+          setViewMode('quest')
+        } else {
+          setViewMode('questline')
+        }
+      }
+
+      setLoading(false)
+    } catch (err) {
+      console.error('Failed to load quests:', err)
+      setError(err.message)
+      setLoading(false)
     }
-    
-    loadQuests()
-  }, [])
+  }, [savedQuestlineId, savedQuestId])
 
   // Scroll to selected questline when modal opens
   useEffect(() => {

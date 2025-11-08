@@ -9,13 +9,13 @@ const isLocalhost = Boolean(
 
 export function register(config) {
   if ('serviceWorker' in navigator) {
-    const publicUrl = new URL(process.env.PUBLIC_URL || '', window.location.href);
+    const publicUrl = new URL(import.meta.env.BASE_URL || '', window.location.href);
     if (publicUrl.origin !== window.location.origin) {
       return;
     }
 
     window.addEventListener('load', () => {
-      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+      const swUrl = `${import.meta.env.BASE_URL}/service-worker.js`;
 
       if (isLocalhost) {
         checkValidServiceWorker(swUrl, config);
@@ -79,6 +79,16 @@ export function unregister() {
         registration.unregister();
       })
       .catch((error) => {});
+  }
+}
+
+// Cache images for offline use
+export function cacheImages(imageUrls) {
+  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage({
+      type: 'CACHE_IMAGES',
+      urls: imageUrls
+    });
   }
 }
 

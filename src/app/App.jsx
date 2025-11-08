@@ -21,6 +21,8 @@ import itemsAPI from '../data/items-api.json' with { type: 'json' }
 import { normalizeItemsMap, normalizeItemRecord, areItemRecordsEqual } from '../utils/itemImageUtils.js'
 import './app.css'
 import LocationImage from '../components/LocationImage.jsx'
+import * as serviceWorkerRegistration from '../serviceWorkerRegistration'
+import { usePWA, isPWA } from '../hooks/usePWA'
 
 // Helper functions for localStorage
 let storageAvailabilityCache = null
@@ -266,6 +268,7 @@ export default function App() {
   const [isItemSelectOpen, setIsItemSelectOpen] = useState(false)
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   const [modeOpen, setModeOpen] = useState(false)
+  const [isPWA, setIsPWA] = useState(false)
   const itemSelectListRef = useRef(null)
   
   const [craftChain, setCraftChain] = useState(() => {
@@ -854,6 +857,78 @@ export default function App() {
     return () => document.removeEventListener('keydown', onKey)
   }, [])
 
+  // Detect PWA mode
+  useEffect(() => {
+    try {
+      if (typeof isPWA !== 'function') {
+        console.error('isPWA is not a function:', typeof isPWA)
+        return
+      }
+      
+      const pwaMode = isPWA()
+      setIsPWA(pwaMode)
+      
+      // Log for debugging
+      if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {
+        console.log('PWA mode detected:', pwaMode)
+      }
+    } catch (error) {
+      console.error('Error detecting PWA mode:', error)
+    }
+  }, [])
+
+  // Pre-load all images for instant access
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      const preloadImages = async () => {
+        try {
+          // Send message to service worker to cache all images
+          const registration = await navigator.serviceWorker.ready;
+          if (registration.active) {
+            registration.active.postMessage({
+              type: 'CACHE_ALL_IMAGES'
+            });
+          }
+        } catch (error) {
+          console.log('Service worker not ready for image preloading:', error);
+        }
+      };
+
+      // Delay preloading slightly to not block initial render
+      setTimeout(preloadImages, 1000);
+    }
+  }, [])
+
+  // Pre-load all data for instant access
+  useEffect(() => {
+    const preloadData = async () => {
+      try {
+        // Pre-load recipes data
+        if (!combinedRecipes || Object.keys(combinedRecipes).length === 0) {
+          const recipesModule = await import('../data/recipes-api.json');
+          const recipesData = recipesModule.default;
+          // Process recipes data here if needed
+          console.log('Recipes data pre-loaded');
+        }
+
+        // Pre-load items data
+        if (!itemsData || Object.keys(itemsData).length === 0) {
+          const itemsModule = await import('../data/items-api.json');
+          const itemsDataRaw = itemsModule.default;
+          // Process items data here if needed
+          console.log('Items data pre-loaded');
+        }
+
+        console.log('All data pre-loaded for instant access');
+      } catch (error) {
+        console.log('Data preloading failed:', error);
+      }
+    };
+
+    // Start preloading after a short delay
+    setTimeout(preloadData, 500);
+  }, [])
+
   useEffect(() => {
     saveToStorage('craftCalculator_useThousandsFormat', useThousandsFormat)
   }, [useThousandsFormat])
@@ -878,6 +953,38 @@ export default function App() {
       setSidebarActiveTab('perks')
     }
   }, [pinnedEnabled, historyEnabled, sidebarActiveTab])
+
+  // Cache images for offline use
+  useEffect(() => {
+    // Collect common location images that are likely to be used
+    const commonLocations = [
+      'Apple Cider',
+      'Forest',
+      'Small Cave',
+      'Highland Hills',
+      'Cane Pole Ridge',
+      'Ember Lagoon',
+      'Mount Banon',
+      'Jundland Desert',
+      'Black Rock Canyon',
+      'Whispering Creek',
+      'Misty Forest',
+      'Haunted House',
+      'Santa\'s Workshop'
+    ]
+
+    const imageUrls = commonLocations.map(location => `/locations_img/${location.replace(/\s+/g, '_').replace(/[’'`]/g, '').replace(/[^A-Za-z0-9_]/g, '')}.png`)
+
+    // Add logo and favicon
+    imageUrls.push('/logo192.png', '/logo512.png', '/favicon.ico')
+
+    // Cache images after a short delay to not interfere with initial load
+    const timer = setTimeout(() => {
+      serviceWorkerRegistration.cacheImages(imageUrls)
+    }, 2000)
+
+    return () => clearTimeout(timer)
+  }, [])
 
   // Pinned resources functions
   const addToPinned = (resourceName, quantity, parentRecipe = null, event = null) => {
@@ -2620,6 +2727,13 @@ export default function App() {
             aria-controls="perks-sidebar"
             aria-expanded={sidebarOpen}
           >≡</button>
+          
+          {/* PWA indicator */}
+          {isPWA && (
+            <div className="pwa-indicator" title="Running as PWA">
+              📱
+            </div>
+          )}
           
           <div className="craft-chain" onClick={(e) => e.stopPropagation()}>
             {/* Show breadcrumbs only when chain has more than one node; otherwise show current mode */}

@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 
-const CACHE_NAME = 'craft-calculator-v3';
+const CACHE_NAME = 'craft-calculator-v4';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -10,10 +10,21 @@ const urlsToCache = [
   '/logo512.png'
 ];
 
+// Data files to pre-cache for offline functionality
+const DATA_FILES = [
+  '/src/data/quests-api.json',
+  '/src/data/recipes-api.json',
+  '/src/data/items-api.json',
+  '/src/data/quests.js',
+  '/src/data/recipes.json',
+  '/src/data/perks.json',
+  '/src/data/location-config.js'
+];
+
 // Cache names for different types of content
-const STATIC_CACHE = 'craft-calculator-static-v3';
-const IMAGES_CACHE = 'craft-calculator-images-v3';
-const API_CACHE = 'craft-calculator-api-v3';
+const STATIC_CACHE = 'craft-calculator-static-v4';
+const IMAGES_CACHE = 'craft-calculator-images-v4';
+const API_CACHE = 'craft-calculator-api-v4';
 
 // All location images to pre-cache
 const LOCATION_IMAGES = [
@@ -96,8 +107,13 @@ self.addEventListener('install', (event) => {
     Promise.all([
       caches.open(STATIC_CACHE)
         .then((cache) => {
-          console.log('[ServiceWorker] Caching app shell');
+          console.log('[ServiceWorker] Pre-caching static assets');
           return cache.addAll(urlsToCache);
+        }),
+      caches.open(API_CACHE)
+        .then((cache) => {
+          console.log('[ServiceWorker] Pre-caching data files');
+          return cache.addAll(DATA_FILES);
         }),
       caches.open(IMAGES_CACHE)
         .then((cache) => {
@@ -173,6 +189,36 @@ self.addEventListener('fetch', (event) => {
               const responseClone = response.clone();
               caches.open(IMAGES_CACHE).then((cache) => {
                 cache.put(event.request, responseClone);
+              });
+            }
+            return response;
+          });
+        })
+    );
+    return;
+  }
+
+  // Handle JSON data files - cache aggressively for offline use
+  if (url.pathname.endsWith('.json') ||
+      url.pathname.includes('/data/') ||
+      url.pathname.includes('quests') ||
+      url.pathname.includes('recipes') ||
+      url.pathname.includes('items')) {
+    event.respondWith(
+      caches.match(event.request)
+        .then((response) => {
+          if (response) {
+            console.log('[ServiceWorker] Serving JSON from cache:', url.pathname);
+            return response;
+          }
+
+          console.log('[ServiceWorker] Fetching JSON from network:', url.pathname);
+          return fetch(event.request).then((response) => {
+            if (response.status === 200) {
+              const responseClone = response.clone();
+              caches.open(API_CACHE).then((cache) => {
+                cache.put(event.request, responseClone);
+                console.log('[ServiceWorker] Cached JSON file:', url.pathname);
               });
             }
             return response;

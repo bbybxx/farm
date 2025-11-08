@@ -271,6 +271,7 @@ export default function App() {
   const [isPWA, setIsPWA] = useState(false)
   const itemSelectListRef = useRef(null)
   const [isOffline, setIsOffline] = useState(false)
+  const [isCaching, setIsCaching] = useState(false)
   
   const [craftChain, setCraftChain] = useState(() => {
     const storedChain = loadFromStorage('craftCalculator_craftChain', null)
@@ -872,12 +873,15 @@ export default function App() {
       // Cache all resources for offline use when in PWA mode
       if (pwaMode) {
         console.log('PWA detected, starting comprehensive resource caching...')
+        setIsCaching(true)
         serviceWorkerRegistration.cacheAllResources()
           .then(() => {
             console.log('All resources cached successfully for offline use')
+            setIsCaching(false)
           })
           .catch((error) => {
             console.error('Failed to cache resources:', error)
+            setIsCaching(false)
           })
       }
       
@@ -2745,7 +2749,7 @@ export default function App() {
       </aside>
 
       <div className="main">
-  <header className={"glass header" + (headerVisible ? '' : ' hidden')}>
+  <header className={"glass header" + (headerVisible ? '' : ' hidden') + (isCaching ? ' caching' : '')}>
           <button
             className="icon menu"
             ref={menuBtnRef}

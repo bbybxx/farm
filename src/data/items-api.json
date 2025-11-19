@@ -8979,5 +8979,12 @@
     "image": "/img/items/zbuddy.png",
     "canCraft": false,
     "craftingLevel": 1
+  },
+  "Pearl Berry Jam": {
+    "name": "Pearl Berry Jam",
+    "type": "item",
+    "image": "/img/items/pbj.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

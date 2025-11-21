@@ -1164,7 +1164,7 @@
   "Bucket": {
     "name": "Bucket",
     "type": "item",
-    "image": "/img/items/8263.PNG",
+    "image": "/img/items/8263.PNG?1",
     "canCraft": true,
     "craftingLevel": 1
   },
@@ -8986,5 +8986,61 @@
     "image": "/img/items/pbj.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Fancy Sword": {
+    "name": "Fancy Sword",
+    "type": "item",
+    "image": "/img/items/fancysword.png",
+    "canCraft": true,
+    "craftingLevel": 52
+  },
+  "Leather Helmet": {
+    "name": "Leather Helmet",
+    "type": "item",
+    "image": "/img/items/afk_9140.png",
+    "canCraft": true,
+    "craftingLevel": 42
+  },
+  "Re'taw Pail": {
+    "name": "Re'taw Pail",
+    "type": "item",
+    "image": "/img/items/8263w.PNG?1",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Red Scarf": {
+    "name": "Red Scarf",
+    "type": "item",
+    "image": "/img/items/redscarf.png",
+    "canCraft": true,
+    "craftingLevel": 74
+  },
+  "Reinforced Helmet": {
+    "name": "Reinforced Helmet",
+    "type": "item",
+    "image": "/img/items/9096.png",
+    "canCraft": true,
+    "craftingLevel": 65
+  },
+  "Seashell Necklace": {
+    "name": "Seashell Necklace",
+    "type": "item",
+    "image": "/img/items/shell_necklace.png",
+    "canCraft": true,
+    "craftingLevel": 51
+  },
+  "Ship Mast": {
+    "name": "Ship Mast",
+    "type": "item",
+    "image": "/img/items/viri_4089.png",
+    "canCraft": true,
+    "craftingLevel": 85
+  },
+  "Spiky Bracelet": {
+    "name": "Spiky Bracelet",
+    "type": "item",
+    "image": "/img/items/5175.png",
+    "canCraft": true,
+    "craftingLevel": 70
   }
 }

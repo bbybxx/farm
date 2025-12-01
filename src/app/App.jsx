@@ -22,7 +22,7 @@ import { normalizeItemsMap, normalizeItemRecord, areItemRecordsEqual } from '../
 import './app.css'
 import LocationImage from '../components/LocationImage.jsx'
 import * as serviceWorkerRegistration from '../serviceWorkerRegistration'
-import { usePWA, isPWA } from '../hooks/usePWA'
+import { usePWA } from '../hooks/usePWA'
 
 // Helper functions for localStorage
 let storageAvailabilityCache = null
@@ -151,6 +151,110 @@ async function copyToClipboard(text) {
   }
 }
 
+// Global set to track which inputs are being actively edited (survives re-renders)
+const editingInputsSet = new Set()
+
+// Isolated input component with realtime updates via DOM manipulation
+const LocationItemInput = React.memo(function LocationItemInput({ 
+  itemName, 
+  display, 
+  onCommit,
+  onPreview,
+  formatNumber 
+}) {
+  const inputRef = useRef(null)
+  const lastSetValueRef = useRef(null) // Track last value we set via preview
+  
+  // On mount/update, restore value if it was set by preview (not React)
+  useEffect(() => {
+    if (inputRef.current && !editingInputsSet.has(itemName) && lastSetValueRef.current !== null) {
+      inputRef.current.value = lastSetValueRef.current
+    }
+  })
+  
+  const handleFocus = (e) => {
+    editingInputsSet.add(itemName)
+    // Set raw value without formatting for editing
+    const currentVal = display !== '—' ? String(display).replace(/\s/g, '') : ''
+    e.target.value = currentVal
+    lastSetValueRef.current = null // Clear preview value
+    setTimeout(() => e.target.select(), 0)
+  }
+
+  const handleChange = (e) => {
+    const val = e.target.value.replace(/\s/g, '')
+    console.log('handleChange called:', val)
+    if (val === '' || !isNaN(val)) {
+      const numVal = val === '' ? 0 : parseFloat(val)
+      if (!isNaN(numVal) && numVal > 0) {
+        // Call preview to update other fields without losing focus
+        console.log('calling onPreview:', itemName, numVal)
+        onPreview(itemName, numVal)
+      }
+    }
+  }
+
+  const handleBlur = (e) => {
+    editingInputsSet.delete(itemName)
+    const val = e.target.value.replace(/\s/g, '')
+    const numVal = val === '' ? 0 : parseFloat(val)
+    lastSetValueRef.current = null
+    
+    if (!isNaN(numVal) && numVal > 0) {
+      onCommit(itemName, numVal)
+    } else {
+      // Reset to display value and sync other fields
+      const resetVal = display !== '—' ? parseFloat(String(display).replace(/\s/g, '')) : 0
+      e.target.value = display !== '—' ? formatNumber(display) : ''
+      // Call preview with display value to sync other fields back
+      if (!isNaN(resetVal) && resetVal > 0) {
+        onPreview(itemName, resetVal)
+      }
+    }
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.target.blur()
+    } else if (e.key === 'Escape') {
+      e.target.value = display !== '—' ? formatNumber(display) : ''
+      editingInputsSet.delete(itemName)
+      lastSetValueRef.current = null
+      e.target.blur()
+    }
+  }
+  
+  // Store ref for external access (preview updates)
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current._lastSetValueRef = lastSetValueRef
+    }
+  }, [])
+
+  // Initial value
+  const initialValue = display !== '—' ? formatNumber(display) : ''
+
+  return (
+    <input
+      ref={inputRef}
+      type="text"
+      inputMode="decimal"
+      className="location-item-input"
+      defaultValue={initialValue}
+      data-item-name={itemName}
+      onChange={handleChange}
+      onClick={(e) => e.stopPropagation()}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
+      placeholder={display !== '—' ? formatNumber(display) : '0'}
+    />
+  )
+}, (prevProps, nextProps) => {
+  // Never re-render - we handle everything via DOM
+  return true
+})
+
 export default function App() {
   const [itemSelectFilter, setItemSelectFilter] = useState('')
   // Получаем объединенные рецепты (API + локальные)
@@ -268,12 +372,30 @@ export default function App() {
   const [isItemSelectOpen, setIsItemSelectOpen] = useState(false)
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   const [modeOpen, setModeOpen] = useState(false)
-  const [isPWA, setIsPWA] = useState(false)
   const itemSelectListRef = useRef(null)
   const [isOffline, setIsOffline] = useState(false)
   const [isCaching, setIsCaching] = useState(false)
   const [cachingProgress, setCachingProgress] = useState(0)
   
+  // PWA detection using hook
+  const isPWAMode = usePWA()
+  
+  // PWA caching logic
+  useEffect(() => {
+    if (isPWAMode) {
+      setIsCaching(true)
+      serviceWorkerRegistration.cacheAllResources((progress) => {
+        setCachingProgress(progress)
+      }).then(() => {
+        setIsCaching(false)
+        setCachingProgress(100)
+      }).catch((error) => {
+        console.error('Failed to cache resources:', error)
+        setIsCaching(false)
+      })
+    }
+  }, [isPWAMode])
+
   const [craftChain, setCraftChain] = useState(() => {
     const storedChain = loadFromStorage('craftCalculator_craftChain', null)
     if (storedChain && storedChain.length > 0) {
@@ -328,55 +450,15 @@ export default function App() {
   const [buddyFarmLinksEnabled, setBuddyFarmLinksEnabled] = useState(() => loadFromStorage('craftCalculator_buddyFarmLinksEnabled', false))
   const [isLocationConfigOpen, setIsLocationConfigOpen] = useState(false)
 
-  // Reverse-craft mode: when true the UI lists "source" resources and shows available crafts for the selected resource
-  const [reverseMode, setReverseMode] = useState(false)
   // Locations mode: show locations list and location-specific drops
   const [locationsMode, setLocationsMode] = useState(() => loadFromStorage('craftCalculator_locationsMode', false))
   const [selectedLocation, setSelectedLocation] = useState(() => loadFromStorage('craftCalculator_selectedLocation', 'Forest'))
   // Quests mode: show quests and quest chains
   const [questsMode, setQuestsMode] = useState(() => loadFromStorage('craftCalculator_questsMode', false))
-  // Target quantities for items in location mode (itemName -> targetQuantity)
-  const [locationItemTargets, setLocationItemTargets] = useState({})
-  // Track which item input is currently being edited
-  const [editingLocationItem, setEditingLocationItem] = useState(null)
-  // Remember last selection per mode (modeKey -> { item, amount, craftChain, selectedLocation })
-  const [lastSelectionByMode, setLastSelectionByMode] = useState(() => loadFromStorage('craftCalculator_lastSelectionByMode', {}))
-
-  const getModeKeyFor = (rev, loc, qst, exp) => {
-    const modeName = qst ? 'quests' : (loc ? 'locations' : (rev ? 'baseToCraft' : 'craftToBase'))
-    return `${modeName}|${exp || ''}`
-  }
-
-  const saveCurrentSelection = () => {
-    try {
-      const key = getModeKeyFor(reverseMode, locationsMode, questsMode, exploringMode)
-      const data = { item, amount, craftChain, selectedLocation }
-      setLastSelectionByMode(prev => {
-        const next = { ...(prev || {}), [key]: data }
-        try { saveToStorage('craftCalculator_lastSelectionByMode', next) } catch (e) {}
-        return next
-      })
-    } catch (e) {
-      // ignore
-    }
-  }
-
-  const restoreSelectionFor = (rev, loc, qst, exp) => {
-    try {
-      const key = getModeKeyFor(rev, loc, qst, exp)
-      const stored = loadFromStorage('craftCalculator_lastSelectionByMode', lastSelectionByMode || {})
-      const data = stored && stored[key]
-      if (data) {
-        if (data.item) setItem(data.item)
-        if (data.amount !== undefined) setAmount(data.amount)
-        if (data.craftChain) setCraftChain(data.craftChain)
-        if (data.selectedLocation) setSelectedLocation(data.selectedLocation)
-        return true
-      }
-    } catch (e) {}
-    return false
-  }
-  // Reverse-craft mode: debug instrumentation removed
+  
+  // Collapsible sections state for unified item view
+  const [resourcesSectionCollapsed, setResourcesSectionCollapsed] = useState(() => loadFromStorage('craftCalculator_resourcesSectionCollapsed', false))
+  const [usedInSectionCollapsed, setUsedInSectionCollapsed] = useState(() => loadFromStorage('craftCalculator_usedInSectionCollapsed', true))
 
   const locationsForConfig = useMemo(() => {
     try {
@@ -452,11 +534,21 @@ export default function App() {
     }
   }, [combinedRecipes])
 
-  const itemsForSelect = reverseMode ? sourceResources : items
+  // Items for select: show all items (both craftable and source resources)
+  const itemsForSelect = items
 
   useEffect(() => {
     saveToStorage('craftCalculator_locationsMode', locationsMode)
   }, [locationsMode])
+  
+  // Save collapsible section states
+  useEffect(() => {
+    saveToStorage('craftCalculator_resourcesSectionCollapsed', resourcesSectionCollapsed)
+  }, [resourcesSectionCollapsed])
+  
+  useEffect(() => {
+    saveToStorage('craftCalculator_usedInSectionCollapsed', usedInSectionCollapsed)
+  }, [usedInSectionCollapsed])
 
   useEffect(() => {
     saveToStorage('craftCalculator_selectedLocation', selectedLocation)
@@ -860,72 +952,6 @@ export default function App() {
     return () => document.removeEventListener('keydown', onKey)
   }, [])
 
-  // Detect PWA mode
-  useEffect(() => {
-    try {
-      if (typeof isPWA !== 'function') {
-        console.error('isPWA is not a function:', typeof isPWA)
-        return
-      }
-      
-      const pwaMode = isPWA()
-      setIsPWA(pwaMode)
-      
-      // Cache all resources for offline use when in PWA mode
-      if (pwaMode) {
-        console.log('PWA detected, starting comprehensive resource caching...')
-        setIsCaching(true)
-        
-        // Collect all item image paths from items data
-        const itemImageUrls = []
-        if (itemsData) {
-          Object.values(itemsData).forEach(item => {
-            if (item.image && item.image.startsWith('/img/items/')) {
-              itemImageUrls.push(item.image)
-            }
-            if (item.imageFallback && item.imageFallback.startsWith('/img/items/')) {
-              itemImageUrls.push(item.imageFallback)
-            }
-            if (item.imageRemote && item.imageRemote.startsWith('/img/items/')) {
-              itemImageUrls.push(item.imageRemote)
-            }
-            if (item.imageLocal && item.imageLocal.startsWith('/img/items/')) {
-              itemImageUrls.push(item.imageLocal)
-            }
-            if (Array.isArray(item.imageSources)) {
-              item.imageSources.forEach(src => {
-                if (src && src.startsWith('/img/items/')) {
-                  itemImageUrls.push(src)
-                }
-              })
-            }
-          })
-        }
-        
-        serviceWorkerRegistration.cacheAllResources([...new Set(itemImageUrls)], (progress) => {
-          setCachingProgress(progress)
-        })
-          .then(() => {
-            console.log('All resources cached successfully for offline use')
-            setIsCaching(false)
-            setCachingProgress(0)
-          })
-          .catch((error) => {
-            console.error('Failed to cache resources:', error)
-            setIsCaching(false)
-            setCachingProgress(0)
-          })
-      }
-      
-      // Log for debugging
-      if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {
-        console.log('PWA mode detected:', pwaMode)
-      }
-    } catch (error) {
-      console.error('Error detecting PWA mode:', error)
-    }
-  }, [])
-
   // Detect online/offline status
   useEffect(() => {
     const handleOnline = () => setIsOffline(false)
@@ -1039,7 +1065,20 @@ export default function App() {
       'Santa\'s Workshop'
     ]
 
-    const imageUrls = commonLocations.map(location => `/locations_img/${location.replace(/\s+/g, '_').replace(/[’'`]/g, '').replace(/[^A-Za-z0-9_]/g, '')}.png`)
+    // Get correct image URLs using the same logic as LocationImage component
+    let locationImagesMap = null
+    try {
+      const modules = import.meta.glob('/src/../locations_img/*.{png,jpg,jpeg,svg}', { eager: true, query: '?url', import: 'default' })
+      locationImagesMap = {}
+      Object.keys(modules).forEach(k => {
+        const fileName = k.split('/').pop()
+        locationImagesMap[fileName] = modules[k]
+      })
+    } catch (e) {
+      locationImagesMap = null
+    }
+
+    const imageUrls = commonLocations.map(location => `/locations_img/${location.replace(/\s+/g, '_').replace(/[''`]/g, '').replace(/[^A-Za-z0-9_]/g, '')}.png`)
 
     // Add logo and favicon
     imageUrls.push('/logo192.png', '/logo512.png', '/favicon.ico')
@@ -1184,16 +1223,14 @@ export default function App() {
       const locs = getItemLocations(resourceName) || []
       const hasLast = lastPinnedLocation && locs.some(l => l.name === lastPinnedLocation)
       
-      // Determine the origin mode
+      // Determine the origin mode (simplified: only 'craft', 'locations', 'quests', 'quick-pin')
       let originMode = 'quick-pin' // default for quick pin
       if (questsMode) {
         originMode = 'quests'
       } else if (locationsMode) {
         originMode = 'locations'
-      } else if (reverseMode) {
-        originMode = 'base-to-craft'
       } else {
-        originMode = 'craft-to-base'
+        originMode = 'craft'
       }
       
       const newEntry = {
@@ -1293,7 +1330,6 @@ export default function App() {
       // Then switch modes
       setQuestsMode(false)
       setLocationsMode(false)
-      setReverseMode(false)
     } else if (canFind) {
       // Switch to location mode with the best location
       // Find location with best drop rate
@@ -1325,11 +1361,7 @@ export default function App() {
       
       setQuestsMode(false)
       setLocationsMode(true)
-      setReverseMode(false)
       setSelectedLocation(bestLocation)
-      
-      // Set the target quantity for this specific item
-      setLocationItemTargets({ [itemName]: quantity })
       
       // Calculate required consumables based on target quantity
       handleLocationItemCommit(itemName, quantity)
@@ -1345,39 +1377,9 @@ export default function App() {
     }
   }, [isQuickPinModalOpen])
 
-  // Reset location item targets when location changes or leaving location mode
-  useEffect(() => {
-    setLocationItemTargets({})
-    setEditingLocationItem(null)
-  }, [selectedLocation, locationsMode])
-
-  // Recalculate all location item targets when amount changes (but not if user is editing)
-  useEffect(() => {
-    if (locationsMode && !editingLocationItem && selectedLocation) {
-      // Clear targets to force recalculation from amount
-      setLocationItemTargets({})
-    }
-  }, [amount, activePerks, exploringMode])
-
-  // Handle location item input change (just update the local state, don't recalculate amount yet)
-  const handleLocationItemInputChange = (itemName, value) => {
-    setLocationItemTargets(prev => ({
-      ...prev,
-      [itemName]: value
-    }))
-  }
-
-  // Handle location item blur or Enter - recalculate amount (consumables) based on desired item quantity
-  const handleLocationItemCommit = (itemName, targetQuantity) => {
-    setEditingLocationItem(null)
-    
+  // Handle location item commit - calculate and update amount based on target quantity
+  const handleLocationItemCommit = useCallback((itemName, targetQuantity) => {
     if (!targetQuantity || targetQuantity <= 0) {
-      // If empty or zero, just clear and recalculate from amount
-      setLocationItemTargets(prev => {
-        const next = { ...prev }
-        delete next[itemName]
-        return next
-      })
       return
     }
 
@@ -1424,7 +1426,100 @@ export default function App() {
     } catch (e) {
       console.error('Error calculating required amount:', e)
     }
-  }
+  }, [selectedLocation, activePerks, exploringMode])
+
+  // Preview handler - updates other fields via DOM without React re-render
+  const handleLocationItemPreview = useCallback((editingItemName, targetQuantity) => {
+    if (!targetQuantity || targetQuantity <= 0) return
+    
+    console.log('handleLocationItemPreview called:', editingItemName, targetQuantity)
+    
+    try {
+      // Calculate what amount would be needed
+      const perUnit = computePinnedEstimate(
+        { name: editingItemName, location: selectedLocation },
+        1,
+        activePerks,
+        exploringMode
+      )
+      
+      console.log('perUnit:', perUnit)
+      
+      let newAmount = null
+      if (exploringMode === 'Apple Cider' && perUnit && perUnit.mode === 'AC' && typeof perUnit.effectiveDropsPerCider === 'number') {
+        const dropsPerCider = perUnit.effectiveDropsPerCider
+        if (dropsPerCider > 0) {
+          newAmount = Math.ceil(targetQuantity / dropsPerCider)
+        }
+      } else if (exploringMode === 'Arnold Palmer' && perUnit && perUnit.mode === 'AP' && typeof perUnit.itemsPerAP === 'number') {
+        const itemsPerAP = perUnit.itemsPerAP
+        if (itemsPerAP > 0) {
+          newAmount = Math.ceil(targetQuantity / itemsPerAP)
+        }
+      }
+      
+      console.log('newAmount:', newAmount)
+      
+      if (newAmount === null) return
+      
+      // Get location data for calculating other items
+      const locObj = APPLE_CIDER_REAL_DROP_RATES.locations && APPLE_CIDER_REAL_DROP_RATES.locations[selectedLocation]
+      if (!locObj) return
+      
+      // Find all location-item-input elements and update them via DOM
+      const inputs = document.querySelectorAll('.location-item-input[data-item-name]')
+      console.log('Found inputs:', inputs.length)
+      
+      inputs.forEach(input => {
+        const itemName = input.dataset.itemName
+        console.log('Processing input:', itemName, 'editing:', editingInputsSet.has(itemName))
+        if (itemName === editingItemName) return // Skip the one being edited
+        if (editingInputsSet.has(itemName)) return // Skip if also being edited
+        
+        // Calculate new value for this item
+        try {
+          const itemPerUnit = computePinnedEstimate(
+            { name: itemName, location: selectedLocation },
+            1,
+            activePerks,
+            exploringMode
+          )
+          
+          let newValue = null
+          if (exploringMode === 'Apple Cider' && itemPerUnit && itemPerUnit.mode === 'AC' && typeof itemPerUnit.effectiveDropsPerCider === 'number') {
+            newValue = newAmount * itemPerUnit.effectiveDropsPerCider
+          } else if (exploringMode === 'Arnold Palmer' && itemPerUnit && itemPerUnit.mode === 'AP' && typeof itemPerUnit.itemsPerAP === 'number') {
+            newValue = newAmount * itemPerUnit.itemsPerAP
+          }
+          
+          console.log('Setting value for', itemName, ':', newValue)
+          if (newValue !== null) {
+            const formattedValue = formatNumber(roundToTwo(newValue))
+            input.value = formattedValue
+            // Store in ref so it survives React re-render
+            if (input._lastSetValueRef) {
+              input._lastSetValueRef.current = formattedValue
+            }
+            // Trigger update animation
+            input.classList.remove('value-updated')
+            void input.offsetWidth // Force reflow to restart animation
+            input.classList.add('value-updated')
+            console.log('Set to:', input.value)
+          }
+        } catch (e) {
+          console.error('Error for', itemName, e)
+        }
+      })
+      
+      // Also update the amount input field
+      const amountInput = document.querySelector('.amount-input')
+      if (amountInput) {
+        amountInput.value = formatNumber(newAmount)
+      }
+    } catch (e) {
+      console.error('Preview error:', e)
+    }
+  }, [selectedLocation, activePerks, exploringMode, formatNumber])
 
   // Save pinned resources to localStorage
 
@@ -2038,10 +2133,8 @@ export default function App() {
                               }, 0)
                             } else {
                               // Switch to quests mode
-                              saveCurrentSelection()
                               setQuestsMode(true)
                               setLocationsMode(false)
-                              setReverseMode(false)
                             }
                             
                             // Close sidebar on mobile
@@ -2412,16 +2505,16 @@ export default function App() {
                                   
                                   // Smart routing based on origin and capability
                                   
-                                  // If pinned from craft-to-base, base-to-craft, or locations - restore that mode with chain
+                                  // If pinned from craft or locations - restore that mode with chain
                                   if (pinnedItem.originMode === 'craft-to-base' || 
-                                      pinnedItem.originMode === 'base-to-craft' || 
+                                      pinnedItem.originMode === 'base-to-craft' ||
+                                      pinnedItem.originMode === 'craft' || 
                                       pinnedItem.originMode === 'locations') {
                                     
                                     // Restore the original mode first
                                     if (pinnedItem.originMode === 'locations') {
                                       setQuestsMode(false)
                                       setLocationsMode(true)
-                                      setReverseMode(false)
                                       if (pinnedItem.location) {
                                         setSelectedLocation(pinnedItem.location)
                                       }
@@ -2433,10 +2526,9 @@ export default function App() {
                                       } else {
                                         setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
                                       }
-                                      // In locations mode, we set locationItemTargets for the item quantity
+                                      // In locations mode, we calculate amount based on quantity
                                       // Use setTimeout to ensure state updates after mode switch
                                       setTimeout(() => {
-                                        setLocationItemTargets({ [pinnedItem.name]: pinnedItem.quantity })
                                         // Restore saved amount or recalculate
                                         if (pinnedItem.savedAmount !== undefined && pinnedItem.savedAmount !== null) {
                                           setAmount(pinnedItem.savedAmount)
@@ -2446,7 +2538,7 @@ export default function App() {
                                         }
                                       }, 0)
                                     } else {
-                                      // For craft-to-base and base-to-craft modes
+                                      // For craft modes (legacy craft-to-base, base-to-craft, and new 'craft')
                                       setItem(pinnedItem.name)
                                       setAmount(pinnedItem.quantity)
                                       
@@ -2457,31 +2549,23 @@ export default function App() {
                                         setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
                                       }
                                       
-                                      if (pinnedItem.originMode === 'base-to-craft') {
-                                        setQuestsMode(false)
-                                        setLocationsMode(false)
-                                        setReverseMode(true)
-                                      } else {
-                                        setQuestsMode(false)
-                                        setLocationsMode(false)
-                                        setReverseMode(false)
-                                      }
+                                      // All craft modes now use unified view
+                                      setQuestsMode(false)
+                                      setLocationsMode(false)
                                     }
                                   }
                                   // If pinned from quests or quick-pin - smart routing
                                   else {
-                                    // Priority: craft-to-base if craftable, otherwise locations if findable
+                                    // Priority: craft mode if craftable, otherwise locations if findable
                                     if (canCraft) {
                                       setItem(pinnedItem.name)
                                       setAmount(pinnedItem.quantity)
                                       setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
                                       setQuestsMode(false)
                                       setLocationsMode(false)
-                                      setReverseMode(false)
                                     } else if (canFind) {
                                       setQuestsMode(false)
                                       setLocationsMode(true)
-                                      setReverseMode(false)
                                       if (pinnedItem.location) {
                                         setSelectedLocation(pinnedItem.location)
                                       } else if (locations[0]) {
@@ -2490,9 +2574,8 @@ export default function App() {
                                       // Set item and craft chain
                                       setItem(pinnedItem.name)
                                       setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
-                                      // In locations mode, set locationItemTargets with a delay
+                                      // In locations mode, trigger recalculation with a delay
                                       setTimeout(() => {
-                                        setLocationItemTargets({ [pinnedItem.name]: pinnedItem.quantity })
                                         // Trigger recalculation of consumables needed
                                         handleLocationItemCommit(pinnedItem.name, pinnedItem.quantity)
                                       }, 0)
@@ -2795,7 +2878,7 @@ export default function App() {
           >≡</button>
           
           {/* PWA indicator */}
-          {isPWA && (
+          {isPWAMode && (
             <div className="pwa-indicator" title="Running as PWA">
               PWA
             </div>
@@ -2834,13 +2917,11 @@ export default function App() {
                           if (target && typeof target === 'object' && target.isPlaceholder) {
                             setQuestsMode(true)
                             setLocationsMode(false)
-                            setReverseMode(false)
                           }
                           // If this breadcrumb represents a location node, switch back into Locations mode
                           else if (target && typeof target === 'object' && target.isLocation) {
                             setQuestsMode(false)
                             setLocationsMode(true)
-                            setReverseMode(false)
                             setSelectedLocation(target.name)
                             
                             // Restore saved amount if available
@@ -2850,21 +2931,15 @@ export default function App() {
                             
                             // Restore the target item and quantity if saved
                             if (target.targetItem && target.targetQuantity) {
-                              setLocationItemTargets({ [target.targetItem]: target.targetQuantity })
                               // Don't call handleLocationItemCommit if we have savedAmount
                               if (target.savedAmount === undefined || target.savedAmount === null) {
                                 handleLocationItemCommit(target.targetItem, target.targetQuantity)
                               }
                             }
                           } else {
-                            // Regular craft mode navigation
-                            // If we came from locations mode, the chain represents base->craft (reverse) flow
-                            // Check if there's a location node in the chain to determine mode
-                            const hasLocationInChain = craftChain.some(n => n && typeof n === 'object' && n.isLocation)
-                            
+                            // Regular craft mode navigation - unified view shows both sections
                             setQuestsMode(false)
                             setLocationsMode(false)
-                            setReverseMode(hasLocationInChain) // Use reverse mode if came from locations
                             
                             const targetName = (typeof target === 'string') ? target : (target && target.name) || ''
                             const targetAmt = (typeof target === 'object' && target && target.amount) ? target.amount : 1
@@ -2909,7 +2984,7 @@ export default function App() {
               </nav>
             ) : (
               <div className="breadcrumb-mode" aria-label="Mode">
-                {questsMode ? 'Quests' : (locationsMode ? 'Locations' : (reverseMode ? 'Base to Craft' : 'Craft to Base'))}
+                {questsMode ? 'Quests' : (locationsMode ? 'Locations' : 'Crafts')}
               </div>
             )}
           </div>
@@ -2932,161 +3007,47 @@ export default function App() {
                     exit={{ opacity: 0, y: -6, scale: 0.98 }}
                     transition={{ duration: 0.12 }}
                   >
-                  {questsMode ? (
-                    // When in Quests mode: offer all other modes
-                    <>
+                    {/* Show only modes that are not currently active */}
+                    {(questsMode || locationsMode) && (
                       <button
-                        className={`mode-option`}
+                        className="mode-option"
                         type="button"
                         onClick={() => {
-                          saveCurrentSelection()
-                          setQuestsMode(false); setReverseMode(false); setLocationsMode(false); setModeOpen(false);
-                          if (!restoreSelectionFor(false, false, false, exploringMode)) {}
+                          setQuestsMode(false)
+                          setLocationsMode(false)
+                          setModeOpen(false)
                         }}
                       >
-                        Craft to Base
+                        Crafts
                       </button>
+                    )}
+                    {!locationsMode && (
                       <button
-                        className={`mode-option`}
+                        className="mode-option"
                         type="button"
                         onClick={() => {
-                          saveCurrentSelection()
-                          setQuestsMode(false); setReverseMode(true); setLocationsMode(false); setModeOpen(false);
-                          if (!restoreSelectionFor(true, false, false, exploringMode)) {}
-                        }}
-                      >
-                        Base to Craft
-                      </button>
-                      <button
-                        className={`mode-option`}
-                        type="button"
-                        onClick={() => {
-                          saveCurrentSelection()
-                          setQuestsMode(false); setLocationsMode(true); setReverseMode(false); setModeOpen(false);
-                          if (!restoreSelectionFor(false, true, false, exploringMode)) {
-                            if (!selectedLocation) setSelectedLocation('Forest')
-                          }
+                          setQuestsMode(false)
+                          setLocationsMode(true)
+                          setModeOpen(false)
+                          if (!selectedLocation) setSelectedLocation('Forest')
                         }}
                       >
                         Locations
                       </button>
-                    </>
-                  ) : locationsMode ? (
-                    // When on Locations page: offer both craft↔base options and Quests
-                    <>
+                    )}
+                    {!questsMode && (
                       <button
-                        className={`mode-option`}
+                        className="mode-option"
                         type="button"
                         onClick={() => {
-                          saveCurrentSelection()
-                          setQuestsMode(false); setReverseMode(false); setLocationsMode(false); setModeOpen(false);
-                          if (!restoreSelectionFor(false, false, false, exploringMode)) {}
-                        }}
-                      >
-                        Craft to Base
-                      </button>
-                      <button
-                        className={`mode-option`}
-                        type="button"
-                        onClick={() => {
-                          saveCurrentSelection()
-                          setQuestsMode(false); setReverseMode(true); setLocationsMode(false); setModeOpen(false);
-                          if (!restoreSelectionFor(true, false, false, exploringMode)) {}
-                        }}
-                      >
-                        Base to Craft
-                      </button>
-                      <button
-                        className={`mode-option`}
-                        type="button"
-                        onClick={() => {
-                          saveCurrentSelection()
-                          setQuestsMode(true); setLocationsMode(false); setReverseMode(false); setModeOpen(false);
-                          if (!restoreSelectionFor(false, false, true, exploringMode)) {}
+                          setQuestsMode(true)
+                          setLocationsMode(false)
+                          setModeOpen(false)
                         }}
                       >
                         Quests
                       </button>
-                    </>
-                  ) : reverseMode ? (
-                    // When on Base to Craft: offer Craft to Base, Locations and Quests
-                    <>
-                      <button
-                        className={`mode-option`}
-                        type="button"
-                        onClick={() => {
-                          saveCurrentSelection()
-                          setQuestsMode(false); setReverseMode(false); setLocationsMode(false); setModeOpen(false);
-                          if (!restoreSelectionFor(false, false, false, exploringMode)) {}
-                        }}
-                      >
-                        Craft to Base
-                      </button>
-                      <button
-                        className={`mode-option`}
-                        type="button"
-                        onClick={() => {
-                          saveCurrentSelection()
-                          setQuestsMode(false); setLocationsMode(true); setReverseMode(false); setModeOpen(false);
-                          if (!restoreSelectionFor(false, true, false, exploringMode)) {
-                            if (!selectedLocation) setSelectedLocation('Forest')
-                          }
-                        }}
-                      >
-                        Locations
-                      </button>
-                      <button
-                        className={`mode-option`}
-                        type="button"
-                        onClick={() => {
-                          saveCurrentSelection()
-                          setQuestsMode(true); setLocationsMode(false); setReverseMode(false); setModeOpen(false);
-                          if (!restoreSelectionFor(false, false, true, exploringMode)) {}
-                        }}
-                      >
-                        Quests
-                      </button>
-                    </>
-                  ) : (
-                    // Default (Craft to Base): offer Base to Craft, Locations and Quests
-                    <>
-                      <button
-                        className={`mode-option`}
-                        type="button"
-                        onClick={() => {
-                          saveCurrentSelection()
-                          setQuestsMode(false); setReverseMode(true); setLocationsMode(false); setModeOpen(false);
-                          if (!restoreSelectionFor(true, false, false, exploringMode)) {}
-                        }}
-                      >
-                        Base to Craft
-                      </button>
-                      <button
-                        className={`mode-option`}
-                        type="button"
-                        onClick={() => {
-                          saveCurrentSelection()
-                          setQuestsMode(false); setLocationsMode(true); setReverseMode(false); setModeOpen(false);
-                          if (!restoreSelectionFor(false, true, false, exploringMode)) {
-                            if (!selectedLocation) setSelectedLocation('Forest')
-                          }
-                        }}
-                      >
-                        Locations
-                      </button>
-                      <button
-                        className={`mode-option`}
-                        type="button"
-                        onClick={() => {
-                          saveCurrentSelection()
-                          setQuestsMode(true); setLocationsMode(false); setReverseMode(false); setModeOpen(false);
-                          if (!restoreSelectionFor(false, false, true, exploringMode)) {}
-                        }}
-                      >
-                        Quests
-                      </button>
-                    </>
-                  )}
+                    )}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -3128,7 +3089,7 @@ export default function App() {
             <label className="field">
             <span className="label">{locationsMode ? (exploringMode === 'Apple Cider' ? 'Apple Cider' : 'Arnold Palmer') : 'Amount'}</span>
             <input 
-              className="input" 
+              className="input amount-input" 
               type="text" 
               min={1} 
               max={9999999999999999}
@@ -3467,15 +3428,14 @@ export default function App() {
                       // clickable when item itself has a recipe OR there exist recipes that USE this drop as an ingredient
                       const craftable = isCraftable(it) || ((findRecipesThatUse(it) || []).length > 0)
                       return (
-                        <motion.li layout key={it} className="resource-item">
+                        <li key={it} className="resource-item">
                           <div
                             className={`resource-content ${craftable ? 'clickable' : ''}`}
                             onClick={() => {
                               if (!craftable) return
                               hapticFeedback('medium')
-                              // switch into Base → Craft (reverse) mode
+                              // switch to unified craft view
                               setLocationsMode(false)
-                              setReverseMode(true)
                               // choose reasonable amount: use computed numericValue (budget result) rounded down, fallback to 1
                               const parsed = numericValue != null && !Number.isNaN(Number(numericValue)) ? Number(numericValue) : null
                               const targetAmount = parsed && parsed >= 1 ? Math.max(1, Math.floor(parsed)) : 1
@@ -3503,59 +3463,12 @@ export default function App() {
                                 )}
                               </ItemDisplay>
                             </span>
-                            <input
-                              type="text"
-                              inputMode="decimal"
-                              className="location-item-input"
-                              value={
-                                editingLocationItem === it
-                                  ? (locationItemTargets[it] !== undefined ? locationItemTargets[it] : '')
-                                  : (locationItemTargets[it] !== undefined 
-                                      ? formatNumber(locationItemTargets[it]) 
-                                      : (display !== '—' ? formatNumber(display) : ''))
-                              }
-                              onChange={(e) => {
-                                e.stopPropagation()
-                                // Remove spaces for parsing
-                                const val = e.target.value.replace(/\s/g, '')
-                                if (val === '' || !isNaN(val)) {
-                                  handleLocationItemInputChange(it, val)
-                                }
-                              }}
-                              onClick={(e) => e.stopPropagation()}
-                              onFocus={(e) => {
-                                setEditingLocationItem(it)
-                                // Set raw value without formatting for editing
-                                const currentVal = locationItemTargets[it] !== undefined ? locationItemTargets[it] : display
-                                if (currentVal && currentVal !== '—') {
-                                  handleLocationItemInputChange(it, String(currentVal).replace(/\s/g, ''))
-                                }
-                                setTimeout(() => e.target.select(), 0)
-                              }}
-                              onBlur={(e) => {
-                                // Remove spaces for parsing
-                                const val = e.target.value.replace(/\s/g, '')
-                                const numVal = val === '' ? 0 : parseFloat(val)
-                                if (!isNaN(numVal)) {
-                                  handleLocationItemCommit(it, numVal)
-                                } else {
-                                  setEditingLocationItem(null)
-                                }
-                              }}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                  e.target.blur()
-                                } else if (e.key === 'Escape') {
-                                  setEditingLocationItem(null)
-                                  setLocationItemTargets(prev => {
-                                    const next = { ...prev }
-                                    delete next[it]
-                                    return next
-                                  })
-                                  e.target.blur()
-                                }
-                              }}
-                              placeholder={display !== '—' ? formatNumber(display) : '0'}
+                            <LocationItemInput
+                              itemName={it}
+                              display={display}
+                              onCommit={handleLocationItemCommit}
+                              onPreview={handleLocationItemPreview}
+                              formatNumber={formatNumber}
                             />
                           </div>
                           {pinnedEnabled && (
@@ -3577,218 +3490,262 @@ export default function App() {
                             })()
                           )}
                           
-                        </motion.li>
+                        </li>
                       )
                     })
                   })()}
                 </ul>
               </motion.section>
             )}
-            {!questsMode && !locationsMode && !reverseMode && result && Object.keys(result.filteredResources).length > 0 && (
-              <motion.section className="glass card">
-                <h2>Resources</h2>
-                <ul className="list">
-                  {(showAllBase ? Object.entries(result.filteredResources) : Object.entries(result.filteredResources).slice(0, 8)).map(([k, v]) => {
-                    const mailableItems = ['Acorn', 'Apple', 'Apple Cider', 'Aquamarine', 'Arnold Palmer', 'Arrowhead', 'Axe', 'Black Powder', 'Blue Dye', 'Blue Feathers', 'Bone', 'Bouquet of Flowers', 'Bucket', 'Carbon Sphere', 'Caterpillar', 'Coal', 'Eggs', 'Explosive', 'Feathers', 'Fern Leaf', 'Fire Ant', 'Fishing Net', 'Fruit Punch', 'Glass Orb', 'Grapes', 'Green Dye', 'Green Parchment', 'Grubs', 'Hammer', 'Heart Container', 'Hide', 'Horn', 'Iced Tea', 'Iron Cup', 'Ladder', 'Large Net', 'Leather', 'Leather Diary', 'Lemon', 'Lemonade', 'Milk', 'Minnows', 'Mushroom', 'Mushroom Paste', 'Oak', 'Old Boot', 'Orange', 'Orange Juice', 'Peach', 'Peach Juice', 'Potato', 'Purple Dye', 'Purple Flower', 'Purple Parchment', 'Red Dye', 'Rope', 'Scrap Metal', 'Scrap Wire', 'Shimmer Stone', 'Shovel', 'Slimestone', 'Spider', 'Stone', 'Twine', 'Unpolished Shimmer Stone', 'Wood', 'Wooden Box', 'Wooden Button', 'Wooden Table', 'Worms', 'Yarn']
-                    const isMailable = mailableItems.includes(k)
-                    const canCraft = isCraftable(k)
-                    const locations = getItemLocations(k)
-                    const canFind = locations && locations.length > 0
-                    const isClickable = canCraft || canFind
-                    
-                    return (
-                      <motion.li 
-                        layout 
-                        key={k}
-                        className="resource-item"
+            
+            {/* Unified Item View - shows both Resources (ingredients) and Used In (crafts) */}
+            {!questsMode && !locationsMode && (
+              <>
+                {/* Resources Section - What's needed to craft this item */}
+                {result && Object.keys(result.filteredResources).length > 0 && (
+                  <motion.section className="glass card">
+                    <h2 
+                      className="collapsible-header"
+                      onClick={() => setResourcesSectionCollapsed(!resourcesSectionCollapsed)}
+                      style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                    >
+                      <span>Resources</span>
+                      <svg 
+                        width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                        style={{ transform: resourcesSectionCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
                       >
-                        <div 
-                          className={`resource-content ${isClickable ? 'clickable' : ''}`}
-                          onClick={() => {
-                            if (canCraft) {
-                              handleResourceClick(k, v)
-                            } else if (canFind) {
-                              // Switch to location mode
-                              // Find best location
-                              let bestLocation = locations[0].name
-                              try {
-                                const estimate = computePinnedEstimate(
-                                  { name: k, quantity: 1 },
-                                  1,
-                                  activePerks,
-                                  exploringMode
-                                )
-                                if (estimate && estimate.location) {
-                                  bestLocation = estimate.location
-                                }
-                              } catch (e) {
-                                // Use first location as fallback
-                              }
-                              
-                              // Create craft chain
-                              const currentChain = craftChain.length > 0 ? [...craftChain] : [{ name: item, amount: amount }]
-                              setCraftChain([...currentChain, { 
-                                name: bestLocation, 
-                                amount: v, 
-                                isLocation: true,
-                                targetItem: k,
-                                targetQuantity: v
-                              }])
-                              
-                              setQuestsMode(false)
-                              setLocationsMode(true)
-                              setReverseMode(false)
-                              setSelectedLocation(bestLocation)
-                              
-                              // Set the target quantity for this specific item
-                              setLocationItemTargets({ [k]: v })
-                              
-                              // Calculate required consumables
-                              handleLocationItemCommit(k, v)
-                              
-                              hapticFeedback('light')
-                            }
-                          }}
-                          style={isClickable ? { cursor: 'pointer' } : {}}
-                          title={canCraft ? `Click to craft ${k}` : (canFind ? `Click to find ${k} in locations` : undefined)}
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </h2>
+                    <AnimatePresence>
+                      {!resourcesSectionCollapsed && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
                         >
-                          <span className="k">
-                            <ItemDisplay itemName={k} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled}>
-                              {isClickable && (
-                                <span className="craft-indicator">
-                                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                    <path 
-                                      d="M2 8L6 4L10 8" 
-                                      stroke="currentColor" 
-                                      strokeWidth="1.5" 
-                                      strokeLinecap="round" 
-                                      strokeLinejoin="round"
-                                    />
-                                  </svg>
-                                </span>
-                              )}
-                            </ItemDisplay>
-                          </span>
-                          <span className="v">{formatNumber(v)}</span>
-                        </div>
-                        {pinnedEnabled && (
-                          <button
-                            className={`pin-btn ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'success' : ''}`}
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              addToPinned(k, v, craftChain.length > 0 ? craftChain[0].name : item, e)
-                            }}
-                            type="button"
-                            title={`Pin ${k} from ${item}`}
-                          >
-                            <div className="pin-icon">
-                              <div 
-                                className={`pin-line pin-line-horizontal ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'checked' : ''}`}
-                              ></div>
-                              <div 
-                                className={`pin-line pin-line-vertical ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'checked' : ''}`}
-                              ></div>
-                            </div>
-                          </button>
-                        )}
-                      </motion.li>
-                    )
-                  })}
-                </ul>
-                {Object.keys(result.filteredResources).length > 8 && (
-                  <button className="link" onClick={() => setShowAllBase(s => !s)}>
-                    {showAllBase ? 'Show less' : `Show all (${Object.keys(result.filteredResources).length})`}
-                  </button>
-                )}
-              </motion.section>
-            )}
-
-            { reverseMode && (
-              <motion.section className="glass card">
-                <h2>Crafts</h2>
-                <ul className="list">
-                  {availableCrafts.length === 0 && (
-                    <li className="empty-state" style={{ padding: '12px 16px', color: '#9aa' }}>No crafts available for the current selection.</li>
-                  )}
-                  {availableCrafts.map(c => {
-                    const further = findRecipesThatUse(c.name) || []
-                    const canNavigate = further.length > 0
-                    return (
-                      <motion.li layout key={c.name} className="resource-item">
-                        <div 
-                          className={`resource-content ${canNavigate ? 'clickable' : ''}`}
-                          onClick={() => {
-                            if (!canNavigate) return
-                            // Determine the sensible amount for the new craft node: how many of this craft
-                            // can be made from the currently available ingredient amount (precomputed as craftableCount).
-                            const targetAmount = (typeof c.craftableCount === 'number') ? c.craftableCount : (Number(amount) || 1)
-
-                            // Add current navigation to craft history (same behavior as original mode)
-                            if (historyEnabled) {
-                              const historyEntry = {
-                                  id: Date.now(),
-                                  timestamp: new Date().toISOString(),
-                                  fromItem: item,
-                                  fromAmount: amount,
-                                  toItem: c.name,
-                                  toAmount: targetAmount,
-                                  chain: [...craftChain]
-                                }
-                              setCraftHistory(prev => [historyEntry, ...prev.slice(0, historyLimit - 1)])
-                            }
-
-                            // Navigate to the craft (select the crafted item)
-                            setItem(c.name)
-                            // Set amount to how many of the crafted item can be made from current resources
-                            setAmount(targetAmount)
-                            // Append crafted item to existing chain with the computed amount
-                            setCraftChain(prev => {
-                              // If prev already ends with the crafted item, keep as-is
-                              if (prev && prev.length > 0 && String(prev[prev.length - 1].name) === String(c.name)) return prev
-                              return [...prev, { name: c.name, amount: targetAmount }]
-                            })
-                          }}
-                          style={canNavigate ? { cursor: 'pointer' } : undefined}
-                          title={canNavigate ? `Open recipe for ${c.name}` : undefined}
-                        >
-                          <span className="k">
-                            <ItemDisplay itemName={c.name} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled}>
-                              {canNavigate && (
-                                <span className="craft-indicator">
-                                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                    <path d="M2 8L6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                  </svg>
-                                </span>
-                              )}
-                            </ItemDisplay>
-                          </span>
-                          <span className="v">{formatNumber(c.craftableCount != null ? c.craftableCount : 0)}</span>
-                        </div>
-
-                        {pinnedEnabled && (() => {
-                          // If we can compute how many crafts are available, pin the full available amount
-                          const qtyForCraftPin = (typeof c.craftableCount === 'number' && c.craftableCount > 0)
-                            ? Math.round(c.craftableCount * (c.outputQty || 1))
-                            : (c.outputQty || 1)
-                          return (
-                            <button
-                              className={`pin-btn ${recentlyAddedItems.has(`${c.name}_${qtyForCraftPin}_${item}`) ? 'success' : ''}`}
-                              onClick={(e) => { e.stopPropagation(); addToPinned(c.name, qtyForCraftPin, item) }}
-                              type="button"
-                              title={`Pin ${c.name}`}
-                            >
-                              <div className="pin-icon">
-                                <div className={`pin-line pin-line-horizontal ${recentlyAddedItems.has(`${c.name}_${qtyForCraftPin}_${item}`) ? 'checked' : ''}`}></div>
-                                <div className={`pin-line pin-line-vertical ${recentlyAddedItems.has(`${c.name}_${qtyForCraftPin}_${item}`) ? 'checked' : ''}`}></div>
-                              </div>
+                          <ul className="list">
+                            {(showAllBase ? Object.entries(result.filteredResources) : Object.entries(result.filteredResources).slice(0, 8)).map(([k, v]) => {
+                              const mailableItems = ['Acorn', 'Apple', 'Apple Cider', 'Aquamarine', 'Arnold Palmer', 'Arrowhead', 'Axe', 'Black Powder', 'Blue Dye', 'Blue Feathers', 'Bone', 'Bouquet of Flowers', 'Bucket', 'Carbon Sphere', 'Caterpillar', 'Coal', 'Eggs', 'Explosive', 'Feathers', 'Fern Leaf', 'Fire Ant', 'Fishing Net', 'Fruit Punch', 'Glass Orb', 'Grapes', 'Green Dye', 'Green Parchment', 'Grubs', 'Hammer', 'Heart Container', 'Hide', 'Horn', 'Iced Tea', 'Iron Cup', 'Ladder', 'Large Net', 'Leather', 'Leather Diary', 'Lemon', 'Lemonade', 'Milk', 'Minnows', 'Mushroom', 'Mushroom Paste', 'Oak', 'Old Boot', 'Orange', 'Orange Juice', 'Peach', 'Peach Juice', 'Potato', 'Purple Dye', 'Purple Flower', 'Purple Parchment', 'Red Dye', 'Rope', 'Scrap Metal', 'Scrap Wire', 'Shimmer Stone', 'Shovel', 'Slimestone', 'Spider', 'Stone', 'Twine', 'Unpolished Shimmer Stone', 'Wood', 'Wooden Box', 'Wooden Button', 'Wooden Table', 'Worms', 'Yarn']
+                              const isMailable = mailableItems.includes(k)
+                              const canCraft = isCraftable(k)
+                              const locations = getItemLocations(k)
+                              const canFind = locations && locations.length > 0
+                              const isClickable = canCraft || canFind
+                              
+                              return (
+                                <motion.li 
+                                  layout 
+                                  key={k}
+                                  className="resource-item"
+                                >
+                                  <div 
+                                    className={`resource-content ${isClickable ? 'clickable' : ''}`}
+                                    onClick={() => {
+                                      if (canCraft) {
+                                        handleResourceClick(k, v)
+                                      } else if (canFind) {
+                                        // Switch to location mode
+                                        // Find best location
+                                        let bestLocation = locations[0].name
+                                        try {
+                                          const estimate = computePinnedEstimate(
+                                            { name: k, quantity: 1 },
+                                            1,
+                                            activePerks,
+                                            exploringMode
+                                          )
+                                          if (estimate && estimate.location) {
+                                            bestLocation = estimate.location
+                                          }
+                                        } catch (e) {
+                                          // Use first location as fallback
+                                        }
+                                        
+                                        // Create craft chain
+                                        const currentChain = craftChain.length > 0 ? [...craftChain] : [{ name: item, amount: amount }]
+                                        setCraftChain([...currentChain, { 
+                                          name: bestLocation, 
+                                          amount: v, 
+                                          isLocation: true,
+                                          targetItem: k,
+                                          targetQuantity: v
+                                        }])
+                                        
+                                        setQuestsMode(false)
+                                        setLocationsMode(true)
+                                        setSelectedLocation(bestLocation)
+                                        
+                                        // Calculate required consumables
+                                        handleLocationItemCommit(k, v)
+                                        
+                                        hapticFeedback('light')
+                                      }
+                                    }}
+                                    style={isClickable ? { cursor: 'pointer' } : {}}
+                                    title={canCraft ? `Click to craft ${k}` : (canFind ? `Click to find ${k} in locations` : undefined)}
+                                  >
+                                    <span className="k">
+                                      <ItemDisplay itemName={k} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled}>
+                                        {isClickable && (
+                                          <span className="craft-indicator">
+                                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                              <path 
+                                                d="M2 8L6 4L10 8" 
+                                                stroke="currentColor" 
+                                                strokeWidth="1.5" 
+                                                strokeLinecap="round" 
+                                                strokeLinejoin="round"
+                                              />
+                                            </svg>
+                                          </span>
+                                        )}
+                                      </ItemDisplay>
+                                    </span>
+                                    <span className="v">{formatNumber(v)}</span>
+                                  </div>
+                                  {pinnedEnabled && (
+                                    <button
+                                      className={`pin-btn ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'success' : ''}`}
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        addToPinned(k, v, craftChain.length > 0 ? craftChain[0].name : item, e)
+                                      }}
+                                      type="button"
+                                      title={`Pin ${k} from ${item}`}
+                                    >
+                                      <div className="pin-icon">
+                                        <div 
+                                          className={`pin-line pin-line-horizontal ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'checked' : ''}`}
+                                        ></div>
+                                        <div 
+                                          className={`pin-line pin-line-vertical ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'checked' : ''}`}
+                                        ></div>
+                                      </div>
+                                    </button>
+                                  )}
+                                </motion.li>
+                              )
+                            })}
+                          </ul>
+                          {Object.keys(result.filteredResources).length > 8 && (
+                            <button className="link" onClick={() => setShowAllBase(s => !s)}>
+                              {showAllBase ? 'Show less' : `Show all (${Object.keys(result.filteredResources).length})`}
                             </button>
-                          )
-                        })()}
-                      </motion.li>
-                    )
-                  })}
-                </ul>
-              </motion.section>
+                          )}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.section>
+                )}
+
+                {/* Used In Section - What can be crafted from this item */}
+                {availableCrafts.length > 0 && (
+                  <motion.section className="glass card">
+                    <h2 
+                      className="collapsible-header"
+                      onClick={() => setUsedInSectionCollapsed(!usedInSectionCollapsed)}
+                      style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                    >
+                      <span>Used In</span>
+                      <svg 
+                        width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                        style={{ transform: usedInSectionCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+                      >
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </h2>
+                    <AnimatePresence>
+                      {!usedInSectionCollapsed && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <ul className="list">
+                            {availableCrafts.map(c => {
+                              const further = findRecipesThatUse(c.name) || []
+                              const canNavigate = further.length > 0
+                              return (
+                                <motion.li layout key={c.name} className="resource-item">
+                                  <div 
+                                    className={`resource-content ${canNavigate ? 'clickable' : ''}`}
+                                    onClick={() => {
+                                      if (!canNavigate) return
+                                      // Determine the sensible amount for the new craft node
+                                      const targetAmount = (typeof c.craftableCount === 'number') ? c.craftableCount : (Number(amount) || 1)
+
+                                      // Add current navigation to craft history
+                                      if (historyEnabled) {
+                                        const historyEntry = {
+                                            id: Date.now(),
+                                            timestamp: new Date().toISOString(),
+                                            fromItem: item,
+                                            fromAmount: amount,
+                                            toItem: c.name,
+                                            toAmount: targetAmount,
+                                            chain: [...craftChain]
+                                          }
+                                        setCraftHistory(prev => [historyEntry, ...prev.slice(0, historyLimit - 1)])
+                                      }
+
+                                      // Navigate to the craft
+                                      setItem(c.name)
+                                      setAmount(targetAmount)
+                                      setCraftChain(prev => {
+                                        if (prev && prev.length > 0 && String(prev[prev.length - 1].name) === String(c.name)) return prev
+                                        return [...prev, { name: c.name, amount: targetAmount }]
+                                      })
+                                    }}
+                                    style={canNavigate ? { cursor: 'pointer' } : undefined}
+                                    title={canNavigate ? `Open recipe for ${c.name}` : undefined}
+                                  >
+                                    <span className="k">
+                                      <ItemDisplay itemName={c.name} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled}>
+                                        {canNavigate && (
+                                          <span className="craft-indicator">
+                                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                              <path d="M2 8L6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                          </span>
+                                        )}
+                                      </ItemDisplay>
+                                    </span>
+                                    <span className="v">{formatNumber(c.craftableCount != null ? c.craftableCount : 0)}</span>
+                                  </div>
+
+                                  {pinnedEnabled && (() => {
+                                    const qtyForCraftPin = (typeof c.craftableCount === 'number' && c.craftableCount > 0)
+                                      ? Math.round(c.craftableCount * (c.outputQty || 1))
+                                      : (c.outputQty || 1)
+                                    return (
+                                      <button
+                                        className={`pin-btn ${recentlyAddedItems.has(`${c.name}_${qtyForCraftPin}_${item}`) ? 'success' : ''}`}
+                                        onClick={(e) => { e.stopPropagation(); addToPinned(c.name, qtyForCraftPin, item) }}
+                                        type="button"
+                                        title={`Pin ${c.name}`}
+                                      >
+                                        <div className="pin-icon">
+                                          <div className={`pin-line pin-line-horizontal ${recentlyAddedItems.has(`${c.name}_${qtyForCraftPin}_${item}`) ? 'checked' : ''}`}></div>
+                                          <div className={`pin-line pin-line-vertical ${recentlyAddedItems.has(`${c.name}_${qtyForCraftPin}_${item}`) ? 'checked' : ''}`}></div>
+                                        </div>
+                                      </button>
+                                    )
+                                  })()}
+                                </motion.li>
+                              )
+                            })}
+                          </ul>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.section>
+                )}
+              </>
             )}
           </motion.div>
         </AnimatePresence>

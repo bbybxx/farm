@@ -354,7 +354,7 @@ body {
 }
 
 .layout { display: grid; grid-template-columns: 1fr; gap: 8px; width: 100%; max-width: 100%; overflow-x: hidden; }
-.main { display: grid; gap: 8px; width: 100%; max-width: 100%; padding-top: 60px; overflow-x: hidden; }
+.main { display: grid; gap: 8px; width: 100%; max-width: 100%; padding-top: 52px; overflow-x: hidden; }
 .stack { 
   display: flex;
   flex-direction: column;
@@ -2758,4 +2758,20 @@ body.no-visual-scrollbar,
 
 .location-item-input::placeholder {
   color: rgba(255, 255, 255, 0.3);
+}
+
+/* Animation for value update */
+.location-item-input.value-updated {
+  animation: valueFlash 0.3s ease-out;
+}
+
+@keyframes valueFlash {
+  0% {
+    background: rgba(130, 180, 255, 0.25);
+    border-color: rgba(130, 180, 255, 0.4);
+  }
+  100% {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
 }

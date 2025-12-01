@@ -2877,12 +2877,7 @@ export default function App() {
             aria-expanded={sidebarOpen}
           >≡</button>
           
-          {/* PWA indicator */}
-          {isPWAMode && (
-            <div className="pwa-indicator" title="Running as PWA">
-              PWA
-            </div>
-          )}
+          {/* PWA indicator hidden intentionally (kept for caching logic) */}
 
           {/* Offline indicator */}
           {isOffline && (

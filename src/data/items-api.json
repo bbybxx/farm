@@ -17,7 +17,7 @@
     "name": "11th Leaf Centerpiece",
     "type": "item",
     "image": "/img/items/centerpiece.png",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 75
   },
   "25 Gold": {
@@ -1914,7 +1914,7 @@
     "name": "Christmas Tree",
     "type": "item",
     "image": "/img/items/cr_t_06_b.png?1",
-    "canCraft": false,
+    "canCraft": true,
     "craftingLevel": 30
   },
   "Chum": {
@@ -4525,7 +4525,7 @@
     "name": "Holiday Wreath",
     "type": "item",
     "image": "/img/items/wreath.png?2",
-    "canCraft": false,
+    "canCraft": true,
     "craftingLevel": 70
   },
   "Honey": {
@@ -7556,7 +7556,7 @@
     "name": "Snow Globe",
     "type": "item",
     "image": "/img/items/21_sm.png",
-    "canCraft": false,
+    "canCraft": true,
     "craftingLevel": 35
   },
   "Snow Shoes": {
@@ -7591,7 +7591,7 @@
     "name": "Snowman",
     "type": "item",
     "image": "/img/items/cr_t_08.png",
-    "canCraft": false,
+    "canCraft": true,
     "craftingLevel": 30
   },
   "Snowman Buddy Doll": {
@@ -8963,7 +8963,7 @@
     "name": "Yule Goat",
     "type": "item",
     "image": "/img/items/yulegoatsm.png",
-    "canCraft": false,
+    "canCraft": true,
     "craftingLevel": 82
   },
   "Zho's Dagger": {
@@ -9042,5 +9042,61 @@
     "image": "/img/items/5175.png",
     "canCraft": true,
     "craftingLevel": 70
+  },
+  "Box of Holiday Cakes": {
+    "name": "Box of Holiday Cakes",
+    "type": "item",
+    "image": "/img/items/treecakebox.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Buddy Elf on a Shelf": {
+    "name": "Buddy Elf on a Shelf",
+    "type": "item",
+    "image": "/img/items/belfonashelf.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Cotton Candy": {
+    "name": "Cotton Candy",
+    "type": "item",
+    "image": "/img/items/cottoncandy.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gingerbread Buddy Doll": {
+    "name": "Gingerbread Buddy Doll",
+    "type": "item",
+    "image": "/img/items/gingerbreadbuddydoll.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Holiday Cake": {
+    "name": "Holiday Cake",
+    "type": "item",
+    "image": "/img/items/treecake.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Holiday Cheer Bundle 01": {
+    "name": "Holiday Cheer Bundle 01",
+    "type": "item",
+    "image": "/img/items/holidaycheerbundle.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mini Marshmallows": {
+    "name": "Mini Marshmallows",
+    "type": "item",
+    "image": "/img/items/mms.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Ugly Buddy Sweater": {
+    "name": "Ugly Buddy Sweater",
+    "type": "item",
+    "image": "/img/items/ugly_sweater.png",
+    "canCraft": true,
+    "craftingLevel": 75
   }
 }

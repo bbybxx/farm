@@ -635,6 +635,68 @@ export default function App() {
     return recipe && (recipe.из || recipe.ingredients);
   }
 
+  // Check if an item has any content to show (recipe, used in recipes, or found at locations)
+  const hasItemContent = (itemName) => {
+    // Has its own recipe
+    if (isCraftable(itemName)) return true
+    // Is used as ingredient in other recipes
+    const usedIn = findRecipesThatUse(itemName) || []
+    if (usedIn.length > 0) return true
+    // Can be found at locations
+    const locations = getItemLocations(itemName) || []
+    if (locations.length > 0) return true
+    return false
+  }
+
+  // Unified navigation to item page - simplified click handler
+  const navigateToItem = (itemName, quantity = 1, source = null) => {
+    if (!hasItemContent(itemName)) return
+    
+    hapticFeedback('medium')
+    
+    // Add to history if enabled
+    if (historyEnabled && item && item !== itemName) {
+      const historyEntry = {
+        id: Date.now(),
+        timestamp: new Date().toISOString(),
+        fromItem: item,
+        fromAmount: amount,
+        toItem: itemName,
+        toAmount: quantity,
+        chain: [...craftChain]
+      }
+      setCraftHistory(prev => [historyEntry, ...prev.slice(0, historyLimit - 1)])
+    }
+    
+    // Set item and amount
+    setItem(itemName)
+    setAmount(quantity)
+    
+    // Build craft chain
+    if (source) {
+      // If source is a string (quest name, location name, etc.), create placeholder
+      if (typeof source === 'string') {
+        setCraftChain([
+          { name: source, amount: 1, isPlaceholder: true },
+          { name: itemName, amount: quantity }
+        ])
+      } else {
+        // Source is an object with more context
+        setCraftChain([source, { name: itemName, amount: quantity }])
+      }
+    } else if (craftChain.length > 0) {
+      // Append to existing chain
+      setCraftChain(prev => [...prev, { name: itemName, amount: quantity }])
+    } else {
+      // Start new chain
+      setCraftChain([{ name: itemName, amount: quantity }])
+    }
+    
+    // Always go to unified item view
+    setQuestsMode(false)
+    setLocationsMode(false)
+  }
+
   // Helper to round to two decimals
   const roundToTwo = (n) => {
     if (n === null || n === undefined || Number.isNaN(n)) return null
@@ -660,30 +722,9 @@ export default function App() {
     return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger
   }
 
-  // Function to handle clicking on a craftable resource
+  // Function to handle clicking on a resource - now uses unified navigation
   const handleResourceClick = (resourceName, quantity) => {
-    if (isCraftable(resourceName)) {
-      hapticFeedback('medium')
-      
-      // Add current item to history before navigating (only if history is enabled)
-      if (historyEnabled) {
-        const historyEntry = {
-          id: Date.now(),
-          timestamp: new Date().toISOString(),
-          fromItem: item,
-          fromAmount: amount,
-          toItem: resourceName,
-          toAmount: quantity,
-          chain: [...craftChain]
-        }
-        
-        setCraftHistory(prev => [historyEntry, ...prev.slice(0, historyLimit - 1)]) // Keep configured limit
-      }
-      
-      setItem(resourceName)
-      setAmount(quantity)
-      setCraftChain(prev => [...prev, { name: resourceName, amount: quantity }])
-    }
+    navigateToItem(resourceName, quantity)
   }
 
   // Breadcrumb navigation removed
@@ -1305,67 +1346,9 @@ export default function App() {
     setQuickPinQuantity('')
   }
 
-  // Handle item click from quests - switch to appropriate mode with item and quantity
+  // Handle item click from quests - uses unified navigation
   const handleQuestItemClick = (itemName, quantity, questName) => {
-    hapticFeedback('light')
-    
-    // Check if item can be crafted
-    const canCraft = combinedRecipes && combinedRecipes[itemName]
-    // Check if item can be found in locations
-    const locations = getItemLocations(itemName)
-    const canFind = locations && locations.length > 0
-    
-    if (canCraft) {
-      // Switch to craft mode with craft chain
-      // Create a two-element chain to show breadcrumb: quest name -> current item
-      // First set the item and chain
-      setItem(itemName)
-      setAmount(quantity)
-      // Add quest/questline name and the target item to make breadcrumb visible (needs 2+ elements)
-      setCraftChain([
-        { name: questName || 'Quests', amount: 1, isPlaceholder: true },
-        { name: itemName, amount: quantity }
-      ])
-      
-      // Then switch modes
-      setQuestsMode(false)
-      setLocationsMode(false)
-    } else if (canFind) {
-      // Switch to location mode with the best location
-      // Find location with best drop rate
-      let bestLocation = locations[0].name
-      let bestRate = 0
-      
-      try {
-        for (const loc of locations) {
-          const estimate = computePinnedEstimate(
-            { name: itemName, quantity: 1 },
-            1,
-            activePerks,
-            exploringMode
-          )
-          if (estimate && estimate.location === loc.name) {
-            bestLocation = loc.name
-            break
-          }
-        }
-      } catch (e) {
-        // Use first location as fallback
-      }
-      
-      // Create craft chain for location mode too
-      setCraftChain([
-        { name: questName || 'Quests', amount: 1, isPlaceholder: true },
-        { name: bestLocation, amount: quantity, isLocation: true, targetItem: itemName, targetQuantity: quantity }
-      ])
-      
-      setQuestsMode(false)
-      setLocationsMode(true)
-      setSelectedLocation(bestLocation)
-      
-      // Calculate required consumables based on target quantity
-      handleLocationItemCommit(itemName, quantity)
-    }
+    navigateToItem(itemName, quantity, questName || 'Quests')
   }
 
   // Reset Quick Pin filter when modal closes
@@ -2274,10 +2257,7 @@ export default function App() {
                                   </div>
                                   <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                                     {itemsArray.map(([itemName, quantity]) => {
-                                      const canCraft = combinedRecipes && combinedRecipes[itemName]
-                                      const locations = getItemLocations(itemName)
-                                      const canFind = locations && locations.length > 0
-                                      const isClickable = canCraft || canFind
+                                      const isClickable = hasItemContent(itemName)
 
                                       return (
                                         <div
@@ -2382,10 +2362,7 @@ export default function App() {
                                   </div>
                                   <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                                     {itemsArray.map(([itemName, quantity]) => {
-                                      const canCraft = combinedRecipes && combinedRecipes[itemName]
-                                      const locations = getItemLocations(itemName)
-                                      const canFind = locations && locations.length > 0
-                                      const isClickable = canCraft || canFind
+                                      const isClickable = hasItemContent(itemName)
 
                                       return (
                                         <div
@@ -2490,104 +2467,23 @@ export default function App() {
                         </button>
 
                         {(() => {
-                          // Check if item is clickable
-                          const canCraft = combinedRecipes && combinedRecipes[pinnedItem.name]
-                          const locations = getItemLocations(pinnedItem.name)
-                          const canFind = locations && locations.length > 0
-                          const isClickable = canCraft || canFind
+                          // Check if item has content to show
+                          const isClickable = hasItemContent(pinnedItem.name)
 
                           return (
                             <>
                               <div 
                                 className="pinned-card-content"
                                 onClick={() => {
-                                  if (!isClickable) return // Don't do anything if not clickable
+                                  if (!isClickable) return
                                   
-                                  // Smart routing based on origin and capability
-                                  
-                                  // If pinned from craft or locations - restore that mode with chain
-                                  if (pinnedItem.originMode === 'craft-to-base' || 
-                                      pinnedItem.originMode === 'base-to-craft' ||
-                                      pinnedItem.originMode === 'craft' || 
-                                      pinnedItem.originMode === 'locations') {
-                                    
-                                    // Restore the original mode first
-                                    if (pinnedItem.originMode === 'locations') {
-                                      setQuestsMode(false)
-                                      setLocationsMode(true)
-                                      if (pinnedItem.location) {
-                                        setSelectedLocation(pinnedItem.location)
-                                      }
-                                      // Set item to the pinned item name for context
-                                      setItem(pinnedItem.name)
-                                      // Set craft chain for proper tracking
-                                      if (pinnedItem.craftChain && pinnedItem.craftChain.length > 0) {
-                                        setCraftChain(pinnedItem.craftChain)
-                                      } else {
-                                        setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
-                                      }
-                                      // In locations mode, we calculate amount based on quantity
-                                      // Use setTimeout to ensure state updates after mode switch
-                                      setTimeout(() => {
-                                        // Restore saved amount or recalculate
-                                        if (pinnedItem.savedAmount !== undefined && pinnedItem.savedAmount !== null) {
-                                          setAmount(pinnedItem.savedAmount)
-                                        } else {
-                                          // Only recalculate if we don't have savedAmount
-                                          handleLocationItemCommit(pinnedItem.name, pinnedItem.quantity)
-                                        }
-                                      }, 0)
-                                    } else {
-                                      // For craft modes (legacy craft-to-base, base-to-craft, and new 'craft')
-                                      setItem(pinnedItem.name)
-                                      setAmount(pinnedItem.quantity)
-                                      
-                                      // Restore craft chain if it exists
-                                      if (pinnedItem.craftChain && pinnedItem.craftChain.length > 0) {
-                                        setCraftChain(pinnedItem.craftChain)
-                                      } else {
-                                        setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
-                                      }
-                                      
-                                      // All craft modes now use unified view
-                                      setQuestsMode(false)
-                                      setLocationsMode(false)
-                                    }
-                                  }
-                                  // If pinned from quests or quick-pin - smart routing
-                                  else {
-                                    // Priority: craft mode if craftable, otherwise locations if findable
-                                    if (canCraft) {
-                                      setItem(pinnedItem.name)
-                                      setAmount(pinnedItem.quantity)
-                                      setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
-                                      setQuestsMode(false)
-                                      setLocationsMode(false)
-                                    } else if (canFind) {
-                                      setQuestsMode(false)
-                                      setLocationsMode(true)
-                                      if (pinnedItem.location) {
-                                        setSelectedLocation(pinnedItem.location)
-                                      } else if (locations[0]) {
-                                        setSelectedLocation(locations[0].name)
-                                      }
-                                      // Set item and craft chain
-                                      setItem(pinnedItem.name)
-                                      setCraftChain([{ name: pinnedItem.name, amount: pinnedItem.quantity }])
-                                      // In locations mode, trigger recalculation with a delay
-                                      setTimeout(() => {
-                                        // Trigger recalculation of consumables needed
-                                        handleLocationItemCommit(pinnedItem.name, pinnedItem.quantity)
-                                      }, 0)
-                                    }
-                                  }
+                                  // Use unified navigation - always go to item page
+                                  navigateToItem(pinnedItem.name, pinnedItem.quantity, pinnedItem.parentRecipe || null)
                                   
                                   // Close sidebar on mobile
                                   if (window.innerWidth <= 768) {
                                     setSidebarOpen(false)
                                   }
-                                  
-                                  hapticFeedback('light')
                                 }}
                                 style={{ 
                                   cursor: isClickable ? 'pointer' : 'default',
@@ -3062,8 +2958,7 @@ export default function App() {
             addQuestToPinned={addQuestToPinned}
             recentlyAddedItems={recentlyAddedItems}
             onItemClick={handleQuestItemClick}
-            combinedRecipes={combinedRecipes}
-            getItemLocations={getItemLocations}
+            hasItemContent={hasItemContent}
           />
         ) : (
           <>
@@ -3420,36 +3315,29 @@ export default function App() {
                           }
                         }
                         if (display === null || display === undefined) display = '—'
-                      // clickable when item itself has a recipe OR there exist recipes that USE this drop as an ingredient
-                      const craftable = isCraftable(it) || ((findRecipesThatUse(it) || []).length > 0)
+                      // clickable when there is any content to show for this item
+                      const isClickable = hasItemContent(it)
+                      // compute target amount for navigation
+                      const parsed = numericValue != null && !Number.isNaN(Number(numericValue)) ? Number(numericValue) : null
+                      const targetAmount = parsed && parsed >= 1 ? Math.max(1, Math.floor(parsed)) : 1
                       return (
                         <li key={it} className="resource-item">
                           <div
-                            className={`resource-content ${craftable ? 'clickable' : ''}`}
+                            className={`resource-content ${isClickable ? 'clickable' : ''}`}
                             onClick={() => {
-                              if (!craftable) return
-                              hapticFeedback('medium')
-                              // switch to unified craft view
-                              setLocationsMode(false)
-                              // choose reasonable amount: use computed numericValue (budget result) rounded down, fallback to 1
-                              const parsed = numericValue != null && !Number.isNaN(Number(numericValue)) ? Number(numericValue) : null
-                              const targetAmount = parsed && parsed >= 1 ? Math.max(1, Math.floor(parsed)) : 1
-                              // capture current amount (what user had in Locations view) so we can restore it if user returns
-                              const savedAmountForLocation = amount
-                              // include the selected location as the first node so breadcrumbs show source and remember the prior amount
-                              const locNode = selectedLocation ? { name: selectedLocation, isLocation: true, savedAmount: savedAmountForLocation } : null
-                              const baseNode = { name: it, amount: targetAmount }
-                              setCraftChain(locNode ? [locNode, baseNode] : [baseNode])
-                              // navigate to the craft target
-                              setItem(it)
-                              setAmount(targetAmount)
+                              if (!isClickable) return
+                              // create location source node for breadcrumbs
+                              const locNode = selectedLocation 
+                                ? { name: selectedLocation, isLocation: true, savedAmount: amount } 
+                                : null
+                              navigateToItem(it, targetAmount, locNode)
                             }}
-                            style={craftable ? { cursor: 'pointer' } : undefined}
-                            title={craftable ? `Open crafts that use ${it}` : undefined}
+                            style={isClickable ? { cursor: 'pointer' } : undefined}
+                            title={isClickable ? `View ${it}` : undefined}
                           >
                             <span className="k">
                               <ItemDisplay itemName={it} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled}>
-                                {craftable && (
+                                {isClickable && (
                                   <span className="craft-indicator">
                                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                                       <path d="M2 8L6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -3525,10 +3413,7 @@ export default function App() {
                             {(showAllBase ? Object.entries(result.filteredResources) : Object.entries(result.filteredResources).slice(0, 8)).map(([k, v]) => {
                               const mailableItems = ['Acorn', 'Apple', 'Apple Cider', 'Aquamarine', 'Arnold Palmer', 'Arrowhead', 'Axe', 'Black Powder', 'Blue Dye', 'Blue Feathers', 'Bone', 'Bouquet of Flowers', 'Bucket', 'Carbon Sphere', 'Caterpillar', 'Coal', 'Eggs', 'Explosive', 'Feathers', 'Fern Leaf', 'Fire Ant', 'Fishing Net', 'Fruit Punch', 'Glass Orb', 'Grapes', 'Green Dye', 'Green Parchment', 'Grubs', 'Hammer', 'Heart Container', 'Hide', 'Horn', 'Iced Tea', 'Iron Cup', 'Ladder', 'Large Net', 'Leather', 'Leather Diary', 'Lemon', 'Lemonade', 'Milk', 'Minnows', 'Mushroom', 'Mushroom Paste', 'Oak', 'Old Boot', 'Orange', 'Orange Juice', 'Peach', 'Peach Juice', 'Potato', 'Purple Dye', 'Purple Flower', 'Purple Parchment', 'Red Dye', 'Rope', 'Scrap Metal', 'Scrap Wire', 'Shimmer Stone', 'Shovel', 'Slimestone', 'Spider', 'Stone', 'Twine', 'Unpolished Shimmer Stone', 'Wood', 'Wooden Box', 'Wooden Button', 'Wooden Table', 'Worms', 'Yarn']
                               const isMailable = mailableItems.includes(k)
-                              const canCraft = isCraftable(k)
-                              const locations = getItemLocations(k)
-                              const canFind = locations && locations.length > 0
-                              const isClickable = canCraft || canFind
+                              const isClickable = hasItemContent(k)
                               
                               return (
                                 <motion.li 
@@ -3539,48 +3424,11 @@ export default function App() {
                                   <div 
                                     className={`resource-content ${isClickable ? 'clickable' : ''}`}
                                     onClick={() => {
-                                      if (canCraft) {
-                                        handleResourceClick(k, v)
-                                      } else if (canFind) {
-                                        // Switch to location mode
-                                        // Find best location
-                                        let bestLocation = locations[0].name
-                                        try {
-                                          const estimate = computePinnedEstimate(
-                                            { name: k, quantity: 1 },
-                                            1,
-                                            activePerks,
-                                            exploringMode
-                                          )
-                                          if (estimate && estimate.location) {
-                                            bestLocation = estimate.location
-                                          }
-                                        } catch (e) {
-                                          // Use first location as fallback
-                                        }
-                                        
-                                        // Create craft chain
-                                        const currentChain = craftChain.length > 0 ? [...craftChain] : [{ name: item, amount: amount }]
-                                        setCraftChain([...currentChain, { 
-                                          name: bestLocation, 
-                                          amount: v, 
-                                          isLocation: true,
-                                          targetItem: k,
-                                          targetQuantity: v
-                                        }])
-                                        
-                                        setQuestsMode(false)
-                                        setLocationsMode(true)
-                                        setSelectedLocation(bestLocation)
-                                        
-                                        // Calculate required consumables
-                                        handleLocationItemCommit(k, v)
-                                        
-                                        hapticFeedback('light')
-                                      }
+                                      if (!isClickable) return
+                                      navigateToItem(k, v)
                                     }}
                                     style={isClickable ? { cursor: 'pointer' } : {}}
-                                    title={canCraft ? `Click to craft ${k}` : (canFind ? `Click to find ${k} in locations` : undefined)}
+                                    title={isClickable ? `View ${k}` : undefined}
                                   >
                                     <span className="k">
                                       <ItemDisplay itemName={k} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled}>
@@ -3663,45 +3511,22 @@ export default function App() {
                         >
                           <ul className="list">
                             {availableCrafts.map(c => {
-                              const further = findRecipesThatUse(c.name) || []
-                              const canNavigate = further.length > 0
+                              const isClickable = hasItemContent(c.name)
+                              const targetAmount = (typeof c.craftableCount === 'number') ? c.craftableCount : (Number(amount) || 1)
                               return (
                                 <motion.li layout key={c.name} className="resource-item">
                                   <div 
-                                    className={`resource-content ${canNavigate ? 'clickable' : ''}`}
+                                    className={`resource-content ${isClickable ? 'clickable' : ''}`}
                                     onClick={() => {
-                                      if (!canNavigate) return
-                                      // Determine the sensible amount for the new craft node
-                                      const targetAmount = (typeof c.craftableCount === 'number') ? c.craftableCount : (Number(amount) || 1)
-
-                                      // Add current navigation to craft history
-                                      if (historyEnabled) {
-                                        const historyEntry = {
-                                            id: Date.now(),
-                                            timestamp: new Date().toISOString(),
-                                            fromItem: item,
-                                            fromAmount: amount,
-                                            toItem: c.name,
-                                            toAmount: targetAmount,
-                                            chain: [...craftChain]
-                                          }
-                                        setCraftHistory(prev => [historyEntry, ...prev.slice(0, historyLimit - 1)])
-                                      }
-
-                                      // Navigate to the craft
-                                      setItem(c.name)
-                                      setAmount(targetAmount)
-                                      setCraftChain(prev => {
-                                        if (prev && prev.length > 0 && String(prev[prev.length - 1].name) === String(c.name)) return prev
-                                        return [...prev, { name: c.name, amount: targetAmount }]
-                                      })
+                                      if (!isClickable) return
+                                      navigateToItem(c.name, targetAmount)
                                     }}
-                                    style={canNavigate ? { cursor: 'pointer' } : undefined}
-                                    title={canNavigate ? `Open recipe for ${c.name}` : undefined}
+                                    style={isClickable ? { cursor: 'pointer' } : undefined}
+                                    title={isClickable ? `View ${c.name}` : undefined}
                                   >
                                     <span className="k">
                                       <ItemDisplay itemName={c.name} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled}>
-                                        {canNavigate && (
+                                        {isClickable && (
                                           <span className="craft-indicator">
                                             <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                                               <path d="M2 8L6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

@@ -14,8 +14,7 @@ export default function QuestsPanel({
   addQuestToPinned,
   recentlyAddedItems,
   onItemClick,
-  combinedRecipes,
-  getItemLocations,
+  hasItemContent,
   enableBuddyFarmLinks
 }) {
   const [selectedQuestline, setSelectedQuestline] = useState(null)
@@ -404,9 +403,7 @@ export default function QuestsPanel({
                     <ul className="list" style={{ marginBottom: '16px' }}>
                       {Object.entries(totals.requirements.items).map(([name, quantity]) => {
                         const pinKey = `${name}_${quantity}_${selectedQuestline.name} (Total)`
-                        const canCraft = combinedRecipes && combinedRecipes[name]
-                        const canFind = getItemLocations && getItemLocations(name)?.length > 0
-                        const isClickable = onItemClick && (canCraft || canFind)
+                        const isClickable = onItemClick && hasItemContent && hasItemContent(name)
                         
                         return (
                           <li key={name} style={{ 
@@ -904,9 +901,7 @@ export default function QuestsPanel({
               <ul className="list">
                 {selectedQuest.requirements.items.map(item => {
                   const pinKey = `${item.name}_${item.quantity}_${selectedQuestline.name} (Quest)`
-                  const canCraft = combinedRecipes && combinedRecipes[item.name]
-                  const canFind = getItemLocations && getItemLocations(item.name)?.length > 0
-                  const isClickable = onItemClick && (canCraft || canFind)
+                  const isClickable = onItemClick && hasItemContent && hasItemContent(item.name)
                   
                   return (
                     <li key={item.name} style={{ 

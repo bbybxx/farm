@@ -1,145 +1,58 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
+# Dependencies
 /node_modules
 server/node_modules/
 /.pnp
 .pnp.js
 
-# testing
+# Testing
 /coverage
 
-# production
+# Build outputs
 /build
 /dist
+/build-output
 
-# misc
-.DS_Store
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-server/.env
+# Vite cache
+/.vite/
 
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-server/node_modules/
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# production
-/build
-/dist
-
-# misc
-.DS_Store
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-server/.env
-
-# backup files
-backup-*/
-
-# logs
-npm-debug.log*
-*.log
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-.vercel
-/android
-
-# Android / Gradle / build artifacts
-/android/.gradle/
-/android/build/
-/android/app/build/
-# ---- Node / frontend ----
-/node_modules/
-/.pnp
-.pnp.js
-
-# Vite / build outputs
-/dist/
-/build/
-/build-output/
-
-# caches, lockfiles (local), logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-*.log
+# Local tools/binaries
+/.local/
 
 # Environment
 .env
 .env.*
+!.env.example
 server/.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
 
 # OS files
 .DS_Store
 Thumbs.db
 
-# ---- Source artifacts / IDE ----
+# IDE
 /.idea/
 /.vscode/
-/.gradle/
-
-# Editor temp files
-*~
 *.swp
 *.swo
+*~
 
-# ---- Android / Gradle ----
-/android/.gradle/
-/android/build/
-/android/app/build/
-/android/**/build/
-/android/local.properties
-/android/*.iml
+# Vercel
+/.vercel
 
-# Local Capacitor/Android modules and build outputs
-/android/capacitor-android/build/
-/android/capacitor-cordova-android-plugins/build/
-
-# Android Studio config and JBR/JDK shipped in repo
-/android/.idea/
-/android/"Android Studio"/
-/android/JDK/
-
-# platform-tools if downloaded into repo
+# Android / Capacitor
+/android/
 /platform-tools/
-
-# JDK downloads
 /.jdk/
-
-# Unpacked APK / temp
 /apk-unpacked/
-
-# ---- Keystore / signing ----
 *.jks
 keystore.properties
 keystore.*
 
-# ---- Server / Node service ----
-/server/node_modules/
-
-# ---- Misc / generated ----
+# Generated/temp
 /all-items_files/
-/source-index_files/
-
-# ---- Vercel / deployment ----
-/.vercel
-vercel.json
-
-# End of file
-
+backup-*/

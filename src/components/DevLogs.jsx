@@ -7,6 +7,12 @@ export default function DevLogs({ isOpen, onClose }) {
 
   const logs = [
     {
+      id: 7,
+      date: '2025-12-02',
+      title: 'Repository cleanup & public release prep',
+      content: 'Prepared repository for public release: removed .example files and sensitive example configs, replaced hardcoded API endpoints with `GRAPHQL_API_ENDPOINT` environment variable across scripts and server code, updated GitHub Actions to use secrets, cleaned .gitignore, removed tracked build/cache/temp files (.vite, .local, temp JSONs) and added a comprehensive README. Changes committed (867b6c8).'
+    },
+    {
       id: 6,
       date: '2025-12-02',
       title: 'Navigation Simplification & Performance',

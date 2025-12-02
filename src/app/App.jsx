@@ -2751,6 +2751,51 @@ export default function App() {
                     Boosty
                   </a>
                 </div>
+                <div className="social-link-wrapper">
+                  <span className="social-label">Code</span>
+                  <a
+                    href="https://github.com/bbybxx/farm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-link"
+                    title="GitHub Repository"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="social-icon">
+                      <path d="M12 .5C5.73.5.75 5.48.75 11.76c0 4.9 3.18 9.06 7.6 10.52.56.1.76-.24.76-.53 0-.26-.01-1-.02-1.96-3.09.67-3.74-1.49-3.74-1.49-.5-1.27-1.22-1.61-1.22-1.61-.99-.68.07-.67.07-.67 1.09.08 1.66 1.12 1.66 1.12.97 1.66 2.55 1.18 3.17.9.1-.7.38-1.18.69-1.45-2.47-.28-5.07-1.24-5.07-5.52 0-1.22.44-2.21 1.15-2.99-.12-.28-.5-1.4.11-2.92 0 0 .94-.3 3.08 1.14.9-.25 1.87-.38 2.83-.38.96 0 1.92.13 2.83.38 2.14-1.44 3.08-1.14 3.08-1.14.61 1.52.23 2.64.11 2.92.71.78 1.15 1.77 1.15 2.99 0 4.29-2.6 5.23-5.08 5.51.39.34.74 1.01.74 2.04 0 1.47-.01 2.66-.01 3.02 0 .29.2.64.77.53 4.42-1.47 7.6-5.63 7.6-10.52C23.25 5.48 18.27.5 12 .5z" />
+                    </svg>
+                    GitHub
+                  </a>
+                </div>
+                <div className="social-link-wrapper">
+                  <span className="social-label">Telegram</span>
+                  <a
+                    href="https://t.me/bbybrxx"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-link"
+                    title="Telegram"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="social-icon">
+                      <path d="M21 3L3 10.5l4.5 1.6L9 21l3.6-2.3L18.6 21 21 3z"></path>
+                    </svg>
+                    @bbybrxx
+                  </a>
+                </div>
+                <div className="social-link-wrapper">
+                  <span className="social-label">Discord</span>
+                  <a
+                    href="https://discord.com/users/715290260564869130"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-link"
+                    title="Discord"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="social-icon">
+                      <path d="M20 4.5a19.79 19.79 0 0 0-4.99-1.5l-.3.64A17.88 17.88 0 0 0 12 4c-1.8 0-3.5.15-5.1.42L6.6 3 4 4.5v10.2c0 1.9.8 3.6 2.1 4.7 2.1 1.8 5.7 2.9 9.9 2.9s7.8-1.1 9.9-2.9c1.3-1.1 2.1-2.8 2.1-4.7V4.5z" />
+                    </svg>
+                    Discord
+                  </a>
+                </div>
               </div>
               
             </div>

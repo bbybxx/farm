@@ -1165,6 +1165,10 @@ select.input option {
   height: 20px;
   object-fit: contain;
   flex-shrink: 0;
+  /* Support font icons (Font Awesome) */
+  font-size: 20px;
+  line-height: 1;
+  display: inline-block;
 }
 
 .social-link svg.social-icon {

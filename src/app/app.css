@@ -1084,9 +1084,9 @@ select.input option {
   margin-top: 24px;
   padding-top: 16px;
   border-top: 1px solid color-mix(in oklab, #ffffff 5%, transparent);
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 6px !important;
   justify-items: center;
   align-items: start;
   opacity: 0.5;
@@ -1629,8 +1629,9 @@ body.no-visual-scrollbar,
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
 .cart-settings {
   padding: 12px;
   background: var(--glass-bg);
@@ -2597,9 +2598,13 @@ body.no-visual-scrollbar,
 .folder-tab-input {
   flex: 1;
   min-width: 0;
-  padding: 5px 8px;
-  font-size: 13px;
-  background: color-mix(in oklab, #000000 20%, transparent);
+.social-link {
+  padding: 4px 6px !important;
+  font-size: 12px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
   border: 1px solid color-mix(in oklab, #ffffff 15%, transparent);
   border-radius: 5px;
   color: var(--text);

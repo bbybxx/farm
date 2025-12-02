@@ -35,9 +35,13 @@ $context = stream_context_create([
 ]);
 
 // LEGACY FILE - Consider using Vercel serverless functions instead
-// Configure API endpoint via environment variable
-// IMPORTANT: Set GRAPHQL_API_ENDPOINT in your environment
-$apiEndpoint = getenv('GRAPHQL_API_ENDPOINT') ?: 'https://YOUR_API_ENDPOINT_HERE/graphql';
+// Configure API endpoint via environment variable - contact FarmRPG devs for access
+$apiEndpoint = getenv('GRAPHQL_API_ENDPOINT');
+if (!$apiEndpoint) {
+    http_response_code(500);
+    echo json_encode(['error' => 'GRAPHQL_API_ENDPOINT environment variable is not set']);
+    exit();
+}
 $response = file_get_contents($apiEndpoint, false, $context);
 
 if ($response === false) {

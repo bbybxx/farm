@@ -30,6 +30,8 @@ jobs:
           node-version: '18'
       
       - name: Sync drop rates from API
+        env:
+          GRAPHQL_API_ENDPOINT: ${{ secrets.GRAPHQL_API_ENDPOINT }}
         run: node scripts/sync-drop-rates.mjs
       
       - name: Check for changes

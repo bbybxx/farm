@@ -24,6 +24,8 @@ jobs:
           node-version: '18'
       
       - name: Download images from API
+        env:
+          GRAPHQL_API_ENDPOINT: ${{ secrets.GRAPHQL_API_ENDPOINT }}
         run: node scripts/download-images.mjs
       
       - name: Check for new or changed files

@@ -168,7 +168,7 @@ function formatBugReport(data) {
   
   // User agent (collapsed for readability)
   if (userAgent) {
-    formattedMessage += `\n\n📱 <b>User Agent:</b>\n<code>${userAgent}</code>`;
+    formattedMessage += `\n\n� <b>User Agent:</b>\n<code>${userAgent}</code>`;
   }
   
   return formattedMessage;
@@ -374,11 +374,18 @@ app.get('/api/bot-info', async (req, res) => {
 });
 
 // GraphQL Proxy - configure API endpoint via environment variable
-// Contact FarmRPG community for API access
+// Contact FarmRPG developers for API access
 app.post('/api/graphql', async (req, res) => {
   try {
-    // IMPORTANT: Set GRAPHQL_API_ENDPOINT in your .env file
-    const apiEndpoint = process.env.GRAPHQL_API_ENDPOINT || 'https://YOUR_API_ENDPOINT_HERE/graphql';
+    const apiEndpoint = process.env.GRAPHQL_API_ENDPOINT;
+    
+    if (!apiEndpoint) {
+      console.error('GRAPHQL_API_ENDPOINT environment variable is not set');
+      return res.status(500).json({
+        success: false,
+        error: 'GraphQL API endpoint not configured'
+      });
+    }
     
     if (process.env.NODE_ENV === 'development') {
       console.log('Proxying GraphQL request...');
@@ -399,7 +406,7 @@ app.post('/api/graphql', async (req, res) => {
 
     const data = await response.json();
     
-    // Add CORS headers
+    // Добавляем CORS заголовки для всех источников
     res.set({
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -417,13 +424,13 @@ app.post('/api/graphql', async (req, res) => {
     }
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch from GraphQL API',
+      error: 'Failed to fetch from buddy.farm API',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 });
 
-// Handle OPTIONS requests for CORS
+// Обработка OPTIONS запросов для CORS
 app.options('/api/graphql', (req, res) => {
   res.set({
     'Access-Control-Allow-Origin': '*',

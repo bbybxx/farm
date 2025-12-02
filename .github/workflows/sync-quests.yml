@@ -30,6 +30,8 @@ jobs:
           node-version: '18'
       
       - name: Sync quests from API
+        env:
+          GRAPHQL_API_ENDPOINT: ${{ secrets.GRAPHQL_API_ENDPOINT }}
         run: node scripts/sync-quests.mjs
       
       - name: Check for changes

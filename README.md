@@ -2,7 +2,7 @@
 
 A comprehensive crafting and exploring calculator for FarmRPG, built with React 19 and Vite.
 
-**Live:** [craft-calculator.vercel.app](https://craft-calculator.vercel.app)
+**Live:** [https://farm-pink-gamma.vercel.app/](https://farm-pink-gamma.vercel.app/)
 
 ## ✨ Features
 
@@ -52,7 +52,7 @@ A comprehensive crafting and exploring calculator for FarmRPG, built with React 
 
 ```bash
 # Clone the repository
-git clone https://github.com/bbybxx/craft-calculator.git
+git clone https://github.com/bbybxx/farm.git
 cd craft-calculator
 
 # Install dependencies

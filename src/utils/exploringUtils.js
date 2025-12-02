@@ -6,6 +6,24 @@ import {
   applyLocationOverrides
 } from '../data/location-config.js'
 
+// Cache for computePinnedEstimate results - limited size LRU-like cache
+const estimateCache = new Map()
+const CACHE_MAX_SIZE = 500
+
+function getCacheKey(pinnedItem, quantity, activePerks, exploringMode) {
+  const loc = pinnedItem.location || pinnedItem.selectedLocation || ''
+  return `${pinnedItem.name}|${loc}|${quantity}|${activePerks.sort().join(',')}|${exploringMode}`
+}
+
+function cacheSet(key, value) {
+  if (estimateCache.size >= CACHE_MAX_SIZE) {
+    // Remove oldest entry (first key)
+    const firstKey = estimateCache.keys().next().value
+    estimateCache.delete(firstKey)
+  }
+  estimateCache.set(key, value)
+}
+
 // Helpers to interpret activePerks
 function parsePerks(activePerks = []) {
   // normalize perk names (strip parenthesis suffixes like "(Farm Supply)")
@@ -112,6 +130,12 @@ function ciderForLocation(quantity, locEntry, perksParsed) {
 
 // General compute function: returns best estimate across locations
 export function computePinnedEstimate(pinnedItem, quantity, activePerks, exploringMode) {
+  // Check cache first
+  const cacheKey = getCacheKey(pinnedItem, quantity, activePerks, exploringMode)
+  if (estimateCache.has(cacheKey)) {
+    return estimateCache.get(cacheKey)
+  }
+
   // pinnedItem: { name, quantity, parentRecipe }
   const perks = parsePerks(activePerks)
   const itemName = pinnedItem.name
@@ -233,15 +257,17 @@ export function computePinnedEstimate(pinnedItem, quantity, activePerks, explori
   }
 
   // Return depending on exploringMode
+  let result
   if (exploringMode === 'Manually') {
-    return bestManual ? { mode: 'EXP', ...bestManual } : null
+    result = bestManual ? { mode: 'EXP', ...bestManual } : null
+  } else if (exploringMode === 'Apple Cider') {
+    result = bestCider ? { mode: 'AC', ...bestCider } : null
+  } else if (exploringMode === 'Arnold Palmer') {
+    result = bestAP ? { mode: 'AP', ...bestAP } : null
+  } else {
+    // default: return all three
+    result = { manual: bestManual, cider: bestCider, ap: bestAP }
   }
-  if (exploringMode === 'Apple Cider') {
-    return bestCider ? { mode: 'AC', ...bestCider } : null
-  }
-  if (exploringMode === 'Arnold Palmer') {
-    return bestAP ? { mode: 'AP', ...bestAP } : null
-  }
-  // default: return all three
-  return { manual: bestManual, cider: bestCider, ap: bestAP }
+  cacheSet(cacheKey, result)
+  return result
 }

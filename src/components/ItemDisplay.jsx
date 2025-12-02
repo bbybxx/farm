@@ -1,6 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, memo } from 'react';
 
 const PLACEHOLDER_SRC = '/img/placeholder.svg';
+
+// Static styles to avoid creating new objects on each render
+const containerStyle = { display: 'flex', alignItems: 'center', gap: '8px' };
+const imageBaseStyle = { width: '24px', height: '24px', objectFit: 'contain', flexShrink: 0 };
+const imageClickableStyle = { ...imageBaseStyle, cursor: 'pointer' };
+const linkStyle = { display: 'flex', lineHeight: 0 };
+const nameContainerStyle = { fontSize: '14px', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap', minWidth: 0 };
 
 const buildImageSources = (item) => {
   if (!item) return [];
@@ -20,16 +27,23 @@ const buildImageSources = (item) => {
   return deduped;
 };
 
-const ItemDisplay = ({ itemName, itemsData = {}, children, enableBuddyFarmLinks = false }) => {
+// Generate buddy.farm URL from item name
+const getBuddyFarmUrl = (name) => {
+  if (!name) return null;
+  const slug = name.toLowerCase().replace(/\s+/g, '-');
+  return `https://buddy.farm/i/${slug}/`;
+};
+
+const ItemDisplay = memo(function ItemDisplay({ itemName, itemsData = {}, children, enableBuddyFarmLinks = false }) {
   // Special handling for Silver (currency, not an item)
   if (itemName === 'Silver') {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div style={containerStyle}>
         <img
           src="/img/items/silver.png"
           alt="Silver"
           title="Silver"
-          style={{ width: '24px', height: '24px', objectFit: 'contain' }}
+          style={imageBaseStyle}
           loading="lazy"
         />
         <span style={{ fontSize: '14px' }}>Silver</span>
@@ -39,12 +53,15 @@ const ItemDisplay = ({ itemName, itemsData = {}, children, enableBuddyFarmLinks 
   }
 
   const item = itemsData[itemName];
-  const sources = useMemo(() => buildImageSources(item), [item]);
+  const sources = useMemo(
+    () => buildImageSources(item), 
+    [item?.image, item?.imageFallback, item?.imageRemote, item?.imageLocal]
+  );
   const [sourceIndex, setSourceIndex] = useState(0);
 
   useEffect(() => {
     setSourceIndex(0);
-  }, [itemName, sources.length, item?.image, item?.imageFallback, item?.imageRemote, item?.imageLocal]);
+  }, [itemName, sources.length]);
 
   if (!item) {
     return <span>{itemName}{children}</span>;
@@ -57,68 +74,46 @@ const ItemDisplay = ({ itemName, itemsData = {}, children, enableBuddyFarmLinks 
   const handleImageError = () => {
     setSourceIndex((prev) => {
       const nextIndex = prev + 1;
-      if (nextIndex < sources.length) {
-        return nextIndex;
-      }
-      return -1;
+      return nextIndex < sources.length ? nextIndex : -1;
     });
-  };
-
-  // Generate buddy.farm URL from item name
-  const getBuddyFarmUrl = (name) => {
-    if (!name) return null;
-    // Convert item name to URL slug: lowercase, replace spaces with hyphens
-    const slug = name.toLowerCase().replace(/\s+/g, '-');
-    return `https://buddy.farm/i/${slug}/`;
   };
 
   const buddyFarmUrl = enableBuddyFarmLinks ? getBuddyFarmUrl(item.name) : null;
 
   const imageElement = (
     <img
-      key={`${itemName}-img-${currentSrc}`}
+      key={`${itemName}-${sourceIndex}`}
       src={currentSrc || PLACEHOLDER_SRC}
       alt={item.name}
       title={item.name}
-      style={{ 
-        width: '24px', 
-        height: '24px', 
-        objectFit: 'contain', 
-        flexShrink: 0,
-        cursor: enableBuddyFarmLinks ? 'pointer' : 'default'
-      }}
+      style={enableBuddyFarmLinks ? imageClickableStyle : imageBaseStyle}
       loading="lazy"
       onError={handleImageError}
     />
   );
 
-  const handleLinkClick = (e) => {
-    // Prevent event from bubbling up to parent handlers (craft chain navigation)
-    e.stopPropagation();
-  };
-
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <div style={containerStyle}>
       {enableBuddyFarmLinks && buddyFarmUrl ? (
         <a 
           href={buddyFarmUrl} 
           target="_blank" 
           rel="noopener noreferrer"
-          style={{ display: 'flex', lineHeight: 0 }}
+          style={linkStyle}
           title={`Open ${item.name} on buddy.farm`}
-          onClick={handleLinkClick}
+          onClick={(e) => e.stopPropagation()}
         >
           {imageElement}
         </a>
       ) : (
         imageElement
       )}
-      <span style={{ fontSize: '14px', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap', minWidth: 0 }}>
+      <span style={nameContainerStyle}>
         <span>{item.name}</span>
         {children}
       </span>
     </div>
   );
-};
+});
 
 export default ItemDisplay;

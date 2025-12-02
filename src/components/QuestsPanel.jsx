@@ -1,9 +1,9 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react'
+import React, { useState, useMemo, useEffect, useRef, memo } from 'react'
 import ItemDisplay from './ItemDisplay'
 import '../app/app.css'
 import questsApiData from '../data/quests-api.json'
 
-export default function QuestsPanel({ 
+export default memo(function QuestsPanel({ 
   itemsData, 
   savedQuestlineId, 
   savedQuestId, 
@@ -1245,4 +1245,4 @@ export default function QuestsPanel({
       )}
     </>
   )
-}
+})

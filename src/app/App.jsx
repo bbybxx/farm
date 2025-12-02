@@ -3416,8 +3416,7 @@ export default function App() {
                               const isClickable = hasItemContent(k)
                               
                               return (
-                                <motion.li 
-                                  layout 
+                                <li 
                                   key={k}
                                   className="resource-item"
                                 >
@@ -3469,7 +3468,7 @@ export default function App() {
                                       </div>
                                     </button>
                                   )}
-                                </motion.li>
+                                </li>
                               )
                             })}
                           </ul>
@@ -3514,7 +3513,7 @@ export default function App() {
                               const isClickable = hasItemContent(c.name)
                               const targetAmount = (typeof c.craftableCount === 'number') ? c.craftableCount : (Number(amount) || 1)
                               return (
-                                <motion.li layout key={c.name} className="resource-item">
+                                <li key={c.name} className="resource-item">
                                   <div 
                                     className={`resource-content ${isClickable ? 'clickable' : ''}`}
                                     onClick={() => {
@@ -3556,7 +3555,7 @@ export default function App() {
                                       </button>
                                     )
                                   })()}
-                                </motion.li>
+                                </li>
                               )
                             })}
                           </ul>

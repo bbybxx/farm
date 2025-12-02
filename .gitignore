@@ -6,6 +6,7 @@ server/node_modules/
 
 # Testing
 /coverage
+/.vscode
 
 # Build outputs
 /build

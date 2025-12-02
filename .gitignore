@@ -151,5 +151,12 @@ api/graphql.php
 .github/workflows/sync-drop-rates.yml
 .github/workflows/download-images.yml
 
+# Scripts that access the private GraphQL API
+/scripts/*.mjs
+/scripts/*.ps1
+
+# Hide local README (sanitized example provided)
+README.md
+
 # End of file
 

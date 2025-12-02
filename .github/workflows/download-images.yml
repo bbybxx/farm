@@ -2,15 +2,9 @@ name: Download Item Images from buddy.farm
 
 on:
   schedule:
-    # Запускается каждую неделю в воскресенье в 4:00 UTC (7:00 MSK)
-    - cron: '0 4 * * 0'
+    # Запускается каждый день в 4:00 UTC (7:00 MSK)
+    - cron: '0 4 * * *'
   workflow_dispatch: # Позволяет запустить вручную
-  push:
-    branches:
-      - main
-    paths:
-      - 'scripts/download-images.mjs'  # Запускается только при изменении самого скрипта
-      - '.github/workflows/download-images.yml'  # Или при изменении workflow
 
 jobs:
   download-images:
@@ -32,16 +26,20 @@ jobs:
       - name: Download images from API
         run: node scripts/download-images.mjs
       
-      - name: Check for changes
+      - name: Check for new or changed files
         id: git-check
         run: |
-          git diff --exit-code public/img/items/ || echo "changed=true" >> $GITHUB_OUTPUT
+          git add public/img/items/
+          if git diff --cached --quiet; then
+            echo "No changes detected"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
       
       - name: Commit and push if changed
         if: steps.git-check.outputs.changed == 'true'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add public/img/items/
           git commit -m "chore: auto-download item images from buddy.farm [skip ci]"
           git push

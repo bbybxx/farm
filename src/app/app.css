@@ -1084,9 +1084,11 @@ select.input option {
   margin-top: 24px;
   padding-top: 16px;
   border-top: 1px solid color-mix(in oklab, #ffffff 5%, transparent);
-  display: flex;
-  gap: 8px;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  justify-items: center;
+  align-items: start;
   opacity: 0.5;
   transition: opacity 0.2s;
 }
@@ -1099,8 +1101,22 @@ select.input option {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  flex: 1;
-  min-width: 0;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Responsive: stack into 2 columns on small screens, 1 column on very small */
+@media (max-width: 720px) {
+  .social-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .social-links {
+    grid-template-columns: 1fr;
+  }
 }
 
 .social-label {

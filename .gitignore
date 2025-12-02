@@ -58,5 +58,4 @@ keystore.*
 /all-items_files/
 backup-*/
 
-# Generated source index (large exported assets) — keep out of repo
-public/source-index_files/
+

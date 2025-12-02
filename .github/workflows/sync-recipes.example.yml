@@ -1,0 +1,58 @@
+name: Sync Recipes from API
+
+on:
+  schedule:
+    # Runs every day at 3:00 UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch: # Allow manual trigger
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/sync-recipes-node.mjs'
+      - '.github/workflows/sync-recipes.yml'
+
+jobs:
+  sync-recipes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Sync recipes from API
+        run: node scripts/sync-recipes-node.mjs
+        env:
+          GRAPHQL_API_ENDPOINT: ${{ secrets.GRAPHQL_API_ENDPOINT }}
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --quiet src/data/recipes-api.json src/data/items-api.json || echo "changed=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit and push if changed
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add src/data/recipes-api.json src/data/items-api.json
+          git commit -m "chore: auto-sync recipes from API [skip ci]"
+          git pull --rebase origin main
+          git push
+      
+      - name: Summary
+        run: |
+          if [ "${{ steps.check_changes.outputs.changed }}" == "true" ]; then
+            echo "Recipes synced and pushed to repository"
+          else
+            echo "Recipes are up to date, no changes needed"
+          fi

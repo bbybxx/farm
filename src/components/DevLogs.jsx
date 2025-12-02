@@ -7,6 +7,12 @@ export default function DevLogs({ isOpen, onClose }) {
 
   const logs = [
     {
+      id: 6,
+      date: '2025-12-02',
+      title: 'Navigation Simplification & Performance',
+      content: 'Merged Crafts/Resources modes into unified "Crafts" mode, Simplified navigation with hasItemContent() and navigateToItem() functions, Performance optimizations: React.memo for ItemDisplay and QuestsPanel, Removed Framer Motion from list items, Added LRU caching for exploring calculations, Added useDeferredValue for smoother input handling, Fixed location mode input sync issue, Prepared repository for public release'
+    },
+    {
       id: 5,
       date: '2025-11-06',
       title: 'Quest Pinning & Navigation',
@@ -16,7 +22,7 @@ export default function DevLogs({ isOpen, onClose }) {
       id: 4,
       date: '2025-11-05',
       title: 'Quest mode',
-      content: 'Add full Quests reference mode with questlines and individual quest pages, Quest data from buddy.farm API (296 questlines, 1999 quests), Two-page navigation system: questline totals + quest details, Search questlines with dropdown selector, Previous/Next quest navigation, Silver displayed as item with icon'
+      content: 'Add full Quests reference mode with questlines and individual quest pages, Quest data from API (296 questlines, 1999 quests), Two-page navigation system: questline totals + quest details, Search questlines with dropdown selector, Previous/Next quest navigation, Silver displayed as item with icon'
     },
     {
       id: 3,

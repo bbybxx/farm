@@ -141,5 +141,15 @@ keystore.*
 /.vercel
 vercel.json
 
+# ---- API config files (contain API endpoints) ----
+# Use .example versions as templates
+vite.config.ts
+server/server.js
+api/graphql.php
+.github/workflows/sync-recipes.yml
+.github/workflows/sync-quests.yml
+.github/workflows/sync-drop-rates.yml
+.github/workflows/download-images.yml
+
 # End of file
 

@@ -1,0 +1,60 @@
+name: Sync Quests from API
+
+on:
+  schedule:
+    # Runs every day at 4:00 UTC
+    - cron: '0 4 * * *'
+  workflow_dispatch: # Allow manual trigger
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/sync-quests.mjs'
+      - '.github/workflows/sync-quests.yml'
+
+jobs:
+  sync-quests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Sync quests from API
+        run: node scripts/sync-quests.mjs
+        env:
+          GRAPHQL_API_ENDPOINT: ${{ secrets.GRAPHQL_API_ENDPOINT }}
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --quiet src/data/quests-api.json || echo "changed=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit and push if changed
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add src/data/quests-api.json
+          git commit -m "chore: auto-sync quests from API [skip ci]"
+          git pull --rebase origin main
+          git push
+      
+      - name: Summary
+        run: |
+          echo "### Quests Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.check_changes.outputs.changed }}" == "true" ]; then
+            echo "Quests data has been updated and committed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No changes detected in quests data" >> $GITHUB_STEP_SUMMARY
+          fi

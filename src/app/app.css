@@ -1632,6 +1632,7 @@ body.no-visual-scrollbar,
   align-items: center;
   width: 100%;
   box-sizing: border-box;
+}
 .cart-settings {
   padding: 12px;
   background: var(--glass-bg);

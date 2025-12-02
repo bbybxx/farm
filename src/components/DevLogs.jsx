@@ -10,8 +10,7 @@ export default function DevLogs({ isOpen, onClose }) {
       id: 7,
       date: '2025-12-02',
       title: 'Public release',
-      content: '
-        'The calculator is now open source. You can deploy it locally, use it for similar games with some customization, and contribute to the project if you wish.'
+      content: 'The calculator is now open source. You can deploy it locally, use it for similar games with some customization, and contribute to the project if you wish.'
     },
     {
       id: 6,

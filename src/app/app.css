@@ -1086,7 +1086,7 @@ select.input option {
   border-top: 1px solid color-mix(in oklab, #ffffff 5%, transparent);
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
   justify-items: center;
   align-items: start;
   opacity: 0.5;
@@ -1106,17 +1106,10 @@ select.input option {
   box-sizing: border-box;
 }
 
-/* Responsive: stack into 2 columns on small screens, 1 column on very small */
-@media (max-width: 720px) {
-  .social-links {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 420px) {
-  .social-links {
-    grid-template-columns: 1fr;
-  }
+/* Force a 3x2 grid for social links (three columns, two rows). Reduce padding so items fit. */
+.social-link {
+  padding: 6px 8px;
+  font-size: 12px;
 }
 
 .social-label {

@@ -1,5 +1,5 @@
 import { devLog } from '../utils/devLog'
-import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useState, useRef, useDeferredValue } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { calculateAllResources, getResourceSaverPercent } from '../utils/calculator'
 import { getCombinedRecipes, findRecipesThatUse } from '../utils/recipeUtils'
@@ -341,6 +341,8 @@ export default function App() {
   
   const [item, setItem] = useState(() => loadFromStorage('craftCalculator_item', 'Board'))
   const [amount, setAmount] = useState(() => loadFromStorage('craftCalculator_amount', 1))
+  // Deferred amount for heavy calculations - prevents UI jank during typing
+  const deferredAmount = useDeferredValue(amount)
   const [activePerks, setActivePerks] = useState(() => loadFromStorage('craftCalculator_activePerks', []));
   const [exploringMode, setExploringMode] = useState(() => {
     const stored = loadFromStorage('craftCalculator_exploringMode', null)
@@ -376,6 +378,9 @@ export default function App() {
   const [isOffline, setIsOffline] = useState(false)
   const [isCaching, setIsCaching] = useState(false)
   const [cachingProgress, setCachingProgress] = useState(0)
+  
+  // Debounce ref for craftChain updates during typing
+  const craftChainDebounceRef = useRef(null)
   
   // PWA detection using hook
   const isPWAMode = usePWA()
@@ -481,7 +486,7 @@ export default function App() {
   const result = useMemo(() => {
     if (!item || !combinedRecipes[item]) return null
     // Clean amount from spaces before converting to number
-    const cleanAmount = typeof amount === 'string' ? amount.replace(/\s/g, '') : amount
+    const cleanAmount = typeof deferredAmount === 'string' ? deferredAmount.replace(/\s/g, '') : deferredAmount
     const fullResult = calculateAllResources(item, Number(cleanAmount) || 1, activePerks, combinedRecipes)
     
     // Get original recipe ingredients
@@ -495,7 +500,7 @@ export default function App() {
     
     for (const [resourceName, baseQuantity] of Object.entries(originalIngredients)) {
       // Apply the same resource saver logic as in calculator
-      let needed = baseQuantity * amount
+      let needed = baseQuantity * deferredAmount
       if (resourceSaverPercent > 0) {
         needed = needed / (1 + resourceSaverPercent)
       }
@@ -506,7 +511,7 @@ export default function App() {
       ...fullResult,
       filteredResources
     }
-  }, [item, amount, activePerks, combinedRecipes])
+  }, [item, deferredAmount, activePerks, combinedRecipes])
 
   // Compute distinct resources that are used as ingredients across recipes (sources for reverse crafting)
   const sourceResources = useMemo(() => {
@@ -2987,6 +2992,21 @@ export default function App() {
               placeholder="Enter amount (e.g., 1 000)"
               onChange={e => {
                 const inputValue = e.target.value
+                
+                // Helper to debounce craftChain updates
+                const debouncedSetCraftChain = (newAmount) => {
+                  if (craftChainDebounceRef.current) {
+                    clearTimeout(craftChainDebounceRef.current)
+                  }
+                  craftChainDebounceRef.current = setTimeout(() => {
+                    setCraftChain(prev => {
+                      const updated = [...prev]
+                      updated[updated.length - 1] = { ...updated[updated.length - 1], amount: newAmount || 1 }
+                      return updated
+                    })
+                  }, 300)
+                }
+                
                 if (locationsMode) {
                   // allow decimals, normalize comma to dot
                   const normalized = inputValue.replace(',', '.')
@@ -2998,21 +3018,13 @@ export default function App() {
                   const final = frac ? `${integer}.${frac}` : integer
                   if (final === '' || final === '.' ) {
                     setAmount('')
-                    setCraftChain(prev => {
-                      const updated = [...prev]
-                      updated[updated.length - 1] = { ...updated[updated.length - 1], amount: 1 }
-                      return updated
-                    })
+                    debouncedSetCraftChain(1)
                     return
                   }
                   const numericValue = parseFloat(final)
                   const rounded = Math.round(numericValue * 100) / 100
                   setAmount(rounded)
-                  setCraftChain(prev => {
-                    const updated = [...prev]
-                    updated[updated.length - 1] = { ...updated[updated.length - 1], amount: rounded || 1 }
-                    return updated
-                  })
+                  debouncedSetCraftChain(rounded)
                   return
                 }
 
@@ -3020,21 +3032,13 @@ export default function App() {
                 const cleanValue = inputValue.replace(/\D/g, '')
                 if (cleanValue === '') {
                   setAmount('')
-                  setCraftChain(prev => {
-                    const updated = [...prev]
-                    updated[updated.length - 1] = { ...updated[updated.length - 1], amount: 1 }
-                    return updated
-                  })
+                  debouncedSetCraftChain(1)
                   return
                 }
                 const numericValue = parseInt(cleanValue)
                 if (numericValue > 9999999999999999) return
                 setAmount(cleanValue)
-                setCraftChain(prev => {
-                  const updated = [...prev]
-                  updated[updated.length - 1] = { ...updated[updated.length - 1], amount: numericValue || 1 }
-                  return updated
-                })
+                debouncedSetCraftChain(numericValue)
               }} 
             />
           </label>
@@ -3217,7 +3221,7 @@ export default function App() {
             />
           )}
           <motion.div
-            key={`${item}-${amount}-${activePerks.join(',')}`}
+            key={`${item}-${activePerks.join(',')}`}
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
@@ -3225,7 +3229,7 @@ export default function App() {
             className="stack"
           >
             {locationsMode && (
-              <motion.section className="glass card">
+              <section className="glass card">
                 <h2>Drops {selectedLocation ? `@ ${selectedLocation}` : ''}</h2>
                 <ul className="list">
                   {(!selectedLocation) && (
@@ -3378,7 +3382,7 @@ export default function App() {
                     })
                   })()}
                 </ul>
-              </motion.section>
+              </section>
             )}
             
             {/* Unified Item View - shows both Resources (ingredients) and Used In (crafts) */}
@@ -3386,7 +3390,7 @@ export default function App() {
               <>
                 {/* Resources Section - What's needed to craft this item */}
                 {result && Object.keys(result.filteredResources).length > 0 && (
-                  <motion.section className="glass card">
+                  <section className="glass card">
                     <h2 
                       className="collapsible-header"
                       onClick={() => setResourcesSectionCollapsed(!resourcesSectionCollapsed)}
@@ -3480,12 +3484,12 @@ export default function App() {
                         </motion.div>
                       )}
                     </AnimatePresence>
-                  </motion.section>
+                  </section>
                 )}
 
                 {/* Used In Section - What can be crafted from this item */}
                 {availableCrafts.length > 0 && (
-                  <motion.section className="glass card">
+                  <section className="glass card">
                     <h2 
                       className="collapsible-header"
                       onClick={() => setUsedInSectionCollapsed(!usedInSectionCollapsed)}
@@ -3562,7 +3566,7 @@ export default function App() {
                         </motion.div>
                       )}
                     </AnimatePresence>
-                  </motion.section>
+                  </section>
                 )}
               </>
             )}

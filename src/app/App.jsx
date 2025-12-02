@@ -165,12 +165,13 @@ const LocationItemInput = React.memo(function LocationItemInput({
   const inputRef = useRef(null)
   const lastSetValueRef = useRef(null) // Track last value we set via preview
   
-  // On mount/update, restore value if it was set by preview (not React)
+  // Update input value when display prop changes (and user is not editing)
   useEffect(() => {
-    if (inputRef.current && !editingInputsSet.has(itemName) && lastSetValueRef.current !== null) {
-      inputRef.current.value = lastSetValueRef.current
+    if (inputRef.current && !editingInputsSet.has(itemName)) {
+      const newValue = display !== '—' ? formatNumber(display) : ''
+      inputRef.current.value = newValue
     }
-  })
+  }, [display, itemName, formatNumber])
   
   const handleFocus = (e) => {
     editingInputsSet.add(itemName)

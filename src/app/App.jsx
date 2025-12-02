@@ -362,7 +362,6 @@ export default function App() {
     saveToStorage('craftCalculator_exploringMode', exploringMode);
   }, [exploringMode]);
 
-  const [showAllBase, setShowAllBase] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sidebarActiveTab, setSidebarActiveTab] = useState('perks')
   const [headerVisible, setHeaderVisible] = useState(true)
@@ -456,6 +455,11 @@ export default function App() {
   const [selectedLocation, setSelectedLocation] = useState(() => loadFromStorage('craftCalculator_selectedLocation', 'Forest'))
   // Quests mode: show quests and quest chains
   const [questsMode, setQuestsMode] = useState(() => loadFromStorage('craftCalculator_questsMode', false))
+  
+  // Mode-specific breadcrumbs storage
+  const [craftBreadcrumbs, setCraftBreadcrumbs] = useState(() => loadFromStorage('craftCalculator_craftBreadcrumbs', []))
+  const [locationsBreadcrumbs, setLocationsBreadcrumbs] = useState(() => loadFromStorage('craftCalculator_locationsBreadcrumbs', []))
+  const [questsBreadcrumbs, setQuestsBreadcrumbs] = useState(() => loadFromStorage('craftCalculator_questsBreadcrumbs', []))
   
   // Collapsible sections state for unified item view
   const [resourcesSectionCollapsed, setResourcesSectionCollapsed] = useState(() => loadFromStorage('craftCalculator_resourcesSectionCollapsed', false))
@@ -558,6 +562,30 @@ export default function App() {
   useEffect(() => {
     saveToStorage('craftCalculator_questsMode', questsMode)
   }, [questsMode])
+
+  // Save mode-specific breadcrumbs
+  useEffect(() => {
+    saveToStorage('craftCalculator_craftBreadcrumbs', craftBreadcrumbs)
+  }, [craftBreadcrumbs])
+  
+  useEffect(() => {
+    saveToStorage('craftCalculator_locationsBreadcrumbs', locationsBreadcrumbs)
+  }, [locationsBreadcrumbs])
+  
+  useEffect(() => {
+    saveToStorage('craftCalculator_questsBreadcrumbs', questsBreadcrumbs)
+  }, [questsBreadcrumbs])
+
+  // Sync craftChain to mode-specific breadcrumbs storage
+  useEffect(() => {
+    if (questsMode) {
+      setQuestsBreadcrumbs(craftChain)
+    } else if (locationsMode) {
+      setLocationsBreadcrumbs(craftChain)
+    } else {
+      setCraftBreadcrumbs(craftChain)
+    }
+  }, [craftChain, questsMode, locationsMode])
 
   // When in reverse mode, compute crafts that use the currently selected `item` as an ingredient
   const availableCrafts = useMemo(() => {
@@ -1593,7 +1621,6 @@ export default function App() {
   setItemsData({ ...STATIC_ITEMS_MAP })
       
       // Reset UI states
-      setShowAllBase(false)
       setSidebarOpen(false)
       setSidebarActiveTab('perks')
       setIsItemSelectOpen(false)
@@ -2951,6 +2978,18 @@ export default function App() {
                         className="mode-option"
                         type="button"
                         onClick={() => {
+                          // Save current breadcrumbs before switching
+                          if (questsMode) {
+                            setQuestsBreadcrumbs(craftChain)
+                          } else if (locationsMode) {
+                            setLocationsBreadcrumbs(craftChain)
+                          }
+                          // Restore craft mode breadcrumbs
+                          if (craftBreadcrumbs.length > 0) {
+                            setCraftChain(craftBreadcrumbs)
+                          } else {
+                            setCraftChain([{ name: item, amount: amount }])
+                          }
                           setQuestsMode(false)
                           setLocationsMode(false)
                           setModeOpen(false)
@@ -2964,6 +3003,18 @@ export default function App() {
                         className="mode-option"
                         type="button"
                         onClick={() => {
+                          // Save current breadcrumbs before switching
+                          if (questsMode) {
+                            setQuestsBreadcrumbs(craftChain)
+                          } else {
+                            setCraftBreadcrumbs(craftChain)
+                          }
+                          // Restore locations mode breadcrumbs
+                          if (locationsBreadcrumbs.length > 0) {
+                            setCraftChain(locationsBreadcrumbs)
+                          } else {
+                            setCraftChain([{ name: selectedLocation || 'Forest', amount: 1, isLocation: true }])
+                          }
                           setQuestsMode(false)
                           setLocationsMode(true)
                           setModeOpen(false)
@@ -2978,6 +3029,18 @@ export default function App() {
                         className="mode-option"
                         type="button"
                         onClick={() => {
+                          // Save current breadcrumbs before switching
+                          if (locationsMode) {
+                            setLocationsBreadcrumbs(craftChain)
+                          } else {
+                            setCraftBreadcrumbs(craftChain)
+                          }
+                          // Restore quests mode breadcrumbs
+                          if (questsBreadcrumbs.length > 0) {
+                            setCraftChain(questsBreadcrumbs)
+                          } else {
+                            setCraftChain([{ name: 'Quests', amount: 1, isPlaceholder: true }])
+                          }
                           setQuestsMode(true)
                           setLocationsMode(false)
                           setModeOpen(false)
@@ -3456,7 +3519,7 @@ export default function App() {
                           transition={{ duration: 0.2 }}
                         >
                           <ul className="list">
-                            {(showAllBase ? Object.entries(result.filteredResources) : Object.entries(result.filteredResources).slice(0, 8)).map(([k, v]) => {
+                            {Object.entries(result.filteredResources).map(([k, v]) => {
                               const mailableItems = ['Acorn', 'Apple', 'Apple Cider', 'Aquamarine', 'Arnold Palmer', 'Arrowhead', 'Axe', 'Black Powder', 'Blue Dye', 'Blue Feathers', 'Bone', 'Bouquet of Flowers', 'Bucket', 'Carbon Sphere', 'Caterpillar', 'Coal', 'Eggs', 'Explosive', 'Feathers', 'Fern Leaf', 'Fire Ant', 'Fishing Net', 'Fruit Punch', 'Glass Orb', 'Grapes', 'Green Dye', 'Green Parchment', 'Grubs', 'Hammer', 'Heart Container', 'Hide', 'Horn', 'Iced Tea', 'Iron Cup', 'Ladder', 'Large Net', 'Leather', 'Leather Diary', 'Lemon', 'Lemonade', 'Milk', 'Minnows', 'Mushroom', 'Mushroom Paste', 'Oak', 'Old Boot', 'Orange', 'Orange Juice', 'Peach', 'Peach Juice', 'Potato', 'Purple Dye', 'Purple Flower', 'Purple Parchment', 'Red Dye', 'Rope', 'Scrap Metal', 'Scrap Wire', 'Shimmer Stone', 'Shovel', 'Slimestone', 'Spider', 'Stone', 'Twine', 'Unpolished Shimmer Stone', 'Wood', 'Wooden Box', 'Wooden Button', 'Wooden Table', 'Worms', 'Yarn']
                               const isMailable = mailableItems.includes(k)
                               const isClickable = hasItemContent(k)
@@ -3518,11 +3581,6 @@ export default function App() {
                               )
                             })}
                           </ul>
-                          {Object.keys(result.filteredResources).length > 8 && (
-                            <button className="link" onClick={() => setShowAllBase(s => !s)}>
-                              {showAllBase ? 'Show less' : `Show all (${Object.keys(result.filteredResources).length})`}
-                            </button>
-                          )}
                         </motion.div>
                       )}
                     </AnimatePresence>

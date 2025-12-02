@@ -155,7 +155,7 @@ async function copyToClipboard(text) {
 const editingInputsSet = new Set()
 
 // Isolated input component with realtime updates via DOM manipulation
-const LocationItemInput = React.memo(function LocationItemInput({ 
+function LocationItemInput({ 
   itemName, 
   display, 
   onCommit,
@@ -184,12 +184,10 @@ const LocationItemInput = React.memo(function LocationItemInput({
 
   const handleChange = (e) => {
     const val = e.target.value.replace(/\s/g, '')
-    console.log('handleChange called:', val)
     if (val === '' || !isNaN(val)) {
       const numVal = val === '' ? 0 : parseFloat(val)
       if (!isNaN(numVal) && numVal > 0) {
         // Call preview to update other fields without losing focus
-        console.log('calling onPreview:', itemName, numVal)
         onPreview(itemName, numVal)
       }
     }
@@ -251,10 +249,7 @@ const LocationItemInput = React.memo(function LocationItemInput({
       placeholder={display !== '—' ? formatNumber(display) : '0'}
     />
   )
-}, (prevProps, nextProps) => {
-  // Never re-render - we handle everything via DOM
-  return true
-})
+}
 
 export default function App() {
   const [itemSelectFilter, setItemSelectFilter] = useState('')

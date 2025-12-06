@@ -9098,5 +9098,19 @@
     "image": "/img/items/ugly_sweater.png",
     "canCraft": true,
     "craftingLevel": 75
+  },
+  "Gold Buddy Sweater": {
+    "name": "Gold Buddy Sweater",
+    "type": "item",
+    "image": "/img/items/ugly_sweater_gold.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Santa Bobblehead": {
+    "name": "Santa Bobblehead",
+    "type": "item",
+    "image": "/img/items/bobble_santa.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

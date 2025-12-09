@@ -4860,21 +4860,21 @@
   "Large Chest 01": {
     "name": "Large Chest 01",
     "type": "item",
-    "image": "/img/items/8572.png",
+    "image": "/img/items/LC-1.png?1",
     "canCraft": false,
     "craftingLevel": 0
   },
   "Large Chest 02": {
     "name": "Large Chest 02",
     "type": "item",
-    "image": "/img/items/8572.png",
+    "image": "/img/items/LC-2.png?1",
     "canCraft": false,
     "craftingLevel": 0
   },
   "Large Chest 03": {
     "name": "Large Chest 03",
     "type": "item",
-    "image": "/img/items/8572.png",
+    "image": "/img/items/LC-3.png?1",
     "canCraft": false,
     "craftingLevel": 0
   },

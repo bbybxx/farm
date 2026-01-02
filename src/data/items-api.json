@@ -9112,5 +9112,33 @@
     "image": "/img/items/bobble_santa.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Frozen Chest 03": {
+    "name": "Frozen Chest 03",
+    "type": "item",
+    "image": "/img/items/frozenchest.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Frozen Hops": {
+    "name": "Frozen Hops",
+    "type": "crop",
+    "image": "/img/items/frozen_hops.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Ice Scraper": {
+    "name": "Ice Scraper",
+    "type": "item",
+    "image": "/img/items/ice_scraper.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Wampa Buddy Doll": {
+    "name": "Wampa Buddy Doll",
+    "type": "item",
+    "image": "/img/items/wampabuddydoll.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

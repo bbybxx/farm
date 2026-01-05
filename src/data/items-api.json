@@ -1914,7 +1914,7 @@
     "name": "Christmas Tree",
     "type": "item",
     "image": "/img/items/cr_t_06_b.png?1",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 30
   },
   "Chum": {
@@ -4525,7 +4525,7 @@
     "name": "Holiday Wreath",
     "type": "item",
     "image": "/img/items/wreath.png?2",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 70
   },
   "Honey": {
@@ -8963,7 +8963,7 @@
     "name": "Yule Goat",
     "type": "item",
     "image": "/img/items/yulegoatsm.png",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 82
   },
   "Zho's Dagger": {
@@ -9096,7 +9096,7 @@
     "name": "Ugly Buddy Sweater",
     "type": "item",
     "image": "/img/items/ugly_sweater.png",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 75
   },
   "Gold Buddy Sweater": {

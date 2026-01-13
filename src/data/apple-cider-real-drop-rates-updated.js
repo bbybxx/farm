@@ -10,7 +10,7 @@ export const APPLE_CIDER_REAL_DROP_RATES_UPGRADED = {
     version: "2.0.0",
     description: "Drop rates for explore locations from buddy.farm API (inverse format)",
     dataSource: "buddy.farm GraphQL API",
-    lastUpdated: "2026-01-12T04:01:34.872Z",
+    lastUpdated: "2026-01-13T03:54:14.864Z",
     variants: {
       rq0cs0: "Without Runecube, Without Cinnamon Sticks",
       rq0cs1: "Without Runecube, With Cinnamon Sticks (+25% drops)",
@@ -686,6 +686,36 @@ export const APPLE_CIDER_REAL_DROP_RATES_UPGRADED = {
         "Prickly Pear": { dropsPerCider: 0.01227 },
       },
     },
+    "Gary's Crushroom": {
+      rq0cs0: {
+        "Piece 30": { dropsPerCider: 0.00008 },
+        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
+        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
+        "Mushroom": { dropsPerCider: 0.37994 },
+        "Snowball": { dropsPerCider: 0.01999 },
+      },
+      rq0cs1: {
+        "Piece 30": { dropsPerCider: 0.00010 },
+        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
+        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
+        "Mushroom": { dropsPerCider: 0.47492 },
+        "Snowball": { dropsPerCider: 0.02498 },
+      },
+      rq1cs0: {
+        "Piece 30": { dropsPerCider: 0.00008 },
+        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
+        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
+        "Mushroom": { dropsPerCider: 0.37492 },
+        "Snowball": { dropsPerCider: 0.02500 },
+      },
+      rq1cs1: {
+        "Piece 30": { dropsPerCider: 0.00009 },
+        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
+        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
+        "Mushroom": { dropsPerCider: 0.46865 },
+        "Snowball": { dropsPerCider: 0.03125 },
+      },
+    },
     "Haunted House": {
       rq0cs0: {
         "Apple": { dropsPerCider: 0.02222 },
@@ -750,36 +780,6 @@ export const APPLE_CIDER_REAL_DROP_RATES_UPGRADED = {
         "Lollipop": { dropsPerCider: 0.08640 },
         "Jack-o-lantern": { dropsPerCider: 0.00149 },
         "Candy": { dropsPerCider: 0.23277 },
-      },
-    },
-    "Gary's Crushroom": {
-      rq0cs0: {
-        "Piece 30": { dropsPerCider: 0.00008 },
-        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
-        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
-        "Mushroom": { dropsPerCider: 0.37994 },
-        "Snowball": { dropsPerCider: 0.01999 },
-      },
-      rq0cs1: {
-        "Piece 30": { dropsPerCider: 0.00010 },
-        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
-        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
-        "Mushroom": { dropsPerCider: 0.47492 },
-        "Snowball": { dropsPerCider: 0.02498 },
-      },
-      rq1cs0: {
-        "Piece 30": { dropsPerCider: 0.00008 },
-        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
-        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
-        "Mushroom": { dropsPerCider: 0.37492 },
-        "Snowball": { dropsPerCider: 0.02500 },
-      },
-      rq1cs1: {
-        "Piece 30": { dropsPerCider: 0.00009 },
-        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
-        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
-        "Mushroom": { dropsPerCider: 0.46865 },
-        "Snowball": { dropsPerCider: 0.03125 },
       },
     },
     "Santa's Workshop": {

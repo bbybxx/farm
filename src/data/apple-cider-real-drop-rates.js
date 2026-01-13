@@ -10,7 +10,7 @@ export const APPLE_CIDER_REAL_DROP_RATES = {
     version: "2.0.0",
     description: "Drop rates for explore locations from buddy.farm API",
     dataSource: "buddy.farm GraphQL API",
-    lastUpdated: "2026-01-12T04:01:34.870Z",
+    lastUpdated: "2026-01-13T03:54:14.862Z",
     variants: {
       rq0cs0: "Without Runecube, Without Cinnamon Sticks",
       rq0cs1: "Without Runecube, With Cinnamon Sticks (+25% drops)",
@@ -686,6 +686,36 @@ export const APPLE_CIDER_REAL_DROP_RATES = {
         "Prickly Pear": { cidersPerDrop: 81.52 },
       },
     },
+    "Gary's Crushroom": {
+      rq0cs0: {
+        "Piece 30": { cidersPerDrop: 13048.02 },
+        "Gary's Diary Page 36": { cidersPerDrop: 27777777.78 },
+        "Gary's Diary Page 77": { cidersPerDrop: 25000000.00 },
+        "Mushroom": { cidersPerDrop: 2.63 },
+        "Snowball": { cidersPerDrop: 50.03 },
+      },
+      rq0cs1: {
+        "Piece 30": { cidersPerDrop: 10438.41 },
+        "Gary's Diary Page 36": { cidersPerDrop: 22222222.22 },
+        "Gary's Diary Page 77": { cidersPerDrop: 20000000.00 },
+        "Mushroom": { cidersPerDrop: 2.11 },
+        "Snowball": { cidersPerDrop: 40.03 },
+      },
+      rq1cs0: {
+        "Piece 30": { cidersPerDrop: 13191.22 },
+        "Gary's Diary Page 36": { cidersPerDrop: 27777777.78 },
+        "Gary's Diary Page 77": { cidersPerDrop: 25000000.00 },
+        "Mushroom": { cidersPerDrop: 2.67 },
+        "Snowball": { cidersPerDrop: 40.00 },
+      },
+      rq1cs1: {
+        "Piece 30": { cidersPerDrop: 10552.98 },
+        "Gary's Diary Page 36": { cidersPerDrop: 22222222.22 },
+        "Gary's Diary Page 77": { cidersPerDrop: 20000000.00 },
+        "Mushroom": { cidersPerDrop: 2.13 },
+        "Snowball": { cidersPerDrop: 32.00 },
+      },
+    },
     "Haunted House": {
       rq0cs0: {
         "Apple": { cidersPerDrop: 45.01 },
@@ -750,36 +780,6 @@ export const APPLE_CIDER_REAL_DROP_RATES = {
         "Lollipop": { cidersPerDrop: 11.57 },
         "Jack-o-lantern": { cidersPerDrop: 670.26 },
         "Candy": { cidersPerDrop: 4.30 },
-      },
-    },
-    "Gary's Crushroom": {
-      rq0cs0: {
-        "Piece 30": { cidersPerDrop: 13048.02 },
-        "Gary's Diary Page 36": { cidersPerDrop: 27777777.78 },
-        "Gary's Diary Page 77": { cidersPerDrop: 25000000.00 },
-        "Mushroom": { cidersPerDrop: 2.63 },
-        "Snowball": { cidersPerDrop: 50.03 },
-      },
-      rq0cs1: {
-        "Piece 30": { cidersPerDrop: 10438.41 },
-        "Gary's Diary Page 36": { cidersPerDrop: 22222222.22 },
-        "Gary's Diary Page 77": { cidersPerDrop: 20000000.00 },
-        "Mushroom": { cidersPerDrop: 2.11 },
-        "Snowball": { cidersPerDrop: 40.03 },
-      },
-      rq1cs0: {
-        "Piece 30": { cidersPerDrop: 13191.22 },
-        "Gary's Diary Page 36": { cidersPerDrop: 27777777.78 },
-        "Gary's Diary Page 77": { cidersPerDrop: 25000000.00 },
-        "Mushroom": { cidersPerDrop: 2.67 },
-        "Snowball": { cidersPerDrop: 40.00 },
-      },
-      rq1cs1: {
-        "Piece 30": { cidersPerDrop: 10552.98 },
-        "Gary's Diary Page 36": { cidersPerDrop: 22222222.22 },
-        "Gary's Diary Page 77": { cidersPerDrop: 20000000.00 },
-        "Mushroom": { cidersPerDrop: 2.13 },
-        "Snowball": { cidersPerDrop: 32.00 },
       },
     },
     "Santa's Workshop": {

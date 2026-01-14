@@ -4552,7 +4552,7 @@
   "Hops": {
     "name": "Hops",
     "type": "crop",
-    "image": "/img/items/8248.PNG",
+    "image": "/img/items/8248n.png",
     "canCraft": false,
     "craftingLevel": 1
   },

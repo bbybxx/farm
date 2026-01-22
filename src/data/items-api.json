@@ -5212,7 +5212,7 @@
     "type": "item",
     "image": "/img/items/5404.png",
     "canCraft": true,
-    "craftingLevel": 39
+    "craftingLevel": 90
   },
   "Mana Scarab": {
     "name": "Mana Scarab",
@@ -8992,7 +8992,7 @@
     "type": "item",
     "image": "/img/items/fancysword.png",
     "canCraft": true,
-    "craftingLevel": 52
+    "craftingLevel": 90
   },
   "Leather Helmet": {
     "name": "Leather Helmet",

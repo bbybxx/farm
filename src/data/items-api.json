@@ -4419,14 +4419,14 @@
   "Heart-shaped Box 01": {
     "name": "Heart-shaped Box 01",
     "type": "item",
-    "image": "/img/items/hsb.png",
+    "image": "/img/items/heartshapedbox1.png",
     "canCraft": false,
     "craftingLevel": 0
   },
   "Heart-shaped Box 02": {
     "name": "Heart-shaped Box 02",
     "type": "item",
-    "image": "/img/items/hsb.png",
+    "image": "/img/items/heartshapedbox1.png",
     "canCraft": false,
     "craftingLevel": 0
   },
@@ -9140,5 +9140,61 @@
     "image": "/img/items/wampabuddydoll.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Bear Buddy Doll": {
+    "name": "Bear Buddy Doll",
+    "type": "item",
+    "image": "/img/items/Bear_buddy.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Duck Egg": {
+    "name": "Duck Egg",
+    "type": "item",
+    "image": "/img/items/duckegg2.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Goostav Bobblehead": {
+    "name": "Goostav Bobblehead",
+    "type": "item",
+    "image": "/img/items/bobble_goostav.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Heart-shaped Box 03": {
+    "name": "Heart-shaped Box 03",
+    "type": "item",
+    "image": "/img/items/heartshapedbox1.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Lovely Rose": {
+    "name": "Lovely Rose",
+    "type": "item",
+    "image": "/img/items/afk_9604.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "PHR Voucher": {
+    "name": "PHR Voucher",
+    "type": "meal",
+    "image": "/img/items/viri_3437.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Swamp Puzzle": {
+    "name": "Swamp Puzzle",
+    "type": "item",
+    "image": "/img/items/puzzle3.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Veggie Juice": {
+    "name": "Veggie Juice",
+    "type": "item",
+    "image": "/img/items/8879.png",
+    "canCraft": true,
+    "craftingLevel": 87
   }
 }

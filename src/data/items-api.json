@@ -4399,7 +4399,7 @@
     "name": "Heart Necklace",
     "type": "item",
     "image": "/img/items/l_02_t_a.PNG",
-    "canCraft": false,
+    "canCraft": true,
     "craftingLevel": 15
   },
   "Heart Necklace Left Piece": {
@@ -7556,7 +7556,7 @@
     "name": "Snow Globe",
     "type": "item",
     "image": "/img/items/21_sm.png",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 35
   },
   "Snow Shoes": {
@@ -7591,7 +7591,7 @@
     "name": "Snowman",
     "type": "item",
     "image": "/img/items/cr_t_08.png",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 30
   },
   "Snowman Buddy Doll": {
@@ -8543,7 +8543,7 @@
     "name": "Valentines Card",
     "type": "item",
     "image": "/img/items/card_valentines.png",
-    "canCraft": false,
+    "canCraft": true,
     "craftingLevel": 1
   },
   "Vampire Buddy Doll": {

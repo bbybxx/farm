@@ -4804,7 +4804,7 @@
   "King Cake": {
     "name": "King Cake",
     "type": "item",
-    "image": "/img/items/kingcake.png?2",
+    "image": "/img/items/king_cake_new.png",
     "canCraft": false,
     "craftingLevel": 0
   },

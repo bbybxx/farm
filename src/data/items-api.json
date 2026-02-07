@@ -9196,5 +9196,12 @@
     "image": "/img/items/8879.png",
     "canCraft": true,
     "craftingLevel": 87
+  },
+  "Podcast Swear Jar": {
+    "name": "Podcast Swear Jar",
+    "type": "item",
+    "image": "/img/items/Podcast_Swear_jar.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

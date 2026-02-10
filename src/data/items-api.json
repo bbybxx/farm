@@ -9203,5 +9203,12 @@
     "image": "/img/items/Podcast_Swear_jar.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Picnic Basket 01": {
+    "name": "Picnic Basket 01",
+    "type": "item",
+    "image": "/img/items/picnicbasket.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

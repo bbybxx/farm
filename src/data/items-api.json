@@ -9210,5 +9210,26 @@
     "image": "/img/items/picnicbasket.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Piece 07": {
+    "name": "Piece 07",
+    "type": "item",
+    "image": "/img/items/piece07.png?1",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Piece 12": {
+    "name": "Piece 12",
+    "type": "item",
+    "image": "/img/items/piece12.png?1",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Piece 31": {
+    "name": "Piece 31",
+    "type": "item",
+    "image": "/img/items/piece31.png?1",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

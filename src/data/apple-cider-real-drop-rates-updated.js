@@ -10,7 +10,7 @@ export const APPLE_CIDER_REAL_DROP_RATES_UPGRADED = {
     version: "2.0.0",
     description: "Drop rates for explore locations from buddy.farm API (inverse format)",
     dataSource: "buddy.farm GraphQL API",
-    lastUpdated: "2026-02-12T04:18:54.431Z",
+    lastUpdated: "2026-02-13T04:18:13.095Z",
     variants: {
       rq0cs0: "Without Runecube, Without Cinnamon Sticks",
       rq0cs1: "Without Runecube, With Cinnamon Sticks (+25% drops)",
@@ -728,6 +728,32 @@ export const APPLE_CIDER_REAL_DROP_RATES_UPGRADED = {
         "Prickly Pear": { dropsPerCider: 0.01227 },
       },
     },
+    "Gary's Crushroom": {
+      rq0cs0: {
+        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
+        "Piece 30": { dropsPerCider: 0.00008 },
+        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
+        "Mushroom": { dropsPerCider: 0.39992 },
+      },
+      rq0cs1: {
+        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
+        "Piece 30": { dropsPerCider: 0.00010 },
+        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
+        "Mushroom": { dropsPerCider: 0.49990 },
+      },
+      rq1cs0: {
+        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
+        "Piece 30": { dropsPerCider: 0.00008 },
+        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
+        "Mushroom": { dropsPerCider: 0.39992 },
+      },
+      rq1cs1: {
+        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
+        "Piece 30": { dropsPerCider: 0.00010 },
+        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
+        "Mushroom": { dropsPerCider: 0.49990 },
+      },
+    },
     "Santa's Workshop": {
       rq0cs0: {
         "Iron": { dropsPerCider: 0.03925 },
@@ -804,32 +830,6 @@ export const APPLE_CIDER_REAL_DROP_RATES_UPGRADED = {
         "Carbon Sphere": { dropsPerCider: 0.02265 },
         "Candy Cane": { dropsPerCider: 0.02264 },
         "Rudolph": { dropsPerCider: 0.00002 },
-      },
-    },
-    "Gary's Crushroom": {
-      rq0cs0: {
-        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
-        "Piece 30": { dropsPerCider: 0.00008 },
-        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
-        "Mushroom": { dropsPerCider: 0.39992 },
-      },
-      rq0cs1: {
-        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
-        "Piece 30": { dropsPerCider: 0.00010 },
-        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
-        "Mushroom": { dropsPerCider: 0.49990 },
-      },
-      rq1cs0: {
-        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
-        "Piece 30": { dropsPerCider: 0.00008 },
-        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
-        "Mushroom": { dropsPerCider: 0.39992 },
-      },
-      rq1cs1: {
-        "Gary's Diary Page 36": { dropsPerCider: 0.00000 },
-        "Piece 30": { dropsPerCider: 0.00010 },
-        "Gary's Diary Page 77": { dropsPerCider: 0.00000 },
-        "Mushroom": { dropsPerCider: 0.49990 },
       },
     },
   }

@@ -9231,5 +9231,12 @@
     "image": "/img/items/piece31.png?1",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Sugar Cube": {
+    "name": "Sugar Cube",
+    "type": "item",
+    "image": "/img/items/sugar_cube.png",
+    "canCraft": true,
+    "craftingLevel": 99
   }
 }

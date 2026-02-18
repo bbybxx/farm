@@ -6554,7 +6554,7 @@
   "Ramjoram's Mask": {
     "name": "Ramjoram's Mask",
     "type": "item",
-    "image": "/img/items/strangemask1.png?1",
+    "image": "/img/items/ramjorammask.png",
     "canCraft": false,
     "craftingLevel": 0
   },
@@ -9236,6 +9236,622 @@
     "name": "Sugar Cube",
     "type": "item",
     "image": "/img/items/sugar_cube.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Amber Mire Bloom": {
+    "name": "Amber Mire Bloom",
+    "type": "item",
+    "image": "/img/items/3567.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bamboo": {
+    "name": "Bamboo",
+    "type": "item",
+    "image": "/img/items/viri_4773.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bamboo Chair": {
+    "name": "Bamboo Chair",
+    "type": "item",
+    "image": "/img/items/bamboochair.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Bamboo Fence": {
+    "name": "Bamboo Fence",
+    "type": "item",
+    "image": "/img/items/bamboofence.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Bamboo Flute": {
+    "name": "Bamboo Flute",
+    "type": "item",
+    "image": "/img/items/bambooflute.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Bamboo Rope": {
+    "name": "Bamboo Rope",
+    "type": "item",
+    "image": "/img/items/rope_t_01.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Bamboo Trellis": {
+    "name": "Bamboo Trellis",
+    "type": "item",
+    "image": "/img/items/bambootrellis.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Basic Pillow": {
+    "name": "Basic Pillow",
+    "type": "item",
+    "image": "/img/items/basicpillow.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Black Bag": {
+    "name": "Black Bag",
+    "type": "item",
+    "image": "/img/items/blackbag.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Black Cloak": {
+    "name": "Black Cloak",
+    "type": "item",
+    "image": "/img/items/blackcloak.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Black Dye": {
+    "name": "Black Dye",
+    "type": "item",
+    "image": "/img/items/blackdye.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Black Purse": {
+    "name": "Black Purse",
+    "type": "item",
+    "image": "/img/items/blackpurse.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Black Scarf": {
+    "name": "Black Scarf",
+    "type": "item",
+    "image": "/img/items/blackscarf.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Black Shield": {
+    "name": "Black Shield",
+    "type": "item",
+    "image": "/img/items/blackshield.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Black Shirt": {
+    "name": "Black Shirt",
+    "type": "item",
+    "image": "/img/items/blackshirt.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Black Twine": {
+    "name": "Black Twine",
+    "type": "item",
+    "image": "/img/items/blacktwine.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Blubberfish": {
+    "name": "Blubberfish",
+    "type": "fish",
+    "image": "/img/items/finp_415.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Blue Shirt": {
+    "name": "Blue Shirt",
+    "type": "item",
+    "image": "/img/items/blueshirt.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Bog Barnacle": {
+    "name": "Bog Barnacle",
+    "type": "fish",
+    "image": "/img/items/382.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Boghead Snapper": {
+    "name": "Boghead Snapper",
+    "type": "fish",
+    "image": "/img/items/afk_8800.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Bogslug": {
+    "name": "Bogslug",
+    "type": "item",
+    "image": "/img/items/afk_8381.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Brown Bag": {
+    "name": "Brown Bag",
+    "type": "item",
+    "image": "/img/items/brownbag.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Brown Cloak": {
+    "name": "Brown Cloak",
+    "type": "item",
+    "image": "/img/items/browncloak.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Brown Dye": {
+    "name": "Brown Dye",
+    "type": "item",
+    "image": "/img/items/browndye.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Brown Twine": {
+    "name": "Brown Twine",
+    "type": "item",
+    "image": "/img/items/browntwine.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Cloth": {
+    "name": "Cloth",
+    "type": "item",
+    "image": "/img/items/690.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Crown of Clover": {
+    "name": "Crown of Clover",
+    "type": "item",
+    "image": "/img/items/Crownofclover.png",
+    "canCraft": true,
+    "craftingLevel": 55
+  },
+  "Egg of Duck": {
+    "name": "Egg of Duck",
+    "type": "item",
+    "image": "/img/items/3270d.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fancy Pillow": {
+    "name": "Fancy Pillow",
+    "type": "item",
+    "image": "/img/items/Fancy_pillow.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Gazebo": {
+    "name": "Gazebo",
+    "type": "item",
+    "image": "/img/items/Gazebo.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Glass Eye Urchin": {
+    "name": "Glass Eye Urchin",
+    "type": "fish",
+    "image": "/img/items/afk_8843.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Glowing Lantern": {
+    "name": "Glowing Lantern",
+    "type": "item",
+    "image": "/img/items/glowinglantern.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Glowshroom": {
+    "name": "Glowshroom",
+    "type": "item",
+    "image": "/img/items/glowshroom.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Aquamarine Ring": {
+    "name": "Gold Aquamarine Ring",
+    "type": "item",
+    "image": "/img/items/goldaqring.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Gold Diamond Ring": {
+    "name": "Gold Diamond Ring",
+    "type": "item",
+    "image": "/img/items/864.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Gold Emerald Ring": {
+    "name": "Gold Emerald Ring",
+    "type": "item",
+    "image": "/img/items/goldemring.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Gold Garnet Ring": {
+    "name": "Gold Garnet Ring",
+    "type": "item",
+    "image": "/img/items/goldgarnetring.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Gold Jade Ring": {
+    "name": "Gold Jade Ring",
+    "type": "item",
+    "image": "/img/items/goldjadering2.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Gold Lemon Quartz Ring": {
+    "name": "Gold Lemon Quartz Ring",
+    "type": "item",
+    "image": "/img/items/goldlqring.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Gold Ring": {
+    "name": "Gold Ring",
+    "type": "item",
+    "image": "/img/items/goldring.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Ruby Ring": {
+    "name": "Gold Ruby Ring",
+    "type": "item",
+    "image": "/img/items/goldrubyring.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Gold Slimeback": {
+    "name": "Gold Slimeback",
+    "type": "fish",
+    "image": "/img/items/goldslimeback.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Green Shirt": {
+    "name": "Green Shirt",
+    "type": "item",
+    "image": "/img/items/greenshirt.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Lavos Shard": {
+    "name": "Lavos Shard",
+    "type": "item",
+    "image": "/img/items/408.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Magenta Growth": {
+    "name": "Magenta Growth",
+    "type": "fish",
+    "image": "/img/items/afk_8827.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mini Slime Squid": {
+    "name": "Mini Slime Squid",
+    "type": "fish",
+    "image": "/img/items/3992.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Mist Lily": {
+    "name": "Mist Lily",
+    "type": "item",
+    "image": "/img/items/whiteflower.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mudcap": {
+    "name": "Mudcap",
+    "type": "item",
+    "image": "/img/items/afk_8440.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Oak Table": {
+    "name": "Oak Table",
+    "type": "item",
+    "image": "/img/items/Oak_table_.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Orange Butterfly": {
+    "name": "Orange Butterfly",
+    "type": "item",
+    "image": "/img/items/orangebutterfly.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Orange Dye": {
+    "name": "Orange Dye",
+    "type": "item",
+    "image": "/img/items/orangedye.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Orange Scarf": {
+    "name": "Orange Scarf",
+    "type": "item",
+    "image": "/img/items/orangescarf.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Orange Shirt": {
+    "name": "Orange Shirt",
+    "type": "item",
+    "image": "/img/items/orangeshirt.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Orange Twine": {
+    "name": "Orange Twine",
+    "type": "item",
+    "image": "/img/items/orangetwine.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Propeller Hat": {
+    "name": "Propeller Hat",
+    "type": "item",
+    "image": "/img/items/Propeller_hat.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Purple Shirt": {
+    "name": "Purple Shirt",
+    "type": "item",
+    "image": "/img/items/purpleshirt.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Reaver Claw": {
+    "name": "Reaver Claw",
+    "type": "fish",
+    "image": "/img/items/293.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Red Shirt": {
+    "name": "Red Shirt",
+    "type": "item",
+    "image": "/img/items/redshirt.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Scrap Cloth": {
+    "name": "Scrap Cloth",
+    "type": "item",
+    "image": "/img/items/1529.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Shadow Bloom": {
+    "name": "Shadow Bloom",
+    "type": "item",
+    "image": "/img/items/blackflower.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sinkroot": {
+    "name": "Sinkroot",
+    "type": "item",
+    "image": "/img/items/3488.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Slime Egg Shell": {
+    "name": "Slime Egg Shell",
+    "type": "fish",
+    "image": "/img/items/afk_8847.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Slimeback": {
+    "name": "Slimeback",
+    "type": "fish",
+    "image": "/img/items/slimeback.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Slobster": {
+    "name": "Slobster",
+    "type": "fish",
+    "image": "/img/items/goobster.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Splatfish": {
+    "name": "Splatfish",
+    "type": "fish",
+    "image": "/img/items/splatterfish.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sporefly": {
+    "name": "Sporefly",
+    "type": "item",
+    "image": "/img/items/1916.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Strong Paste": {
+    "name": "Strong Paste",
+    "type": "item",
+    "image": "/img/items/strongpaste.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Swamp Algae": {
+    "name": "Swamp Algae",
+    "type": "item",
+    "image": "/img/items/3342.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Swamp Gourd": {
+    "name": "Swamp Gourd",
+    "type": "fish",
+    "image": "/img/items/finp_382.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Swamp Thistle": {
+    "name": "Swamp Thistle",
+    "type": "item",
+    "image": "/img/items/finp_634.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Tie Dye Scarf": {
+    "name": "Tie Dye Scarf",
+    "type": "item",
+    "image": "/img/items/tiedyescarf2.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Tin Can": {
+    "name": "Tin Can",
+    "type": "item",
+    "image": "/img/items/198.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Tin Scraps": {
+    "name": "Tin Scraps",
+    "type": "item",
+    "image": "/img/items/tinscraps.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Toxic Tendrils": {
+    "name": "Toxic Tendrils",
+    "type": "fish",
+    "image": "/img/items/finp_476.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "U'ral Talisman": {
+    "name": "U'ral Talisman",
+    "type": "item",
+    "image": "/img/items/viri_3731.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "White Cloak": {
+    "name": "White Cloak",
+    "type": "item",
+    "image": "/img/items/whitecloak.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "White Dye": {
+    "name": "White Dye",
+    "type": "item",
+    "image": "/img/items/whitedye.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "White Purse": {
+    "name": "White Purse",
+    "type": "item",
+    "image": "/img/items/whitepurse.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "White Scarf": {
+    "name": "White Scarf",
+    "type": "item",
+    "image": "/img/items/whitescarf.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "White Shirt": {
+    "name": "White Shirt",
+    "type": "item",
+    "image": "/img/items/whiteshirt.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "White Twine": {
+    "name": "White Twine",
+    "type": "item",
+    "image": "/img/items/whitetwine.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Yellow Bag": {
+    "name": "Yellow Bag",
+    "type": "item",
+    "image": "/img/items/yellowbag.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Yellow Butterfly": {
+    "name": "Yellow Butterfly",
+    "type": "item",
+    "image": "/img/items/yellowbutterfly.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Yellow Dye": {
+    "name": "Yellow Dye",
+    "type": "item",
+    "image": "/img/items/yellowdye.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Yellow Purse": {
+    "name": "Yellow Purse",
+    "type": "item",
+    "image": "/img/items/yellowpurse.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Yellow Scarf": {
+    "name": "Yellow Scarf",
+    "type": "item",
+    "image": "/img/items/yellowscarf.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Yellow Shirt": {
+    "name": "Yellow Shirt",
+    "type": "item",
+    "image": "/img/items/yellowshirt.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Yellow Twine": {
+    "name": "Yellow Twine",
+    "type": "item",
+    "image": "/img/items/yellowtwine.png",
     "canCraft": true,
     "craftingLevel": 99
   }

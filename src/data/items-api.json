@@ -9242,7 +9242,7 @@
   "Amber Mire Bloom": {
     "name": "Amber Mire Bloom",
     "type": "item",
-    "image": "/img/items/3567.png",
+    "image": "/img/items/amberbloom.png",
     "canCraft": false,
     "craftingLevel": 0
   },

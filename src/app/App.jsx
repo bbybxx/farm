@@ -19,237 +19,24 @@ import PinnedLocationSelect from '../components/PinnedLocationSelect.jsx'
 import ItemDisplay from '../components/ItemDisplay'
 import itemsAPI from '../data/items-api.json' with { type: 'json' }
 import { normalizeItemsMap, normalizeItemRecord, areItemRecordsEqual } from '../utils/itemImageUtils.js'
+import { isStorageAvailable, saveToStorage, loadFromStorage } from '../utils/storage.js'
+import { copyToClipboard, clipboardAvailable } from '../utils/clipboard.js'
+import { formatNumberRounded, roundToTwo } from '../utils/formatters.js'
 import './app.css'
 import LocationImage from '../components/LocationImage.jsx'
+import LocationItemInput, { editingInputsSet } from '../components/LocationItemInput.jsx'
 import * as serviceWorkerRegistration from '../serviceWorkerRegistration'
 import { usePWA } from '../hooks/usePWA'
-
-// Helper functions for localStorage
-let storageAvailabilityCache = null
-function isStorageAvailable() {
-  if (storageAvailabilityCache !== null) {
-    return storageAvailabilityCache
-  }
-  if (typeof window === 'undefined' || typeof window.localStorage === 'undefined') {
-    storageAvailabilityCache = false
-    return storageAvailabilityCache
-  }
-  try {
-    const testKey = '__storage_test__'
-    window.localStorage.setItem(testKey, 'test')
-    window.localStorage.removeItem(testKey)
-    storageAvailabilityCache = true
-  } catch (error) {
-    storageAvailabilityCache = false
-  }
-  return storageAvailabilityCache
-}
-
-function saveToStorage(key, data) {
-  if (!isStorageAvailable()) return
-  try {
-    window.localStorage.setItem(key, JSON.stringify(data))
-  } catch (error) {
-    devLog('Failed to save to localStorage:', error)
-  }
-}
-
-// Format numbers with spaces for thousands separator and dot for decimals
-function formatNumber(num) {
-  if (num === null || num === undefined || num === '') return ''
-
-  if (typeof num === 'string') {
-    const trimmed = num.trim()
-    if (!trimmed) return ''
-    if (/[^\d\s.-]/.test(trimmed)) {
-      return num
-    }
-    const normalized = trimmed.replace(/\s+/g, '')
-    if (normalized === '' || normalized === '-' || normalized === '.') {
-      return num
-    }
-    const numericFromString = Number(normalized)
-    if (!Number.isFinite(numericFromString)) {
-      return num
-    }
-    num = numericFromString
-  }
-
-  if (typeof num !== 'number' || Number.isNaN(num)) {
-    return ''
-  }
-  if (num === 0) return '0'
-  
-  // Split into integer and decimal parts
-  const [integerPart, decimalPart] = num.toString().split('.')
-  
-  // Format integer part with spaces
-  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-  
-  // Return with dot as decimal separator if there's a decimal part
-  return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger
-}
-
-function loadFromStorage(key, defaultValue) {
-  if (!isStorageAvailable()) return defaultValue
-  try {
-    const stored = window.localStorage.getItem(key)
-    return stored ? JSON.parse(stored) : defaultValue
-  } catch (error) {
-    devLog('Failed to load from localStorage:', error)
-    return defaultValue
-  }
-}
+import { useCraftHistory } from '../hooks/useCraftHistory.js'
+import { usePinnedResources } from '../hooks/usePinnedResources.js'
+import { useClearData } from '../hooks/useClearData.js'
+import { useSettings } from '../hooks/useSettings.js'
+import { useUIState } from '../hooks/useUIState.js'
+import SettingsTab from '../components/Sidebar/SettingsTab.jsx'
+import PerksTab from '../components/Sidebar/PerksTab.jsx'
+import HistoryTab from '../components/Sidebar/HistoryTab.jsx'
 
 const STATIC_ITEMS_MAP = normalizeItemsMap(itemsAPI)
-
-const clipboardAvailable = () => typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.writeText === 'function'
-
-async function copyToClipboard(text) {
-  if (clipboardAvailable() && (typeof window === 'undefined' || window.isSecureContext)) {
-    try {
-      await navigator.clipboard.writeText(text)
-      return true
-    } catch (error) {
-      // fall through to manual fallback
-    }
-  }
-
-  if (typeof window === 'undefined' || typeof document === 'undefined') {
-    return false
-  }
-
-  if (typeof document.execCommand !== 'function') {
-    return false
-  }
-
-  try {
-    const textarea = document.createElement('textarea')
-    textarea.value = text
-    textarea.setAttribute('readonly', '')
-    textarea.style.position = 'absolute'
-    textarea.style.left = '-9999px'
-    document.body.appendChild(textarea)
-    const selection = typeof window !== 'undefined' && typeof window.getSelection === 'function' ? window.getSelection() : null
-    const selected = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null
-    textarea.select()
-    let successful = false
-    try {
-      successful = document.execCommand('copy')
-    } finally {
-      if (textarea.parentNode) {
-        textarea.parentNode.removeChild(textarea)
-      }
-    }
-    if (selected && selection) {
-      selection.removeAllRanges()
-      selection.addRange(selected)
-    }
-    return successful
-  } catch (error) {
-    return false
-  }
-}
-
-// Global set to track which inputs are being actively edited (survives re-renders)
-const editingInputsSet = new Set()
-
-// Isolated input component with realtime updates via DOM manipulation
-function LocationItemInput({ 
-  itemName, 
-  display, 
-  onCommit,
-  onPreview,
-  formatNumber 
-}) {
-  const inputRef = useRef(null)
-  const lastSetValueRef = useRef(null) // Track last value we set via preview
-  
-  // Update input value when display prop changes (and user is not editing)
-  useEffect(() => {
-    if (inputRef.current && !editingInputsSet.has(itemName)) {
-      const newValue = display !== '—' ? formatNumber(display) : ''
-      inputRef.current.value = newValue
-    }
-  }, [display, itemName, formatNumber])
-  
-  const handleFocus = (e) => {
-    editingInputsSet.add(itemName)
-    // Set raw value without formatting for editing
-    const currentVal = display !== '—' ? String(display).replace(/\s/g, '') : ''
-    e.target.value = currentVal
-    lastSetValueRef.current = null // Clear preview value
-    setTimeout(() => e.target.select(), 0)
-  }
-
-  const handleChange = (e) => {
-    const val = e.target.value.replace(/\s/g, '')
-    if (val === '' || !isNaN(val)) {
-      const numVal = val === '' ? 0 : parseFloat(val)
-      if (!isNaN(numVal) && numVal > 0) {
-        // Call preview to update other fields without losing focus
-        onPreview(itemName, numVal)
-      }
-    }
-  }
-
-  const handleBlur = (e) => {
-    editingInputsSet.delete(itemName)
-    const val = e.target.value.replace(/\s/g, '')
-    const numVal = val === '' ? 0 : parseFloat(val)
-    lastSetValueRef.current = null
-    
-    if (!isNaN(numVal) && numVal > 0) {
-      onCommit(itemName, numVal)
-    } else {
-      // Reset to display value and sync other fields
-      const resetVal = display !== '—' ? parseFloat(String(display).replace(/\s/g, '')) : 0
-      e.target.value = display !== '—' ? formatNumber(display) : ''
-      // Call preview with display value to sync other fields back
-      if (!isNaN(resetVal) && resetVal > 0) {
-        onPreview(itemName, resetVal)
-      }
-    }
-  }
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.target.blur()
-    } else if (e.key === 'Escape') {
-      e.target.value = display !== '—' ? formatNumber(display) : ''
-      editingInputsSet.delete(itemName)
-      lastSetValueRef.current = null
-      e.target.blur()
-    }
-  }
-  
-  // Store ref for external access (preview updates)
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current._lastSetValueRef = lastSetValueRef
-    }
-  }, [])
-
-  // Initial value
-  const initialValue = display !== '—' ? formatNumber(display) : ''
-
-  return (
-    <input
-      ref={inputRef}
-      type="text"
-      inputMode="decimal"
-      className="location-item-input"
-      defaultValue={initialValue}
-      data-item-name={itemName}
-      onChange={handleChange}
-      onClick={(e) => e.stopPropagation()}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-      onKeyDown={handleKeyDown}
-      placeholder={display !== '—' ? formatNumber(display) : '0'}
-    />
-  )
-}
 
 export default function App() {
   const [itemSelectFilter, setItemSelectFilter] = useState('')
@@ -340,27 +127,17 @@ export default function App() {
   // Deferred amount for heavy calculations - prevents UI jank during typing
   const deferredAmount = useDeferredValue(amount)
   const [activePerks, setActivePerks] = useState(() => loadFromStorage('craftCalculator_activePerks', []));
-  const [exploringMode, setExploringMode] = useState(() => {
-    const stored = loadFromStorage('craftCalculator_exploringMode', null)
-    if (!stored) return 'Apple Cider'
-    // map legacy 'Manually' to 'Apple Cider' to preserve UI after removal
-    if (stored === 'Manually') return 'Apple Cider'
-    return stored
-  })
 
-  // persist exploringMode; also fix legacy saved values on first mount
-  useEffect(() => {
-    // if legacy value still present in storage, overwrite it with the mapped value
-    try {
-      const raw = loadFromStorage('craftCalculator_exploringMode', null)
-      if (raw === 'Manually') {
-        saveToStorage('craftCalculator_exploringMode', exploringMode)
-      }
-    } catch (e) {
-      // ignore
-    }
-    saveToStorage('craftCalculator_exploringMode', exploringMode);
-  }, [exploringMode]);
+  const {
+    useThousandsFormat,
+    setUseThousandsFormat,
+    pinnedEnabled,
+    setPinnedEnabled,
+    buddyFarmLinksEnabled,
+    setBuddyFarmLinksEnabled,
+    exploringMode,
+    setExploringMode
+  } = useSettings()
 
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sidebarActiveTab, setSidebarActiveTab] = useState('perks')
@@ -406,64 +183,108 @@ export default function App() {
     return [{ name: storedItem, amount: storedAmount }]
   })
 
-  
-  const [craftHistory, setCraftHistory] = useState(() => loadFromStorage('craftCalculator_craftHistory', []))
-  const [historyLimit, setHistoryLimit] = useState(() => loadFromStorage('craftCalculator_historyLimit', 50))
+  const {
+    craftHistory,
+    setCraftHistory,
+    historyLimit,
+    setHistoryLimit,
+    historyEnabled,
+    setHistoryEnabled,
+    clearHistory,
+    addToHistory
+  } = useCraftHistory()
+
+  const {
+    locationsMode, setLocationsMode,
+    selectedLocation, setSelectedLocation,
+    questsMode, setQuestsMode,
+    craftBreadcrumbs, setCraftBreadcrumbs,
+    locationsBreadcrumbs, setLocationsBreadcrumbs,
+    questsBreadcrumbs, setQuestsBreadcrumbs,
+    resourcesSectionCollapsed, setResourcesSectionCollapsed,
+    usedInSectionCollapsed, setUsedInSectionCollapsed
+  } = useUIState()
+
   // Pinned resources system (replaces cart)
-  const [pinnedResources, setPinnedResources] = useState(() => loadFromStorage('craftCalculator_pinnedResources', []))
-  const [pinnedQuests, setPinnedQuests] = useState(() => loadFromStorage('craftCalculator_pinnedQuests', []))
-  const [expandedPinnedQuests, setExpandedPinnedQuests] = useState(new Set())
-  const [lastPinnedLocation, setLastPinnedLocation] = useState(() => loadFromStorage('craftCalculator_lastPinnedLocation', ''))
-  const [isPinnedOpen, setIsPinnedOpen] = useState(false)
-  
-  // Pinned folders system
-  const [pinnedFolders, setPinnedFolders] = useState(() => 
-    loadFromStorage('craftCalculator_pinnedFolders', [{ id: 'default', name: 'Main', createdAt: Date.now() }])
-  )
-  const [activePinnedFolder, setActivePinnedFolder] = useState(() => 
-    loadFromStorage('craftCalculator_activePinnedFolder', 'default')
-  )
-  const [isFolderConfigOpen, setIsFolderConfigOpen] = useState(false)
-  const [folderNameInput, setFolderNameInput] = useState('')
-  const [editingFolderId, setEditingFolderId] = useState(null)
-  const [isCreatingFolder, setIsCreatingFolder] = useState(false)
-  const [isCreatingFolderInTabs, setIsCreatingFolderInTabs] = useState(false)
-  const [deletingFolderId, setDeletingFolderId] = useState(null)
-  const [isQuickPinModalOpen, setIsQuickPinModalOpen] = useState(false)
-  const [quickPinSelectedItem, setQuickPinSelectedItem] = useState(null)
-  const [quickPinQuantity, setQuickPinQuantity] = useState('')
-  const [quickPinFilter, setQuickPinFilter] = useState('')
-  const [useThousandsFormat, setUseThousandsFormat] = useState(() => loadFromStorage('craftCalculator_useThousandsFormat', true))
-  const [recentlyAddedItems, setRecentlyAddedItems] = useState(new Set())
-  const [showClearConfirm, setShowClearConfirm] = useState(false)
-  const [showClearSuccess, setShowClearSuccess] = useState(false)
+  const {
+    pinnedResources, setPinnedResources,
+    pinnedQuests, setPinnedQuests,
+    expandedPinnedQuests, setExpandedPinnedQuests,
+    lastPinnedLocation, setLastPinnedLocation,
+    isPinnedOpen, setIsPinnedOpen,
+    pinnedFolders, setPinnedFolders,
+    activePinnedFolder, setActivePinnedFolder,
+    isFolderConfigOpen, setIsFolderConfigOpen,
+    folderNameInput, setFolderNameInput,
+    editingFolderId, setEditingFolderId,
+    isCreatingFolder, setIsCreatingFolder,
+    isCreatingFolderInTabs, setIsCreatingFolderInTabs,
+    deletingFolderId, setDeletingFolderId,
+    isQuickPinModalOpen, setIsQuickPinModalOpen,
+    quickPinSelectedItem, setQuickPinSelectedItem,
+    quickPinQuantity, setQuickPinQuantity,
+    quickPinFilter, setQuickPinFilter,
+    recentlyAddedItems, setRecentlyAddedItems,
+    recentlyAddedTimersRef,
+    addToPinned,
+    addQuestToPinned,
+    removeFromPinned,
+    removeQuestFromPinned,
+    createFolder,
+    deleteFolder,
+    renameFolder,
+    addToPinnedWithFolder,
+    handleQuickPin,
+    confirmQuickPin,
+    cancelQuickPin
+  } = usePinnedResources({
+    hapticFeedback,
+    item,
+    amount,
+    craftChain,
+    questsMode,
+    locationsMode
+  })
+
   const [isBugReportOpen, setIsBugReportOpen] = useState(false)
   const [isDevLogsOpen, setIsDevLogsOpen] = useState(false)
   const [isQuestsPanelOpen, setIsQuestsPanelOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [apiLoadStatus, setApiLoadStatus] = useState({ loading: false, error: null, lastUpdate: null })
-  const recentlyAddedTimersRef = useRef(new Set())
   
-  // Feature toggles
-  const [pinnedEnabled, setPinnedEnabled] = useState(() => loadFromStorage('craftCalculator_pinnedEnabled', true))
-  const [historyEnabled, setHistoryEnabled] = useState(() => loadFromStorage('craftCalculator_historyEnabled', true))
-  const [buddyFarmLinksEnabled, setBuddyFarmLinksEnabled] = useState(() => loadFromStorage('craftCalculator_buddyFarmLinksEnabled', false))
   const [isLocationConfigOpen, setIsLocationConfigOpen] = useState(false)
 
-  // Locations mode: show locations list and location-specific drops
-  const [locationsMode, setLocationsMode] = useState(() => loadFromStorage('craftCalculator_locationsMode', false))
-  const [selectedLocation, setSelectedLocation] = useState(() => loadFromStorage('craftCalculator_selectedLocation', 'Forest'))
-  // Quests mode: show quests and quest chains
-  const [questsMode, setQuestsMode] = useState(() => loadFromStorage('craftCalculator_questsMode', false))
-  
-  // Mode-specific breadcrumbs storage
-  const [craftBreadcrumbs, setCraftBreadcrumbs] = useState(() => loadFromStorage('craftCalculator_craftBreadcrumbs', []))
-  const [locationsBreadcrumbs, setLocationsBreadcrumbs] = useState(() => loadFromStorage('craftCalculator_locationsBreadcrumbs', []))
-  const [questsBreadcrumbs, setQuestsBreadcrumbs] = useState(() => loadFromStorage('craftCalculator_questsBreadcrumbs', []))
-  
-  // Collapsible sections state for unified item view
-  const [resourcesSectionCollapsed, setResourcesSectionCollapsed] = useState(() => loadFromStorage('craftCalculator_resourcesSectionCollapsed', false))
-  const [usedInSectionCollapsed, setUsedInSectionCollapsed] = useState(() => loadFromStorage('craftCalculator_usedInSectionCollapsed', true))
+  const {
+    showClearConfirm,
+    showClearSuccess,
+    handleClearData,
+    confirmClearData,
+    cancelClearData
+  } = useClearData({
+    hapticFeedback,
+    setItem,
+    setAmount,
+    setActivePerks,
+    setCraftChain,
+    setCraftHistory,
+    setHistoryLimit,
+    setPinnedResources,
+    setUseThousandsFormat,
+    setPinnedEnabled,
+    setBuddyFarmLinksEnabled,
+    setExploringMode,
+    setHistoryEnabled,
+    setItemsData,
+    STATIC_ITEMS_MAP,
+    setSidebarOpen,
+    setSidebarActiveTab,
+    setIsItemSelectOpen,
+    setIsHistoryOpen,
+    setRecentlyAddedItems,
+    recentlyAddedTimersRef,
+    updateService,
+    mergeItemsData
+  })
 
   const locationsForConfig = useMemo(() => {
     try {
@@ -541,40 +362,6 @@ export default function App() {
 
   // Items for select: show all items (both craftable and source resources)
   const itemsForSelect = items
-
-  useEffect(() => {
-    saveToStorage('craftCalculator_locationsMode', locationsMode)
-  }, [locationsMode])
-  
-  // Save collapsible section states
-  useEffect(() => {
-    saveToStorage('craftCalculator_resourcesSectionCollapsed', resourcesSectionCollapsed)
-  }, [resourcesSectionCollapsed])
-  
-  useEffect(() => {
-    saveToStorage('craftCalculator_usedInSectionCollapsed', usedInSectionCollapsed)
-  }, [usedInSectionCollapsed])
-
-  useEffect(() => {
-    saveToStorage('craftCalculator_selectedLocation', selectedLocation)
-  }, [selectedLocation])
-
-  useEffect(() => {
-    saveToStorage('craftCalculator_questsMode', questsMode)
-  }, [questsMode])
-
-  // Save mode-specific breadcrumbs
-  useEffect(() => {
-    saveToStorage('craftCalculator_craftBreadcrumbs', craftBreadcrumbs)
-  }, [craftBreadcrumbs])
-  
-  useEffect(() => {
-    saveToStorage('craftCalculator_locationsBreadcrumbs', locationsBreadcrumbs)
-  }, [locationsBreadcrumbs])
-  
-  useEffect(() => {
-    saveToStorage('craftCalculator_questsBreadcrumbs', questsBreadcrumbs)
-  }, [questsBreadcrumbs])
 
   // Sync craftChain to mode-specific breadcrumbs storage
   useEffect(() => {
@@ -684,18 +471,7 @@ export default function App() {
     hapticFeedback('medium')
     
     // Add to history if enabled
-    if (historyEnabled && item && item !== itemName) {
-      const historyEntry = {
-        id: Date.now(),
-        timestamp: new Date().toISOString(),
-        fromItem: item,
-        fromAmount: amount,
-        toItem: itemName,
-        toAmount: quantity,
-        chain: [...craftChain]
-      }
-      setCraftHistory(prev => [historyEntry, ...prev.slice(0, historyLimit - 1)])
-    }
+    addToHistory(item, amount, itemName, quantity, craftChain)
     
     // Set item and amount
     setItem(itemName)
@@ -726,31 +502,6 @@ export default function App() {
     setLocationsMode(false)
   }
 
-  // Helper to round to two decimals
-  const roundToTwo = (n) => {
-    if (n === null || n === undefined || Number.isNaN(n)) return null
-    return Math.round(Number(n) * 100) / 100
-  }
-
-  // Format number with thousand separators (spaces) and dot for decimals
-  const formatNumber = (n) => {
-    if (n === null || n === undefined || n === '') return ''
-    const num = Number(n)
-    if (Number.isNaN(num)) return n
-    // Round to 2 decimals
-    const rounded = roundToTwo(num)
-    if (rounded === null) return ''
-    
-    // Split into integer and decimal parts
-    const [integerPart, decimalPart] = rounded.toString().split('.')
-    
-    // Format integer part with spaces
-    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-    
-    // Return with dot as decimal separator if there's a decimal part
-    return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger
-  }
-
   // Function to handle clicking on a resource - now uses unified navigation
   const handleResourceClick = (resourceName, quantity) => {
     navigateToItem(resourceName, quantity)
@@ -766,31 +517,19 @@ export default function App() {
     setIsHistoryOpen(false)
   }
 
-  // Function to clear craft history
-  const clearHistory = () => {
-    setCraftHistory([])
-    if (isStorageAvailable()) {
-      try {
-        window.localStorage.removeItem('craftCalculator_craftHistory')
-      } catch (error) {
-        devLog('Failed to clear craft history from storage:', error)
-      }
-    }
-  }
-
   // Function to generate shareable text
   const generateShareText = () => {
     if (!result) return ''
     
     const resourcesText = Object.entries(result.filteredResources)
-      .map(([name, qty]) => `• ${name}: ${formatNumber(qty)}`)
+      .map(([name, qty]) => `• ${name}: ${formatNumberRounded(qty)}`)
       .join('\n')
     
     const perksText = activePerks.length > 0 
       ? `\n\nPerks:\n${activePerks.map(p => `• ${p}`).join('\n')}` 
       : ''
     
-    return `Craft Calculator Results\n\nItem: ${item} (×${formatNumber(typeof amount === 'string' ? amount.replace(/\s/g, '') : amount)})\n\nResources needed:\n${resourcesText}${perksText}\n\nCalculate your own: [Open Craft Calculator]`
+    return `Craft Calculator Results\n\nItem: ${item} (×${formatNumberRounded(typeof amount === 'string' ? amount.replace(/\s/g, '') : amount)})\n\nResources needed:\n${resourcesText}${perksText}\n\nCalculate your own: [Open Craft Calculator]`
   }
 
   // Function to handle main button click (share results)
@@ -848,14 +587,7 @@ export default function App() {
   }, [craftChain])
 
   useEffect(() => {
-    saveToStorage('craftCalculator_craftHistory', craftHistory)
-  }, [craftHistory])
-
-  useEffect(() => {
-    saveToStorage('craftCalculator_historyLimit', historyLimit)
-  }, [historyLimit])
-
-  useEffect(() => {
+    // ...
     return () => {
       if (typeof window !== 'undefined') {
         recentlyAddedTimersRef.current.forEach(id => {
@@ -939,59 +671,6 @@ export default function App() {
       if (typeof stop === 'function') stop()
     }
   }, [mergeItemsData, updateService])
-
-  useEffect(() => {
-    saveToStorage('craftCalculator_pinnedResources', pinnedResources)
-  }, [pinnedResources])
-
-  useEffect(() => {
-    saveToStorage('craftCalculator_pinnedQuests', pinnedQuests)
-  }, [pinnedQuests])
-
-  useEffect(() => {
-    saveToStorage('craftCalculator_lastPinnedLocation', lastPinnedLocation)
-  }, [lastPinnedLocation])
-
-  useEffect(() => {
-    saveToStorage('craftCalculator_pinnedFolders', pinnedFolders)
-  }, [pinnedFolders])
-
-  useEffect(() => {
-    saveToStorage('craftCalculator_activePinnedFolder', activePinnedFolder)
-  }, [activePinnedFolder])
-
-  // Migration: some older pinned entries used `selectedLocation` key.
-  // Normalize to `location` on first load to avoid mismatch between selector and estimate.
-  // Also add default folderId for items without one.
-  useEffect(() => {
-    try {
-      if (!pinnedResources || pinnedResources.length === 0) return
-      let migrated = false
-      const next = pinnedResources.map(p => {
-        let updated = p
-        
-        // Migrate selectedLocation to location
-        if (p.selectedLocation && !p.location) {
-          migrated = true
-          const { selectedLocation, ...rest } = updated
-          updated = { ...rest, location: selectedLocation }
-        }
-        
-        // Add default folderId if missing
-        if (!updated.folderId) {
-          migrated = true
-          updated = { ...updated, folderId: 'default' }
-        }
-        
-        return updated
-      })
-      if (migrated) setPinnedResources(next)
-    } catch (e) {
-      // ignore
-    }
-    // run only once on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   // Close mode dropdown on outside click or ESC
   useEffect(() => {
@@ -1091,22 +770,6 @@ export default function App() {
     setTimeout(preloadData, 500);
   }, [])
 
-  useEffect(() => {
-    saveToStorage('craftCalculator_useThousandsFormat', useThousandsFormat)
-  }, [useThousandsFormat])
-
-  useEffect(() => {
-    saveToStorage('craftCalculator_pinnedEnabled', pinnedEnabled)
-  }, [pinnedEnabled])
-
-  useEffect(() => {
-    saveToStorage('craftCalculator_historyEnabled', historyEnabled)
-  }, [historyEnabled])
-
-  useEffect(() => {
-    saveToStorage('craftCalculator_buddyFarmLinksEnabled', buddyFarmLinksEnabled)
-  }, [buddyFarmLinksEnabled])
-
   // Auto-switch tab if current tab is disabled
   useEffect(() => {
     if (sidebarActiveTab === 'pinned' && !pinnedEnabled) {
@@ -1161,233 +824,10 @@ export default function App() {
     return () => clearTimeout(timer)
   }, [])
 
-  // Pinned resources functions
-  const addToPinned = (resourceName, quantity, parentRecipe = null, event = null) => {
-    // Stop propagation if event is provided
-    if (event) {
-      event.stopPropagation()
-    }
-    // If active folder is 'quests', fallback to 'default' for regular items
-    const targetFolder = activePinnedFolder === 'quests' ? 'default' : (activePinnedFolder || 'default')
-    addToPinnedWithFolder(resourceName, quantity, parentRecipe, targetFolder)
-  }
-
-  // Function to add quests/questlines to pinned
-  const addQuestToPinned = (questData, event = null) => {
-    if (event) {
-      event.stopPropagation()
-    }
-    
-    hapticFeedback('light')
-    
-    // Ensure Quests folder exists
-    let questsFolderId = pinnedFolders.find(f => f.id === 'quests')?.id
-    if (!questsFolderId) {
-      const questsFolder = {
-        id: 'quests',
-        name: 'Quests',
-        createdAt: Date.now(),
-        isSystemFolder: true
-      }
-      setPinnedFolders(prev => {
-        // Insert after 'default' (Main) folder
-        const defaultIndex = prev.findIndex(f => f.id === 'default')
-        if (defaultIndex !== -1) {
-          return [
-            ...prev.slice(0, defaultIndex + 1),
-            questsFolder,
-            ...prev.slice(defaultIndex + 1)
-          ]
-        }
-        return [questsFolder, ...prev]
-      })
-      questsFolderId = 'quests'
-    }
-    
-    // Always add quest to 'quests' folder regardless of active folder
-    setPinnedQuests(prev => [...prev, { ...questData, folderId: 'quests' }])
-    
-    // Show success animation
-    const itemKey = `quest_${questData.type}_${questData.id}`
-    setRecentlyAddedItems(prev => {
-      const next = new Set(prev)
-      next.add(itemKey)
-      return next
-    })
-    
-    if (typeof window !== 'undefined') {
-      const timerId = window.setTimeout(() => {
-        setRecentlyAddedItems(prev => {
-          const next = new Set(prev)
-          next.delete(itemKey)
-          return next
-        })
-        recentlyAddedTimersRef.current.delete(timerId)
-      }, 2000)
-      recentlyAddedTimersRef.current.add(timerId)
-    }
-  }
-
-  const removeFromPinned = (index) => {
-    hapticFeedback('light')
-    setPinnedResources(prev => prev.filter((_, i) => i !== index))
-  }
-
-  const removeQuestFromPinned = (index) => {
-    hapticFeedback('light')
-    setPinnedQuests(prev => prev.filter((_, i) => i !== index))
-  }
-
-  // Folder management functions
-  const createFolder = (folderName) => {
-    const newFolder = {
-      id: `folder_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      name: folderName.trim(),
-      createdAt: Date.now()
-    }
-    setPinnedFolders(prev => [...prev, newFolder])
-    return newFolder.id
-  }
-
-  const deleteFolder = (folderId) => {
-    if (folderId === 'default') return // Cannot delete default folder
-    
-    // Remove all items in this folder
-    setPinnedResources(prev => prev.filter(item => item.folderId !== folderId))
-    
-    // Remove all quests in this folder
-    if (folderId === 'quests') {
-      setPinnedQuests(prev => prev.filter(quest => quest.folderId !== folderId))
-    }
-    
-    // Remove the folder
-    setPinnedFolders(prev => prev.filter(f => f.id !== folderId))
-    
-    // If active folder is deleted, switch to default
-    if (activePinnedFolder === folderId) {
-      setActivePinnedFolder('default')
-    }
-  }
-
-  const renameFolder = (folderId, newName) => {
-    setPinnedFolders(prev => prev.map(f => 
-      f.id === folderId ? { ...f, name: newName.trim() } : f
-    ))
-  }
-
-  const addToPinnedWithFolder = (resourceName, quantity, parentRecipe = null, folderId = null) => {
-    const targetFolder = folderId || activePinnedFolder || 'default'
-    
-    hapticFeedback('light')
-    
-    setPinnedResources(prev => {
-      let qty = quantity
-      if (qty === null || qty === undefined || qty === '') qty = 1
-      if (typeof qty === 'string') {
-        const parsed = Number(qty.replace(/\s+/g, ''))
-        qty = Number.isFinite(parsed) ? parsed : 1
-      }
-      if (typeof qty !== 'number' || Number.isNaN(qty) || !Number.isFinite(qty) || qty <= 0) qty = 1
-      qty = Math.round(qty * 100) / 100
-
-      const locs = getItemLocations(resourceName) || []
-      const hasLast = lastPinnedLocation && locs.some(l => l.name === lastPinnedLocation)
-      
-      // Determine the origin mode (simplified: only 'craft', 'locations', 'quests', 'quick-pin')
-      let originMode = 'quick-pin' // default for quick pin
-      if (questsMode) {
-        originMode = 'quests'
-      } else if (locationsMode) {
-        originMode = 'locations'
-      } else {
-        originMode = 'craft'
-      }
-      
-      const newEntry = {
-        name: resourceName,
-        quantity: qty,
-        parentRecipe: parentRecipe || item,
-        folderId: targetFolder,
-        craftChain: craftChain && craftChain.length > 0 ? [...craftChain] : [],
-        originMode: originMode, // Save the mode from which it was pinned
-        ...(hasLast ? { location: lastPinnedLocation } : {}),
-        // Save current amount (consumable quantity) if in locations mode
-        ...(locationsMode ? { savedAmount: amount } : {})
-      }
-      return [...prev, newEntry]
-    })
-    
-    // Show success animation
-    const coercedQty = (() => {
-      let q = quantity
-      if (q === null || q === undefined || q === '') return 1
-      if (typeof q === 'string') {
-        const parsed = Number(q.replace(/\s+/g, ''))
-        q = Number.isFinite(parsed) ? parsed : 1
-      }
-      if (typeof q !== 'number' || Number.isNaN(q) || !Number.isFinite(q) || q <= 0) q = 1
-      return Math.round(q * 100) / 100
-    })()
-    const itemKey = `${resourceName}_${coercedQty}_${parentRecipe || item || 'unknown'}`
-    setRecentlyAddedItems(prev => {
-      const next = new Set(prev)
-      next.add(itemKey)
-      return next
-    })
-    
-    if (typeof window !== 'undefined') {
-      const timerId = window.setTimeout(() => {
-        setRecentlyAddedItems(prev => {
-          const next = new Set(prev)
-          next.delete(itemKey)
-          return next
-        })
-        recentlyAddedTimersRef.current.delete(timerId)
-      }, 2000)
-      recentlyAddedTimersRef.current.add(timerId)
-    }
-  }
-
-  // Quick pin handler - opens modal to select any item
-  const handleQuickPin = (selectedItem) => {
-    setQuickPinSelectedItem(selectedItem)
-    setQuickPinQuantity('')
-  }
-
-  const confirmQuickPin = () => {
-    if (quickPinQuantity && !isNaN(quickPinQuantity) && parseInt(quickPinQuantity) > 0) {
-      addToPinnedWithFolder(
-        quickPinSelectedItem,
-        parseInt(quickPinQuantity),
-        'Quick Pin',
-        activePinnedFolder
-      )
-      hapticFeedback('success')
-      setIsQuickPinModalOpen(false)
-      setQuickPinSelectedItem(null)
-      setQuickPinQuantity('')
-      setQuickPinFilter('')
-    }
-  }
-
-  const cancelQuickPin = () => {
-    setQuickPinSelectedItem(null)
-    setQuickPinQuantity('')
-  }
-
   // Handle item click from quests - uses unified navigation
   const handleQuestItemClick = (itemName, quantity, questName) => {
     navigateToItem(itemName, quantity, questName || 'Quests')
   }
-
-  // Reset Quick Pin filter when modal closes
-  useEffect(() => {
-    if (!isQuickPinModalOpen) {
-      setQuickPinFilter('')
-      setQuickPinSelectedItem(null)
-      setQuickPinQuantity('')
-    }
-  }, [isQuickPinModalOpen])
 
   // Handle location item commit - calculate and update amount based on target quantity
   const handleLocationItemCommit = useCallback((itemName, targetQuantity) => {
@@ -1506,7 +946,7 @@ export default function App() {
           
           console.log('Setting value for', itemName, ':', newValue)
           if (newValue !== null) {
-            const formattedValue = formatNumber(roundToTwo(newValue))
+            const formattedValue = formatNumberRounded(roundToTwo(newValue))
             input.value = formattedValue
             // Store in ref so it survives React re-render
             if (input._lastSetValueRef) {
@@ -1526,12 +966,12 @@ export default function App() {
       // Also update the amount input field
       const amountInput = document.querySelector('.amount-input')
       if (amountInput) {
-        amountInput.value = formatNumber(newAmount)
+        amountInput.value = formatNumberRounded(newAmount)
       }
     } catch (e) {
       console.error('Preview error:', e)
     }
-  }, [selectedLocation, activePerks, exploringMode, formatNumber])
+  }, [selectedLocation, activePerks, exploringMode])
 
   // Save pinned resources to localStorage
 
@@ -1564,106 +1004,6 @@ export default function App() {
   const togglePerk = (p) => {
     hapticFeedback('light')
     setActivePerks(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p])
-  }
-
-  // Function to handle clear data with confirmation
-  const handleClearData = () => {
-    hapticFeedback('light')
-    setShowClearConfirm(true)
-  }
-
-  // Function to clear all saved data
-  const clearSavedData = () => {
-    try {
-      // Clear all localStorage keys related to the app (only if storage is available)
-      if (isStorageAvailable()) {
-        // Remove everything that starts with our app prefix
-        const prefix = 'craftCalculator_'
-        const keysToRemove = []
-        const storage = window.localStorage
-        for (let i = 0; i < storage.length; i++) {
-          const k = storage.key(i)
-          if (!k) continue
-          if (k.indexOf(prefix) === 0) keysToRemove.push(k)
-        }
-        // Also remove known keys from RecipeUpdateService/cache
-        keysToRemove.push('lastRecipeUpdate')
-        keysToRemove.push('cachedApiRecipes')
-        keysToRemove.push('cachedApiItems')
-
-        keysToRemove.forEach(k => {
-          try { storage.removeItem(k) } catch (e) {}
-        })
-
-        // Also clear sessionStorage copies if used
-        try {
-          for (let i = 0; i < sessionStorage.length; i++) {
-            const sk = sessionStorage.key(i)
-            if (!sk) continue
-            if (sk.indexOf(prefix) === 0) sessionStorage.removeItem(sk)
-          }
-        } catch (e) {
-          // ignore sessionStorage errors
-        }
-      }
-      
-      // Reset all state to defaults
-      setItem('Board')
-      setAmount(1)
-      setActivePerks([])
-      setCraftChain([{ name: 'Board', amount: 1 }])
-      setCraftHistory([])
-      setHistoryLimit(50)
-      setPinnedResources([])
-      setUseThousandsFormat(true)
-      setPinnedEnabled(true)
-      setHistoryEnabled(true)
-  setItemsData({ ...STATIC_ITEMS_MAP })
-      
-      // Reset UI states
-      setSidebarOpen(false)
-      setSidebarActiveTab('perks')
-      setIsItemSelectOpen(false)
-      setIsHistoryOpen(false)
-      setRecentlyAddedItems(new Set())
-      if (typeof window !== 'undefined') {
-        recentlyAddedTimersRef.current.forEach(id => window.clearTimeout(id))
-      }
-      recentlyAddedTimersRef.current.clear()
-
-  // Also reset any saved-last-selection map in memory
-  setLastSelectionByMode({})
-      
-      // Show confirmation
-      hapticFeedback('heavy')
-      setShowClearSuccess(true)
-      setTimeout(() => {
-        setShowClearSuccess(false)
-      }, 3000)
-
-      updateService.forceUpdate().then((data) => {
-        mergeItemsData(data?.items || data?.itemData || {})
-      }).catch((err) => {
-        if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {
-          devLog('Failed to refetch recipes after clearing data:', err)
-        }
-      })
-    } catch (error) {
-      devLog('Failed to clear saved data:', error)
-      // Could add error modal here too, but keeping minimal for now
-    }
-  }
-
-  // Function to confirm data clearing
-  const confirmClearData = () => {
-    setShowClearConfirm(false)
-    clearSavedData()
-  }
-
-  // Function to cancel data clearing
-  const cancelClearData = () => {
-    hapticFeedback('light')
-    setShowClearConfirm(false)
   }
 
   // Bug report functions
@@ -1901,73 +1241,20 @@ export default function App() {
         
         <div className="side-content">
           {sidebarActiveTab === 'perks' && (
-            <>
-              {perkCategories.map(category => (
-                <div key={category.title} className="perk-group">
-                  <h3 className="perk-group-title">{category.title}</h3>
-                  {category.perks.map(p => (
-                    <motion.button
-                      layout
-                      key={p}
-                      whileTap={{ scale: 0.98 }}
-                      className={"chip wide" + (activePerks.includes(p) ? ' active' : '')}
-                      onClick={() => togglePerk(p)}
-                      type="button"
-                      aria-pressed={activePerks.includes(p)}
-                    >{p}</motion.button>
-                  ))}
-                </div>
-              ))}
-            </>
+            <PerksTab
+              perkCategories={perkCategories}
+              activePerks={activePerks}
+              togglePerk={togglePerk}
+            />
           )}
           
           {sidebarActiveTab === 'history' && historyEnabled && (
-            <div className="history-section">
-              <div className="section-header">
-                <h3>Craft History ({craftHistory.length})</h3>
-                {craftHistory.length > 0 && (
-                  <button 
-                    className="chip danger"
-                    onClick={clearHistory}
-                    type="button"
-                    title="Clear all history"
-                  >
-                    Clear All
-                  </button>
-                )}
-              </div>
-              
-              <div className="history-list-sidebar">
-                {craftHistory.length === 0 ? (
-                  <div className="empty-state">
-                    <p>No craft history yet.</p>
-                    <p>Navigate through intermediate resources to build your history.</p>
-                  </div>
-                ) : (
-                  craftHistory.map(entry => (
-                    <button
-                      key={entry.id}
-                      className="history-item-sidebar"
-                      onClick={() => {
-                        handleHistoryClick(entry)
-                        setSidebarOpen(false)
-                      }}
-                      type="button"
-                    >
-                      <div className="history-main">
-                        <span className="from">{entry.fromItem}</span>
-                        <span className="arrow">→</span>
-                        <span className="to">{entry.toItem}</span>
-                        <span className="amount">×{entry.toAmount}</span>
-                      </div>
-                      <div className="history-time">
-                        {new Date(entry.timestamp).toLocaleDateString()}
-                      </div>
-                    </button>
-                  ))
-                )}
-              </div>
-            </div>
+            <HistoryTab
+              craftHistory={craftHistory}
+              clearHistory={clearHistory}
+              handleHistoryClick={handleHistoryClick}
+              setSidebarOpen={setSidebarOpen}
+            />
           )}
           
           {sidebarActiveTab === 'pinned' && pinnedEnabled && (
@@ -2320,7 +1607,7 @@ export default function App() {
                                         >
                                           <ItemDisplay itemName={itemName} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
                                           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                            <span style={{ color: 'rgba(255,255,255,0.7)' }}>×{formatNumber(quantity)}</span>
+                                            <span style={{ color: 'rgba(255,255,255,0.7)' }}>×{formatNumberRounded(quantity)}</span>
                                             {isClickable && (
                                               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A9EFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                                 <polyline points="9 18 15 12 9 6"></polyline>
@@ -2349,7 +1636,7 @@ export default function App() {
                               }}>
                                 <ItemDisplay itemName="Silver" itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
                                 <span style={{ marginLeft: 'auto', color: 'rgba(255,255,255,0.7)' }}>
-                                  ×{formatNumber(quest.requirements.silver)}
+                                  ×{formatNumberRounded(quest.requirements.silver)}
                                 </span>
                               </div>
                             )}
@@ -2425,7 +1712,7 @@ export default function App() {
                                         >
                                           <ItemDisplay itemName={itemName} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
                                           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                            <span style={{ color: 'rgba(255,255,255,0.7)' }}>×{formatNumber(quantity)}</span>
+                                            <span style={{ color: 'rgba(255,255,255,0.7)' }}>×{formatNumberRounded(quantity)}</span>
                                             {isClickable && (
                                               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A9EFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                                 <polyline points="9 18 15 12 9 6"></polyline>
@@ -2454,7 +1741,7 @@ export default function App() {
                               }}>
                                 <ItemDisplay itemName="Silver" itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
                                 <span style={{ marginLeft: 'auto', color: 'rgba(255,255,255,0.7)' }}>
-                                  ×{formatNumber(quest.rewards.silver)}
+                                  ×{formatNumberRounded(quest.rewards.silver)}
                                 </span>
                               </div>
                             )}
@@ -2529,15 +1816,15 @@ export default function App() {
                                   )}
                                 </div>
                                 <div className="pinned-item-details">
-                                  <span className="pinned-item-quantity">×{formatNumber(pinnedItem.quantity)}</span>
+                                  <span className="pinned-item-quantity">×{formatNumberRounded(pinnedItem.quantity)}</span>
                                   {pinnedItem.parentRecipe && <span className="parent-recipe">from {pinnedItem.parentRecipe}</span>}
 
                                   {est && (() => {
                                     if (typeof est.apNeeded !== 'undefined' && est.apNeeded !== null) {
-                                      return (<div className="pinned-ap-line">{`${formatNumber(est.apNeeded)} AP`}</div>)
+                                      return (<div className="pinned-ap-line">{`${formatNumberRounded(est.apNeeded)} AP`}</div>)
                                     }
-                                    if (est.mode === 'EXP') return (<div style={{ fontSize: 12, color: '#99a', marginTop: 6 }}>{formatNumber(est.explores)} EXP • {formatNumber(est.stamina)} STA</div>)
-                                    if (est.mode === 'AC') return (<div style={{ fontSize: 12, color: '#99a', marginTop: 6 }}>{formatNumber(est.cidersNeeded)} AC • {formatNumber(est.totalStamina)} STA</div>)
+                                    if (est.mode === 'EXP') return (<div style={{ fontSize: 12, color: '#99a', marginTop: 6 }}>{formatNumberRounded(est.explores)} EXP • {formatNumberRounded(est.stamina)} STA</div>)
+                                    if (est.mode === 'AC') return (<div style={{ fontSize: 12, color: '#99a', marginTop: 6 }}>{formatNumberRounded(est.cidersNeeded)} AC • {formatNumberRounded(est.totalStamina)} STA</div>)
                                     return null
                                   })()}
                                 </div>
@@ -2568,265 +1855,23 @@ export default function App() {
           )}
           
           {sidebarActiveTab === 'settings' && (
-            <div className="settings-section">
-              <h3 className="section-title">Display Settings</h3>
-              
-              <h3 className="section-title">Features</h3>
-              
-              <div className="setting-item">
-                <label className="setting-label">
-                  <input
-                    type="checkbox"
-                    checked={pinnedEnabled}
-                    onChange={(e) => setPinnedEnabled(e.target.checked)}
-                    className="setting-checkbox"
-                  />
-                  Enable Resource Pinning
-                </label>
-                <p className="setting-description">
-                  Show pinned tab and pin buttons for resources
-                </p>
-              </div>
-
-              {pinnedEnabled && (
-                <div className="setting-item">
-                  <button
-                    className="chip wide"
-                    onClick={() => setIsFolderConfigOpen(true)}
-                    type="button"
-                  >
-                    Configure Pinning Folders
-                  </button>
-                  <p className="setting-description">
-                    Manage folders for organizing pinned resources
-                  </p>
-                </div>
-              )}
-              
-              
-              <div className="setting-item">
-                <label className="setting-label">
-                  <input
-                    type="checkbox"
-                    checked={historyEnabled}
-                    onChange={(e) => setHistoryEnabled(e.target.checked)}
-                    className="setting-checkbox"
-                  />
-                  Enable History functionality
-                </label>
-                <p className="setting-description">
-                  Track and save calculation history
-                </p>
-              </div>
-
-              <div className="setting-item">
-                <label className="setting-label">
-                  <input
-                    type="checkbox"
-                    checked={buddyFarmLinksEnabled}
-                    onChange={(e) => setBuddyFarmLinksEnabled(e.target.checked)}
-                    className="setting-checkbox"
-                  />
-                  Enable buddy.farm Links
-                </label>
-                <p className="setting-description">
-                  Make item icons clickable to open buddy.farm pages
-                </p>
-              </div>
-
-              <h3 className="section-title">Exploring</h3>
-              <div className="setting-item">
-                <div className="setting-label" style={{ alignItems: 'center', gap: 12 }}>
-                  <span style={{ fontWeight: 600 }}>Mode</span>
-                  <div className="exploring-chips">
-                    <motion.button
-                      whileTap={{ scale: 0.98 }}
-                      className={`chip${exploringMode === 'Apple Cider' ? ' active' : ''}`}
-                      onClick={() => setExploringMode('Apple Cider')}
-                      type="button"
-                    >
-                      Apple Cider
-                    </motion.button>
-
-                    <motion.button
-                      whileTap={{ scale: 0.98 }}
-                      className={`chip${exploringMode === 'Arnold Palmer' ? ' active' : ''}`}
-                      onClick={() => setExploringMode('Arnold Palmer')}
-                      type="button"
-                    >
-                      Arnold Palmer
-                    </motion.button>
-                  </div>
-                </div>
-                <p className="setting-description">Select how exploring calculations should be performed.</p>
-              </div>
-              
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
-                <button
-                  type="button"
-                  onClick={() => setIsLocationConfigOpen(true)}
-                  className="small-btn"
-                  style={{ padding: '6px 10px' }}
-                >
-                  Configure locations
-                </button>
-                <div style={{ fontSize: 12, color: '#666' }}>Set Exploring Effectiveness per location (affects cider explores)</div>
-              </div>
-              
-              {historyEnabled && (
-                <>
-                  <h3 className="section-title">History Settings</h3>
-                  
-                  <div className="setting-item">
-                    <label className="setting-label">
-                      History limit
-                      <input
-                        type="number"
-                        min="10"
-                        max="200"
-                        value={historyLimit}
-                        onChange={(e) => {
-                          const parsed = parseInt(e.target.value, 10)
-                          if (Number.isNaN(parsed)) {
-                            setHistoryLimit(50)
-                            return
-                          }
-                          const bounded = Math.min(200, Math.max(10, parsed))
-                          setHistoryLimit(bounded)
-                        }}
-                        className="setting-input"
-                      />
-                    </label>
-                    <p className="setting-description">
-                      Maximum number of history entries to keep (10-200)
-                    </p>
-                  </div>
-                </>
-              )}
-              
-              <h3 className="section-title">Bug Report</h3>
-              <button
-                className="chip wide"
-                onClick={handleBugReport}
-                type="button"
-                title="Report a bug or issue"
-              >
-                Report Bug
-              </button>
-              <div className="settings-info">
-                <p>Found a bug or issue? Let us know and help improve the app.</p>
-              </div>
-              
-              <h3 className="section-title">Data Management</h3>
-              <button
-                className="chip wide danger"
-                onClick={handleClearData}
-                type="button"
-                title="Clear all saved data and reset to defaults"
-              >
-                Clear All Saved Data
-              </button>
-              
-              <div className="settings-info">
-                <p>This will remove all saved perks, craft history, settings, and current selection.</p>
-              </div>
-              
-              {/* Social links */}
-              <div className="social-links">
-                <div className="social-link-wrapper">
-                  <span className="social-label">Updates</span>
-                  <button
-                    onClick={() => setIsDevLogsOpen(true)}
-                    className="social-link"
-                    title="Development Logs"
-                    type="button"
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="social-icon">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                      <polyline points="14 2 14 8 20 8"></polyline>
-                      <line x1="16" y1="13" x2="8" y2="13"></line>
-                      <line x1="16" y1="17" x2="8" y2="17"></line>
-                      <polyline points="10 9 9 9 8 9"></polyline>
-                    </svg>
-                    Dev Logs
-                  </button>
-                </div>
-                <div className="social-link-wrapper">
-                  <span className="social-label">My Profile</span>
-                  <a 
-                    href="https://farmrpg.com/index.php#!/profile.php?user_name=bbybxx" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="social-link"
-                    title="FarmRPG Profile"
-                  >
-                    <img src="/farmrpg_logo.png" alt="FarmRPG" className="social-icon" />
-                    FarmRPG
-                  </a>
-                </div>
-                <div className="social-link-wrapper">
-                  <span className="social-label">Tip</span>
-                  <a 
-                    href="https://boosty.to/bbybxx/donate?forPost=9850758" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="social-link"
-                    title="Support on Boosty"
-                  >
-                    <img src="/boosty-sign-logo.png" alt="Boosty" className="social-icon" />
-                    Boosty
-                  </a>
-                </div>
-                <div className="social-link-wrapper">
-                  <span className="social-label">Code</span>
-                  <a
-                    href="https://github.com/bbybxx/farm"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="social-link"
-                    title="GitHub Repository"
-                  >
-                    <svg className="social-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.38 7.86 10.9.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.27-1.69-1.27-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.68 1.25 3.33.96.1-.75.4-1.25.72-1.54-2.56-.29-5.26-1.28-5.26-5.7 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.45.11-3.02 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 2.87-.39c.98 0 1.97.13 2.88.39 2.18-1.5 3.14-1.18 3.14-1.18.62 1.57.23 2.73.11 3.02.74.81 1.18 1.84 1.18 3.1 0 4.43-2.71 5.41-5.29 5.69.41.36.77 1.07.77 2.15 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56A10.52 10.52 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z" />
-                    </svg>
-                    GitHub
-                  </a>
-                </div>
-                <div className="social-link-wrapper">
-                  <span className="social-label">Telegram</span>
-                  <a
-                    href="https://t.me/bbybrxx"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="social-link"
-                    title="Telegram"
-                  >
-                    <svg className="social-icon" width="20" height="20" viewBox="0 0 240 240" fill="none" aria-hidden="true">
-                      <path d="M20 120c0-55.228 44.772-100 100-100s100 44.772 100 100-44.772 100-100 100S20 175.228 20 120z" fill="currentColor" opacity="0.06"/>
-                      <path d="M50.5 120.2l133.4-48.4c3.1-1.1 6.7 1.3 5.6 4.4l-22.6 84.9c-1.2 4.6-6.6 6.4-10.2 3.4l-33.9-27.1-17.1 16.5c-3.5 3.3-8.9 1.5-10.3-3.2L61 127.6 50.5 120.2z" fill="currentColor"/>
-                    </svg>
-                    @bbybrxx
-                  </a>
-                </div>
-                <div className="social-link-wrapper">
-                  <span className="social-label">Discord</span>
-                  <a
-                    href="https://discord.com/users/715290260564869130"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="social-link"
-                    title="Discord"
-                  >
-                    <svg className="social-icon" width="20" height="20" viewBox="0 0 71 55" fill="currentColor" aria-hidden="true">
-                      <path d="M60.104 4.552A58.545 58.545 0 0 0 44.4.9a41.01 41.01 0 0 0-2.06 4.183 54.3 54.3 0 0 0-13.08 0A41.08 41.08 0 0 0 27.2.9 58.59 58.59 0 0 0 11.1 4.55C3.6 18.2 2.2 31.6 3.1 44.9a59.22 59.22 0 0 0 22.7 5.86c.34-.47.64-.96.9-1.47-6.2-1.86-10.96-5.15-13.6-8.52 1.15.68 2.36 1.3 3.6 1.82 6.54 2.89 12.9 4.56 20.2 4.56 7.24 0 13.55-1.68 20.1-4.56 1.25-.52 2.45-1.14 3.6-1.82-2.64 3.37-7.4 6.66-13.6 8.52.26.5.56 1 .9 1.47A59.2 59.2 0 0 0 67.9 44.9c.9-13.3.1-26.7-7.8-40.35zM23.2 37.1c-3.2 0-5.8-2.9-5.8-6.4 0-3.5 2.6-6.4 5.8-6.4 3.2 0 5.8 2.9 5.8 6.4 0 3.5-2.6 6.4-5.8 6.4zm24.6 0c-3.2 0-5.8-2.9-5.8-6.4 0-3.5 2.6-6.4 5.8-6.4 3.2 0 5.8 2.9 5.8 6.4 0 3.5-2.6 6.4-5.8 6.4z" />
-                    </svg>
-                    Discord
-                  </a>
-                </div>
-              </div>
-              
-            </div>
+            <SettingsTab
+              pinnedEnabled={pinnedEnabled}
+              setPinnedEnabled={setPinnedEnabled}
+              setIsFolderConfigOpen={setIsFolderConfigOpen}
+              historyEnabled={historyEnabled}
+              setHistoryEnabled={setHistoryEnabled}
+              buddyFarmLinksEnabled={buddyFarmLinksEnabled}
+              setBuddyFarmLinksEnabled={setBuddyFarmLinksEnabled}
+              exploringMode={exploringMode}
+              setExploringMode={setExploringMode}
+              setIsLocationConfigOpen={setIsLocationConfigOpen}
+              historyLimit={historyLimit}
+              setHistoryLimit={setHistoryLimit}
+              handleBugReport={handleBugReport}
+              handleClearData={handleClearData}
+              setIsDevLogsOpen={setIsDevLogsOpen}
+            />
           )}
           
           {/* Exploring perks now use existing perkCategories UI (chips) */}
@@ -3460,7 +2505,6 @@ export default function App() {
                               display={display}
                               onCommit={handleLocationItemCommit}
                               onPreview={handleLocationItemPreview}
-                              formatNumber={formatNumber}
                             />
                           </div>
                           {pinnedEnabled && (
@@ -3555,7 +2599,7 @@ export default function App() {
                                         )}
                                       </ItemDisplay>
                                     </span>
-                                    <span className="v">{formatNumber(v)}</span>
+                                    <span className="v">{formatNumberRounded(v)}</span>
                                   </div>
                                   {pinnedEnabled && (
                                     <button
@@ -3638,7 +2682,7 @@ export default function App() {
                                         )}
                                       </ItemDisplay>
                                     </span>
-                                    <span className="v">{formatNumber(c.craftableCount != null ? c.craftableCount : 0)}</span>
+                                    <span className="v">{formatNumberRounded(c.craftableCount != null ? c.craftableCount : 0)}</span>
                                   </div>
 
                                   {pinnedEnabled && (() => {

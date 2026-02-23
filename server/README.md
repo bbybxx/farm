@@ -15,7 +15,7 @@ npm install
 
 ```env
 # Telegram Bot Configuration
-BOT_TOKEN=8035311656:AAFB8nrpINRSaREmNRtevET2iOjREohVgGs
+BOT_TOKEN=YOUR_BOT_TOKEN_HERE
 CHAT_ID=YOUR_CHAT_ID_HERE  # ID чата куда отправлять сообщения
 
 # Server Configuration  
@@ -31,7 +31,7 @@ ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000,https://your-domain.
 
 1. Добавьте бота в чат или группу
 2. Отправьте сообщение боту
-3. Перейдите по ссылке: `https://api.telegram.org/bot8035311656:AAFB8nrpINRSaREmNRtevET2iOjREohVgGs/getUpdates`
+3. Перейдите по ссылке: `https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates`
 4. Найдите в ответе `"chat":{"id":ВАSH_CHAT_ID}`
 5. Скопируйте ID и вставьте в `.env`
 

@@ -12,12 +12,17 @@
 }
 
 /* Prevent some browsers from forcibly adjusting colors (forced color modes, readers) */
-/* Respect author's color scheme and provide explicit fallbacks */
+/* Force dark scheme so Safari renders chrome/overscroll in dark. */
 html, body {
-  color-scheme: light dark;
+  color-scheme: dark;
   forced-color-adjust: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Safari shows html background in overscroll bounce areas — must match the app bg */
+html {
+  background-color: #0b1020;
 }
 
 /* Provide a solid fallback background color for environments that don't support gradients */

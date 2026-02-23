@@ -12,19 +12,16 @@ import QuestsPanel from '../components/QuestsPanel'
 import LocationConfigPanel from '../components/LocationConfigPanel'
 import { APPLE_CIDER_REAL_DROP_RATES } from '../data/apple-cider-real-drop-rates.js'
 import { computePinnedEstimate, getItemLocations } from '../utils/exploringUtils.js'
-import questsApiData from '../data/quests-api.json'
 // Vercel Web Analytics (React)
 import { Analytics } from '@vercel/analytics/react'
-import PinnedLocationSelect from '../components/PinnedLocationSelect.jsx'
 import ItemDisplay from '../components/ItemDisplay'
 import itemsAPI from '../data/items-api.json' with { type: 'json' }
 import { normalizeItemsMap, normalizeItemRecord, areItemRecordsEqual } from '../utils/itemImageUtils.js'
 import { isStorageAvailable, saveToStorage, loadFromStorage } from '../utils/storage.js'
 import { copyToClipboard, clipboardAvailable } from '../utils/clipboard.js'
-import { formatNumberRounded, roundToTwo } from '../utils/formatters.js'
+import { formatNumberRounded } from '../utils/formatters.js'
 import './app.css'
 import LocationImage from '../components/LocationImage.jsx'
-import LocationItemInput, { editingInputsSet } from '../components/LocationItemInput.jsx'
 import * as serviceWorkerRegistration from '../serviceWorkerRegistration'
 import { usePWA } from '../hooks/usePWA'
 import { useCraftHistory } from '../hooks/useCraftHistory.js'
@@ -35,6 +32,14 @@ import { useUIState } from '../hooks/useUIState.js'
 import SettingsTab from '../components/Sidebar/SettingsTab.jsx'
 import PerksTab from '../components/Sidebar/PerksTab.jsx'
 import HistoryTab from '../components/Sidebar/HistoryTab.jsx'
+import PinnedTab from '../components/Sidebar/PinnedTab.jsx'
+import AppHeader from '../components/AppHeader.jsx'
+import ItemSelectModal from '../components/ItemSelectModal.jsx'
+import CraftSection from '../components/CraftSection.jsx'
+import LocationDropsSection from '../components/LocationDropsSection.jsx'
+import ClearDataModals from '../components/ClearDataModals.jsx'
+import FolderConfigModal from '../components/FolderConfigModal.jsx'
+import QuickPinModal from '../components/QuickPinModal.jsx'
 
 const STATIC_ITEMS_MAP = normalizeItemsMap(itemsAPI)
 
@@ -740,36 +745,6 @@ export default function App() {
     }
   }, [])
 
-  // Pre-load all data for instant access
-  useEffect(() => {
-    const preloadData = async () => {
-      try {
-        // Pre-load recipes data
-        if (!combinedRecipes || Object.keys(combinedRecipes).length === 0) {
-          const recipesModule = await import('../data/recipes-api.json');
-          const recipesData = recipesModule.default;
-          // Process recipes data here if needed
-          console.log('Recipes data pre-loaded');
-        }
-
-        // Pre-load items data
-        if (!itemsData || Object.keys(itemsData).length === 0) {
-          const itemsModule = await import('../data/items-api.json');
-          const itemsDataRaw = itemsModule.default;
-          // Process items data here if needed
-          console.log('Items data pre-loaded');
-        }
-
-        console.log('All data pre-loaded for instant access');
-      } catch (error) {
-        console.log('Data preloading failed:', error);
-      }
-    };
-
-    // Start preloading after a short delay
-    setTimeout(preloadData, 500);
-  }, [])
-
   // Auto-switch tab if current tab is disabled
   useEffect(() => {
     if (sidebarActiveTab === 'pinned' && !pinnedEnabled) {
@@ -879,103 +854,6 @@ export default function App() {
       console.error('Error calculating required amount:', e)
     }
   }, [selectedLocation, activePerks, exploringMode])
-
-  // Preview handler - updates other fields via DOM without React re-render
-  const handleLocationItemPreview = useCallback((editingItemName, targetQuantity) => {
-    if (!targetQuantity || targetQuantity <= 0) return
-    
-    console.log('handleLocationItemPreview called:', editingItemName, targetQuantity)
-    
-    try {
-      // Calculate what amount would be needed
-      const perUnit = computePinnedEstimate(
-        { name: editingItemName, location: selectedLocation },
-        1,
-        activePerks,
-        exploringMode
-      )
-      
-      console.log('perUnit:', perUnit)
-      
-      let newAmount = null
-      if (exploringMode === 'Apple Cider' && perUnit && perUnit.mode === 'AC' && typeof perUnit.effectiveDropsPerCider === 'number') {
-        const dropsPerCider = perUnit.effectiveDropsPerCider
-        if (dropsPerCider > 0) {
-          newAmount = Math.ceil(targetQuantity / dropsPerCider)
-        }
-      } else if (exploringMode === 'Arnold Palmer' && perUnit && perUnit.mode === 'AP' && typeof perUnit.itemsPerAP === 'number') {
-        const itemsPerAP = perUnit.itemsPerAP
-        if (itemsPerAP > 0) {
-          newAmount = Math.ceil(targetQuantity / itemsPerAP)
-        }
-      }
-      
-      console.log('newAmount:', newAmount)
-      
-      if (newAmount === null) return
-      
-      // Get location data for calculating other items
-      const locObj = APPLE_CIDER_REAL_DROP_RATES.locations && APPLE_CIDER_REAL_DROP_RATES.locations[selectedLocation]
-      if (!locObj) return
-      
-      // Find all location-item-input elements and update them via DOM
-      const inputs = document.querySelectorAll('.location-item-input[data-item-name]')
-      console.log('Found inputs:', inputs.length)
-      
-      inputs.forEach(input => {
-        const itemName = input.dataset.itemName
-        console.log('Processing input:', itemName, 'editing:', editingInputsSet.has(itemName))
-        if (itemName === editingItemName) return // Skip the one being edited
-        if (editingInputsSet.has(itemName)) return // Skip if also being edited
-        
-        // Calculate new value for this item
-        try {
-          const itemPerUnit = computePinnedEstimate(
-            { name: itemName, location: selectedLocation },
-            1,
-            activePerks,
-            exploringMode
-          )
-          
-          let newValue = null
-          if (exploringMode === 'Apple Cider' && itemPerUnit && itemPerUnit.mode === 'AC' && typeof itemPerUnit.effectiveDropsPerCider === 'number') {
-            newValue = newAmount * itemPerUnit.effectiveDropsPerCider
-          } else if (exploringMode === 'Arnold Palmer' && itemPerUnit && itemPerUnit.mode === 'AP' && typeof itemPerUnit.itemsPerAP === 'number') {
-            newValue = newAmount * itemPerUnit.itemsPerAP
-          }
-          
-          console.log('Setting value for', itemName, ':', newValue)
-          if (newValue !== null) {
-            const formattedValue = formatNumberRounded(roundToTwo(newValue))
-            input.value = formattedValue
-            // Store in ref so it survives React re-render
-            if (input._lastSetValueRef) {
-              input._lastSetValueRef.current = formattedValue
-            }
-            // Trigger update animation
-            input.classList.remove('value-updated')
-            void input.offsetWidth // Force reflow to restart animation
-            input.classList.add('value-updated')
-            console.log('Set to:', input.value)
-          }
-        } catch (e) {
-          console.error('Error for', itemName, e)
-        }
-      })
-      
-      // Also update the amount input field
-      const amountInput = document.querySelector('.amount-input')
-      if (amountInput) {
-        amountInput.value = formatNumberRounded(newAmount)
-      }
-    } catch (e) {
-      console.error('Preview error:', e)
-    }
-  }, [selectedLocation, activePerks, exploringMode])
-
-  // Save pinned resources to localStorage
-
-  // Save pinned resources to localStorage
 
   // Telegram integration effects
   useEffect(() => {
@@ -1258,600 +1136,39 @@ export default function App() {
           )}
           
           {sidebarActiveTab === 'pinned' && pinnedEnabled && (
-            <div className="pinned-section">
-              {/* Folder tabs */}
-              <div className="folder-tabs-container">
-                <div className="folder-tabs">
-                  {pinnedFolders.map(folder => {
-                    const folderItems = pinnedResources.filter(item => (item.folderId || 'default') === folder.id)
-                    const folderQuests = folder.id === 'quests' ? pinnedQuests.filter(q => (q.folderId || 'quests') === 'quests') : []
-                    const totalCount = folderItems.length + folderQuests.length
-                    return (
-                      <button
-                        key={folder.id}
-                        className={`folder-tab ${activePinnedFolder === folder.id ? 'active' : ''}`}
-                        onClick={() => setActivePinnedFolder(folder.id)}
-                        type="button"
-                      >
-                        {folder.name}
-                        <span className="folder-count">({totalCount})</span>
-                      </button>
-                    )
-                  })}
-                  {!isCreatingFolderInTabs ? (
-                    <button
-                      className="folder-tab new-folder"
-                      onClick={() => {
-                        setIsCreatingFolderInTabs(true)
-                        setFolderNameInput('')
-                      }}
-                      type="button"
-                      title="Create new folder"
-                    >
-                      + New Folder
-                    </button>
-                  ) : (
-                    <div className="folder-tab-input-wrapper">
-                      <input
-                        type="text"
-                        className="folder-name-input folder-tab-input"
-                        value={folderNameInput}
-                        onChange={(e) => setFolderNameInput(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && folderNameInput.trim()) {
-                            const newId = createFolder(folderNameInput.trim())
-                            setActivePinnedFolder(newId)
-                            setIsCreatingFolderInTabs(false)
-                            setFolderNameInput('')
-                          } else if (e.key === 'Escape') {
-                            setIsCreatingFolderInTabs(false)
-                            setFolderNameInput('')
-                          }
-                        }}
-                        placeholder="Folder name..."
-                        autoFocus
-                      />
-                      <button
-                        className="folder-input-btn folder-input-confirm"
-                        onClick={() => {
-                          if (folderNameInput.trim()) {
-                            const newId = createFolder(folderNameInput.trim())
-                            setActivePinnedFolder(newId)
-                            setIsCreatingFolderInTabs(false)
-                            setFolderNameInput('')
-                          }
-                        }}
-                        disabled={!folderNameInput.trim()}
-                        title="Create folder"
-                        type="button"
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                      </button>
-                      <button
-                        className="folder-input-btn folder-input-cancel"
-                        onClick={() => {
-                          setIsCreatingFolderInTabs(false)
-                          setFolderNameInput('')
-                        }}
-                        title="Cancel"
-                        type="button"
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <line x1="18" y1="6" x2="6" y2="18"></line>
-                          <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="section-header">
-                <h3>Pinned Resources</h3>
-                <div style={{ display: 'flex', gap: '6px' }}>
-                  <button 
-                    className="chip"
-                    onClick={() => {
-                      hapticFeedback('light')
-                      setIsQuickPinModalOpen(true)
-                    }}
-                    type="button"
-                    title="Pin any item"
-                  >
-                    + Pin
-                  </button>
-                  {(pinnedResources.filter(item => (item.folderId || 'default') === activePinnedFolder).length > 0 ||
-                    (activePinnedFolder === 'quests' && pinnedQuests.filter(q => (q.folderId || 'quests') === 'quests').length > 0)) && (
-                    <button 
-                      className="chip danger"
-                      onClick={() => {
-                        hapticFeedback('medium')
-                        setPinnedResources(prev => prev.filter(item => (item.folderId || 'default') !== activePinnedFolder))
-                        if (activePinnedFolder === 'quests') {
-                          setPinnedQuests([])
-                        }
-                      }}
-                      type="button"
-                      title="Clear this folder"
-                    >
-                      Clear
-                    </button>
-                  )}
-                </div>
-              </div>
-              
-              {(pinnedResources.filter(item => (item.folderId || 'default') === activePinnedFolder).length === 0 &&
-                (activePinnedFolder !== 'quests' || pinnedQuests.filter(q => (q.folderId || 'quests') === 'quests').length === 0)) ? (
-                <div className="empty-state">
-                  <p>No pinned {activePinnedFolder === 'quests' ? 'quests' : 'resources'} in this folder.</p>
-                  <p>{activePinnedFolder === 'quests' 
-                    ? 'Pin quests or questlines from the Quests mode.' 
-                    : 'Pin resources from any recipe by clicking the "+" button next to them.'}</p>
-                </div>
-              ) : (
-                <div className="pinned-items">
-                  {/* Show pinned quests if in Quests folder */}
-                  {activePinnedFolder === 'quests' && pinnedQuests.map((quest, index) => (
-                    <div key={`quest-${index}`} className="pinned-card">
-                      <button
-                        className="pinned-close-btn"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          removeQuestFromPinned(index)
-                        }}
-                        type="button"
-                        title="Remove from pinned"
-                      >
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <line x1="18" y1="6" x2="6" y2="18"></line>
-                          <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                      </button>
-
-                      <div className="pinned-card-content">
-                        <div 
-                          onClick={() => {
-                            // Save the quest info to localStorage so QuestsPanel can restore it
-                            if (quest.type === 'questline') {
-                              localStorage.setItem('selectedQuestlineId', quest.id)
-                              localStorage.setItem('selectedQuestId', '')
-                            } else if (quest.type === 'quest') {
-                              localStorage.setItem('selectedQuestlineId', quest.questlineId || '')
-                              localStorage.setItem('selectedQuestId', quest.id)
-                            }
-                            
-                            // Force QuestsPanel to reload by toggling questsMode
-                            const wasInQuestsMode = questsMode
-                            if (wasInQuestsMode) {
-                              setQuestsMode(false)
-                              setTimeout(() => {
-                                setQuestsMode(true)
-                              }, 0)
-                            } else {
-                              // Switch to quests mode
-                              setQuestsMode(true)
-                              setLocationsMode(false)
-                            }
-                            
-                            // Close sidebar on mobile
-                            if (window.innerWidth <= 768) {
-                              setSidebarOpen(false)
-                            }
-                            
-                            hapticFeedback('light')
-                          }}
-                          style={{ cursor: 'pointer' }}
-                        >
-                          <div className="pinned-item-name">
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                              <span style={{ fontWeight: 600 }}>{quest.name.replace(/<br\s*\/?>/gi, ' ')}</span>
-                            </div>
-                          </div>
-                          <div className="pinned-item-details">
-                            {quest.type === 'quest' && quest.questlineName && (
-                              <div style={{
-                                fontSize: '11px',
-                                color: 'rgba(255,255,255,0.35)',
-                                marginTop: '6px',
-                                padding: '4px 8px',
-                                background: 'rgba(255,255,255,0.02)',
-                                borderRadius: '4px',
-                                borderLeft: '2px solid rgba(255,255,255,0.1)',
-                                fontStyle: 'italic',
-                                letterSpacing: '0.3px'
-                              }}>
-                                {quest.questlineName.replace(/<br\s*\/?>/gi, ' ')}
-                              </div>
-                            )}
-                            {quest.description && (
-                              <div style={{
-                                fontSize: '12px',
-                                color: 'rgba(255,255,255,0.6)',
-                                marginTop: '4px',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                display: '-webkit-box',
-                                WebkitLineClamp: 2,
-                                WebkitBoxOrient: 'vertical'
-                              }}>
-                                {quest.description}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Toggle button for requirements/rewards */}
-                        {((quest.requirements?.items && (Array.isArray(quest.requirements.items) ? quest.requirements.items.length > 0 : Object.keys(quest.requirements.items).length > 0)) ||
-                          (quest.rewards?.items && (Array.isArray(quest.rewards.items) ? quest.rewards.items.length > 0 : Object.keys(quest.rewards.items).length > 0)) ||
-                          quest.requirements?.silver > 0 ||
-                          quest.rewards?.silver > 0) && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              const questKey = `${quest.type}_${quest.id}`
-                              setExpandedPinnedQuests(prev => {
-                                const next = new Set(prev)
-                                if (next.has(questKey)) {
-                                  next.delete(questKey)
-                                } else {
-                                  next.add(questKey)
-                                }
-                                return next
-                              })
-                              hapticFeedback('light')
-                            }}
-                            style={{
-                              marginTop: '8px',
-                              padding: '4px 8px',
-                              fontSize: '11px',
-                              color: 'rgba(255,255,255,0.4)',
-                              background: 'none',
-                              border: 'none',
-                              cursor: 'pointer',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '4px',
-                              transition: 'color 0.2s'
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.7)'}
-                            onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
-                            type="button"
-                          >
-                            <svg 
-                              width="10" 
-                              height="10" 
-                              viewBox="0 0 24 24" 
-                              fill="none" 
-                              stroke="currentColor" 
-                              strokeWidth="2.5" 
-                              strokeLinecap="round" 
-                              strokeLinejoin="round"
-                              style={{
-                                transform: expandedPinnedQuests.has(`${quest.type}_${quest.id}`) ? 'rotate(180deg)' : 'rotate(0deg)',
-                                transition: 'transform 0.2s'
-                              }}
-                            >
-                              <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
-                            {expandedPinnedQuests.has(`${quest.type}_${quest.id}`) ? 'Hide items' : 'Show items'}
-                          </button>
-                        )}
-
-                        {/* Display requirements */}
-                        <AnimatePresence>
-                          {expandedPinnedQuests.has(`${quest.type}_${quest.id}`) && quest.requirements && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: 'auto', opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.2, ease: 'easeInOut' }}
-                              style={{ overflow: 'hidden', marginTop: '12px' }}
-                            >
-                            {/* Items */}
-                            {(() => {
-                              // Handle both formats: object {itemName: quantity} or array [{name, quantity, image}]
-                              const itemsToDisplay = quest.requirements.items
-                              const itemsArray = Array.isArray(itemsToDisplay) 
-                                ? itemsToDisplay.map(item => [item.name, item.quantity])
-                                : Object.entries(itemsToDisplay || {})
-                              
-                              if (itemsArray.length === 0) return null
-                              
-                              return (
-                                <div style={{ marginBottom: '8px' }}>
-                                  <div style={{ 
-                                    fontSize: '11px', 
-                                    color: 'rgba(255,255,255,0.5)', 
-                                    marginBottom: '4px',
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '0.5px'
-                                  }}>
-                                    Requirements
-                                  </div>
-                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                    {itemsArray.map(([itemName, quantity]) => {
-                                      const isClickable = hasItemContent(itemName)
-
-                                      return (
-                                        <div
-                                          key={itemName}
-                                          onClick={(e) => {
-                                            if (isClickable) {
-                                              e.stopPropagation()
-                                              handleQuestItemClick(itemName, quantity, quest.name)
-                                              // Close sidebar on mobile
-                                              if (window.innerWidth <= 768) {
-                                                setSidebarOpen(false)
-                                              }
-                                            }
-                                          }}
-                                          style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '6px',
-                                            fontSize: '13px',
-                                            padding: '4px 6px',
-                                            borderRadius: '4px',
-                                            backgroundColor: 'rgba(255,255,255,0.03)',
-                                            cursor: isClickable ? 'pointer' : 'default',
-                                            transition: 'background-color 0.2s'
-                                          }}
-                                          onMouseEnter={(e) => {
-                                            if (isClickable) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'
-                                          }}
-                                          onMouseLeave={(e) => {
-                                            if (isClickable) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)'
-                                          }}
-                                        >
-                                          <ItemDisplay itemName={itemName} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
-                                          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                            <span style={{ color: 'rgba(255,255,255,0.7)' }}>×{formatNumberRounded(quantity)}</span>
-                                            {isClickable && (
-                                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A9EFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                                <polyline points="9 18 15 12 9 6"></polyline>
-                                              </svg>
-                                            )}
-                                          </div>
-                                        </div>
-                                      )
-                                    })}
-                                  </div>
-                                </div>
-                              )
-                            })()}
-
-                            {/* Silver */}
-                            {quest.requirements.silver > 0 && (
-                              <div style={{ 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                gap: '6px',
-                                fontSize: '13px',
-                                padding: '4px 6px',
-                                borderRadius: '4px',
-                                backgroundColor: 'rgba(255,255,255,0.03)',
-                                marginTop: '4px'
-                              }}>
-                                <ItemDisplay itemName="Silver" itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
-                                <span style={{ marginLeft: 'auto', color: 'rgba(255,255,255,0.7)' }}>
-                                  ×{formatNumberRounded(quest.requirements.silver)}
-                                </span>
-                              </div>
-                            )}
-                          </motion.div>
-                        )}
-                        </AnimatePresence>
-
-                        {/* Display rewards */}
-                        <AnimatePresence>
-                          {expandedPinnedQuests.has(`${quest.type}_${quest.id}`) && quest.rewards && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: 'auto', opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.2, ease: 'easeInOut' }}
-                              style={{ overflow: 'hidden', marginTop: '12px' }}
-                            >
-                            {/* Items */}
-                            {(() => {
-                              // Handle both formats: object {itemName: quantity} or array [{name, quantity, image}]
-                              const itemsToDisplay = quest.rewards.items
-                              const itemsArray = Array.isArray(itemsToDisplay) 
-                                ? itemsToDisplay.map(item => [item.name, item.quantity])
-                                : Object.entries(itemsToDisplay || {})
-                              
-                              if (itemsArray.length === 0) return null
-                              
-                              return (
-                                <div style={{ marginBottom: '8px' }}>
-                                  <div style={{ 
-                                    fontSize: '11px', 
-                                    color: 'rgba(255,255,255,0.5)', 
-                                    marginBottom: '4px',
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '0.5px'
-                                  }}>
-                                    Rewards
-                                  </div>
-                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                    {itemsArray.map(([itemName, quantity]) => {
-                                      const isClickable = hasItemContent(itemName)
-
-                                      return (
-                                        <div
-                                          key={itemName}
-                                          onClick={(e) => {
-                                            if (isClickable) {
-                                              e.stopPropagation()
-                                              handleQuestItemClick(itemName, quantity, quest.name)
-                                              // Close sidebar on mobile
-                                              if (window.innerWidth <= 768) {
-                                                setSidebarOpen(false)
-                                              }
-                                            }
-                                          }}
-                                          style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '6px',
-                                            fontSize: '13px',
-                                            padding: '4px 6px',
-                                            borderRadius: '4px',
-                                            backgroundColor: 'rgba(255,255,255,0.03)',
-                                            cursor: isClickable ? 'pointer' : 'default',
-                                            transition: 'background-color 0.2s'
-                                          }}
-                                          onMouseEnter={(e) => {
-                                            if (isClickable) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'
-                                          }}
-                                          onMouseLeave={(e) => {
-                                            if (isClickable) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)'
-                                          }}
-                                        >
-                                          <ItemDisplay itemName={itemName} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
-                                          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                            <span style={{ color: 'rgba(255,255,255,0.7)' }}>×{formatNumberRounded(quantity)}</span>
-                                            {isClickable && (
-                                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4A9EFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                                <polyline points="9 18 15 12 9 6"></polyline>
-                                              </svg>
-                                            )}
-                                          </div>
-                                        </div>
-                                      )
-                                    })}
-                                  </div>
-                                </div>
-                              )
-                            })()}
-
-                            {/* Silver */}
-                            {quest.rewards.silver > 0 && (
-                              <div style={{ 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                gap: '6px',
-                                fontSize: '13px',
-                                padding: '4px 6px',
-                                borderRadius: '4px',
-                                backgroundColor: 'rgba(255,255,255,0.03)',
-                                marginTop: '4px'
-                              }}>
-                                <ItemDisplay itemName="Silver" itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
-                                <span style={{ marginLeft: 'auto', color: 'rgba(255,255,255,0.7)' }}>
-                                  ×{formatNumberRounded(quest.rewards.silver)}
-                                </span>
-                              </div>
-                            )}
-                          </motion.div>
-                        )}
-                        </AnimatePresence>
-                      </div>
-                    </div>
-                  ))}
-                  
-                  {/* Show pinned resources */}
-                  {pinnedResources.map((pinnedItem, index) => {
-                    // Only show items in the active folder
-                    if ((pinnedItem.folderId || 'default') !== activePinnedFolder) return null
-                    
-                    // compute estimate once per pinned item so selector and estimate use same default
-                    let est = null
-                    try {
-                      est = computePinnedEstimate(pinnedItem, pinnedItem.quantity, activePerks, exploringMode)
-                    } catch (e) { est = null }
-
-                    const locs = getItemLocations(pinnedItem.name) || []
-                    // prefer explicit user-set `location`, then computed estimate location, then legacy `selectedLocation`, then first available
-                    const selectorValue = pinnedItem.location || (est && est.location) || pinnedItem.selectedLocation || (locs[0] && locs[0].name) || ''
-
-                    return (
-                      <div key={index} className="pinned-card">
-                        <button
-                          className="pinned-close-btn"
-                          onClick={() => removeFromPinned(index)}
-                          type="button"
-                          title="Remove from pinned"
-                        >
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                          </svg>
-                        </button>
-
-                        {(() => {
-                          // Check if item has content to show
-                          const isClickable = hasItemContent(pinnedItem.name)
-
-                          return (
-                            <>
-                              <div 
-                                className="pinned-card-content"
-                                onClick={() => {
-                                  if (!isClickable) return
-                                  
-                                  // Use unified navigation - always go to item page
-                                  navigateToItem(pinnedItem.name, pinnedItem.quantity, pinnedItem.parentRecipe || null)
-                                  
-                                  // Close sidebar on mobile
-                                  if (window.innerWidth <= 768) {
-                                    setSidebarOpen(false)
-                                  }
-                                }}
-                                style={{ 
-                                  cursor: isClickable ? 'pointer' : 'default',
-                                  opacity: isClickable ? 1 : 0.6
-                                }}
-                              >
-                                <div className="pinned-item-name">
-                                  {itemsData && itemsData[pinnedItem.name] ? (
-                                    <ItemDisplay itemName={pinnedItem.name} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
-                                  ) : (
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                      <LocationImage name={pinnedItem.name} size={24} />
-                                      <span style={{ fontWeight: 600 }}>{pinnedItem.name}</span>
-                                    </div>
-                                  )}
-                                </div>
-                                <div className="pinned-item-details">
-                                  <span className="pinned-item-quantity">×{formatNumberRounded(pinnedItem.quantity)}</span>
-                                  {pinnedItem.parentRecipe && <span className="parent-recipe">from {pinnedItem.parentRecipe}</span>}
-
-                                  {est && (() => {
-                                    if (typeof est.apNeeded !== 'undefined' && est.apNeeded !== null) {
-                                      return (<div className="pinned-ap-line">{`${formatNumberRounded(est.apNeeded)} AP`}</div>)
-                                    }
-                                    if (est.mode === 'EXP') return (<div style={{ fontSize: 12, color: '#99a', marginTop: 6 }}>{formatNumberRounded(est.explores)} EXP • {formatNumberRounded(est.stamina)} STA</div>)
-                                    if (est.mode === 'AC') return (<div style={{ fontSize: 12, color: '#99a', marginTop: 6 }}>{formatNumberRounded(est.cidersNeeded)} AC • {formatNumberRounded(est.totalStamina)} STA</div>)
-                                    return null
-                                  })()}
-                                </div>
-                              </div>
-
-                              <div className="pinned-loc-select">
-                                {locs.length === 0 ? null : (
-                                  <PinnedLocationSelect
-                                    options={locs.map(l => l.name)}
-                                    value={selectorValue}
-                                    onChange={(newLoc) => {
-                                      setPinnedResources(prev => prev.map((p, i) => i === index ? { ...p, location: newLoc } : p))
-                                      // persist last-picked location so subsequent pins default to it
-                                      setLastPinnedLocation(newLoc)
-                                    }}
-                                  />
-                                )}
-                              </div>
-                            </>
-                          )
-                        })()}
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
+            <PinnedTab
+              pinnedFolders={pinnedFolders}
+              pinnedResources={pinnedResources}
+              setPinnedResources={setPinnedResources}
+              pinnedQuests={pinnedQuests}
+              setPinnedQuests={setPinnedQuests}
+              activePinnedFolder={activePinnedFolder}
+              setActivePinnedFolder={setActivePinnedFolder}
+              isCreatingFolderInTabs={isCreatingFolderInTabs}
+              setIsCreatingFolderInTabs={setIsCreatingFolderInTabs}
+              folderNameInput={folderNameInput}
+              setFolderNameInput={setFolderNameInput}
+              createFolder={createFolder}
+              hapticFeedback={hapticFeedback}
+              setIsQuickPinModalOpen={setIsQuickPinModalOpen}
+              removeFromPinned={removeFromPinned}
+              removeQuestFromPinned={removeQuestFromPinned}
+              expandedPinnedQuests={expandedPinnedQuests}
+              setExpandedPinnedQuests={setExpandedPinnedQuests}
+              questsMode={questsMode}
+              setQuestsMode={setQuestsMode}
+              locationsMode={locationsMode}
+              setLocationsMode={setLocationsMode}
+              setSidebarOpen={setSidebarOpen}
+              hasItemContent={hasItemContent}
+              handleQuestItemClick={handleQuestItemClick}
+              navigateToItem={navigateToItem}
+              itemsData={itemsData}
+              buddyFarmLinksEnabled={buddyFarmLinksEnabled}
+              activePerks={activePerks}
+              exploringMode={exploringMode}
+              setLastPinnedLocation={setLastPinnedLocation}
+            />
           )}
           
           {sidebarActiveTab === 'settings' && (
@@ -1879,227 +1196,40 @@ export default function App() {
       </aside>
 
       <div className="main">
-  <header className={"glass header" + (headerVisible ? '' : ' hidden') + (isCaching ? ' caching' : '')} style={isCaching ? { '--caching-progress': `${cachingProgress}%` } : {}}>
-          <button
-            className="icon menu"
-            ref={menuBtnRef}
-            onClick={(e) => {
-              e.stopPropagation()
-              setSidebarOpen(true)
-            }}
-            aria-label="Open perks"
-            aria-controls="perks-sidebar"
-            aria-expanded={sidebarOpen}
-          >≡</button>
-          
-          {/* PWA indicator hidden intentionally (kept for caching logic) */}
-
-          {/* Offline indicator */}
-          {isOffline && (
-            <div className="offline-indicator" title="Working offline - all data cached locally">
-              OFFLINE
-            </div>
-          )}
-          
-          <div className="craft-chain" onClick={(e) => e.stopPropagation()}>
-            {/* Show breadcrumbs only when chain has more than one node; otherwise show current mode */}
-            {craftChain && craftChain.length > 1 ? (
-              <nav ref={breadcrumbsRef} className="breadcrumbs" aria-label="Craft chain">
-                {craftChain.slice(0, Math.max(0, craftChain.length - 1)).map((node, idx) => {
-                  const displayName = (typeof node === 'string') ? node : (node && node.name) || ''
-                  // Truncate long names: first 5 + ... + last 5 chars
-                  const truncatedName = displayName.length > 13 
-                    ? `${displayName.substring(0, 5)}...${displayName.substring(displayName.length - 5)}`
-                    : displayName
-                  
-                  return (
-                    <span key={idx}>
-                      <button
-                        type="button"
-                        className="breadcrumb-item"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          const newChain = craftChain.slice(0, idx + 1)
-                          setCraftChain(newChain)
-                          const target = newChain[idx]
-                          
-                          // If this breadcrumb is a placeholder (quest/questline), go back to Quests mode
-                          if (target && typeof target === 'object' && target.isPlaceholder) {
-                            setQuestsMode(true)
-                            setLocationsMode(false)
-                          }
-                          // If this breadcrumb represents a location node, switch back into Locations mode
-                          else if (target && typeof target === 'object' && target.isLocation) {
-                            setQuestsMode(false)
-                            setLocationsMode(true)
-                            setSelectedLocation(target.name)
-                            
-                            // Restore saved amount if available
-                            if (target.savedAmount !== undefined && target.savedAmount !== null) {
-                              setAmount(target.savedAmount)
-                            }
-                            
-                            // Restore the target item and quantity if saved
-                            if (target.targetItem && target.targetQuantity) {
-                              // Don't call handleLocationItemCommit if we have savedAmount
-                              if (target.savedAmount === undefined || target.savedAmount === null) {
-                                handleLocationItemCommit(target.targetItem, target.targetQuantity)
-                              }
-                            }
-                          } else {
-                            // Regular craft mode navigation - unified view shows both sections
-                            setQuestsMode(false)
-                            setLocationsMode(false)
-                            
-                            const targetName = (typeof target === 'string') ? target : (target && target.name) || ''
-                            const targetAmt = (typeof target === 'object' && target && target.amount) ? target.amount : 1
-                            if (targetName) setItem(targetName)
-                            setAmount(targetAmt)
-                          }
-                        }}
-                      >
-                        {typeof node === 'object' && node && node.isPlaceholder ? (
-                          <span style={{ fontWeight: 600 }}>{truncatedName}</span>
-                        ) : typeof node === 'object' && node && node.isLocation ? (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <LocationImage name={node.name} size={20} />
-                            <span style={{ fontWeight: 600 }}>{truncatedName}</span>
-                          </div>
-                        ) : (
-                          <ItemDisplay itemName={displayName} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
-                        )}
-                      </button>
-                      <span className="breadcrumb-separator">›</span>
-                    </span>
-                  )
-                })}
-
-                {craftChain.length > 0 && (
-                  <span className="breadcrumb-item current">
-                    {(() => {
-                      const last = craftChain[craftChain.length - 1]
-                      const lastName = (typeof last === 'string') ? last : (last && last.name) || ''
-                      if (typeof last === 'object' && last && last.isLocation) {
-                        return (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <LocationImage name={lastName} size={20} />
-                            <span style={{ fontWeight: 600 }}>{lastName}</span>
-                          </div>
-                        )
-                      }
-                      return <ItemDisplay itemName={lastName} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
-                    })()}
-                  </span>
-                )}
-              </nav>
-            ) : (
-              <div className="breadcrumb-mode" aria-label="Mode">
-                {questsMode ? 'Quests' : (locationsMode ? 'Locations' : 'Crafts')}
-              </div>
-            )}
-          </div>
-          {/* Header right controls: Mode button */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 'auto', marginRight: 0 }}>
-            <div style={{ position: 'relative' }} ref={modeRef}>
-              <button
-                className="chip"
-                type="button"
-                onClick={(e) => { e.stopPropagation(); setModeOpen(!modeOpen) }}
-                aria-expanded={modeOpen}
-              >
-                mode
-              </button>
-              <AnimatePresence>
-                {modeOpen && (
-                  <motion.div className="mode-dropdown glass" style={{ position: 'absolute', right: 0, marginTop: 8, minWidth: 160, zIndex: 9999 }}
-                    initial={{ opacity: 0, y: -6, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -6, scale: 0.98 }}
-                    transition={{ duration: 0.12 }}
-                  >
-                    {/* Show only modes that are not currently active */}
-                    {(questsMode || locationsMode) && (
-                      <button
-                        className="mode-option"
-                        type="button"
-                        onClick={() => {
-                          // Save current breadcrumbs before switching
-                          if (questsMode) {
-                            setQuestsBreadcrumbs(craftChain)
-                          } else if (locationsMode) {
-                            setLocationsBreadcrumbs(craftChain)
-                          }
-                          // Restore craft mode breadcrumbs
-                          if (craftBreadcrumbs.length > 0) {
-                            setCraftChain(craftBreadcrumbs)
-                          } else {
-                            setCraftChain([{ name: item, amount: amount }])
-                          }
-                          setQuestsMode(false)
-                          setLocationsMode(false)
-                          setModeOpen(false)
-                        }}
-                      >
-                        Crafts
-                      </button>
-                    )}
-                    {!locationsMode && (
-                      <button
-                        className="mode-option"
-                        type="button"
-                        onClick={() => {
-                          // Save current breadcrumbs before switching
-                          if (questsMode) {
-                            setQuestsBreadcrumbs(craftChain)
-                          } else {
-                            setCraftBreadcrumbs(craftChain)
-                          }
-                          // Restore locations mode breadcrumbs
-                          if (locationsBreadcrumbs.length > 0) {
-                            setCraftChain(locationsBreadcrumbs)
-                          } else {
-                            setCraftChain([{ name: selectedLocation || 'Forest', amount: 1, isLocation: true }])
-                          }
-                          setQuestsMode(false)
-                          setLocationsMode(true)
-                          setModeOpen(false)
-                          if (!selectedLocation) setSelectedLocation('Forest')
-                        }}
-                      >
-                        Locations
-                      </button>
-                    )}
-                    {!questsMode && (
-                      <button
-                        className="mode-option"
-                        type="button"
-                        onClick={() => {
-                          // Save current breadcrumbs before switching
-                          if (locationsMode) {
-                            setLocationsBreadcrumbs(craftChain)
-                          } else {
-                            setCraftBreadcrumbs(craftChain)
-                          }
-                          // Restore quests mode breadcrumbs
-                          if (questsBreadcrumbs.length > 0) {
-                            setCraftChain(questsBreadcrumbs)
-                          } else {
-                            setCraftChain([{ name: 'Quests', amount: 1, isPlaceholder: true }])
-                          }
-                          setQuestsMode(true)
-                          setLocationsMode(false)
-                          setModeOpen(false)
-                        }}
-                      >
-                        Quests
-                      </button>
-                    )}
-                </motion.div>
-              )}
-            </AnimatePresence>
-            </div>
-          </div>
-        </header>
+        <AppHeader
+          headerVisible={headerVisible}
+          isCaching={isCaching}
+          cachingProgress={cachingProgress}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          menuBtnRef={menuBtnRef}
+          isOffline={isOffline}
+          craftChain={craftChain}
+          setCraftChain={setCraftChain}
+          breadcrumbsRef={breadcrumbsRef}
+          questsMode={questsMode}
+          setQuestsMode={setQuestsMode}
+          locationsMode={locationsMode}
+          setLocationsMode={setLocationsMode}
+          setSelectedLocation={setSelectedLocation}
+          setItem={setItem}
+          setAmount={setAmount}
+          handleLocationItemCommit={handleLocationItemCommit}
+          modeRef={modeRef}
+          modeOpen={modeOpen}
+          setModeOpen={setModeOpen}
+          craftBreadcrumbs={craftBreadcrumbs}
+          setCraftBreadcrumbs={setCraftBreadcrumbs}
+          locationsBreadcrumbs={locationsBreadcrumbs}
+          setLocationsBreadcrumbs={setLocationsBreadcrumbs}
+          questsBreadcrumbs={questsBreadcrumbs}
+          setQuestsBreadcrumbs={setQuestsBreadcrumbs}
+          item={item}
+          amount={amount}
+          selectedLocation={selectedLocation}
+          itemsData={itemsData}
+          buddyFarmLinksEnabled={buddyFarmLinksEnabled}
+        />
 
         {questsMode ? (
           <QuestsPanel 
@@ -2198,73 +1328,24 @@ export default function App() {
         )}
 
         {/* Modals - accessible in all modes */}
+        <ItemSelectModal
+          isOpen={isItemSelectOpen}
+          onClose={() => setIsItemSelectOpen(false)}
+          locationsMode={locationsMode}
+          selectedLocation={selectedLocation}
+          setSelectedLocation={setSelectedLocation}
+          item={item}
+          itemSelectFilter={itemSelectFilter}
+          setItemSelectFilter={setItemSelectFilter}
+          handleSelectItem={handleSelectItem}
+          itemSelectListRef={itemSelectListRef}
+          itemsForSelect={itemsForSelect}
+          locationsForConfig={locationsForConfig}
+          itemsData={itemsData}
+          buddyFarmLinksEnabled={buddyFarmLinksEnabled}
+        />
+
         <AnimatePresence>
-          {isItemSelectOpen && (
-            <motion.div
-              className="modal-wrapper"
-              onClick={() => setIsItemSelectOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <motion.div 
-                className="glass item-select-content"
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="item-select-title"
-                initial={{ scale: 0.95 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0.95 }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="item-select-header">
-                  <h2 id="item-select-title" className="item-select-title">Select an Item</h2>
-                  <div className="item-select-search-wrapper">
-                    <input
-                      className="calc-input item-select-search"
-                      placeholder={locationsMode ? 'Search locations...' : 'Search items...'}
-                      value={itemSelectFilter}
-                      onChange={(e) => setItemSelectFilter(e.target.value)}
-                      aria-label="Filter items"
-                    />
-                  </div>
-                </div>
-                <div ref={itemSelectListRef} className="item-select-list">
-                  {(locationsMode ? (locationsForConfig || []) : (itemsForSelect || [])).filter(i => {
-                    const label = locationsMode ? (i.name || '') : (i || '')
-                    if (!itemSelectFilter) return true
-                    return String(label).toLowerCase().includes(itemSelectFilter.toLowerCase())
-                  }).map(i => {
-                    const label = locationsMode ? i.name : i
-                    const active = locationsMode ? selectedLocation === i.name : item === i
-                    return (
-                      <button
-                        key={label}
-                        className={active ? 'active' : ''}
-                        onClick={() => {
-                          if (locationsMode) {
-                            setSelectedLocation(label)
-                            setIsItemSelectOpen(false)
-                          } else {
-                            handleSelectItem(label)
-                          }
-                        }}
-                        type="button"
-                      >
-                              {locationsMode ? (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                  <LocationImage name={label} size={22} />
-                                  <span>{label}</span>
-                                </div>
-                              ) : <ItemDisplay itemName={i} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />}
-                      </button>
-                    )
-                  })}
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-          
           {isHistoryOpen && (
             <motion.div
               className="modal-wrapper"
@@ -2379,817 +1460,93 @@ export default function App() {
             className="stack"
           >
             {locationsMode && (
-              <section className="glass card">
-                <h2>Drops {selectedLocation ? `@ ${selectedLocation}` : ''}</h2>
-                <ul className="list">
-                  {(!selectedLocation) && (
-                    <li className="empty-state" style={{ padding: '12px 16px', color: '#9aa' }}>Select a location to see drops.</li>
-                  )}
-                  {selectedLocation && (() => {
-                    const locObj = APPLE_CIDER_REAL_DROP_RATES.locations && APPLE_CIDER_REAL_DROP_RATES.locations[selectedLocation]
-                    if (!locObj) return (<li className="empty-state" style={{ padding: '12px 16px', color: '#9aa' }}>No data for this location.</li>)
-                    const itemSet = new Set()
-                    Object.values(locObj).forEach(variant => {
-                      if (variant && typeof variant === 'object') Object.keys(variant).forEach(k => itemSet.add(k))
-                    })
-                    // Sort items by drops-per-cider (best variant) descending
-                    const itemsList = Array.from(itemSet)
-                      .map(it => {
-                        // find best dropsPerCider across variants for this location
-                        let best = 0
-                        Object.keys(locObj).forEach(vk => {
-                          const part = locObj[vk]
-                          if (!part) return
-                          const entry = part[it]
-                          if (!entry) return
-                          const val = (typeof entry === 'object' && (entry.dropsPerCider || entry.cidersPerDrop)) ? (entry.dropsPerCider || (entry.cidersPerDrop ? 1 / entry.cidersPerDrop : 0)) : (typeof entry === 'number' ? entry : 0)
-                          if (val && val > best) best = val
-                        })
-                        return { name: it, bestDrops: best }
-                      })
-                      .sort((a, b) => b.bestDrops - a.bestDrops)
-                      .map(x => x.name)
-
-                    return itemsList.map((it) => {
-                        let est = null
-                        try { est = computePinnedEstimate({ name: it, location: selectedLocation }, Number(amount) || 1, activePerks, exploringMode) } catch (e) { est = null }
-                        // compute per-unit estimate (cost per 1 item) and invert using user's Amount as budget
-                        let numericValue = null
-                        try {
-                          const perUnit = computePinnedEstimate({ name: it, location: selectedLocation }, 1, activePerks, exploringMode)
-                          const budget = Number(amount) || 0
-                          if (exploringMode === 'Apple Cider') {
-                            // perUnit.effectiveDropsPerCider = drops per cider for 1 cider baseline
-                            const perCider = perUnit && perUnit.mode === 'AC' && typeof perUnit.effectiveDropsPerCider === 'number' ? perUnit.effectiveDropsPerCider : null
-                            if (perCider && budget > 0) {
-                              numericValue = budget * perCider
-                            } else {
-                              // fallback to raw dropsPerCider from variants
-                              const raw = locObj['rq0cs0'] && locObj['rq0cs0'][it]
-                              // cidersPerDrop from API is actually exploresPerDrop (hits needed for 1 drop)
-                              // To get dropsPerCider: divide base explores (1010) by exploresPerDrop
-                              const rawVal = raw && (raw.dropsPerCider || (raw.cidersPerDrop ? 1010 / raw.cidersPerDrop : null) || raw)
-                              if (rawVal && budget > 0) numericValue = budget * rawVal
-
-                              // additional fallback: compute best dropsPerCider across all variants for this location
-                              if ((numericValue == null || numericValue === 0) && budget > 0) {
-                                let bestDrops = 0
-                                Object.keys(locObj).forEach(vk => {
-                                  const part = locObj[vk]
-                                  if (!part) return
-                                  const entry = part[it]
-                                  if (!entry) return
-                                  // cidersPerDrop from API is actually exploresPerDrop, convert to dropsPerCider
-                                  const val = (typeof entry === 'object' && (entry.dropsPerCider || entry.cidersPerDrop)) ? (entry.dropsPerCider || (entry.cidersPerDrop ? 1010 / entry.cidersPerDrop : 0)) : (typeof entry === 'number' ? entry : 0)
-                                  if (val && val > bestDrops) bestDrops = val
-                                })
-                                if (bestDrops > 0) numericValue = budget * bestDrops
-                              }
-                            }
-                          } else if (exploringMode === 'Arnold Palmer') {
-                            const perAP = perUnit && perUnit.mode === 'AP' && typeof perUnit.itemsPerAP === 'number' ? perUnit.itemsPerAP : null
-                            if (perAP && budget > 0) {
-                              numericValue = budget * perAP
-                            }
-                          }
-                        } catch (e) {
-                          numericValue = null
-                        }
-                        let display = numericValue != null ? roundToTwo(numericValue) : null
-                        // fallback to est if computePinnedEstimate returned useful totals
-                        if ((display === null || display === undefined || display === '') && est) {
-                          if (est.mode === 'AC' && typeof est.effectiveDropsPerCider === 'number') {
-                            display = roundToTwo((Number(amount) || 0) * est.effectiveDropsPerCider)
-                          } else if (est.mode === 'AP' && typeof est.itemsPerAP === 'number') {
-                            display = roundToTwo((Number(amount) || 0) * est.itemsPerAP)
-                          } else if (est.mode === 'EXP' && typeof est.explores === 'number') {
-                            // show explores-derived estimate as 1 / explores if possible
-                            const unitCost = est.explores
-                            if (unitCost && unitCost > 0) display = roundToTwo((Number(amount) || 0) / unitCost)
-                          }
-                        }
-                        if (display === null || display === undefined) display = '—'
-                      // clickable when there is any content to show for this item
-                      const isClickable = hasItemContent(it)
-                      // compute target amount for navigation
-                      const parsed = numericValue != null && !Number.isNaN(Number(numericValue)) ? Number(numericValue) : null
-                      const targetAmount = parsed && parsed >= 1 ? Math.max(1, Math.floor(parsed)) : 1
-                      return (
-                        <li key={it} className="resource-item">
-                          <div
-                            className={`resource-content ${isClickable ? 'clickable' : ''}`}
-                            onClick={() => {
-                              if (!isClickable) return
-                              // create location source node for breadcrumbs
-                              const locNode = selectedLocation 
-                                ? { name: selectedLocation, isLocation: true, savedAmount: amount } 
-                                : null
-                              navigateToItem(it, targetAmount, locNode)
-                            }}
-                            style={isClickable ? { cursor: 'pointer' } : undefined}
-                            title={isClickable ? `View ${it}` : undefined}
-                          >
-                            <span className="k">
-                              <ItemDisplay itemName={it} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled}>
-                                {isClickable && (
-                                  <span className="craft-indicator">
-                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                      <path d="M2 8L6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                  </span>
-                                )}
-                              </ItemDisplay>
-                            </span>
-                            <LocationItemInput
-                              itemName={it}
-                              display={display}
-                              onCommit={handleLocationItemCommit}
-                              onPreview={handleLocationItemPreview}
-                            />
-                          </div>
-                          {pinnedEnabled && (
-                            (() => {
-                              const qtyForPin = numericValue != null ? roundToTwo(numericValue) : 1
-                              return (
-                                <button
-                                  className={`pin-btn ${recentlyAddedItems.has(`${it}_${qtyForPin}_${selectedLocation || item}`) ? 'success' : ''}`}
-                                  onClick={(e) => { e.stopPropagation(); addToPinned(it, qtyForPin, selectedLocation || item) }}
-                                  type="button"
-                                  title={`Pin ${it}`}
-                                >
-                                  <div className="pin-icon">
-                                    <div className={`pin-line pin-line-horizontal ${recentlyAddedItems.has(`${it}_${qtyForPin}_${selectedLocation || item}`) ? 'checked' : ''}`}></div>
-                                    <div className={`pin-line pin-line-vertical ${recentlyAddedItems.has(`${it}_${qtyForPin}_${selectedLocation || item}`) ? 'checked' : ''}`}></div>
-                                  </div>
-                                </button>
-                              )
-                            })()
-                          )}
-                          
-                        </li>
-                      )
-                    })
-                  })()}
-                </ul>
-              </section>
+              <LocationDropsSection
+                selectedLocation={selectedLocation}
+                amount={amount}
+                activePerks={activePerks}
+                exploringMode={exploringMode}
+                hasItemContent={hasItemContent}
+                navigateToItem={navigateToItem}
+                itemsData={itemsData}
+                buddyFarmLinksEnabled={buddyFarmLinksEnabled}
+                pinnedEnabled={pinnedEnabled}
+                recentlyAddedItems={recentlyAddedItems}
+                addToPinned={addToPinned}
+                item={item}
+                handleLocationItemCommit={handleLocationItemCommit}
+              />
             )}
             
             {/* Unified Item View - shows both Resources (ingredients) and Used In (crafts) */}
             {!questsMode && !locationsMode && (
-              <>
-                {/* Resources Section - What's needed to craft this item */}
-                {result && Object.keys(result.filteredResources).length > 0 && (
-                  <section className="glass card">
-                    <h2 
-                      className="collapsible-header"
-                      onClick={() => setResourcesSectionCollapsed(!resourcesSectionCollapsed)}
-                      style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-                    >
-                      <span>Resources</span>
-                      <svg 
-                        width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                        style={{ transform: resourcesSectionCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
-                      >
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </h2>
-                    <AnimatePresence>
-                      {!resourcesSectionCollapsed && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <ul className="list">
-                            {Object.entries(result.filteredResources).map(([k, v]) => {
-                              const mailableItems = ['Acorn', 'Apple', 'Apple Cider', 'Aquamarine', 'Arnold Palmer', 'Arrowhead', 'Axe', 'Black Powder', 'Blue Dye', 'Blue Feathers', 'Bone', 'Bouquet of Flowers', 'Bucket', 'Carbon Sphere', 'Caterpillar', 'Coal', 'Eggs', 'Explosive', 'Feathers', 'Fern Leaf', 'Fire Ant', 'Fishing Net', 'Fruit Punch', 'Glass Orb', 'Grapes', 'Green Dye', 'Green Parchment', 'Grubs', 'Hammer', 'Heart Container', 'Hide', 'Horn', 'Iced Tea', 'Iron Cup', 'Ladder', 'Large Net', 'Leather', 'Leather Diary', 'Lemon', 'Lemonade', 'Milk', 'Minnows', 'Mushroom', 'Mushroom Paste', 'Oak', 'Old Boot', 'Orange', 'Orange Juice', 'Peach', 'Peach Juice', 'Potato', 'Purple Dye', 'Purple Flower', 'Purple Parchment', 'Red Dye', 'Rope', 'Scrap Metal', 'Scrap Wire', 'Shimmer Stone', 'Shovel', 'Slimestone', 'Spider', 'Stone', 'Twine', 'Unpolished Shimmer Stone', 'Wood', 'Wooden Box', 'Wooden Button', 'Wooden Table', 'Worms', 'Yarn']
-                              const isMailable = mailableItems.includes(k)
-                              const isClickable = hasItemContent(k)
-                              
-                              return (
-                                <li 
-                                  key={k}
-                                  className="resource-item"
-                                >
-                                  <div 
-                                    className={`resource-content ${isClickable ? 'clickable' : ''}`}
-                                    onClick={() => {
-                                      if (!isClickable) return
-                                      navigateToItem(k, v)
-                                    }}
-                                    style={isClickable ? { cursor: 'pointer' } : {}}
-                                    title={isClickable ? `View ${k}` : undefined}
-                                  >
-                                    <span className="k">
-                                      <ItemDisplay itemName={k} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled}>
-                                        {isClickable && (
-                                          <span className="craft-indicator">
-                                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                              <path 
-                                                d="M2 8L6 4L10 8" 
-                                                stroke="currentColor" 
-                                                strokeWidth="1.5" 
-                                                strokeLinecap="round" 
-                                                strokeLinejoin="round"
-                                              />
-                                            </svg>
-                                          </span>
-                                        )}
-                                      </ItemDisplay>
-                                    </span>
-                                    <span className="v">{formatNumberRounded(v)}</span>
-                                  </div>
-                                  {pinnedEnabled && (
-                                    <button
-                                      className={`pin-btn ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'success' : ''}`}
-                                      onClick={(e) => {
-                                        e.stopPropagation()
-                                        addToPinned(k, v, craftChain.length > 0 ? craftChain[0].name : item, e)
-                                      }}
-                                      type="button"
-                                      title={`Pin ${k} from ${item}`}
-                                    >
-                                      <div className="pin-icon">
-                                        <div 
-                                          className={`pin-line pin-line-horizontal ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'checked' : ''}`}
-                                        ></div>
-                                        <div 
-                                          className={`pin-line pin-line-vertical ${recentlyAddedItems.has(`${k}_${v}_${craftChain.length > 0 ? craftChain[0].name : item}`) ? 'checked' : ''}`}
-                                        ></div>
-                                      </div>
-                                    </button>
-                                  )}
-                                </li>
-                              )
-                            })}
-                          </ul>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </section>
-                )}
-
-                {/* Used In Section - What can be crafted from this item */}
-                {availableCrafts.length > 0 && (
-                  <section className="glass card">
-                    <h2 
-                      className="collapsible-header"
-                      onClick={() => setUsedInSectionCollapsed(!usedInSectionCollapsed)}
-                      style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-                    >
-                      <span>Used In</span>
-                      <svg 
-                        width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                        style={{ transform: usedInSectionCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
-                      >
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </h2>
-                    <AnimatePresence>
-                      {!usedInSectionCollapsed && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <ul className="list">
-                            {availableCrafts.map(c => {
-                              const isClickable = hasItemContent(c.name)
-                              const targetAmount = (typeof c.craftableCount === 'number') ? c.craftableCount : (Number(amount) || 1)
-                              return (
-                                <li key={c.name} className="resource-item">
-                                  <div 
-                                    className={`resource-content ${isClickable ? 'clickable' : ''}`}
-                                    onClick={() => {
-                                      if (!isClickable) return
-                                      navigateToItem(c.name, targetAmount)
-                                    }}
-                                    style={isClickable ? { cursor: 'pointer' } : undefined}
-                                    title={isClickable ? `View ${c.name}` : undefined}
-                                  >
-                                    <span className="k">
-                                      <ItemDisplay itemName={c.name} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled}>
-                                        {isClickable && (
-                                          <span className="craft-indicator">
-                                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                              <path d="M2 8L6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
-                                          </span>
-                                        )}
-                                      </ItemDisplay>
-                                    </span>
-                                    <span className="v">{formatNumberRounded(c.craftableCount != null ? c.craftableCount : 0)}</span>
-                                  </div>
-
-                                  {pinnedEnabled && (() => {
-                                    const qtyForCraftPin = (typeof c.craftableCount === 'number' && c.craftableCount > 0)
-                                      ? Math.round(c.craftableCount * (c.outputQty || 1))
-                                      : (c.outputQty || 1)
-                                    return (
-                                      <button
-                                        className={`pin-btn ${recentlyAddedItems.has(`${c.name}_${qtyForCraftPin}_${item}`) ? 'success' : ''}`}
-                                        onClick={(e) => { e.stopPropagation(); addToPinned(c.name, qtyForCraftPin, item) }}
-                                        type="button"
-                                        title={`Pin ${c.name}`}
-                                      >
-                                        <div className="pin-icon">
-                                          <div className={`pin-line pin-line-horizontal ${recentlyAddedItems.has(`${c.name}_${qtyForCraftPin}_${item}`) ? 'checked' : ''}`}></div>
-                                          <div className={`pin-line pin-line-vertical ${recentlyAddedItems.has(`${c.name}_${qtyForCraftPin}_${item}`) ? 'checked' : ''}`}></div>
-                                        </div>
-                                      </button>
-                                    )
-                                  })()}
-                                </li>
-                              )
-                            })}
-                          </ul>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </section>
-                )}
-              </>
+              <CraftSection
+                result={result}
+                availableCrafts={availableCrafts}
+                resourcesSectionCollapsed={resourcesSectionCollapsed}
+                setResourcesSectionCollapsed={setResourcesSectionCollapsed}
+                usedInSectionCollapsed={usedInSectionCollapsed}
+                setUsedInSectionCollapsed={setUsedInSectionCollapsed}
+                hasItemContent={hasItemContent}
+                navigateToItem={navigateToItem}
+                itemsData={itemsData}
+                buddyFarmLinksEnabled={buddyFarmLinksEnabled}
+                pinnedEnabled={pinnedEnabled}
+                recentlyAddedItems={recentlyAddedItems}
+                addToPinned={addToPinned}
+                item={item}
+                craftChain={craftChain}
+                amount={amount}
+              />
             )}
           </motion.div>
         </AnimatePresence>
 
         <footer className="spacer" />
 
-        {/* Clear Data Confirmation Modal */}
-        <AnimatePresence>
-          {showClearConfirm && (
-            <motion.div
-              className="modal-overlay"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <motion.div
-                className="modal-content"
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="modal-header">
-                  <h3>Clear All Data</h3>
-                </div>
-                <div className="modal-body">
-                  <p>Are you sure you want to clear all saved data?</p>
-                  <p className="modal-warning">This will reset everything to default settings and cannot be undone.</p>
-                </div>
-                <div className="modal-actions">
-                  <button 
-                    className="btn-secondary" 
-                    onClick={cancelClearData}
-                  >
-                    Cancel
-                  </button>
-                  <button 
-                    className="btn-danger" 
-                    onClick={confirmClearData}
-                  >
-                    Clear All Data
-                  </button>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <ClearDataModals
+          showClearConfirm={showClearConfirm}
+          showClearSuccess={showClearSuccess}
+          cancelClearData={cancelClearData}
+          confirmClearData={confirmClearData}
+        />
 
-        {/* Clear Success Notification */}
-        <AnimatePresence>
-          {showClearSuccess && (
-            <motion.div
-              className="success-notification"
-              initial={{ y: 100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 100, opacity: 0 }}
-              transition={{ 
-                type: "spring", 
-                damping: 20, 
-                stiffness: 300 
-              }}
-            >
-              <div className="notification-content">
-                <span className="notification-icon">[OK]</span>
-                <span>All data cleared! App reset to defaults.</span>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <FolderConfigModal
+          isOpen={isFolderConfigOpen}
+          onClose={() => setIsFolderConfigOpen(false)}
+          pinnedFolders={pinnedFolders}
+          pinnedResources={pinnedResources}
+          pinnedQuests={pinnedQuests}
+          editingFolderId={editingFolderId}
+          setEditingFolderId={setEditingFolderId}
+          folderNameInput={folderNameInput}
+          setFolderNameInput={setFolderNameInput}
+          renameFolder={renameFolder}
+          deletingFolderId={deletingFolderId}
+          setDeletingFolderId={setDeletingFolderId}
+          deleteFolder={deleteFolder}
+          isCreatingFolder={isCreatingFolder}
+          setIsCreatingFolder={setIsCreatingFolder}
+          createFolder={createFolder}
+        />
 
-        {/* Folder Configuration Modal */}
-        <AnimatePresence>
-          {isFolderConfigOpen && (
-            <motion.div
-              className="modal-overlay"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => {
-                setIsFolderConfigOpen(false)
-                setEditingFolderId(null)
-                setIsCreatingFolder(false)
-                setFolderNameInput('')
-              }}
-            >
-              <motion.div
-                className="modal glass folder-config-modal"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="modal-header">
-                  <h3>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: 'middle', marginRight: '8px' }}>
-                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                    Manage Pinning Folders
-                  </h3>
-                </div>
-                <div className="modal-body">
-                  <div className="folder-list">
-                    {pinnedFolders.map(folder => (
-                      <div key={folder.id} className="folder-config-item">
-                        {editingFolderId === folder.id ? (
-                          <div className="folder-edit-input-wrapper">
-                            <input
-                              type="text"
-                              className="folder-name-input"
-                              value={folderNameInput}
-                              onChange={(e) => setFolderNameInput(e.target.value)}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter' && folderNameInput.trim()) {
-                                  renameFolder(folder.id, folderNameInput)
-                                  setEditingFolderId(null)
-                                  setFolderNameInput('')
-                                } else if (e.key === 'Escape') {
-                                  setEditingFolderId(null)
-                                  setFolderNameInput('')
-                                }
-                              }}
-                              autoFocus
-                              placeholder="Folder name"
-                            />
-                            <button
-                              className="folder-input-btn confirm"
-                              onClick={() => {
-                                if (folderNameInput.trim()) {
-                                  renameFolder(folder.id, folderNameInput)
-                                  setEditingFolderId(null)
-                                  setFolderNameInput('')
-                                }
-                              }}
-                            >
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                              </svg>
-                            </button>
-                            <button
-                              className="folder-input-btn cancel"
-                              onClick={() => {
-                                setEditingFolderId(null)
-                                setFolderNameInput('')
-                              }}
-                            >
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                              </svg>
-                            </button>
-                          </div>
-                        ) : (
-                          <>
-                            <div className="folder-config-info">
-                              <span className="folder-config-name">{folder.name}</span>
-                              <span className="folder-config-count">
-                                {folder.id === 'quests' 
-                                  ? `${pinnedQuests.filter(q => (q.folderId || 'quests') === 'quests').length} quests`
-                                  : `${pinnedResources.filter(item => (item.folderId || 'default') === folder.id).length} items`
-                                }
-                              </span>
-                            </div>
-                            <div className="folder-config-actions">
-                              <button
-                                className="folder-config-btn"
-                                onClick={() => {
-                                  setEditingFolderId(folder.id)
-                                  setFolderNameInput(folder.name)
-                                }}
-                                title="Rename folder"
-                              >
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                              </button>
-                              {folder.id !== 'default' && !folder.isSystemFolder && (
-                                deletingFolderId === folder.id ? (
-                                  <div className="folder-delete-confirm">
-                                    <span className="folder-delete-message">Delete "{folder.name}"?</span>
-                                    <button
-                                      className="folder-input-btn folder-input-confirm"
-                                      onClick={() => {
-                                        deleteFolder(folder.id)
-                                        setDeletingFolderId(null)
-                                      }}
-                                      title="Confirm delete"
-                                    >
-                                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                        <polyline points="20 6 9 17 4 12"></polyline>
-                                      </svg>
-                                    </button>
-                                    <button
-                                      className="folder-input-btn folder-input-cancel"
-                                      onClick={() => setDeletingFolderId(null)}
-                                      title="Cancel"
-                                    >
-                                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                                      </svg>
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <button
-                                    className="folder-config-btn danger"
-                                    onClick={() => setDeletingFolderId(folder.id)}
-                                    title="Delete folder"
-                                  >
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                      <polyline points="3 6 5 6 21 6"></polyline>
-                                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                    </svg>
-                                  </button>
-                                )
-                              )}
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    ))}
-                    
-                    {/* Create new folder inline */}
-                    {isCreatingFolder && (
-                      <div className="folder-config-item creating">
-                        <div className="folder-edit-input-wrapper">
-                          <input
-                            type="text"
-                            className="folder-name-input"
-                            value={folderNameInput}
-                            onChange={(e) => setFolderNameInput(e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter' && folderNameInput.trim()) {
-                                createFolder(folderNameInput)
-                                setIsCreatingFolder(false)
-                                setFolderNameInput('')
-                              } else if (e.key === 'Escape') {
-                                setIsCreatingFolder(false)
-                                setFolderNameInput('')
-                              }
-                            }}
-                            autoFocus
-                            placeholder="New folder name"
-                          />
-                          <button
-                            className="folder-input-btn confirm"
-                            onClick={() => {
-                              if (folderNameInput.trim()) {
-                                createFolder(folderNameInput)
-                                setIsCreatingFolder(false)
-                                setFolderNameInput('')
-                              }
-                            }}
-                          >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                          </button>
-                          <button
-                            className="folder-input-btn cancel"
-                            onClick={() => {
-                              setIsCreatingFolder(false)
-                              setFolderNameInput('')
-                            }}
-                          >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <line x1="18" y1="6" x2="6" y2="18"></line>
-                              <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {!isCreatingFolder && (
-                    <button
-                      className="chip wide"
-                      onClick={() => {
-                        setIsCreatingFolder(true)
-                        setFolderNameInput('')
-                      }}
-                      type="button"
-                    >
-                      + Create New Folder
-                    </button>
-                  )}
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Quick Pin Modal */}
-        <AnimatePresence>
-          {isQuickPinModalOpen && (
-            <motion.div
-              className="modal-wrapper"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsQuickPinModalOpen(false)}
-              style={{ zIndex: 50 }}
-            >
-              <motion.div
-                className="item-select-content glass"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {!quickPinSelectedItem ? (
-                  <>
-                    <div className="item-select-header">
-                      <h2 className="item-select-title">Quick Pin {activePinnedFolder === 'quests' ? 'Questline' : 'Item'}</h2>
-                      <div className="item-select-search-wrapper">
-                        <input
-                          className="calc-input item-select-search"
-                          placeholder={activePinnedFolder === 'quests' ? "Search questlines..." : "Search items..."}
-                          value={quickPinFilter}
-                          onChange={(e) => setQuickPinFilter(e.target.value)}
-                          aria-label="Filter items"
-                          autoFocus
-                        />
-                      </div>
-                    </div>
-                    <div className="item-select-list">
-                      {activePinnedFolder === 'quests' ? (
-                        // Show questlines for Quests folder
-                        (() => {
-                          try {
-                            const questlines = questsApiData?.data?.questlines || []
-                            return questlines
-                              .filter(chain => {
-                                if (!quickPinFilter) return true
-                                return String(chain.title).toLowerCase().includes(quickPinFilter.toLowerCase())
-                              })
-                              .map((chain) => (
-                                <button
-                                  key={chain.id}
-                                  onClick={() => {
-                                    // Directly add questline without quantity selection
-                                    const totals = {
-                                      requirements: { items: {}, silver: 0, levels: {} },
-                                      rewards: { items: {}, silver: 0 }
-                                    }
-                                    
-                                    // Calculate totals
-                                    chain.steps?.forEach(step => {
-                                      const quest = step.quest
-                                      if (quest) {
-                                        // Requirements
-                                        quest.requiredItems?.forEach(req => {
-                                          if (req.item?.name) {
-                                            totals.requirements.items[req.item.name] = 
-                                              (totals.requirements.items[req.item.name] || 0) + (req.quantity || 1)
-                                          }
-                                        })
-                                        if (quest.requiredSilver) {
-                                          totals.requirements.silver += quest.requiredSilver
-                                        }
-                                        quest.levels?.forEach(lvl => {
-                                          if (lvl.skill && lvl.level) {
-                                            totals.requirements.levels[lvl.skill] = Math.max(
-                                              totals.requirements.levels[lvl.skill] || 0,
-                                              lvl.level
-                                            )
-                                          }
-                                        })
-                                        
-                                        // Rewards
-                                        quest.rewardItems?.forEach(rew => {
-                                          if (rew.item?.name) {
-                                            totals.rewards.items[rew.item.name] = 
-                                              (totals.rewards.items[rew.item.name] || 0) + (rew.quantity || 1)
-                                          }
-                                        })
-                                        if (quest.rewardSilver) {
-                                          totals.rewards.silver += quest.rewardSilver
-                                        }
-                                      }
-                                    })
-                                    
-                                    addQuestToPinned({
-                                      type: 'questline',
-                                      id: chain.id,
-                                      name: chain.title,
-                                      description: chain.description || '',
-                                      requirements: totals.requirements,
-                                      rewards: totals.rewards
-                                    })
-                                    hapticFeedback('success')
-                                    setIsQuickPinModalOpen(false)
-                                    setQuickPinFilter('')
-                                  }}
-                                  type="button"
-                                >
-                                  <span>{chain.title}</span>
-                                </button>
-                              ))
-                          } catch (e) {
-                            console.error('Failed to load questlines:', e)
-                            return <div style={{ padding: '20px', textAlign: 'center', color: 'rgba(255,255,255,0.5)' }}>
-                              Failed to load questlines: {e.message}
-                            </div>
-                          }
-                        })()
-                      ) : (
-                        // Show items for other folders
-                        allItems.filter(itm => {
-                          if (!quickPinFilter) return true
-                          return String(itm).toLowerCase().includes(quickPinFilter.toLowerCase())
-                        }).map((itm) => (
-                          <button
-                            key={itm}
-                            onClick={() => handleQuickPin(itm)}
-                            type="button"
-                          >
-                            <ItemDisplay itemName={itm} itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled} />
-                          </button>
-                        ))
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  <div style={{ padding: '20px' }}>
-                    <h2 className="item-select-title" style={{ marginBottom: '16px' }}>
-                      Pin {quickPinSelectedItem}
-                    </h2>
-                    <div className="folder-edit-input-wrapper" style={{ marginBottom: '16px' }}>
-                      <input
-                        type="number"
-                        className="folder-name-input"
-                        value={quickPinQuantity}
-                        onChange={(e) => setQuickPinQuantity(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            confirmQuickPin()
-                          } else if (e.key === 'Escape') {
-                            cancelQuickPin()
-                          }
-                        }}
-                        placeholder="Quantity..."
-                        autoFocus
-                        min="1"
-                      />
-                      <button
-                        className="folder-input-btn folder-input-confirm"
-                        onClick={confirmQuickPin}
-                        disabled={!quickPinQuantity || parseInt(quickPinQuantity) <= 0}
-                        title="Pin item"
-                        type="button"
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                      </button>
-                      <button
-                        className="folder-input-btn folder-input-cancel"
-                        onClick={cancelQuickPin}
-                        title="Cancel"
-                        type="button"
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <line x1="18" y1="6" x2="6" y2="18"></line>
-                          <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <QuickPinModal
+          isOpen={isQuickPinModalOpen}
+          onClose={() => setIsQuickPinModalOpen(false)}
+          quickPinSelectedItem={quickPinSelectedItem}
+          quickPinFilter={quickPinFilter}
+          setQuickPinFilter={setQuickPinFilter}
+          quickPinQuantity={quickPinQuantity}
+          setQuickPinQuantity={setQuickPinQuantity}
+          handleQuickPin={handleQuickPin}
+          confirmQuickPin={confirmQuickPin}
+          cancelQuickPin={cancelQuickPin}
+          activePinnedFolder={activePinnedFolder}
+          allItems={allItems}
+          itemsData={itemsData}
+          buddyFarmLinksEnabled={buddyFarmLinksEnabled}
+          addQuestToPinned={addQuestToPinned}
+          hapticFeedback={hapticFeedback}
+        />
 
         {/* Bug Report Modal */}
         <BugReportModal

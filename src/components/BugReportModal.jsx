@@ -13,22 +13,13 @@ function BugReportModal({ isOpen, onClose, onSubmit }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    console.log('BugReportModal handleSubmit called');
-    
-    if (!message.trim()) {
-      console.log('Message is empty, aborting');
-      return;
-    }
+    if (!message.trim()) return;
 
-    console.log('Preparing payload:', { messageLength: message.trim().length, filesCount: files.length });
     setIsSubmitting(true);
     
     try {
-      // Pass files along with the message. Convert files state (array) to FileList-like array
       const payload = { message: message.trim(), files };
-      console.log('Calling onSubmit with payload');
       const result = await onSubmit(payload);
-      console.log('onSubmit result:', result);
       
       if (result.success) {
         setSubmitSuccess(true);

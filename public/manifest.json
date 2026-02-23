@@ -1,7 +1,7 @@
 {
   "short_name": "Craft Calc",
-  "name": "Craft Calculator - FarmRPG",
-  "description": "Calculate crafting recipes and resources for FarmRPG game",
+  "name": "FarmRPG Craft Calculator",
+  "description": "Calculate crafting materials, Apple Cider exploring requirements, and drop rates for FarmRPG. Supports all perks. Free PWA.",
   "icons": [
     {
       "src": "/favicon.ico",

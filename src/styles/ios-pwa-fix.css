@@ -6,6 +6,8 @@
   html {
     /* Use the real viewport height on iOS */
     height: -webkit-fill-available;
+    /* Ensure overscroll / rubber-band areas are dark on Safari iOS */
+    background-color: #0b1020;
   }
   
   body {

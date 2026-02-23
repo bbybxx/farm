@@ -26,8 +26,8 @@
   "display": "standalone",
   "display_override": ["standalone", "fullscreen", "minimal-ui"],
   "orientation": "portrait",
-  "theme_color": "#1a1a2e",
-  "background_color": "#0f0f1e",
+  "theme_color": "#0b1020",
+  "background_color": "#0b1020",
   "categories": ["utilities", "productivity", "games"],
   "screenshots": [],
   "prefer_related_applications": false

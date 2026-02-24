@@ -9854,5 +9854,19 @@
     "image": "/img/items/yellowtwine.png",
     "canCraft": true,
     "craftingLevel": 99
+  },
+  "Slime Bucket": {
+    "name": "Slime Bucket",
+    "type": "item",
+    "image": "/img/items/bucket_of_slime.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Slime Buddy Doll": {
+    "name": "Slime Buddy Doll",
+    "type": "item",
+    "image": "/img/items/slimebuddydoll2.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

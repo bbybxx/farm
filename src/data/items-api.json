@@ -4273,7 +4273,7 @@
     "name": "Green Top Hat",
     "type": "item",
     "image": "/img/items/greenhat.png",
-    "canCraft": false,
+    "canCraft": true,
     "craftingLevel": 72
   },
   "Green Torpedo": {
@@ -4399,7 +4399,7 @@
     "name": "Heart Necklace",
     "type": "item",
     "image": "/img/items/l_02_t_a.PNG",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 15
   },
   "Heart Necklace Left Piece": {
@@ -8543,7 +8543,7 @@
     "name": "Valentines Card",
     "type": "item",
     "image": "/img/items/card_valentines.png",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 1
   },
   "Vampire Buddy Doll": {
@@ -9873,6 +9873,41 @@
     "name": "Chapiku",
     "type": "item",
     "image": "/img/items/Stripeymouse.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg of Tree": {
+    "name": "Egg of Tree",
+    "type": "item",
+    "image": "/img/items/egg_of_tree.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Leprechaun Hat": {
+    "name": "Leprechaun Hat",
+    "type": "item",
+    "image": "/img/items/Leprechaun_hatnew.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Shamrock Milk": {
+    "name": "Shamrock Milk",
+    "type": "item",
+    "image": "/img/items/shamrock_milk.png",
+    "canCraft": true,
+    "craftingLevel": 85
+  },
+  "Spring Basket 03": {
+    "name": "Spring Basket 03",
+    "type": "item",
+    "image": "/img/items/springbasket.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Toga Buddy Doll": {
+    "name": "Toga Buddy Doll",
+    "type": "item",
+    "image": "/img/items/toga_buddy_doll.png",
     "canCraft": false,
     "craftingLevel": 0
   }

@@ -9945,5 +9945,12 @@
     "image": "/img/items/lucky_trout.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Harvest Bundle 01": {
+    "name": "Harvest Bundle 01",
+    "type": "item",
+    "image": "/img/items/harvest_bundle.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

@@ -9952,5 +9952,103 @@
     "image": "/img/items/harvest_bundle.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Alien Fuzzy Chick": {
+    "name": "Alien Fuzzy Chick",
+    "type": "item",
+    "image": "/img/items/alien_fuzzy_chick.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Asteroid Egg": {
+    "name": "Asteroid Egg",
+    "type": "item",
+    "image": "/img/items/egg_asteroid.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Astro Fuzzy Chick": {
+    "name": "Astro Fuzzy Chick",
+    "type": "item",
+    "image": "/img/items/astro_fuzzy_chick.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Black Hole Egg": {
+    "name": "Black Hole Egg",
+    "type": "item",
+    "image": "/img/items/egg_black_hold.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Comet Egg": {
+    "name": "Comet Egg",
+    "type": "item",
+    "image": "/img/items/egg_comet.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Egg Buddy Doll": {
+    "name": "Egg Buddy Doll",
+    "type": "item",
+    "image": "/img/items/Egg_buddy_doll.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fuzzy Trout": {
+    "name": "Fuzzy Trout",
+    "type": "fish",
+    "image": "/img/items/fuzzy_trout.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Garden Claw": {
+    "name": "Garden Claw",
+    "type": "item",
+    "image": "/img/items/garden_claw.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Garden Crate 01": {
+    "name": "Garden Crate 01",
+    "type": "item",
+    "image": "/img/items/garden_crate.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Garden Trowel": {
+    "name": "Garden Trowel",
+    "type": "item",
+    "image": "/img/items/trowel.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Moon Egg": {
+    "name": "Moon Egg",
+    "type": "item",
+    "image": "/img/items/egg_moon.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Nebula Egg": {
+    "name": "Nebula Egg",
+    "type": "item",
+    "image": "/img/items/egg_nebula.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Planet Egg": {
+    "name": "Planet Egg",
+    "type": "item",
+    "image": "/img/items/egg_planet.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sun Egg": {
+    "name": "Sun Egg",
+    "type": "item",
+    "image": "/img/items/egg_sun.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

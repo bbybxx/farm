@@ -3755,7 +3755,7 @@
     "name": "Glass Eyes",
     "type": "item",
     "image": "/img/items/eyes_t_01.png",
-    "canCraft": false,
+    "canCraft": true,
     "craftingLevel": 82
   },
   "Glass Jar": {
@@ -4273,7 +4273,7 @@
     "name": "Green Top Hat",
     "type": "item",
     "image": "/img/items/greenhat.png",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 72
   },
   "Green Torpedo": {
@@ -9894,7 +9894,7 @@
     "name": "Shamrock Milk",
     "type": "item",
     "image": "/img/items/shamrock_milk.png",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 85
   },
   "Spring Basket 03": {

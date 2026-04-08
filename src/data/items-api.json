@@ -79,7 +79,7 @@
   "Acorn Butter": {
     "name": "Acorn Butter",
     "type": "item",
-    "image": "/img/items/acornbutter.png?1",
+    "image": "/img/items/Acorn_butter.png",
     "canCraft": true,
     "craftingLevel": 36
   },
@@ -8121,7 +8121,7 @@
   },
   "Supply Voucher": {
     "name": "Supply Voucher",
-    "type": "meal",
+    "type": "item",
     "image": "/img/items/voucher.png",
     "canCraft": false,
     "craftingLevel": 0
@@ -8324,7 +8324,7 @@
   },
   "Travel Voucher": {
     "name": "Travel Voucher",
-    "type": "meal",
+    "type": "item",
     "image": "/img/items/4876.png",
     "canCraft": false,
     "craftingLevel": 0
@@ -9178,7 +9178,7 @@
   },
   "PHR Voucher": {
     "name": "PHR Voucher",
-    "type": "meal",
+    "type": "item",
     "image": "/img/items/viri_3437.png",
     "canCraft": false,
     "craftingLevel": 0

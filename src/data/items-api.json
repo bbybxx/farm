@@ -10050,5 +10050,61 @@
     "image": "/img/items/egg_sun.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Day Off Voucher": {
+    "name": "Day Off Voucher",
+    "type": "item",
+    "image": "/img/items/chorecoupon.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Eggypalchi": {
+    "name": "Eggypalchi",
+    "type": "item",
+    "image": "/img/items/Tama.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Farmiversary Trophy 01": {
+    "name": "Farmiversary Trophy 01",
+    "type": "item",
+    "image": "/img/items/year1.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Farmiversary Trophy 02": {
+    "name": "Farmiversary Trophy 02",
+    "type": "item",
+    "image": "/img/items/year2.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Farmiversary Trophy 03": {
+    "name": "Farmiversary Trophy 03",
+    "type": "item",
+    "image": "/img/items/year3.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Farmiversary Trophy 04": {
+    "name": "Farmiversary Trophy 04",
+    "type": "item",
+    "image": "/img/items/year4.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Farmiversary Trophy 05": {
+    "name": "Farmiversary Trophy 05",
+    "type": "item",
+    "image": "/img/items/year5.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Farmiversary Trophy 06": {
+    "name": "Farmiversary Trophy 06",
+    "type": "item",
+    "image": "/img/items/year6.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

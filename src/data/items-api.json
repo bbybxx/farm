@@ -10106,5 +10106,12 @@
     "image": "/img/items/year6.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Galactic Egg Basket": {
+    "name": "Galactic Egg Basket",
+    "type": "item",
+    "image": "/img/items/space_egg_chest.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

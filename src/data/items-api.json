@@ -10120,5 +10120,26 @@
     "image": "/img/items/fuzzytrophy.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Birthday Surprise Box 05": {
+    "name": "Birthday Surprise Box 05",
+    "type": "item",
+    "image": "/img/items/bsb01.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gloorp": {
+    "name": "Gloorp",
+    "type": "item",
+    "image": "/img/items/Gloorpp.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Slimed Buddy Doll": {
+    "name": "Slimed Buddy Doll",
+    "type": "item",
+    "image": "/img/items/Slimedbusdydoll.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

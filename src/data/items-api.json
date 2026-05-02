@@ -3755,7 +3755,7 @@
     "name": "Glass Eyes",
     "type": "item",
     "image": "/img/items/eyes_t_01.png",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 82
   },
   "Glass Jar": {
@@ -6107,7 +6107,7 @@
     "name": "Piñata Whop Stick",
     "type": "item",
     "image": "/img/items/pinata_stick.png",
-    "canCraft": false,
+    "canCraft": true,
     "craftingLevel": 75
   },
   "Pine Board": {

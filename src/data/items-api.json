@@ -759,8 +759,8 @@
     "name": "Blue Milk",
     "type": "item",
     "image": "/img/items/bluemilk.png?2",
-    "canCraft": false,
-    "craftingLevel": 1
+    "canCraft": true,
+    "craftingLevel": 99
   },
   "Blue Ornament": {
     "name": "Blue Ornament",
@@ -5393,7 +5393,7 @@
     "name": "Milk Carton",
     "type": "item",
     "image": "/img/items/packaging_t_01.PNG",
-    "canCraft": false,
+    "canCraft": true,
     "craftingLevel": 74
   },
   "Mini Time Egg": {

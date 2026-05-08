@@ -10141,5 +10141,12 @@
     "image": "/img/items/Slimedbusdydoll.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Blue Diamond Fish": {
+    "name": "Blue Diamond Fish",
+    "type": "fish",
+    "image": "/img/items/bdfish.png",
+    "canCraft": false,
+    "craftingLevel": 1
   }
 }

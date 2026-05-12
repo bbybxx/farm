@@ -10148,5 +10148,26 @@
     "image": "/img/items/bdfish.png",
     "canCraft": false,
     "craftingLevel": 1
+  },
+  "5th Birthday Card": {
+    "name": "5th Birthday Card",
+    "type": "card",
+    "image": "/img/items/5th_card.png",
+    "canCraft": false,
+    "craftingLevel": 1
+  },
+  "Red Velvet Cake": {
+    "name": "Red Velvet Cake",
+    "type": "meal",
+    "image": "/img/items/Red_velvet.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Thomas's Red Velvet Cake": {
+    "name": "Thomas's Red Velvet Cake",
+    "type": "item",
+    "image": "/img/items/recipe.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

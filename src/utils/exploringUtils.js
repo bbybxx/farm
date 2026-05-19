@@ -39,6 +39,7 @@ function parsePerks(activePerks = []) {
     hasCinnamon: has('Cinnamon Sticks'),
     hasSprintI: has('Sprint Shoes I'),
     hasSprintII: has('Sprint Shoes II'),
+    hasSprintIII: has('Sprint Shoes III'),
     hasNeigh: has('Neigh'),
     hasCabbage: has('Cabbage Stew'),
   hasLemonSqueezer: has('Lemon Squeezer'),
@@ -210,8 +211,8 @@ export function computePinnedEstimate(pinnedItem, quantity, activePerks, explori
   const ee = locCfg.exploringEffectiveness || 0
   // Cinnamon should increase explores (so more drops per cider) but should NOT increase stamina per cider.
   // Compute explores used for drop-scaling with cinnamon (if present), but compute stamina using the non-cinnamon explores
-  const exploresPerCider = AppleCiderCalculator.calculateExplores(ee, perks.hasSprintI, perks.hasSprintII, perks.hasCinnamon)
-  const exploresPerCiderForStamina = AppleCiderCalculator.calculateExplores(ee, perks.hasSprintI, perks.hasSprintII, false)
+  const exploresPerCider = AppleCiderCalculator.calculateExplores(ee, perks.hasSprintI, perks.hasSprintII, perks.hasSprintIII, perks.hasCinnamon)
+  const exploresPerCiderForStamina = AppleCiderCalculator.calculateExplores(ee, perks.hasSprintI, perks.hasSprintII, perks.hasSprintIII, false)
   // Scale dropsPerCider by explores scaling factor so Cinnamon / Sprint increase effective drops per cider
   const baseExplores = APPLE_CIDER_DATA.basic.baseExplores || 1010
   const scalingFactor = exploresPerCider / baseExplores

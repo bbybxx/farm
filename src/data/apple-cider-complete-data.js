@@ -105,6 +105,11 @@ const APPLE_CIDER_DATA = {
         name: "Sprint Shoes II", 
         effect: "Double again (4x total with Sprint I)",
         formula: "effectiveness * 4 (with Sprint I)"
+      },
+      sprintShoesIII: {
+        name: "Sprint Shoes III", 
+        effect: "Double again (8x total with Sprint I and II)",
+        formula: "effectiveness * 8 (with Sprint I and II)"
       }
     },
     
@@ -244,11 +249,12 @@ const APPLE_CIDER_DATA = {
 // ===== УТИЛИТЫ ДЛЯ РАСЧЕТОВ =====
 const AppleCiderCalculator = {
   // Рассчитать количество explores
-  calculateExplores(effectiveness, hasSprintI = false, hasSprintII = false, hasCinnamon = false) {
+  calculateExplores(effectiveness, hasSprintI = false, hasSprintII = false, hasSprintIII = false, hasCinnamon = false) {
     let adjustedEffectiveness = effectiveness;
     
     if (hasSprintI) adjustedEffectiveness *= 2;
     if (hasSprintII) adjustedEffectiveness *= 2; // дополнительно x2
+    if (hasSprintIII) adjustedEffectiveness *= 2; // дополнительно x2
     
     if (hasCinnamon) {
       return Math.round(1010 * 1.25 + (adjustedEffectiveness * 12.5));
@@ -295,8 +301,8 @@ const AppleCiderCalculator = {
 };
 
 const AppleCiderIntegration = {
-  calculateAdjustedDropRates(effectiveness, hasSprintI = false, hasSprintII = false, hasCinnamon = false) {
-    const explores = AppleCiderCalculator.calculateExplores(effectiveness, hasSprintI, hasSprintII, hasCinnamon);
+  calculateAdjustedDropRates(effectiveness, hasSprintI = false, hasSprintII = false, hasSprintIII = false, hasCinnamon = false) {
+    const explores = AppleCiderCalculator.calculateExplores(effectiveness, hasSprintI, hasSprintII, hasSprintIII, hasCinnamon);
     const scalingFactor = explores / APPLE_CIDER_DATA.basic.baseExplores;
 
     const adjustedDropRates = {};

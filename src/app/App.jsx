@@ -957,7 +957,8 @@ export default function App() {
         'Wanderer III',
         'Wanderer IV',
         'Sprint Shoes I',
-        'Sprint Shoes II'
+        'Sprint Shoes II',
+        'Sprint Shoes III'
       ]
     },
     {

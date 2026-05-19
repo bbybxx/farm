@@ -94,11 +94,11 @@ Each upgrade costs 10x more silver/corn than the previous upgrade. When you expl
 
 Wanderer perks still save stamina. When you have less stamina left than your explore allows, only 1 stamina is used per explore.
 
-You can use a Protein Bar in an area to increase the exploring effectiveness without increasing the silver/corn cost. So if your next upgrade would cost 1b and you use the protein bar, your exploring effectiveness will go up by 1 (more if you have perks) and your next upgrade will still cost 1b. 3 Protein Bar can be used on any given exploration location for free (plus the cost of the protein bar). After you have used 3 Protein Bar in a location, future protein bar uses cost an increasing amount of gold starting at 25 and going up by 25 each time (25, 50, 75, etc...).
+You can use a Protein Bar in an area to increase the exploring effectiveness without increasing the silver/corn cost. So if your next upgrade would cost 1b and you use the protein bar, your exploring effectiveness will go up by 1 (more if you have perks) and your next upgrade will still cost 1b. 3 Protein Bar can be used on any given exploration location for free (plus the cost of the protein bar). After you have used 3 Protein Bar in a location, future protein bar uses cost an increasing amount of gold starting at 25 and going up by 25 each time (25, 50, 75, etc).
 
 Apple Cider takes into account your Exploring Effectiveness in an Explore location. See Apple Cider for more info and a handy chart.
 
-The Sprint Shoes I perk, from Farm Supply, doubles the number of explores gained from upgrading your exploring effectiveness. - Example: If your effectiveness in an area is 4, with Sprint Shoes that becomes 8. Sprint shoes II doubles that again, so if you have both perks, your 4 would actually be 16.
+The Sprint Shoes I perk, from Farm Supply, doubles the number of explores gained from upgrading your exploring effectiveness. - Example: If your effectiveness in an area is 4, with Sprint Shoes that becomes 8. Sprint shoes II doubles that again, so if you have both perks, your 4 would actually be 16. Sprint shoes III doubles it a third time, making that 4 into a 32.
 
 ## Zone Drop Rates
 

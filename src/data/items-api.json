@@ -10169,5 +10169,33 @@
     "image": "/img/items/recipe.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Camping Buddy Doll": {
+    "name": "Camping Buddy Doll",
+    "type": "item",
+    "image": "/img/items/Campingbuddydoll.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Coconut Water": {
+    "name": "Coconut Water",
+    "type": "item",
+    "image": "/img/items/1922.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fish Flakes": {
+    "name": "Fish Flakes",
+    "type": "item",
+    "image": "/img/items/fish_flakes.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Traveler's Bag 01": {
+    "name": "Traveler's Bag 01",
+    "type": "item",
+    "image": "/img/items/Patches.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

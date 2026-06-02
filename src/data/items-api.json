@@ -759,7 +759,7 @@
     "name": "Blue Milk",
     "type": "item",
     "image": "/img/items/bluemilk.png?2",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 99
   },
   "Blue Ornament": {
@@ -5393,7 +5393,7 @@
     "name": "Milk Carton",
     "type": "item",
     "image": "/img/items/packaging_t_01.PNG",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 74
   },
   "Mini Time Egg": {
@@ -6107,7 +6107,7 @@
     "name": "Piñata Whop Stick",
     "type": "item",
     "image": "/img/items/pinata_stick.png",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 75
   },
   "Pine Board": {

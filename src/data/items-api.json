@@ -10197,5 +10197,33 @@
     "image": "/img/items/Patches.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Buddy Box": {
+    "name": "Buddy Box",
+    "type": "item",
+    "image": "/img/items/Buddycube.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cake": {
+    "name": "Cake",
+    "type": "item",
+    "image": "/img/items/the_cake_is_a_lie.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Crowbar": {
+    "name": "Crowbar",
+    "type": "item",
+    "image": "/img/items/crowbar.png",
+    "canCraft": false,
+    "craftingLevel": 75
+  },
+  "Valve": {
+    "name": "Valve",
+    "type": "item",
+    "image": "/img/items/9330.png",
+    "canCraft": true,
+    "craftingLevel": 80
   }
 }

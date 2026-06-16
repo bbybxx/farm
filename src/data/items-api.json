@@ -7479,8 +7479,8 @@
     "name": "Small Bolt",
     "type": "item",
     "image": "/img/items/9374.PNG",
-    "canCraft": false,
-    "craftingLevel": 0
+    "canCraft": true,
+    "craftingLevel": 80
   },
   "Small Chest 01": {
     "name": "Small Chest 01",

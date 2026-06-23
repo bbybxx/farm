@@ -10225,5 +10225,26 @@
     "image": "/img/items/9330.png",
     "canCraft": true,
     "craftingLevel": 80
+  },
+  "Goldfish Prize": {
+    "name": "Goldfish Prize",
+    "type": "item",
+    "image": "/img/items/Goldfishbag_item.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Pine Shavings": {
+    "name": "Pine Shavings",
+    "type": "item",
+    "image": "/img/items/wood_shavings.png",
+    "canCraft": true,
+    "craftingLevel": 81
+  },
+  "Wood Planer": {
+    "name": "Wood Planer",
+    "type": "item",
+    "image": "/img/items/planer.png",
+    "canCraft": true,
+    "craftingLevel": 81
   }
 }

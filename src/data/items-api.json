@@ -10246,5 +10246,12 @@
     "image": "/img/items/planer.png",
     "canCraft": true,
     "craftingLevel": 81
+  },
+  "Hornworm": {
+    "name": "Hornworm",
+    "type": "item",
+    "image": "/img/items/hornworm.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

@@ -51,13 +51,15 @@ export default async function handler(req, res) {
       case 'POST': {
         // Проверка токена авторизации
         // Токен задаётся через переменную окружения WEBHOOK_TOKEN в Vercel Dashboard
-        const token = req.query?.token || '';
+        // Ожидается заголовок: Authorization: Bearer <token>
+        const authHeader = req.headers?.authorization || '';
+        const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
         const expectedToken = process.env.WEBHOOK_TOKEN;
 
         if (!expectedToken || !token || token !== expectedToken) {
           return res.status(403).json({
             success: false,
-            error: 'Forbidden: invalid or missing token. Set WEBHOOK_TOKEN env var and provide ?token= in the URL.',
+            error: 'Forbidden: invalid or missing token. Set WEBHOOK_TOKEN env var and provide Authorization: Bearer <token> header.',
           });
         }
 

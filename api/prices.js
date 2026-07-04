@@ -49,7 +49,21 @@ export default async function handler(req, res) {
     switch (req.method) {
       // ========== POST: сохранить цены (от Fauna) ==========
       case 'POST': {
+        // Проверка токена авторизации
+        // Токен задаётся через переменную окружения WEBHOOK_TOKEN в Vercel Dashboard
+        const token = req.query?.token || '';
+        const expectedToken = process.env.WEBHOOK_TOKEN;
+
+        if (!expectedToken || !token || token !== expectedToken) {
+          return res.status(403).json({
+            success: false,
+            error: 'Forbidden: invalid or missing token. Set WEBHOOK_TOKEN env var and provide ?token= in the URL.',
+          });
+        }
+
+
         const prices = req.body;
+
 
         if (!prices || typeof prices !== 'object' || Object.keys(prices).length === 0) {
           return res.status(400).json({

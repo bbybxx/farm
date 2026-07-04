@@ -16,8 +16,16 @@ export default function SettingsTab({
   setHistoryLimit,
   handleBugReport,
   handleClearData,
-  setIsDevLogsOpen
+  setIsDevLogsOpen,
+  // Dynamic Prices
+  prices,
+  isPricesLoading,
+  pricesError,
+  pricesLastUpdated,
+  onRefreshPrices,
+  onClearPrices
 }) {
+
   return (
     <div className="settings-section">
       <h3 className="section-title">Display Settings</h3>
@@ -155,7 +163,50 @@ export default function SettingsTab({
         </>
       )}
       
+      <h3 className="section-title">Dynamic Prices</h3>
+      <div className="setting-item">
+        <button
+          className={`chip wide${isPricesLoading ? ' disabled' : ''}`}
+          onClick={onRefreshPrices}
+          disabled={isPricesLoading}
+          type="button"
+          title="Fetch latest prices from server"
+        >
+          {isPricesLoading ? 'Loading...' : prices ? '🔄 Refresh Prices' : '📥 Fetch Prices'}
+        </button>
+        {prices && (
+          <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <p className="setting-description" style={{ margin: 0 }}>
+              ✅ Loaded {Object.keys(prices).length} items with dynamic prices
+            </p>
+            {pricesLastUpdated && (
+              <p className="setting-description" style={{ margin: 0, fontSize: 11 }}>
+                Last updated: {new Date(pricesLastUpdated).toLocaleString()}
+              </p>
+            )}
+            <button
+              className="small-btn"
+              onClick={onClearPrices}
+              type="button"
+              style={{ alignSelf: 'flex-start', marginTop: 4, fontSize: 11, padding: '2px 8px', color: '#e06c75' }}
+            >
+              Clear cached prices
+            </button>
+          </div>
+        )}
+        {pricesError && (
+          <p className="setting-description" style={{ color: '#e06c75', marginTop: 4 }}>
+            ⚠️ {pricesError}
+          </p>
+        )}
+        <p className="setting-description">
+          Fetch prices from the server without rebuilding the app. 
+          Requires a webhook to POST data to /api/prices first.
+        </p>
+      </div>
+      
       <h3 className="section-title">Bug Report</h3>
+
       <button
         className="chip wide"
         onClick={handleBugReport}

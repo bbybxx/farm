@@ -29,6 +29,8 @@ import { usePinnedResources } from '../hooks/usePinnedResources.js'
 import { useClearData } from '../hooks/useClearData.js'
 import { useSettings } from '../hooks/useSettings.js'
 import { useUIState } from '../hooks/useUIState.js'
+import { usePrices } from '../hooks/usePrices.js'
+
 import SettingsTab from '../components/Sidebar/SettingsTab.jsx'
 import PerksTab from '../components/Sidebar/PerksTab.jsx'
 import HistoryTab from '../components/Sidebar/HistoryTab.jsx'
@@ -259,7 +261,18 @@ export default function App() {
   
   const [isLocationConfigOpen, setIsLocationConfigOpen] = useState(false)
 
+  // Dynamic Prices
   const {
+    prices,
+    isLoading: isPricesLoading,
+    error: pricesError,
+    lastUpdated: pricesLastUpdated,
+    refreshPrices,
+    clearPrices,
+  } = usePrices()
+
+  const {
+
     showClearConfirm,
     showClearSuccess,
     handleClearData,
@@ -1189,8 +1202,16 @@ export default function App() {
               handleBugReport={handleBugReport}
               handleClearData={handleClearData}
               setIsDevLogsOpen={setIsDevLogsOpen}
+              // Dynamic Prices
+              prices={prices}
+              isPricesLoading={isPricesLoading}
+              pricesError={pricesError}
+              pricesLastUpdated={pricesLastUpdated}
+              onRefreshPrices={refreshPrices}
+              onClearPrices={clearPrices}
             />
           )}
+
           
           {/* Exploring perks now use existing perkCategories UI (chips) */}
         </div>

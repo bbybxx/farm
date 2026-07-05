@@ -59,9 +59,9 @@ export default function EconomyAppHeader({
         </div>
       )}
       
-      <div className="craft-chain" onClick={(e) => e.stopPropagation()} style={{ minWidth: 0 }}>
+      <div className="craft-chain" onClick={(e) => e.stopPropagation()}>
         {craftChain && craftChain.length > 1 ? (
-          <nav ref={breadcrumbsRef} className="breadcrumbs" aria-label="Craft chain">
+          <nav ref={breadcrumbsRef} className="breadcrumbs" aria-label="Craft chain" style={{ maxWidth: '100%' }}>
             {craftChain.slice(0, Math.max(0, craftChain.length - 1)).map((node, idx) => {
               const displayName = (typeof node === 'string') ? node : (node && node.name) || ''
               const truncatedName = displayName.length > 13 

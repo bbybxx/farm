@@ -15,7 +15,25 @@ export default function EconomyItemSelectModal({ isOpen, mode, onSelect, onClose
 
   const craftItems = useMemo(() => {
     const recipes = getCombinedRecipes()
-    return Object.keys(recipes || {})
+    const itemsSet = new Set()
+
+    // Все крафтовые предметы (у кого есть рецепт)
+    Object.keys(recipes || {}).forEach(itemName => {
+      itemsSet.add(itemName)
+    })
+
+    // Все ингредиенты (базовые ресурсы)
+    Object.values(recipes || {}).forEach(recipe => {
+      const resources = recipe.ingredients || recipe.из
+      if (resources) {
+        Object.keys(resources).forEach(resource => {
+          itemsSet.add(resource)
+        })
+      }
+    })
+
+    // Оставляем только те, что используются в других рецептах
+    return Array.from(itemsSet)
       .filter(itemName => findRecipesThatUse(itemName).length > 0)
       .sort()
   }, [])

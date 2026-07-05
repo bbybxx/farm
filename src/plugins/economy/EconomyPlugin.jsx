@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useRef } from 'react'
+import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { useEconomyContext } from './EconomyContext'
 import { useActivePerks } from './hooks/useActivePerks'
 import { getCombinedRecipes, findRecipesThatUse } from '../../utils/recipeUtils'
@@ -8,7 +8,6 @@ import { APPLE_CIDER_REAL_DROP_RATES } from '../../data/apple-cider-real-drop-ra
 import { computePinnedEstimate } from '../../utils/exploringUtils'
 import ItemDisplay from '../../components/ItemDisplay'
 import LocationImage from '../../components/LocationImage'
-import LocationItemInput from '../../components/LocationItemInput'
 import itemsAPI from '../../data/items-api.json' with { type: 'json' }
 import { normalizeItemsMap } from '../../utils/itemImageUtils'
 import { formatNumberRounded, roundToTwo } from '../../utils/formatters'
@@ -64,6 +63,79 @@ function computeDisplayValue(itemName, budget, location, activePerks, exploringM
 }
 
 /**
+ * Пересчитывает количество для узла craftChain по индексу,
+ * исходя из корневого (первого) узла цепочки.
+ * Возвращает массив с обновлёнными amount для всех узлов.
+ */
+function recalcChainFromRoot(chain, activePerks, exploringMode, combinedRecipes) {
+  if (!chain || chain.length === 0) return chain
+
+  const result = chain.map((node, idx) => ({ ...node }))
+
+  for (let i = 1; i < result.length; i++) {
+    const prev = result[i - 1]
+    const curr = result[i]
+
+    if (prev.isLocation) {
+      // Предыдущий — локация. Вычисляем дроп для curr.name от prev.amount (budget)
+      const budget = Number(prev.amount) || 0
+      if (budget <= 0) {
+        curr.amount = 0
+        continue
+      }
+      const display = computeDisplayValue(curr.name, budget, prev.name, activePerks, exploringMode)
+      const parsed = typeof display === 'number' && !Number.isNaN(Number(display)) ? Number(display) : null
+      curr.amount = parsed && parsed >= 1 ? Math.floor(parsed) : 0
+    } else {
+      // Предыдущий — крафт. Вычисляем craftableCount для curr.name от prev.amount
+      // Ищем рецепт curr.name, в котором prev.name является ингредиентом
+      const availableAmount = Number(prev.amount) || 0
+      if (availableAmount <= 0) {
+        curr.amount = 0
+        continue
+      }
+      const resourceSaverPercent = getResourceSaverPercent(activePerks || [])
+      const prevNameNorm = String(prev.name).normalize('NFKC').trim().replace(/\s+/g, ' ').toLowerCase()
+      const currNameNorm = String(curr.name).normalize('NFKC').trim().replace(/\s+/g, ' ').toLowerCase()
+      let craftable = 0
+      // Ищем рецепт с именем curr.name
+      const recipe = combinedRecipes[curr.name]
+      if (recipe) {
+        const ing = recipe?.из || recipe?.ingredients || {}
+        // Ищем в ингредиентах prev.name
+        let requiredPerCraft = null
+        const keys = Object.keys(ing || {})
+        for (const k of keys) {
+          const normalizedK = String(k).normalize('NFKC').trim().replace(/\s+/g, ' ').toLowerCase()
+          if (normalizedK === prevNameNorm) {
+            const val = ing[k]; requiredPerCraft = (typeof val === 'number') ? val : 1; break
+          }
+          const v = ing[k]
+          if (v && typeof v === 'object') {
+            const nestedKeys = Object.keys(v)
+            for (const nk of nestedKeys) {
+              const normalizedNk = String(nk).normalize('NFKC').trim().replace(/\s+/g, ' ').toLowerCase()
+              if (normalizedNk === prevNameNorm) {
+                const nestedVal = v[nk]; requiredPerCraft = (typeof nestedVal === 'number') ? nestedVal : 1; break
+              }
+            }
+            if (requiredPerCraft != null) break
+          }
+        }
+        if (requiredPerCraft != null) {
+          const adjustedRequired = resourceSaverPercent > 0 ? (requiredPerCraft / (1 + resourceSaverPercent)) : requiredPerCraft
+          const finalRequired = adjustedRequired > 0 ? adjustedRequired : requiredPerCraft
+          craftable = finalRequired > 0 ? Math.floor(availableAmount / finalRequired) : 0
+        }
+      }
+      curr.amount = craftable
+    }
+  }
+
+  return result
+}
+
+/**
  * EconomyPlugin — простое зеркало режимов крафта и локаций.
  * Рендерится внутри .main, не использует createPortal.
  * Не имеет своего хедера, breadcrumbs, цепочек — только чистая логика.
@@ -89,27 +161,33 @@ export default function EconomyPlugin() {
 
   const combinedRecipes = useMemo(() => getCombinedRecipes(), [])
 
+  // --- Полный пересчёт цепочки при изменении перков или exploringMode ---
+  // Пересчитываем все узлы цепочки от корня
+  const recalculatedChain = useMemo(() => {
+    return recalcChainFromRoot(craftChain, activePerks, exploringMode, combinedRecipes)
+  }, [craftChain, activePerks, exploringMode, combinedRecipes])
+
+  // Синхронизируем amount/locationAmount с пересчитанной цепочкой
+  // для текущего отображаемого узла
+  useEffect(() => {
+    if (recalculatedChain.length === 0) return
+    const lastNode = recalculatedChain[recalculatedChain.length - 1]
+    if (lastNode.isLocation) {
+      // Для локации обновляем locationAmount только если это корневой узел
+      // (первый в цепочке) — он editable
+      if (recalculatedChain.length === 1) {
+        setLocationAmount(Number(lastNode.amount) || 1)
+      }
+    } else {
+      setAmount(Number(lastNode.amount) || 1)
+    }
+  }, [recalculatedChain])
+
   // --- Craft logic (копия из App.jsx) ---
   const result = useMemo(() => {
     if (!selectedItem || !combinedRecipes[selectedItem]) return null
     const cleanAmount = typeof amount === 'string' ? amount.replace(/\s/g, '') : amount
     return calculateAllResources(selectedItem, Number(cleanAmount) || 1, activePerks, combinedRecipes)
-  }, [selectedItem, amount, activePerks, combinedRecipes])
-
-  const directIngredients = useMemo(() => {
-    if (!selectedItem || !combinedRecipes[selectedItem]) return {}
-    const recipe = combinedRecipes[selectedItem]
-    const originalIngredients = recipe.из || recipe.ingredients || {}
-    const resourceSaverPercent = getResourceSaverPercent(activePerks)
-    const cleanAmount = typeof amount === 'string' ? amount.replace(/\s/g, '') : amount
-    const numAmount = Number(cleanAmount) || 1
-    const filtered = {}
-    for (const [resourceName, baseQuantity] of Object.entries(originalIngredients)) {
-      let needed = baseQuantity * numAmount
-      if (resourceSaverPercent > 0) needed = needed / (1 + resourceSaverPercent)
-      filtered[resourceName] = Math.ceil(needed)
-    }
-    return filtered
   }, [selectedItem, amount, activePerks, combinedRecipes])
 
   const availableCrafts = useMemo(() => {
@@ -177,16 +255,20 @@ export default function EconomyPlugin() {
       setCraftChain(prev => {
         if (prev.length === 0 || !prev[0]?.isLocation) {
           return [
-            { name: selectedLocation, amount: locationAmount, isLocation: true, savedAmount: locationAmount },
-            { name: itemName, amount: quantity }
+            { name: selectedLocation, amount: locationAmount, isLocation: true, savedAmount: locationAmount, editable: true },
+            { name: itemName, amount: quantity, editable: false }
           ]
         }
-        return [...prev, { name: itemName, amount: quantity }]
+        return [...prev, { name: itemName, amount: quantity, editable: false }]
       })
     } else {
-      setCraftChain(prev => [...prev, { name: itemName, amount: quantity }])
+      // Берём количество из пересчитанной цепочки для текущего узла
+      const currentAmount = recalculatedChain.length > 0
+        ? Number(recalculatedChain[recalculatedChain.length - 1]?.amount) || 1
+        : quantity
+      setCraftChain(prev => [...prev, { name: itemName, amount: currentAmount, editable: false }])
     }
-  }, [hasItemContent, setCraftChain, view, selectedLocation, locationAmount])
+  }, [hasItemContent, setCraftChain, view, selectedLocation, locationAmount, recalculatedChain])
 
   // --- Location logic (копия из App.jsx) ---
   const locObj = APPLE_CIDER_REAL_DROP_RATES.locations?.[selectedLocation]
@@ -215,31 +297,8 @@ export default function EconomyPlugin() {
       .map(x => x.name)
   }, [locObj])
 
-  const handleLocationItemCommit = useCallback((itemName, targetQuantity) => {
-    if (!targetQuantity || targetQuantity <= 0 || !selectedLocation) return
-    try {
-      const perUnit = computePinnedEstimate({ name: itemName, location: selectedLocation }, 1, activePerks, exploringMode)
-      if (exploringMode === 'Apple Cider' && perUnit && perUnit.mode === 'AC' && typeof perUnit.effectiveDropsPerCider === 'number') {
-        if (perUnit.effectiveDropsPerCider > 0) setLocationAmount(Math.ceil(targetQuantity / perUnit.effectiveDropsPerCider))
-      } else if (exploringMode === 'Arnold Palmer' && perUnit && perUnit.mode === 'AP' && typeof perUnit.itemsPerAP === 'number') {
-        if (perUnit.itemsPerAP > 0) setLocationAmount(Math.ceil(targetQuantity / perUnit.itemsPerAP))
-      } else {
-        const locObj = APPLE_CIDER_REAL_DROP_RATES.locations?.[selectedLocation]
-        if (locObj) {
-          const raw = locObj['rq0cs0']?.[itemName]
-          if (raw) {
-            let dropsPerConsumable = null
-            if (typeof raw === 'object') dropsPerConsumable = raw.dropsPerCider || (raw.cidersPerDrop ? 1010 / raw.cidersPerDrop : null)
-            else if (typeof raw === 'number') dropsPerConsumable = raw
-            if (dropsPerConsumable && dropsPerConsumable > 0) setLocationAmount(Math.ceil(targetQuantity / dropsPerConsumable))
-          }
-        }
-      }
-    } catch (e) { console.error('Error calculating required amount:', e) }
-  }, [selectedLocation, activePerks, exploringMode])
-
   // Auto-scroll breadcrumbs to the rightmost (latest) node when chain updates
-  React.useEffect(() => {
+  useEffect(() => {
     try {
       if (breadcrumbsRef && breadcrumbsRef.current) {
         const el = breadcrumbsRef.current
@@ -257,7 +316,7 @@ export default function EconomyPlugin() {
     setItemSelectMode(null)
     setView('craft')
     if (setCraftChain) {
-      setCraftChain([{ name, amount: qty }])
+      setCraftChain([{ name, amount: qty, editable: true }])
     }
   }
 
@@ -267,9 +326,13 @@ export default function EconomyPlugin() {
     setItemSelectMode(null)
     setView('location')
     if (setCraftChain) {
-      setCraftChain([{ name, amount: qty, isLocation: true }])
+      setCraftChain([{ name, amount: qty, isLocation: true, savedAmount: qty, editable: true }])
     }
   }
+
+  // Определяем, является ли текущий узел редактируемым
+  const isCurrentEditable = recalculatedChain.length <= 1 ||
+    (recalculatedChain[recalculatedChain.length - 1]?.editable !== false)
 
   if (!economyEnabled) return null
 
@@ -280,7 +343,7 @@ export default function EconomyPlugin() {
         isCaching={false}
         cachingProgress={0}
         isOffline={false}
-        craftChain={craftChain}
+        craftChain={recalculatedChain}
         setCraftChain={setCraftChain}
         breadcrumbsRef={breadcrumbsRef}
         setSelectedItem={setSelectedItem}
@@ -326,18 +389,35 @@ export default function EconomyPlugin() {
             </label>
             <label className="field">
               <span className="label">Amount</span>
-              <input
-                className="input amount-input" type="text" min={1} max={9999999999999999}
-                value={String(amount)}
-                placeholder="Enter amount (e.g., 1 000)"
-                onChange={e => {
-                  const cleanValue = e.target.value.replace(/\D/g, '')
-                  if (cleanValue === '') { setAmount(''); return }
-                  const numericValue = parseInt(cleanValue)
-                  if (numericValue > 9999999999999999) return
-                  setAmount(cleanValue)
-                }}
-              />
+              {isCurrentEditable ? (
+                <input
+                  className="input amount-input" type="text" min={1} max={9999999999999999}
+                  value={String(amount)}
+                  placeholder="Enter amount (e.g., 1 000)"
+                  onChange={e => {
+                    const cleanValue = e.target.value.replace(/\D/g, '')
+                    if (cleanValue === '') { setAmount(''); return }
+                    const numericValue = parseInt(cleanValue)
+                    if (numericValue > 9999999999999999) return
+                    setAmount(cleanValue)
+                    // Обновляем корневой узел цепочки
+                    setCraftChain(prev => {
+                      if (prev.length === 0) return prev
+                      const updated = [...prev]
+                      updated[0] = { ...updated[0], amount: numericValue || 1 }
+                      return updated
+                    })
+                  }}
+                />
+              ) : (
+                <input
+                  className="input amount-input" type="text"
+                  value={formatNumberRounded(Number(amount) || 0)}
+                  readOnly
+                  disabled
+                  style={{ opacity: 0.7, cursor: 'not-allowed' }}
+                />
+              )}
             </label>
           </section>
 
@@ -390,7 +470,15 @@ export default function EconomyPlugin() {
                   const frac = parts[1] ? parts[1].slice(0, 2) : ''
                   const final = frac ? `${integer}.${frac}` : integer
                   if (final === '' || final === '.') { setLocationAmount(''); return }
-                  setLocationAmount(Math.round(parseFloat(final) * 100) / 100)
+                  const newVal = Math.round(parseFloat(final) * 100) / 100
+                  setLocationAmount(newVal)
+                  // Обновляем корневой узел цепочки
+                  setCraftChain(prev => {
+                    if (prev.length === 0) return prev
+                    const updated = [...prev]
+                    updated[0] = { ...updated[0], amount: newVal || 1, savedAmount: newVal || 1 }
+                    return updated
+                  })
                 }}
               />
             </label>
@@ -418,7 +506,8 @@ export default function EconomyPlugin() {
                         style={clickable ? { cursor: 'pointer' } : { cursor: 'default' }}
                       >
                         <span className="k"><ItemDisplay itemName={it} itemsData={STATIC_ITEMS_MAP} /></span>
-                        <LocationItemInput itemName={it} display={display} onCommit={handleLocationItemCommit} />
+                        {/* В режиме локации дропы только для чтения — показываем значение без input */}
+                        <span className="v">{formatNumberRounded(parsed != null ? parsed : 0)}</span>
                       </div>
                     </li>
                   )

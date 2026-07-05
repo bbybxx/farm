@@ -34,7 +34,7 @@ const getBuddyFarmUrl = (name) => {
   return `https://buddy.farm/i/${slug}/`;
 };
 
-const ItemDisplay = memo(function ItemDisplay({ itemName, itemsData = {}, children, enableBuddyFarmLinks = false }) {
+const ItemDisplay = memo(function ItemDisplay({ itemName, itemsData = {}, children, enableBuddyFarmLinks = false, showName = true, displayName }) {
   // Special handling for Silver (currency, not an item)
   if (itemName === 'Silver') {
     return (
@@ -108,10 +108,12 @@ const ItemDisplay = memo(function ItemDisplay({ itemName, itemsData = {}, childr
       ) : (
         imageElement
       )}
-      <span style={nameContainerStyle}>
-        <span>{item.name}</span>
-        {children}
-      </span>
+      {showName && (
+        <span style={nameContainerStyle}>
+          <span>{displayName || item.name}</span>
+          {children}
+        </span>
+      )}
     </div>
   );
 });

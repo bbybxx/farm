@@ -1,6 +1,26 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { useEconomyContext } from '../../plugins/economy/EconomyContext'
+import EconomyPriceConfigModal from '../../plugins/economy/components/EconomyPriceConfigModal'
+import { parseItemPrices } from '../../plugins/economy/utils/parsePriceString'
+import communityPrices from '../../../prices.json'
+
+/**
+ * Парсит prices.json в плоский объект { "Item Name": { gold, ap, oj } }
+ * Пропускает PC-предметы.
+ */
+function parseCommunityPrices() {
+  const result = {}
+  if (!communityPrices?.items) return result
+  for (const item of communityPrices.items) {
+    if (item.PC) continue
+    const name = item.name.replace(/<[^>]*>/g, '').trim()
+    result[name] = parseItemPrices(item)
+  }
+  return result
+}
+
+const BUILTIN_PRICES = parseCommunityPrices()
 
 export default function SettingsTab({
   pinnedEnabled,
@@ -18,13 +38,6 @@ export default function SettingsTab({
   handleBugReport,
   handleClearData,
   setIsDevLogsOpen,
-  // Dynamic Prices
-  prices,
-  isPricesLoading,
-  pricesError,
-  pricesLastUpdated,
-  onRefreshPrices,
-  onClearPrices
 }) {
   const {
     economyEnabled, setEconomyEnabled,
@@ -33,8 +46,14 @@ export default function SettingsTab({
     prices: economyPrices,
     setPrice,
     priceRefreshable, setPriceRefreshable,
+    applyBuiltinPrices,
     isPriceConfigOpen, setIsPriceConfigOpen
   } = useEconomyContext()
+
+  // Применить цены из prices.json для предметов с Auto=true
+  const handleUpdateFromBuiltin = useCallback(() => {
+    applyBuiltinPrices(BUILTIN_PRICES)
+  }, [applyBuiltinPrices])
 
   return (
     <div className="settings-section">
@@ -153,11 +172,15 @@ export default function SettingsTab({
         </>
       )}
 
-      {economyEnabled && isPriceConfigOpen && (
-        <div className="economy-price-config-placeholder glass" style={{ padding: '1rem', marginTop: '0.5rem', borderRadius: '8px' }}>
-          <p style={{ opacity: 0.7, fontSize: '0.85rem' }}>Price configuration will be available in the Economy plugin.</p>
-        </div>
-      )}
+      <EconomyPriceConfigModal
+        isOpen={economyEnabled && isPriceConfigOpen}
+        onClose={() => setIsPriceConfigOpen(false)}
+        prices={economyPrices}
+        setPrice={setPrice}
+        priceRefreshable={priceRefreshable}
+        setPriceRefreshable={setPriceRefreshable}
+        onUpdateFromBuiltin={handleUpdateFromBuiltin}
+      />
 
       <h3 className="section-title">Exploring</h3>
       <div className="setting-item">
@@ -228,48 +251,6 @@ export default function SettingsTab({
           </div>
         </>
       )}
-      
-      <h3 className="section-title">Dynamic Prices</h3>
-      <div className="setting-item">
-        <button
-          className={`chip wide${isPricesLoading ? ' disabled' : ''}`}
-          onClick={onRefreshPrices}
-          disabled={isPricesLoading}
-          type="button"
-          title="Fetch latest prices from server"
-        >
-          {isPricesLoading ? 'Loading...' : prices ? '🔄 Refresh Prices' : '📥 Fetch Prices'}
-        </button>
-        {prices && (
-          <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <p className="setting-description" style={{ margin: 0 }}>
-              ✅ Loaded {Object.keys(prices).length} items with dynamic prices
-            </p>
-            {pricesLastUpdated && (
-              <p className="setting-description" style={{ margin: 0, fontSize: 11 }}>
-                Last updated: {new Date(pricesLastUpdated).toLocaleString()}
-              </p>
-            )}
-            <button
-              className="small-btn"
-              onClick={onClearPrices}
-              type="button"
-              style={{ alignSelf: 'flex-start', marginTop: 4, fontSize: 11, padding: '2px 8px', color: '#e06c75' }}
-            >
-              Clear cached prices
-            </button>
-          </div>
-        )}
-        {pricesError && (
-          <p className="setting-description" style={{ color: '#e06c75', marginTop: 4 }}>
-            ⚠️ {pricesError}
-          </p>
-        )}
-        <p className="setting-description">
-          Fetch prices from the server without rebuilding the app. 
-          Requires a webhook to POST data to /api/prices first.
-        </p>
-      </div>
       
       <h3 className="section-title">Bug Report</h3>
 

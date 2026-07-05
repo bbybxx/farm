@@ -1,0 +1,5317 @@
+{
+    "configuration": {
+        "gold_to_ap_rate": "62.5",
+        "gold_to_oj_rate": "8.25"
+    },
+    "items": [
+        {
+            "name": "3-leaf Clover",
+            "image": "https://farmrpg.com/img/items/8250.PNG",
+            "gold": "",
+            "ap": "4-6/k",
+            "oj": "",
+            "last_updated": "2026-04-27T18:15:45",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T18:15:45",
+                    "gold": "",
+                    "ap": "4-6/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "3rd Birthday Card",
+            "image": "https://farmrpg.com/img/items/card_3ears.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-04-27T18:15:48",
+            "recent": false,
+            "PC": true,
+            "history": []
+        },
+        {
+            "name": "4th Birthday Card",
+            "image": "https://farmrpg.com/img/items/card_4th.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-04-27T18:15:51",
+            "recent": false,
+            "PC": true,
+            "history": []
+        },
+        {
+            "name": "5th Birthday Card",
+            "image": "https://farmrpg.com/img/items/5th_card.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-05-13T23:51:38",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-05-13T23:51:38",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Acorn",
+            "image": "https://farmrpg.com/img/items/5759.PNG",
+            "gold": "",
+            "ap": "6-9/k",
+            "oj": "",
+            "last_updated": "2026-06-15T15:06:59",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T18:15:53",
+                    "gold": "",
+                    "ap": "3-6/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:06:59",
+                    "gold": "",
+                    "ap": "6-9/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Acorn Pie (<i>meal</i>)",
+            "image": "https://farmrpg.com/img/items/acorn_pie.png",
+            "gold": "",
+            "ap": "5-12",
+            "oj": "",
+            "last_updated": "2026-04-27T20:01:30",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T20:01:30",
+                    "gold": "",
+                    "ap": "5-12",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Apple",
+            "image": "https://farmrpg.com/img/items/8297.png",
+            "gold": "1-1.5g/k",
+            "ap": "15-20/k",
+            "oj": "",
+            "last_updated": "2026-04-27T18:16:27",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T18:16:27",
+                    "gold": "1-1.5g/k",
+                    "ap": "15-20/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Apple Basket",
+            "image": "https://farmrpg.com/img/items/applebasket.png?2",
+            "gold": "240-260g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:07:20",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-03T20:51:51",
+                    "gold": "250-270g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:07:20",
+                    "gold": "240-260g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Apple Cider",
+            "image": "https://farmrpg.com/img/items/8984.png",
+            "gold": "17.5-20g/k",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-07-01T03:07:32",
+            "recent": true,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T18:16:37",
+                    "gold": "25-30g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-20T13:23:58",
+                    "gold": "25g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-11T01:29:15",
+                    "gold": "20-25g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-24T14:00:00",
+                    "gold": "20-22.5g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-25T20:18:09",
+                    "gold": "20g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-07-01T03:07:32",
+                    "gold": "17.5-20g/k",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Apple Crate 01",
+            "image": "https://farmrpg.com/img/items/applecrate.png",
+            "gold": "225-275g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-04-27T18:16:41",
+            "recent": false,
+            "PC": false,
+            "history": []
+        },
+        {
+            "name": "Apple Crate 02",
+            "image": "https://farmrpg.com/img/items/applecrate.png",
+            "gold": "250-300g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-04-27T18:16:45",
+            "recent": false,
+            "PC": false,
+            "history": []
+        },
+        {
+            "name": "Apple Pie",
+            "image": "https://farmrpg.com/img/items/applepie2.png",
+            "gold": "210-230g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-05-01T09:27:22",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T18:16:49",
+                    "gold": "210-230g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Aquamarine",
+            "image": "https://farmrpg.com/img/items/6146.PNG",
+            "gold": "",
+            "ap": "3-5/k",
+            "oj": "",
+            "last_updated": "2026-04-27T18:27:38",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T18:27:38",
+                    "gold": "",
+                    "ap": "3-5/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Arnold Palmer",
+            "image": "https://farmrpg.com/img/items/ap.png",
+            "gold": "60-65g/k",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-07-01T01:23:27",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T18:28:06",
+                    "gold": "67.5-75g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-04-30T23:23:21",
+                    "gold": "67.5-72.5g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-03T20:52:23",
+                    "gold": "65-72.5g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-04T17:34:19",
+                    "gold": "70-75g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-20T12:05:30",
+                    "gold": "67.5-72.5g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-30T09:32:29",
+                    "gold": "65-70g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-03T08:25:22",
+                    "gold": "65g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-11T01:29:31",
+                    "gold": "60-65g/k",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Arrowhead",
+            "image": "https://farmrpg.com/img/items/5910.png",
+            "gold": "",
+            "ap": "",
+            "oj": "15-25/k",
+            "last_updated": "2026-04-27T17:57:11",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T17:57:11",
+                    "gold": "",
+                    "ap": "",
+                    "oj": "15-25/k"
+                }
+            ]
+        },
+        {
+            "name": "Axe",
+            "image": "https://farmrpg.com/img/items/5875.png?1",
+            "gold": "",
+            "ap": "2-3/k",
+            "oj": "",
+            "last_updated": "2026-04-27T18:28:10",
+            "recent": false,
+            "PC": false,
+            "history": []
+        },
+        {
+            "name": "Baba's Snack Pack",
+            "image": "https://farmrpg.com/img/items/babasnack.png",
+            "gold": "50-100g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:07:42",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-20T14:56:10",
+                    "gold": "100-150g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-20T14:56:20",
+                    "gold": "100g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:07:42",
+                    "gold": "50-100g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Backpack",
+            "image": "https://farmrpg.com/img/items/BagsAndBoxes_64_t.png",
+            "gold": "40-55g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Beach Ball",
+            "image": "https://farmrpg.com/img/items/beachball.png?1",
+            "gold": "25-50g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Beatrix's Big Box of Boom",
+            "image": "https://farmrpg.com/img/items/beatrixbox.png?1",
+            "gold": "30-40g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-05-30T02:08:12",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-30T02:08:12",
+                    "gold": "30-40g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Beatrix's Booming Brawl Box 01",
+            "image": "https://farmrpg.com/img/items/bfw.png",
+            "gold": "250-300g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-05-06T18:28:11",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-01T09:46:05",
+                    "gold": "300-350g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-01T09:57:21",
+                    "gold": "225-250g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-03T20:51:02",
+                    "gold": "250-300g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Beatrix's Booming Brawl Box 02",
+            "image": "https://farmrpg.com/img/items/fireworks_box_2.png",
+            "gold": "300-350g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-05-30T02:05:51",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-01T09:54:17",
+                    "gold": "350-400g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-01T09:54:33",
+                    "gold": "300-350g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-03T20:51:17",
+                    "gold": "325-375g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-30T02:05:51",
+                    "gold": "300-350g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Beatrix's Booming Brawl Box 03",
+            "image": "https://farmrpg.com/img/items/Fireworksbox2026.png",
+            "gold": "230-300g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-07-04T10:23:53",
+            "recent": true,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-07-01T03:11:33",
+                    "gold": "225-250g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-07-04T10:23:53",
+                    "gold": "230-300g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Bird Egg",
+            "image": "https://farmrpg.com/img/items/6067.PNG",
+            "gold": "",
+            "ap": "3-5/k",
+            "oj": "",
+            "last_updated": "2026-04-27T20:03:42",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T20:03:42",
+                    "gold": "",
+                    "ap": "3-5/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Birthday Surprise Box 03",
+            "image": "https://farmrpg.com/img/items/bsb01.png",
+            "gold": "250-300g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:08:44",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-15T15:08:14",
+                    "gold": "300-400g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:08:44",
+                    "gold": "250-300g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Birthday Surprise Box 04",
+            "image": "https://farmrpg.com/img/items/bsb01.png",
+            "gold": "250-300g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:09:01",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-15T15:08:20",
+                    "gold": "350-450g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:09:01",
+                    "gold": "250-300g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Birthday Surprise Box 05",
+            "image": "https://farmrpg.com/img/items/bsb01.png",
+            "gold": "275-300g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-05T10:49:18",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-01T09:24:07",
+                    "gold": "325-350g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-02T23:45:40",
+                    "gold": "300-325g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-06T18:28:50",
+                    "gold": "300-340g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-29T09:14:37",
+                    "gold": "275-300g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Black Powder",
+            "image": "https://farmrpg.com/img/items/powder.png",
+            "gold": "",
+            "ap": "",
+            "oj": "15-20/k",
+            "last_updated": "2026-04-27T20:04:11",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T20:04:11",
+                    "gold": "",
+                    "ap": "",
+                    "oj": "15-20/k"
+                }
+            ]
+        },
+        {
+            "name": "Blitzen",
+            "image": "https://farmrpg.com/img/items/blitzen.png",
+            "gold": ".5-.75g",
+            "ap": "10-15",
+            "oj": "",
+            "last_updated": "2026-04-27T20:04:29",
+            "recent": false,
+            "PC": true,
+            "history": []
+        },
+        {
+            "name": "Blue Crab",
+            "image": "https://farmrpg.com/img/items/7825.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "10/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Blue Dye",
+            "image": "https://farmrpg.com/img/items/bluedye.png",
+            "gold": "",
+            "ap": "4-6/k",
+            "oj": "",
+            "last_updated": "2026-04-27T21:37:43",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:37:43",
+                    "gold": "",
+                    "ap": "4-6/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Blue Feathers",
+            "image": "https://farmrpg.com/img/items/5963.png",
+            "gold": "",
+            "ap": "2-3/k",
+            "oj": "",
+            "last_updated": "2026-04-27T21:37:48",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:37:48",
+                    "gold": "",
+                    "ap": "2-3/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Bluegill",
+            "image": "https://farmrpg.com/img/items/7722.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "10/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Bomb",
+            "image": "https://farmrpg.com/img/items/bomb.png",
+            "gold": "",
+            "ap": "5-15",
+            "oj": "",
+            "last_updated": "2026-05-30T02:07:39",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T17:57:52",
+                    "gold": ".5-1g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-30T02:07:39",
+                    "gold": "",
+                    "ap": "5-15",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Bone",
+            "image": "https://farmrpg.com/img/items/6033.PNG",
+            "gold": "",
+            "ap": "1-2/k",
+            "oj": "",
+            "last_updated": "2026-04-27T21:38:16",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:38:16",
+                    "gold": "",
+                    "ap": "1-2/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Boobun's Spray Bottle",
+            "image": "https://farmrpg.com/img/items/spraybottle.png",
+            "gold": "5g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Bouquet of Flowers",
+            "image": "https://farmrpg.com/img/items/bouquet.png?1",
+            "gold": "5-7.5g/k",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-07T06:09:06",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-20T21:38:31",
+                    "gold": "10-15g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-04-27T21:38:46",
+                    "gold": "7.5-10g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-07T06:09:06",
+                    "gold": "5-7.5g/k",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Box of Chocolate 01",
+            "image": "https://farmrpg.com/img/items/l_06_t.png?1",
+            "gold": "30g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Box of Chocolate 02",
+            "image": "https://farmrpg.com/img/items/l_06_t.png?1",
+            "gold": "40g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Breakfast Boost (<i>meal</i>)",
+            "image": "https://farmrpg.com/img/items/eggsandwich.png",
+            "gold": "15-25g [100]",
+            "ap": "2-3",
+            "oj": "",
+            "last_updated": "2026-06-25T15:23:16",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:16:30",
+                    "gold": "20-25g/100",
+                    "ap": "2-3",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:10:07",
+                    "gold": "15-25g [100]",
+                    "ap": "2-3",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Bucket",
+            "image": "https://farmrpg.com/img/items/8263.PNG",
+            "gold": "",
+            "ap": "2/k",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Buddy Doll",
+            "image": "https://farmrpg.com/img/items/buddydoll2.png",
+            "gold": "5-10g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:10:37",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:39:19",
+                    "gold": "7.5-10g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:10:37",
+                    "gold": "5-10g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Buddy Loves You Card",
+            "image": "https://farmrpg.com/img/items/card_buddylove.png",
+            "gold": "5g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Buddy's Beach Bag",
+            "image": "https://farmrpg.com/img/items/buddybag2.png",
+            "gold": "180-250g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:12:24",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-15T15:12:02",
+                    "gold": "180-220g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:12:24",
+                    "gold": "180-250g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Buddy's School Bag",
+            "image": "https://farmrpg.com/img/items/buddybag.png?2",
+            "gold": "75-150g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Cabbage Stew (<i>meal</i>)",
+            "image": "https://farmrpg.com/img/items/greensoup.png",
+            "gold": "40-50g [100]",
+            "ap": "6-7.5",
+            "oj": "",
+            "last_updated": "2026-06-25T15:24:24",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:21:28",
+                    "gold": "40-50g [100]",
+                    "ap": "6-7.5",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Calavera 01",
+            "image": "https://farmrpg.com/img/items/738.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Calavera 02",
+            "image": "https://farmrpg.com/img/items/739.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Capy Birthday Card",
+            "image": "https://farmrpg.com/img/items/card_capybirthday.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Carbon Sphere",
+            "image": "https://farmrpg.com/img/items/carbonsphere.png",
+            "gold": "",
+            "ap": "6-10/k",
+            "oj": "",
+            "last_updated": "2026-06-15T15:12:57",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:39:31",
+                    "gold": "",
+                    "ap": "6-8/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-15T13:03:34",
+                    "gold": "",
+                    "ap": "8-10/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:12:57",
+                    "gold": "",
+                    "ap": "6-10/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Carp",
+            "image": "https://farmrpg.com/img/items/7737.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "10/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Carrot",
+            "image": "https://farmrpg.com/img/items/8391.PNG",
+            "gold": "",
+            "ap": "3-5/k",
+            "oj": "",
+            "last_updated": "2026-04-27T21:41:05",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:41:05",
+                    "gold": "",
+                    "ap": "3-5/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Cat's Meow (<i>meal</i>)",
+            "image": "https://farmrpg.com/img/items/fishessensestew.png",
+            "gold": "15-25g [100]",
+            "ap": "2.5-4",
+            "oj": "",
+            "last_updated": "2026-06-29T14:20:30",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-25T15:26:18",
+                    "gold": "20-30g [100]",
+                    "ap": "3-4",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-29T14:20:30",
+                    "gold": "15-25g [100]",
+                    "ap": "2.5-4",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Caterpillar",
+            "image": "https://farmrpg.com/img/items/caterpillar.png",
+            "gold": "",
+            "ap": "50-75/k",
+            "oj": "",
+            "last_updated": "2026-06-25T15:17:12",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-20T21:41:19",
+                    "gold": "5g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-04-27T21:41:35",
+                    "gold": "5-10g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:13:29",
+                    "gold": "",
+                    "ap": "50-100/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-25T15:17:12",
+                    "gold": "",
+                    "ap": "50-75/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Cheese",
+            "image": "https://farmrpg.com/img/items/8279.png",
+            "gold": "7.5-10g/k",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:14:24",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-15T15:14:13",
+                    "gold": "10-15g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:14:24",
+                    "gold": "7.5-10g/k",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Christmas Card",
+            "image": "https://farmrpg.com/img/items/card_christmas.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Christmas Present 01",
+            "image": "https://farmrpg.com/img/items/7468.png",
+            "gold": "55g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Christmas Present 02",
+            "image": "https://farmrpg.com/img/items/7468.png",
+            "gold": "0.5-1g",
+            "ap": "5-15",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Christmas Present 07",
+            "image": "https://farmrpg.com/img/items/7468.png",
+            "gold": "105-110g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Clawed Card",
+            "image": "https://farmrpg.com/img/items/card_clawed.png",
+            "gold": "5-10g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-04-26T13:10:25",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Clubs",
+            "image": "https://farmrpg.com/img/items/card_clubs.png",
+            "gold": "2-2.5g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Coal",
+            "image": "https://farmrpg.com/img/items/coal.png",
+            "gold": "",
+            "ap": "2/k",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Coderanger's Missing Semicolon",
+            "image": "https://farmrpg.com/img/items/semi.png",
+            "gold": "",
+            "ap": "30-50",
+            "oj": "",
+            "last_updated": "2026-06-29T18:05:32",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-29T18:05:17",
+                    "gold": "5g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-29T18:05:32",
+                    "gold": "",
+                    "ap": "30-50",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Comet",
+            "image": "https://farmrpg.com/img/items/comet.png",
+            "gold": ".5-.75g",
+            "ap": "10-15",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Congratulations Card",
+            "image": "https://farmrpg.com/img/items/card_congrats.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Cornucopia 01",
+            "image": "https://farmrpg.com/img/items/cornucopia.png",
+            "gold": "30-40g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Cornucopia 02",
+            "image": "https://farmrpg.com/img/items/cornucopia.png",
+            "gold": "225-275g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-04-17T17:09:28",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Cornucopia 03",
+            "image": "https://farmrpg.com/img/items/cornucopia.png",
+            "gold": "325-350g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:15:09",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-15T15:14:52",
+                    "gold": "350-375g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:15:09",
+                    "gold": "325-350g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Crappie",
+            "image": "https://farmrpg.com/img/items/7735.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "5/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Cricket",
+            "image": "https://farmrpg.com/img/items/cricket.png",
+            "gold": "5-10g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Crunchy Omelette (<i>meal</i>)",
+            "image": "https://farmrpg.com/img/items/omelet2.png",
+            "gold": ".5-1g",
+            "ap": "10-15",
+            "oj": "",
+            "last_updated": "2026-06-15T15:16:30",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T20:02:03",
+                    "gold": ".75-1g",
+                    "ap": "10-15",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:16:30",
+                    "gold": ".5-1g",
+                    "ap": "10-15",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Cucumber",
+            "image": "https://farmrpg.com/img/items/5805.png",
+            "gold": "",
+            "ap": "3-5/k",
+            "oj": "",
+            "last_updated": "2026-04-27T21:42:40",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:42:40",
+                    "gold": "",
+                    "ap": "3-5/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Cupid",
+            "image": "https://farmrpg.com/img/items/cupid.png",
+            "gold": ".5-.75g",
+            "ap": "10-15",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Dancer",
+            "image": "https://farmrpg.com/img/items/dancer.png",
+            "gold": ".5-.75g",
+            "ap": "10-15",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Dasher",
+            "image": "https://farmrpg.com/img/items/dasher.png",
+            "gold": ".5-.75g",
+            "ap": "10-15",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Diamonds",
+            "image": "https://farmrpg.com/img/items/card_diamonds.png",
+            "gold": "2-2.5g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Donner",
+            "image": "https://farmrpg.com/img/items/donner.png",
+            "gold": ".5-.75g",
+            "ap": "10-15",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Dragonfly",
+            "image": "https://farmrpg.com/img/items/fishing_64_t.png",
+            "gold": "",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Drum",
+            "image": "https://farmrpg.com/img/items/7718.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "5/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Egg 01",
+            "image": "https://farmrpg.com/img/items/egg01.png",
+            "gold": "",
+            "ap": "3-5",
+            "oj": "",
+            "last_updated": "2026-04-27T21:43:26",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:43:26",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg 02",
+            "image": "https://farmrpg.com/img/items/egg02.png",
+            "gold": "",
+            "ap": "10",
+            "oj": "",
+            "last_updated": "2026-04-27T21:43:32",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:43:32",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg 03",
+            "image": "https://farmrpg.com/img/items/egg03.png",
+            "gold": "",
+            "ap": "3-5",
+            "oj": "",
+            "last_updated": "2026-04-27T21:43:38",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:43:38",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg 04",
+            "image": "https://farmrpg.com/img/items/egg04.png",
+            "gold": "",
+            "ap": "3-5",
+            "oj": "",
+            "last_updated": "2026-04-27T21:43:46",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:43:46",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg 05",
+            "image": "https://farmrpg.com/img/items/egg05.png",
+            "gold": "",
+            "ap": "3-5",
+            "oj": "",
+            "last_updated": "2026-04-27T21:43:51",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:43:51",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg 06",
+            "image": "https://farmrpg.com/img/items/egg06.png",
+            "gold": "",
+            "ap": "3-5",
+            "oj": "",
+            "last_updated": "2026-04-27T21:43:57",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:43:57",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg 07",
+            "image": "https://farmrpg.com/img/items/egg07.png",
+            "gold": "",
+            "ap": "3-5",
+            "oj": "",
+            "last_updated": "2026-04-27T21:44:05",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:44:05",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg 08",
+            "image": "https://farmrpg.com/img/items/egg08.png",
+            "gold": "",
+            "ap": "3-5",
+            "oj": "",
+            "last_updated": "2026-04-27T21:44:11",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:44:11",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg 09",
+            "image": "https://farmrpg.com/img/items/egg09.png",
+            "gold": "",
+            "ap": "3-5",
+            "oj": "",
+            "last_updated": "2026-04-27T21:44:24",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:44:24",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg 10",
+            "image": "https://farmrpg.com/img/items/egg10.png",
+            "gold": "",
+            "ap": "3-5",
+            "oj": "",
+            "last_updated": "2026-04-27T21:44:32",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:44:32",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg 11",
+            "image": "https://farmrpg.com/img/items/egg11.png",
+            "gold": "",
+            "ap": "3-5",
+            "oj": "",
+            "last_updated": "2026-04-26T13:12:47",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Egg 12",
+            "image": "https://farmrpg.com/img/items/egg12.png",
+            "gold": "",
+            "ap": "3-5",
+            "oj": "",
+            "last_updated": "2026-04-27T21:44:40",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:44:40",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg Basket",
+            "image": "https://farmrpg.com/img/items/eggbasket.png",
+            "gold": "",
+            "ap": "2",
+            "oj": "",
+            "last_updated": "2026-04-27T21:45:26",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:44:53",
+                    "gold": "1g",
+                    "ap": "10",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-04-27T21:45:26",
+                    "gold": "",
+                    "ap": "2",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg of Ages",
+            "image": "https://farmrpg.com/img/items/timeegg2.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Egg of Air",
+            "image": "https://farmrpg.com/img/items/airegg.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Egg of Chaos",
+            "image": "https://farmrpg.com/img/items/chaosegg.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Egg of Earth",
+            "image": "https://farmrpg.com/img/items/earthegg.png",
+            "gold": "",
+            "ap": "100",
+            "oj": "",
+            "last_updated": "2026-04-27T21:46:07",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:46:07",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg of Fire",
+            "image": "https://farmrpg.com/img/items/fireegg.png",
+            "gold": "",
+            "ap": "10",
+            "oj": "",
+            "last_updated": "2026-04-27T21:46:13",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:46:13",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg of Life",
+            "image": "https://farmrpg.com/img/items/lifeegg.png",
+            "gold": "",
+            "ap": "5",
+            "oj": "",
+            "last_updated": "2026-04-27T21:46:20",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:46:20",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg of Light",
+            "image": "https://farmrpg.com/img/items/lightegg.png",
+            "gold": "",
+            "ap": "150",
+            "oj": "",
+            "last_updated": "2026-04-27T21:46:25",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:46:25",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg of Shadow",
+            "image": "https://farmrpg.com/img/items/shadowegg.png",
+            "gold": "",
+            "ap": "25",
+            "oj": "",
+            "last_updated": "2026-04-27T21:46:35",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:46:35",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Egg of Space",
+            "image": "https://farmrpg.com/img/items/spaceegg.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Egg of Water",
+            "image": "https://farmrpg.com/img/items/wateregg.png",
+            "gold": "",
+            "ap": "25",
+            "oj": "",
+            "last_updated": "2026-04-27T21:46:46",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:46:46",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Eggplant",
+            "image": "https://farmrpg.com/img/items/eggplant.png",
+            "gold": "",
+            "ap": "3-5/k",
+            "oj": "",
+            "last_updated": "2026-04-27T21:46:52",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:46:52",
+                    "gold": "",
+                    "ap": "3-5/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Eggs",
+            "image": "https://farmrpg.com/img/items/5720.PNG",
+            "gold": "",
+            "ap": "3-5/k",
+            "oj": "",
+            "last_updated": "2026-04-27T21:47:04",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:47:04",
+                    "gold": "",
+                    "ap": "3-5/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Explosive",
+            "image": "https://farmrpg.com/img/items/6124.png",
+            "gold": "",
+            "ap": "",
+            "oj": "20-35/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Fall Basket",
+            "image": "https://farmrpg.com/img/items/fallbasket.png",
+            "gold": "30-40g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Fancy Present",
+            "image": "https://farmrpg.com/img/items/gift_2.png",
+            "gold": "40-60g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Feathers",
+            "image": "https://farmrpg.com/img/items/feathers.png",
+            "gold": "",
+            "ap": "3-5/k",
+            "oj": "",
+            "last_updated": "2026-04-27T21:47:19",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:47:19",
+                    "gold": "",
+                    "ap": "3-5/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Fern Leaf",
+            "image": "https://farmrpg.com/img/items/fern.png",
+            "gold": "",
+            "ap": "2-5/k",
+            "oj": "",
+            "last_updated": "2026-04-27T21:47:30",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:47:30",
+                    "gold": "",
+                    "ap": "2-5/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Festive Eggnog",
+            "image": "https://farmrpg.com/img/items/eggnog.png",
+            "gold": "",
+            "ap": "1-3",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Fire Ant",
+            "image": "https://farmrpg.com/img/items/fireant.png",
+            "gold": "",
+            "ap": "5-10/k",
+            "oj": "",
+            "last_updated": "2026-06-29T18:03:26",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:47:45",
+                    "gold": ".5g/k",
+                    "ap": "10-20/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-29T18:03:26",
+                    "gold": "",
+                    "ap": "5-10/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Firestream's Magic Wire",
+            "image": "https://farmrpg.com/img/items/magicwire.png",
+            "gold": "",
+            "ap": "20-30",
+            "oj": "",
+            "last_updated": "2026-06-29T18:07:23",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-29T18:07:13",
+                    "gold": "5g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-29T18:07:23",
+                    "gold": "",
+                    "ap": "20-30",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Fireworks",
+            "image": "https://farmrpg.com/img/items/petard.png",
+            "gold": "",
+            "ap": "",
+            "oj": "25/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Fish and Chips (<i>meal</i>)",
+            "image": "https://farmrpg.com/img/items/fishnchips.png",
+            "gold": "5-7.5g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-26T03:09:03",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T20:02:13",
+                    "gold": "7.5-10g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:16:59",
+                    "gold": "5-10g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-26T03:09:03",
+                    "gold": "5-7.5g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Fish Bones",
+            "image": "https://farmrpg.com/img/items/7747.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "10-20/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Fishing Net",
+            "image": "https://farmrpg.com/img/items/7748.png",
+            "gold": "",
+            "ap": "10/k",
+            "oj": "",
+            "last_updated": "2026-04-27T21:48:00",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:48:00",
+                    "gold": "",
+                    "ap": "10/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Five Point Mace",
+            "image": "https://farmrpg.com/img/items/5046.png",
+            "gold": "20-30g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-04-27T21:48:11",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:48:11",
+                    "gold": "20-30g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Flier",
+            "image": "https://farmrpg.com/img/items/7843.png",
+            "gold": "",
+            "ap": "",
+            "oj": "40/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Forcepath's Book of Quest Requirements",
+            "image": "https://farmrpg.com/img/items/7581.png",
+            "gold": "",
+            "ap": "20-30",
+            "oj": "",
+            "last_updated": "2026-06-29T18:07:54",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-29T18:07:44",
+                    "gold": "5g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-29T18:07:54",
+                    "gold": "",
+                    "ap": "20-30",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Frank's Basket",
+            "image": "https://farmrpg.com/img/items/fbasket.png",
+            "gold": "35-50g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Friendship Bag 01",
+            "image": "https://farmrpg.com/img/items/friendshipbag.png",
+            "gold": "35-45g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-04-27T21:49:02",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:49:02",
+                    "gold": "35-45g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Frozen Chest 01",
+            "image": "https://farmrpg.com/img/items/frozen_chest.png",
+            "gold": "40-55g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Frozen Chest 02",
+            "image": "https://farmrpg.com/img/items/frozen_chest.png",
+            "gold": "50-100g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-26T03:13:46",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-30T02:07:04",
+                    "gold": "50-125g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-26T03:13:46",
+                    "gold": "50-100g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Frozen Chest 03",
+            "image": "https://farmrpg.com/img/items/frozenchest.png",
+            "gold": "250-275g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-05-06T18:29:35",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-03T20:51:38",
+                    "gold": "250-275g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Frozen Hops",
+            "image": "https://farmrpg.com/img/items/frozen_hops.png",
+            "gold": "25-30g/100",
+            "ap": "4-5",
+            "oj": "",
+            "last_updated": "2026-04-27T21:49:24",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:49:24",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Frozen Radish",
+            "image": "https://farmrpg.com/img/items/frozen_radish.png",
+            "gold": "",
+            "ap": "1",
+            "oj": "",
+            "last_updated": "2026-04-27T21:49:33",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:49:33",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Fruit Punch",
+            "image": "https://farmrpg.com/img/items/fruitpunch.png",
+            "gold": "125-160g/k",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:19:45",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:49:49",
+                    "gold": "150-175g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:19:45",
+                    "gold": "125-160g/k",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Fuzzy Chick 01",
+            "image": "https://farmrpg.com/img/items/fuzzychick1pink.png",
+            "gold": "",
+            "ap": "100",
+            "oj": "",
+            "last_updated": "2026-04-27T21:50:19",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:50:19",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Fuzzy Chick 02",
+            "image": "https://farmrpg.com/img/items/Fuzzychick2.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Fuzzy Chick 03",
+            "image": "https://farmrpg.com/img/items/Fuzzychick3green.png",
+            "gold": "",
+            "ap": "",
+            "oj": "4",
+            "last_updated": "2026-04-27T21:50:29",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:50:29",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Fuzzy Chick 04",
+            "image": "https://farmrpg.com/img/items/Fuzzychick3yellow.png",
+            "gold": "",
+            "ap": "20",
+            "oj": "",
+            "last_updated": "2026-04-27T21:50:57",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:50:57",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Fuzzy Chick 05",
+            "image": "https://farmrpg.com/img/items/Fuzzychick1blue.png",
+            "gold": "",
+            "ap": "5-6",
+            "oj": "",
+            "last_updated": "2026-05-01T09:25:52",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-05-01T09:25:52",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Fuzzy Chick 06",
+            "image": "https://farmrpg.com/img/items/Fuzzychick3.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Fuzzy Chick 07",
+            "image": "https://farmrpg.com/img/items/Fuzzychick2green.png",
+            "gold": "",
+            "ap": "100",
+            "oj": "",
+            "last_updated": "2026-04-27T21:52:14",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:52:14",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Fuzzy Chick 08",
+            "image": "https://farmrpg.com/img/items/Fuzzychick1.png",
+            "gold": "",
+            "ap": "100",
+            "oj": "",
+            "last_updated": "2026-04-27T21:52:24",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:52:24",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Fuzzy Chick 09",
+            "image": "https://farmrpg.com/img/items/Fuzzychick2pink.png",
+            "gold": "",
+            "ap": "100",
+            "oj": "",
+            "last_updated": "2026-04-27T21:52:33",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:52:33",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Fuzzy Chick 10",
+            "image": "https://farmrpg.com/img/items/Fuzzychick1green.png",
+            "gold": "",
+            "ap": "100-200",
+            "oj": "",
+            "last_updated": "2026-04-27T21:50:47",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:50:47",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Fuzzy Chick 11",
+            "image": "https://farmrpg.com/img/items/Fuzzychick2yellow.png",
+            "gold": "",
+            "ap": "10-15",
+            "oj": "",
+            "last_updated": "2026-04-27T21:50:42",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:50:42",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Fuzzy Chick 12",
+            "image": "https://farmrpg.com/img/items/Fuzzychick3blue.png",
+            "gold": "",
+            "ap": "100",
+            "oj": "",
+            "last_updated": "2026-04-27T21:50:34",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:50:34",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Galactic Egg Basket",
+            "image": "https://farmrpg.com/img/items/space_egg_chest.png",
+            "gold": "25-35g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-05-01T09:26:06",
+            "recent": false,
+            "PC": true,
+            "history": [
+                {
+                    "date": "2026-04-27T21:52:51",
+                    "gold": "20-40g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-04-27T21:53:07",
+                    "gold": "25-35g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-01T09:26:06",
+                    "gold": "PC",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Garden Crate 01",
+            "image": "https://farmrpg.com/img/items/garden_crate.png",
+            "gold": "400-420g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-05-06T18:30:06",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:53:33",
+                    "gold": "450-480g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-04-28T11:58:08",
+                    "gold": "425g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-04T17:33:51",
+                    "gold": "400-420g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Gare Bear",
+            "image": "https://farmrpg.com/img/items/buffteddy2.png",
+            "gold": "40-50g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-05-19T15:25:31",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:54:00",
+                    "gold": "40-50g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-09T21:48:57",
+                    "gold": "35-40g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-19T15:25:31",
+                    "gold": "40-50g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Get Well Soon Card",
+            "image": "https://farmrpg.com/img/items/card_gws.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Ghost Candy",
+            "image": "https://farmrpg.com/img/items/ghost_candy.png",
+            "gold": "",
+            "ap": "",
+            "oj": "30",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Giant Centipede",
+            "image": "https://farmrpg.com/img/items/giantcent.png",
+            "gold": "",
+            "ap": "",
+            "oj": "10-15/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Glass Orb",
+            "image": "https://farmrpg.com/img/items/5708.PNG",
+            "gold": "",
+            "ap": "2-3/k",
+            "oj": "",
+            "last_updated": "2026-04-29T11:04:29",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:54:17",
+                    "gold": "",
+                    "ap": "2-3/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Gold Carrot",
+            "image": "https://farmrpg.com/img/items/8391g.png",
+            "gold": "",
+            "ap": "0/k",
+            "oj": "",
+            "last_updated": "2026-06-14T03:59:51",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-14T03:59:51",
+                    "gold": "",
+                    "ap": "0/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Gold Catfish",
+            "image": "https://farmrpg.com/img/items/goldcatfish.png",
+            "gold": "",
+            "ap": "0-10/k",
+            "oj": "",
+            "last_updated": "2026-06-14T04:28:29",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-14T04:28:29",
+                    "gold": "",
+                    "ap": "0-10/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Gold Cucumber",
+            "image": "https://farmrpg.com/img/items/5805g.png?1",
+            "gold": "",
+            "ap": "0/k",
+            "oj": "",
+            "last_updated": "2026-06-14T04:00:08",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-14T04:00:08",
+                    "gold": "",
+                    "ap": "0/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Gold Drum",
+            "image": "https://farmrpg.com/img/items/golddrum.png",
+            "gold": "",
+            "ap": "0-10/k",
+            "oj": "",
+            "last_updated": "2026-06-14T04:28:44",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-14T04:28:44",
+                    "gold": "",
+                    "ap": "0-10/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Gold Eggplant",
+            "image": "https://farmrpg.com/img/items/geggplant.png?1",
+            "gold": "",
+            "ap": "0/k",
+            "oj": "",
+            "last_updated": "2026-06-14T04:00:25",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-14T04:00:25",
+                    "gold": "",
+                    "ap": "0/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Gold Feather",
+            "image": "https://farmrpg.com/img/items/5996.png",
+            "gold": "10-15g/k",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-29T18:03:49",
+            "recent": true,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-20T21:55:31",
+                    "gold": "12.5-15g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-04-27T21:55:44",
+                    "gold": "15-20g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-14T04:30:15",
+                    "gold": "15g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-29T18:03:49",
+                    "gold": "10-15g/k",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Gold Peas",
+            "image": "https://farmrpg.com/img/items/8259g.png",
+            "gold": "",
+            "ap": "0/k",
+            "oj": "",
+            "last_updated": "2026-06-14T04:00:43",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-14T04:00:43",
+                    "gold": "",
+                    "ap": "0/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Gold Peppers",
+            "image": "https://farmrpg.com/img/items/8301g.png?1",
+            "gold": "",
+            "ap": "0/k",
+            "oj": "",
+            "last_updated": "2026-06-14T04:00:56",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-14T04:00:56",
+                    "gold": "",
+                    "ap": "0/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Gold Trout",
+            "image": "https://farmrpg.com/img/items/goldtrout.png?1",
+            "gold": "",
+            "ap": "0-10/k",
+            "oj": "",
+            "last_updated": "2026-06-14T04:29:00",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-14T04:29:00",
+                    "gold": "",
+                    "ap": "0-10/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Goldgill",
+            "image": "https://farmrpg.com/img/items/goldgill.png",
+            "gold": "",
+            "ap": "0-10/k",
+            "oj": "",
+            "last_updated": "2026-06-14T04:29:18",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-14T04:29:18",
+                    "gold": "",
+                    "ap": "0-10/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Good Luck Card",
+            "image": "https://farmrpg.com/img/items/card_goodluck.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Grapes",
+            "image": "https://farmrpg.com/img/items/8272.PNG",
+            "gold": "",
+            "ap": "5-8/k",
+            "oj": "",
+            "last_updated": "2026-06-15T15:20:14",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:56:14",
+                    "gold": "",
+                    "ap": "",
+                    "oj": "30-50/k"
+                },
+                {
+                    "date": "2026-05-14T07:12:47",
+                    "gold": "",
+                    "ap": "6-10/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:20:14",
+                    "gold": "",
+                    "ap": "5-8/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Grasshopper",
+            "image": "https://farmrpg.com/img/items/3315.png",
+            "gold": "",
+            "ap": ".5-1",
+            "oj": "4-5",
+            "last_updated": "2026-04-27T21:56:37",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:56:37",
+                    "gold": "",
+                    "ap": ".5-1",
+                    "oj": "4-5"
+                }
+            ]
+        },
+        {
+            "name": "Green Backpack",
+            "image": "https://farmrpg.com/img/items/luckybag.png",
+            "gold": "90-125g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Green Chromis",
+            "image": "https://farmrpg.com/img/items/7828.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "10/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Green Dye",
+            "image": "https://farmrpg.com/img/items/greendye.png",
+            "gold": "",
+            "ap": "4-7/k",
+            "oj": "",
+            "last_updated": "2026-06-15T15:20:51",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:56:52",
+                    "gold": "",
+                    "ap": "5-8/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:20:51",
+                    "gold": "",
+                    "ap": "4-7/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Green Parchment",
+            "image": "https://farmrpg.com/img/items/greenparchment.png",
+            "gold": "",
+            "ap": "",
+            "oj": "20-30/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Grubs",
+            "image": "https://farmrpg.com/img/items/7745.png",
+            "gold": "",
+            "ap": "",
+            "oj": "10/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Gummy Worms",
+            "image": "https://farmrpg.com/img/items/gworm.png",
+            "gold": "",
+            "ap": "",
+            "oj": "5/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Hammer",
+            "image": "https://farmrpg.com/img/items/hammer.png?2",
+            "gold": "",
+            "ap": "3-5/k",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Happy Cookies",
+            "image": "https://farmrpg.com/img/items/ccookies.png",
+            "gold": "5-10g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:21:20",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:57:18",
+                    "gold": "7.5-10g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:21:20",
+                    "gold": "5-10g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Happy Farmiversary Card",
+            "image": "https://farmrpg.com/img/items/card_farmiversary.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Happy Halloween Card",
+            "image": "https://farmrpg.com/img/items/halloween_card.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Heart Container",
+            "image": "https://farmrpg.com/img/items/heartcontainer.png?1",
+            "gold": "20-25g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-07-04T00:41:10",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-20T21:58:29",
+                    "gold": "30-35g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-04-27T21:58:59",
+                    "gold": "25-35g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-05T10:48:28",
+                    "gold": "20-30g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:22:38",
+                    "gold": "20-25g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Heart-shaped Box 01",
+            "image": "https://farmrpg.com/img/items/hsb.png",
+            "gold": "300-350g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Heart-shaped Box 02",
+            "image": "https://farmrpg.com/img/items/hsb.png",
+            "gold": "400-450g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Heart-shaped Box 03",
+            "image": "https://farmrpg.com/img/items/heartshapedbox1.png",
+            "gold": "300-330g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-02-01T23:49:04",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Heart-shaped Gem",
+            "image": "https://farmrpg.com/img/items/3495.png",
+            "gold": "180-200g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:22:12",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T21:59:51",
+                    "gold": "200-215g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-03T20:48:21",
+                    "gold": "190-210g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:22:12",
+                    "gold": "180-200g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Hearts",
+            "image": "https://farmrpg.com/img/items/card_hearts.png",
+            "gold": "2-2.5g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Hensods's Bonsai",
+            "image": "https://farmrpg.com/img/items/bonsai01.png",
+            "gold": "5g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Hickory Omelette (<i>meal</i>)",
+            "image": "https://farmrpg.com/img/items/omelet1.png",
+            "gold": "30-35g [100]",
+            "ap": "4.5-5.5",
+            "oj": "",
+            "last_updated": "2026-06-25T15:26:45",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-25T15:26:45",
+                    "gold": "30-35g [100]",
+                    "ap": "4.5-5.5",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Hide",
+            "image": "https://farmrpg.com/img/items/5986.PNG",
+            "gold": "",
+            "ap": "3-4/k",
+            "oj": "",
+            "last_updated": "2026-06-15T15:23:09",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-15T15:22:55",
+                    "gold": "",
+                    "ap": "6/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:23:09",
+                    "gold": "",
+                    "ap": "3-4/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Holger's Lunch Box",
+            "image": "https://farmrpg.com/img/items/lunchbox2.png?1",
+            "gold": "35-50g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Holiday Cake",
+            "image": "https://farmrpg.com/img/items/treecake.png",
+            "gold": "",
+            "ap": "5-15",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Holiday Cheer Bundle 01",
+            "image": "https://farmrpg.com/img/items/holidaycheerbundle.png",
+            "gold": "260-300g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Hops",
+            "image": "https://farmrpg.com/img/items/8248.PNG",
+            "gold": "",
+            "ap": "10-20/k",
+            "oj": "",
+            "last_updated": "2026-05-30T02:06:34",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:01:04",
+                    "gold": "",
+                    "ap": "15-20/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-30T02:06:34",
+                    "gold": "",
+                    "ap": "10-20/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Horn",
+            "image": "https://farmrpg.com/img/items/6111.PNG",
+            "gold": "",
+            "ap": "8-10/k",
+            "oj": "",
+            "last_updated": "2026-07-01T01:22:54",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:01:32",
+                    "gold": "",
+                    "ap": "",
+                    "oj": "20-40/k"
+                },
+                {
+                    "date": "2026-06-14T04:44:24",
+                    "gold": "",
+                    "ap": "5-8/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-21T00:29:39",
+                    "gold": "",
+                    "ap": "5-10/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-29T18:04:11",
+                    "gold": "",
+                    "ap": "8-10/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Horned Beetle",
+            "image": "https://farmrpg.com/img/items/hbeetle.png",
+            "gold": "",
+            "ap": "",
+            "oj": "20/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Iced Tea",
+            "image": "https://farmrpg.com/img/items/tea.png",
+            "gold": "",
+            "ap": "",
+            "oj": "20-50/k",
+            "last_updated": "2026-04-27T22:02:27",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:02:27",
+                    "gold": "",
+                    "ap": "",
+                    "oj": "20-50/k"
+                }
+            ]
+        },
+        {
+            "name": "Inferno Pepper",
+            "image": "https://farmrpg.com/img/items/infpepper.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Iron Cup",
+            "image": "https://farmrpg.com/img/items/ironcup.png",
+            "gold": "",
+            "ap": "",
+            "oj": "5-10/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Joker",
+            "image": "https://farmrpg.com/img/items/joker.png",
+            "gold": "4-5g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Ladder",
+            "image": "https://farmrpg.com/img/items/5629.png",
+            "gold": "",
+            "ap": "",
+            "oj": "20-30/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Large Net",
+            "image": "https://farmrpg.com/img/items/lnet.png?3",
+            "gold": "10-12.5g/k",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-07-01T09:49:42",
+            "recent": true,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:02:44",
+                    "gold": "20-25g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-06T16:45:24",
+                    "gold": "15-20g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-07T21:03:48",
+                    "gold": "10-15g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-09T21:49:08",
+                    "gold": "10-17.5g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-13T14:42:50",
+                    "gold": "10-15g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-22T21:21:19",
+                    "gold": "15g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-26T03:33:27",
+                    "gold": "12.5-15g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-08T03:35:32",
+                    "gold": "10-12.5g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:25:22",
+                    "gold": "8-12.5g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-22T14:06:45",
+                    "gold": "8-10g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-07-01T09:49:42",
+                    "gold": "10-12.5g/k",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Largemouth Bass",
+            "image": "https://farmrpg.com/img/items/7736.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "5/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Leather",
+            "image": "https://farmrpg.com/img/items/5987.PNG",
+            "gold": "",
+            "ap": "4-6/k",
+            "oj": "",
+            "last_updated": "2026-06-15T15:25:43",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:05:17",
+                    "gold": "",
+                    "ap": "6-8/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:25:43",
+                    "gold": "",
+                    "ap": "4-6/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Leather Diary",
+            "image": "https://farmrpg.com/img/items/5754.PNG",
+            "gold": "",
+            "ap": "2-3/k",
+            "oj": "",
+            "last_updated": "2026-03-09T21:19:04",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Leek",
+            "image": "https://farmrpg.com/img/items/8291.png",
+            "gold": "",
+            "ap": "35-40/k",
+            "oj": "",
+            "last_updated": "2026-04-27T22:05:37",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:05:37",
+                    "gold": "",
+                    "ap": "35-40/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Lemon",
+            "image": "https://farmrpg.com/img/items/8251.PNG",
+            "gold": "2-2.3g/k",
+            "ap": "11.5-12.5/k",
+            "oj": "",
+            "last_updated": "2026-04-27T22:05:49",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:05:49",
+                    "gold": "2-2.3g/k",
+                    "ap": "11.5-12.5/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Lemon Cream Pie (<i>meal</i>)",
+            "image": "https://farmrpg.com/img/items/lemoncreampie.png",
+            "gold": "30-40g [100]",
+            "ap": "4.5-6.5",
+            "oj": "",
+            "last_updated": "2026-06-25T15:27:05",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-15T15:26:06",
+                    "gold": "40-50g/100",
+                    "ap": "5-6.5",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:27:33",
+                    "gold": "30-40g [100]",
+                    "ap": "4.5-6.5",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Lemonade",
+            "image": "https://farmrpg.com/img/items/lemonade.png",
+            "gold": "5.2-5.6g/k",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:31:19",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:06:02",
+                    "gold": "5.5-6g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:31:19",
+                    "gold": "5.2-5.6g/k",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Lovely Cookies",
+            "image": "https://farmrpg.com/img/items/lcookies.png",
+            "gold": "5-10g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:21:29",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:06:14",
+                    "gold": "7.5-10g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:21:29",
+                    "gold": "5-10g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Lovely Present",
+            "image": "https://farmrpg.com/img/items/lpres.png",
+            "gold": "35-40g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Magical Chest 01",
+            "image": "https://farmrpg.com/img/items/magicchest01.png",
+            "gold": "40-50g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Magical Chest 02",
+            "image": "https://farmrpg.com/img/items/magicchest01.png",
+            "gold": "50-75g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-04-19T02:32:16",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Magical Egg Basket",
+            "image": "https://farmrpg.com/img/items/mageggbasket.png",
+            "gold": "1g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-04-27T22:04:36",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-20T22:04:09",
+                    "gold": "2-5g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-04-27T22:04:36",
+                    "gold": "1g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Mealworms",
+            "image": "https://farmrpg.com/img/items/mw.png",
+            "gold": "Free",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "MIAB",
+            "image": "https://farmrpg.com/img/items/7756.png",
+            "gold": "",
+            "ap": "",
+            "oj": "20/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Milk",
+            "image": "https://farmrpg.com/img/items/8382.PNG",
+            "gold": "",
+            "ap": "5-8/k",
+            "oj": "",
+            "last_updated": "2026-05-15T13:06:32",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:06:32",
+                    "gold": "",
+                    "ap": "3-6/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-05T11:59:05",
+                    "gold": "",
+                    "ap": "10-15/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-14T07:27:01",
+                    "gold": "",
+                    "ap": "5-8/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Minnows",
+            "image": "https://farmrpg.com/img/items/7749.png",
+            "gold": "",
+            "ap": "",
+            "oj": "5/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Mizzem's Daisies",
+            "image": "https://farmrpg.com/img/items/MizzemsDaisies.png",
+            "gold": "",
+            "ap": "30-50",
+            "oj": "",
+            "last_updated": "2026-06-29T18:04:51",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-29T18:04:29",
+                    "gold": "5g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-29T18:04:51",
+                    "gold": "",
+                    "ap": "30-50",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Mug of Beer",
+            "image": "https://farmrpg.com/img/items/7264.png?1",
+            "gold": "40-50g [100]",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-25T15:33:54",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-02T01:30:38",
+                    "gold": "35-50g/100",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-02T01:30:47",
+                    "gold": "40-50g [100]",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Mushroom",
+            "image": "https://farmrpg.com/img/items/mushroom.png",
+            "gold": "",
+            "ap": "",
+            "oj": "10-20/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Mushroom Paste",
+            "image": "https://farmrpg.com/img/items/5691.png",
+            "gold": "",
+            "ap": "2-3/k",
+            "oj": "",
+            "last_updated": "2026-04-27T22:06:56",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:06:56",
+                    "gold": "",
+                    "ap": "2-3/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Mushroom Stew (<i>meal</i>)",
+            "image": "https://farmrpg.com/img/items/mushroomstew.png",
+            "gold": "30-40g [100]",
+            "ap": "4.5-6.5",
+            "oj": "",
+            "last_updated": "2026-06-25T15:27:40",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-15T15:31:35",
+                    "gold": "35-45g/100",
+                    "ap": "5.5-7",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:32:17",
+                    "gold": "30-40g [100]",
+                    "ap": "4.5-6.5",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Neigh (<i>meal</i>)",
+            "image": "https://farmrpg.com/img/items/vegsoup4.png",
+            "gold": "30-35g [100]",
+            "ap": "4.5-5.5",
+            "oj": "",
+            "last_updated": "2026-06-25T15:28:39",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-20T01:31:43",
+                    "gold": "30-35g [100]",
+                    "ap": "4.5-5.5",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Oak",
+            "image": "https://farmrpg.com/img/items/6695.png",
+            "gold": "",
+            "ap": "2-3/k",
+            "oj": "",
+            "last_updated": "2026-04-27T22:07:05",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:07:05",
+                    "gold": "",
+                    "ap": "2-3/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Old Boot",
+            "image": "https://farmrpg.com/img/items/7848.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "10-20/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Onion",
+            "image": "https://farmrpg.com/img/items/8317.png",
+            "gold": "",
+            "ap": "30-40/k",
+            "oj": "",
+            "last_updated": "2026-04-27T22:07:38",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:07:38",
+                    "gold": "",
+                    "ap": "30-40/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Onion Soup (<i>meal</i>)",
+            "image": "https://farmrpg.com/img/items/onionsoup.png",
+            "gold": "10-20g [100]",
+            "ap": "2-3",
+            "oj": "",
+            "last_updated": "2026-06-25T15:29:19",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-25T15:28:20",
+                    "gold": "10-20g [100]",
+                    "ap": "2-3",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Orange",
+            "image": "https://farmrpg.com/img/items/orange.png",
+            "gold": "2.5-3g/k",
+            "ap": "",
+            "oj": "166-333/k",
+            "last_updated": "2026-04-27T22:07:47",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:07:47",
+                    "gold": "2.5-3g/k",
+                    "ap": "",
+                    "oj": "166-333/k"
+                }
+            ]
+        },
+        {
+            "name": "Orange Juice",
+            "image": "https://farmrpg.com/img/items/orangejuice.png",
+            "gold": "7-10g/k",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-16T18:51:24",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:08:16",
+                    "gold": "7-10g/k",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Over The Moon (<i>meal</i>)",
+            "image": "https://farmrpg.com/img/items/leekmeatcorn.png",
+            "gold": "20-25g [100]",
+            "ap": "3-4",
+            "oj": "",
+            "last_updated": "2026-06-25T15:29:53",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-07T19:51:07",
+                    "gold": "20-30g/100",
+                    "ap": "3-4",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-07T19:52:04",
+                    "gold": "20-25g [100]",
+                    "ap": "3-4",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Peach",
+            "image": "https://farmrpg.com/img/items/peach.png",
+            "gold": "25-30g/k",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-04-27T22:08:47",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:08:47",
+                    "gold": "25-30g/k",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Peach Juice",
+            "image": "https://farmrpg.com/img/items/peachjuice.png",
+            "gold": "50-100g/k",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:36:03",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-15T15:35:53",
+                    "gold": "75-125g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:36:03",
+                    "gold": "50-100g/k",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Peas",
+            "image": "https://farmrpg.com/img/items/8259.PNG",
+            "gold": "",
+            "ap": "3-5/k",
+            "oj": "",
+            "last_updated": "2026-04-27T22:09:04",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:09:04",
+                    "gold": "",
+                    "ap": "3-5/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Peppers",
+            "image": "https://farmrpg.com/img/items/8301.png",
+            "gold": "",
+            "ap": "3-5/k",
+            "oj": "",
+            "last_updated": "2026-04-27T22:09:11",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:09:11",
+                    "gold": "",
+                    "ap": "3-5/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Perfect Paint Palette",
+            "image": "https://farmrpg.com/img/items/palette.png",
+            "gold": "20-30g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-04-27T22:09:20",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:09:20",
+                    "gold": "20-30g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Piece 01",
+            "image": "https://farmrpg.com/img/items/piece01.png?1",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Piece 03",
+            "image": "https://farmrpg.com/img/items/piece03.png?1",
+            "gold": "15-25g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:38:06",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-15T15:37:46",
+                    "gold": "50-100g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:38:06",
+                    "gold": "15-25g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Piece 04",
+            "image": "https://farmrpg.com/img/items/piece04.png?1",
+            "gold": "150-250g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Piece 09",
+            "image": "https://farmrpg.com/img/items/piece09.png?1",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Piece 11",
+            "image": "https://farmrpg.com/img/items/piece11.png?1",
+            "gold": "15-25g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-30T13:08:41",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-01T09:25:12",
+                    "gold": "25-35g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-26T03:02:55",
+                    "gold": "15-30g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-30T13:08:41",
+                    "gold": "15-25g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Piece 15",
+            "image": "https://farmrpg.com/img/items/piece15.png?1",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Piece 18",
+            "image": "https://farmrpg.com/img/items/piece18.png?1",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Piece 22",
+            "image": "https://farmrpg.com/img/items/piece22.png?1",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Piece 23",
+            "image": "https://farmrpg.com/img/items/piece23.png?1",
+            "gold": "50-70g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Piece 24",
+            "image": "https://farmrpg.com/img/items/piece24.png?1",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Piece 26",
+            "image": "https://farmrpg.com/img/items/piece26.png?1",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Piece 30",
+            "image": "https://farmrpg.com/img/items/piece30.png?1",
+            "gold": "400-500g/k",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:38:57",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-15T15:38:47",
+                    "gold": "400-450g/k",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:38:57",
+                    "gold": "400-500g/k",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Pillow Case 01",
+            "image": "https://farmrpg.com/img/items/pillow_case.png",
+            "gold": "700-750g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-05-06T18:30:32",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-03T20:49:47",
+                    "gold": "700-750g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Pirate Bandana",
+            "image": "https://farmrpg.com/img/items/4903.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Pirate Flag",
+            "image": "https://farmrpg.com/img/items/4924.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Pot of Gold (Large)",
+            "image": "https://farmrpg.com/img/items/potogold.png",
+            "gold": "50-55g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:40:28",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-15T15:40:28",
+                    "gold": "50-55g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Pot of Gold (Medium)",
+            "image": "https://farmrpg.com/img/items/pog2.png",
+            "gold": "30g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Pot of Gold (Small)",
+            "image": "https://farmrpg.com/img/items/pog3.png",
+            "gold": "15g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Potato",
+            "image": "https://farmrpg.com/img/items/potato.png",
+            "gold": "",
+            "ap": "5-10/k",
+            "oj": "",
+            "last_updated": "2026-06-15T15:40:42",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:10:50",
+                    "gold": "",
+                    "ap": "4-6/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:40:42",
+                    "gold": "",
+                    "ap": "5-10/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Prancer",
+            "image": "https://farmrpg.com/img/items/prancer.png",
+            "gold": ".5-.75g",
+            "ap": "10-15",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Prism Shell",
+            "image": "https://farmrpg.com/img/items/prismshell.png?1",
+            "gold": "20-25g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-04-27T22:11:01",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:11:01",
+                    "gold": "20-25g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Protein Bar",
+            "image": "https://farmrpg.com/img/items/chocolate_t_01.png",
+            "gold": "7.5-12.5g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-07-02T22:17:18",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:11:12",
+                    "gold": "10-15g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-07-02T22:17:18",
+                    "gold": "7.5-12.5g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Purple Dye",
+            "image": "https://farmrpg.com/img/items/purpledye.png",
+            "gold": "",
+            "ap": "15-20/k",
+            "oj": "",
+            "last_updated": "2026-07-01T01:22:42",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:11:19",
+                    "gold": "",
+                    "ap": "12-20/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-14T04:09:49",
+                    "gold": "",
+                    "ap": "15/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-21T00:29:19",
+                    "gold": "",
+                    "ap": "15-20/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Purple Flower",
+            "image": "https://farmrpg.com/img/items/flower.png",
+            "gold": "",
+            "ap": "4-7/k",
+            "oj": "",
+            "last_updated": "2026-04-27T22:11:26",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:11:26",
+                    "gold": "",
+                    "ap": "4-7/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Purple Parchment",
+            "image": "https://farmrpg.com/img/items/5755.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "20-50/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Quandary Chowder (<i>meal</i>)",
+            "image": "https://farmrpg.com/img/items/corngreens.png",
+            "gold": "30-40g [100]",
+            "ap": "4.5-6",
+            "oj": "",
+            "last_updated": "2026-06-25T15:30:24",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-25T15:30:24",
+                    "gold": "30-40g [100]",
+                    "ap": "4.5-6",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Radish",
+            "image": "https://farmrpg.com/img/items/radish.png?1",
+            "gold": "",
+            "ap": "15-20/k",
+            "oj": "",
+            "last_updated": "2026-05-30T02:06:11",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:11:35",
+                    "gold": "",
+                    "ap": "20-30/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-30T02:06:11",
+                    "gold": "",
+                    "ap": "15-20/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Ramjoram's Mask",
+            "image": "https://farmrpg.com/img/items/strangemask1.png?1",
+            "gold": "15-25g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-04-27T22:11:59",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:11:59",
+                    "gold": "15-25g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Red Dye",
+            "image": "https://farmrpg.com/img/items/reddye.png",
+            "gold": "",
+            "ap": "8-10/k",
+            "oj": "",
+            "last_updated": "2026-07-01T01:22:30",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:12:13",
+                    "gold": "",
+                    "ap": "15-20/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-01T10:47:49",
+                    "gold": "",
+                    "ap": "15/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-14T23:43:54",
+                    "gold": "",
+                    "ap": "12-15/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-16T14:45:31",
+                    "gold": "",
+                    "ap": "10/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-18T11:43:39",
+                    "gold": "",
+                    "ap": "8-10/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Red Envelope",
+            "image": "https://farmrpg.com/img/items/redletter.png",
+            "gold": "20g/k",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Refined Corn Quartz",
+            "image": "https://farmrpg.com/img/items/cornquartz2.png",
+            "gold": "20-30g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-04-27T22:12:28",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:12:28",
+                    "gold": "20-30g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Rope",
+            "image": "https://farmrpg.com/img/items/5624.png",
+            "gold": "",
+            "ap": "2-3/k",
+            "oj": "",
+            "last_updated": "2026-04-27T22:12:44",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:12:44",
+                    "gold": "",
+                    "ap": "2-3/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Rosalie's Beach Tote",
+            "image": "https://farmrpg.com/img/items/tote1.png",
+            "gold": "200-250g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-07-02T22:16:13",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-01T17:42:18",
+                    "gold": "200-225g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-02T17:42:28",
+                    "gold": "150-200g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-03T20:49:07",
+                    "gold": "150-175g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-07-02T22:16:13",
+                    "gold": "200-250g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Rudolph",
+            "image": "https://farmrpg.com/img/items/rudolph.png",
+            "gold": ".75-1g",
+            "ap": "15-20",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Safety Goggles",
+            "image": "https://farmrpg.com/img/items/2129.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Sappy Christmas Card",
+            "image": "https://farmrpg.com/img/items/card_sappy.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Scrap Metal",
+            "image": "https://farmrpg.com/img/items/9383.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "10-20/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Scrap Wire",
+            "image": "https://farmrpg.com/img/items/9398.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "10-15/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Sea Pincher Special (<i>meal</i>)",
+            "image": "https://farmrpg.com/img/items/crabclawsoup.png",
+            "gold": "30-35g [100]",
+            "ap": "4.5-5.5",
+            "oj": "",
+            "last_updated": "2026-06-25T15:30:45",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-25T15:30:45",
+                    "gold": "30-35g [100]",
+                    "ap": "4.5-5.5",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Shimmer Stone",
+            "image": "https://farmrpg.com/img/items/5711.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "10-15/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Shiny Beetle",
+            "image": "https://farmrpg.com/img/items/beetle.png",
+            "gold": "",
+            "ap": "",
+            "oj": "20-40/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Shiny Present",
+            "image": "https://farmrpg.com/img/items/shinypresent.png",
+            "gold": "60-75g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Shovel",
+            "image": "https://farmrpg.com/img/items/5853.png?1",
+            "gold": "",
+            "ap": "",
+            "oj": "20-40/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Shrimp",
+            "image": "https://farmrpg.com/img/items/7844.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "10-20/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Shrimp-a-Plenty (<i>meal</i>)",
+            "image": "https://farmrpg.com/img/items/shrimpgreensmix.png",
+            "gold": "30-35g [100]",
+            "ap": "4.5-5.5",
+            "oj": "",
+            "last_updated": "2026-06-25T15:31:02",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-15T15:40:56",
+                    "gold": "30-40g/100",
+                    "ap": "4.5-6",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:41:28",
+                    "gold": "30-35g [100]",
+                    "ap": "4.5-5.5",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Skipjack",
+            "image": "https://farmrpg.com/img/items/7790.png",
+            "gold": "",
+            "ap": "",
+            "oj": "10/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Slimestone",
+            "image": "https://farmrpg.com/img/items/5655.png",
+            "gold": "",
+            "ap": "2-3/k",
+            "oj": "",
+            "last_updated": "2026-04-01T01:56:46",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Small Prawn",
+            "image": "https://farmrpg.com/img/items/7826.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "10/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Snail",
+            "image": "https://farmrpg.com/img/items/snail.png",
+            "gold": "",
+            "ap": "3-5/k",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Snowball",
+            "image": "https://farmrpg.com/img/items/cr_t_07.png",
+            "gold": "",
+            "ap": "3-5/k",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Spades",
+            "image": "https://farmrpg.com/img/items/card_spades.png",
+            "gold": "4-5g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Spider",
+            "image": "https://farmrpg.com/img/items/spiderbutcutererr.png",
+            "gold": "",
+            "ap": "30-50/k",
+            "oj": "",
+            "last_updated": "2026-04-27T22:13:11",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:13:11",
+                    "gold": "",
+                    "ap": "30-50/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Spooky Cookies",
+            "image": "https://farmrpg.com/img/items/854.png",
+            "gold": "5-10g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:21:38",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:13:21",
+                    "gold": "7.5-10g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:21:38",
+                    "gold": "5-10g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Spooky Pie",
+            "image": "https://farmrpg.com/img/items/923.png",
+            "gold": "25-35g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-07-02T18:52:23",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:13:32",
+                    "gold": "30-40g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-07-02T18:52:23",
+                    "gold": "25-35g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Spring Basket 01",
+            "image": "https://farmrpg.com/img/items/springbasket.png",
+            "gold": "30-35g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Spring Basket 02",
+            "image": "https://farmrpg.com/img/items/springbasket.png",
+            "gold": "275-325g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Spring Basket 03",
+            "image": "https://farmrpg.com/img/items/springbasket.png",
+            "gold": "270-300g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-05-02T14:39:20",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-01T14:38:54",
+                    "gold": "250-275g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-02T14:39:20",
+                    "gold": "270-300g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Stack of Cards",
+            "image": "https://farmrpg.com/img/items/stack_cards.png?2",
+            "gold": "35-40g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Stingray",
+            "image": "https://farmrpg.com/img/items/7831.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "10-20/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Stone",
+            "image": "https://farmrpg.com/img/items/6174.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "5-10/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Summer Basket",
+            "image": "https://farmrpg.com/img/items/basket.png",
+            "gold": "100-150g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-07-02T22:15:43",
+            "recent": true,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-01T04:02:02",
+                    "gold": "35-50g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-07-01T15:33:01",
+                    "gold": "80-125g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-07-02T22:15:43",
+                    "gold": "100-150g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Supply Voucher",
+            "image": "https://farmrpg.com/img/items/voucher.png",
+            "gold": "100-120g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-07-02T22:16:38",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-20T22:14:05",
+                    "gold": "140-160g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-04-27T22:14:20",
+                    "gold": "125-140g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-01T19:26:27",
+                    "gold": "110-140g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:06:37",
+                    "gold": "110-125g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-07-02T22:16:38",
+                    "gold": "100-120g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Support's Ticket",
+            "image": "https://farmrpg.com/img/items/sticket.png",
+            "gold": "",
+            "ap": "30-50",
+            "oj": "",
+            "last_updated": "2026-06-29T18:06:23",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-29T18:06:13",
+                    "gold": "5g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-29T18:06:23",
+                    "gold": "",
+                    "ap": "30-50",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Tenfoo's Lost Sock",
+            "image": "https://farmrpg.com/img/items/sock.png",
+            "gold": "",
+            "ap": "20-30",
+            "oj": "",
+            "last_updated": "2026-06-29T18:09:19",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-29T18:08:54",
+                    "gold": "5g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-29T18:09:19",
+                    "gold": "",
+                    "ap": "20-30",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Thank You Card",
+            "image": "https://farmrpg.com/img/items/card_thankyou.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Thomas's Tavern Tote",
+            "image": "https://farmrpg.com/img/items/7307.png",
+            "gold": "300-350g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Tomato",
+            "image": "https://farmrpg.com/img/items/8290.png",
+            "gold": "",
+            "ap": "10-15/k",
+            "oj": "",
+            "last_updated": "2026-07-02T22:15:31",
+            "recent": true,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:15:41",
+                    "gold": "",
+                    "ap": "30-40/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-29T16:43:23",
+                    "gold": "",
+                    "ap": "5-15/k",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-07-02T22:15:31",
+                    "gold": "",
+                    "ap": "10-15/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Traveler's Bag 01",
+            "image": "https://farmrpg.com/img/items/Patches.png",
+            "gold": "680-700g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-29T13:00:33",
+            "recent": true,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-01T02:03:46",
+                    "gold": "700-725g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-10T14:22:51",
+                    "gold": "680-700g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:42:12",
+                    "gold": "680-725g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-28T17:48:36",
+                    "gold": "680-720g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-29T13:00:33",
+                    "gold": "680-700g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Treat Bag 02",
+            "image": "https://farmrpg.com/img/items/bag_t_03.png",
+            "gold": "",
+            "ap": "30-40/k",
+            "oj": "",
+            "last_updated": "2026-06-15T15:42:47",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-06-15T15:42:47",
+                    "gold": "",
+                    "ap": "30-40/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Treat Bag 04",
+            "image": "https://farmrpg.com/img/items/bag_t_03.png",
+            "gold": "40-45g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Treat Bag 05",
+            "image": "https://farmrpg.com/img/items/bag_t_03.png",
+            "gold": "60-70g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-05-06T18:31:00",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-03T20:49:20",
+                    "gold": "60-70g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Treat Bag 06",
+            "image": "https://farmrpg.com/img/items/bag_t_03.png",
+            "gold": "575-650g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:43:26",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-01T09:56:26",
+                    "gold": "625-700g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-05-01T09:56:39",
+                    "gold": "600-650g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:43:26",
+                    "gold": "575-650g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Trout",
+            "image": "https://farmrpg.com/img/items/trout.png",
+            "gold": "",
+            "ap": "",
+            "oj": "5/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Twine",
+            "image": "https://farmrpg.com/img/items/6172-1.png",
+            "gold": "",
+            "ap": "2/k",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Unpolished Shimmer Stone",
+            "image": "https://farmrpg.com/img/items/5782.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "10/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Valentines Card",
+            "image": "https://farmrpg.com/img/items/card_valentines.png",
+            "gold": "",
+            "ap": "10",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Veggie Juice",
+            "image": "https://farmrpg.com/img/items/8879.png",
+            "gold": "5-10g/k",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-04-27T22:15:59",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:15:59",
+                    "gold": "5-10g/k",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Vixen",
+            "image": "https://farmrpg.com/img/items/vixen.png",
+            "gold": ".5-.75g",
+            "ap": "10-15",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        },
+        {
+            "name": "Void Bag 01",
+            "image": "https://farmrpg.com/img/items/voidbag.png",
+            "gold": "0.25-0.30g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-06-15T15:44:08",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:16:12",
+                    "gold": "0.25-0.35g",
+                    "ap": "",
+                    "oj": ""
+                },
+                {
+                    "date": "2026-06-15T15:44:08",
+                    "gold": "0.25-0.30g",
+                    "ap": "",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "We Know Card",
+            "image": "https://farmrpg.com/img/items/card_weknow.png?12",
+            "gold": "500-1,000g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Welcome Card",
+            "image": "https://farmrpg.com/img/items/card_welcome.png",
+            "gold": "Country Store",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Winter Basket",
+            "image": "https://farmrpg.com/img/items/winterbasket.png?2",
+            "gold": "30-50g",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Wood",
+            "image": "https://farmrpg.com/img/items/6143.PNG",
+            "gold": "",
+            "ap": "",
+            "oj": "10/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Wooden Box",
+            "image": "https://farmrpg.com/img/items/5736.PNG",
+            "gold": "",
+            "ap": "2-3/k",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Wooden Button",
+            "image": "https://farmrpg.com/img/items/707.png",
+            "gold": "",
+            "ap": "2-4/k",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Wooden Table",
+            "image": "https://farmrpg.com/img/items/3826.png",
+            "gold": "",
+            "ap": "3-5/k",
+            "oj": "",
+            "last_updated": "2026-06-15T15:44:36",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-05-15T15:44:21",
+                    "gold": "",
+                    "ap": "",
+                    "oj": "50-75/k"
+                },
+                {
+                    "date": "2026-06-15T15:44:36",
+                    "gold": "",
+                    "ap": "3-5/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Worms",
+            "image": "https://farmrpg.com/img/items/7758.png",
+            "gold": "Country Store",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "Yarn",
+            "image": "https://farmrpg.com/img/items/pt_t_07.png",
+            "gold": "",
+            "ap": "2-4/k",
+            "oj": "",
+            "last_updated": "2026-04-27T22:16:30",
+            "recent": false,
+            "PC": false,
+            "history": [
+                {
+                    "date": "2026-04-27T22:16:30",
+                    "gold": "",
+                    "ap": "2-4/k",
+                    "oj": ""
+                }
+            ]
+        },
+        {
+            "name": "Yellow Perch",
+            "image": "https://farmrpg.com/img/items/yellowperch.png",
+            "gold": "",
+            "ap": "",
+            "oj": "5/k",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": false
+        },
+        {
+            "name": "You Rock Card",
+            "image": "https://farmrpg.com/img/items/card_yourock.png",
+            "gold": "PC",
+            "ap": "",
+            "oj": "",
+            "last_updated": "2026-01-01T00:00:0",
+            "recent": false,
+            "PC": true
+        }
+    ],
+    "ignored_items": [
+        "10 gold",
+        "100 gold",
+        "25 gold",
+        "5 gold",
+        "50 gold"
+    ]
+}

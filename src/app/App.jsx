@@ -1172,14 +1172,8 @@ export default function App() {
               handleBugReport={handleBugReport}
               handleClearData={handleClearData}
               setIsDevLogsOpen={setIsDevLogsOpen}
-              // Dynamic Prices
-              prices={prices}
-              isPricesLoading={isPricesLoading}
-              pricesError={pricesError}
-              pricesLastUpdated={pricesLastUpdated}
-              onRefreshPrices={refreshPrices}
-              onClearPrices={clearPrices}
             />
+
           )}
 
           

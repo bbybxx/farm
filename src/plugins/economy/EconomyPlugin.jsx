@@ -13,6 +13,7 @@ import { normalizeItemsMap } from '../../utils/itemImageUtils'
 import { formatNumberRounded, roundToTwo } from '../../utils/formatters'
 import EconomyItemSelectModal from './components/EconomyItemSelectModal'
 import EconomyAppHeader from './components/EconomyAppHeader'
+import EconomyAdvancedView from './components/EconomyAdvancedView'
 import './styles/economy.css'
 
 const STATIC_ITEMS_MAP = normalizeItemsMap(itemsAPI)
@@ -141,10 +142,23 @@ function recalcChainFromRoot(chain, activePerks, exploringMode, combinedRecipes)
  * Не имеет своего хедера, breadcrumbs, цепочек — только чистая логика.
  */
 export default function EconomyPlugin() {
-  const { economyEnabled, setEconomyEnabled } = useEconomyContext()
+  const {
+    economyEnabled,
+    setEconomyEnabled,
+    economyChain,
+    setEconomyChain,
+    prices,
+    currency,
+    exchangeRates,
+    advancedState,
+    setAdvancedState,
+    manualAdditions,
+    addManualAddition,
+    removeManualAddition,
+  } = useEconomyContext()
   const { activePerks, exploringMode } = useActivePerks()
 
-  const [view, setView] = useState('start') // 'start' | 'craft' | 'location'
+  const [view, setView] = useState('start') // 'start' | 'craft' | 'location' | 'advanced'
   const [itemSelectMode, setItemSelectMode] = useState(null) // null | 'craft' | 'location'
 
   // Craft state
@@ -330,6 +344,24 @@ export default function EconomyPlugin() {
     }
   }
 
+  // --- getLocationDrops — колбэк для получения всех дропов локации ---
+  const getLocationDrops = useCallback((locationName, budget) => {
+    if (!locationName || !budget || budget <= 0) return []
+    const locObj = APPLE_CIDER_REAL_DROP_RATES.locations?.[locationName]
+    if (!locObj) return []
+
+    const itemSet = new Set()
+    Object.values(locObj).forEach(variant => {
+      if (variant && typeof variant === 'object') Object.keys(variant).forEach(k => itemSet.add(k))
+    })
+
+    return Array.from(itemSet).map(it => {
+      const display = computeDisplayValue(it, budget, locationName, activePerks, exploringMode)
+      const parsed = typeof display === 'number' && !Number.isNaN(Number(display)) ? Number(display) : 0
+      return { name: it, amount: parsed >= 1 ? Math.floor(parsed) : 0 }
+    }).filter(d => d.amount > 0)
+  }, [activePerks, exploringMode])
+
   // Определяем, является ли текущий узел редактируемым
   const isCurrentEditable = recalculatedChain.length <= 1 ||
     (recalculatedChain[recalculatedChain.length - 1]?.editable !== false)
@@ -442,6 +474,24 @@ export default function EconomyPlugin() {
             </section>
           )}
         </>
+      )}
+
+      {/* Advanced mode — экономический расчёт */}
+      {view === 'advanced' && (
+        <EconomyAdvancedView
+          chain={recalculatedChain}
+          prices={prices}
+          currency={currency}
+          exchangeRates={exchangeRates}
+          advancedState={advancedState}
+          setAdvancedState={setAdvancedState}
+          manualAdditions={manualAdditions}
+          addManualAddition={addManualAddition}
+          removeManualAddition={removeManualAddition}
+          recipes={combinedRecipes}
+          resourceSaverPercent={getResourceSaverPercent(activePerks || [])}
+          getLocationDrops={getLocationDrops}
+        />
       )}
 
       {/* Location mode — controls + drops */}

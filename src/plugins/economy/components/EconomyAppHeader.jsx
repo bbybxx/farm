@@ -154,41 +154,42 @@ export default function EconomyAppHeader({
                 exit={{ opacity: 0, y: -6, scale: 0.98 }}
                 transition={{ duration: 0.12 }}
               >
-                {/*
-                  Показываем Craft когда:
-                    - view === 'location' (мы на экране локации)
-                    - ИЛИ craftChain начинается с локации (мы в крафте, но пришли из локации)
-                  Иначе показываем Location.
-                */}
-                {(view === 'location' || craftChain?.[0]?.isLocation) ? (
-                  <button
-                    className="mode-option"
-                    type="button"
-                    onClick={() => {
-                      if (setView) setView('craft')
-                      if (setSelectedItem) setSelectedItem(null)
-                      if (setAmount) setAmount(1)
-                      if (setCraftChain) setCraftChain([])
-                      setModeOpen(false)
-                    }}
-                  >
-                    Craft
-                  </button>
-                ) : (
-                  <button
-                    className="mode-option"
-                    type="button"
-                    onClick={() => {
-                      if (setView) setView('location')
-                      if (setSelectedItem) setSelectedItem(null)
-                      if (setAmount) setAmount(1)
-                      if (setCraftChain) setCraftChain([])
-                      setModeOpen(false)
-                    }}
-                  >
-                    Location
-                  </button>
-                )}
+                <button
+                  className="mode-option"
+                  type="button"
+                  onClick={() => {
+                    if (setView) setView('craft')
+                    if (setSelectedItem) setSelectedItem(null)
+                    if (setAmount) setAmount(1)
+                    if (setCraftChain) setCraftChain([])
+                    setModeOpen(false)
+                  }}
+                >
+                  Craft
+                </button>
+                <button
+                  className="mode-option"
+                  type="button"
+                  onClick={() => {
+                    if (setView) setView('location')
+                    if (setSelectedItem) setSelectedItem(null)
+                    if (setAmount) setAmount(1)
+                    if (setCraftChain) setCraftChain([])
+                    setModeOpen(false)
+                  }}
+                >
+                  Location
+                </button>
+                <button
+                  className="mode-option"
+                  type="button"
+                  onClick={() => {
+                    if (setView) setView('advanced')
+                    setModeOpen(false)
+                  }}
+                >
+                  Advanced
+                </button>
               </motion.div>
             )}
           </AnimatePresence>

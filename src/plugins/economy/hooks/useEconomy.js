@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { loadFromStorage, saveToStorage } from '../../../utils/storage'
+import { parseItemPrices } from '../utils/parsePriceString'
 
 export function useEconomy() {
   const [economyEnabled, setEconomyEnabledState] = useState(() => loadFromStorage('economy_enabled', false))
@@ -74,6 +75,7 @@ export function useEconomy() {
   }, [])
 
   const setPrice = useCallback((itemName, currencyType, value) => {
+    // value может быть { value: number|null, divisor: number } или null
     setPricesState(prev => ({
       ...prev,
       [itemName]: {
@@ -96,6 +98,10 @@ export function useEconomy() {
       ...prev,
       { itemName, quantity, timestamp: Date.now() }
     ])
+  }, [])
+
+  const removeManualAddition = useCallback((index) => {
+    setManualAdditionsState(prev => prev.filter((_, i) => i !== index))
   }, [])
 
   const setAdvancedState = useCallback((state) => {
@@ -148,6 +154,44 @@ export function useEconomy() {
     }))
   }, [])
 
+  /**
+   * Мержит цены с сервера в локальное хранилище.
+   * Уважает priceRefreshable — если для предмета стоит false, цена не перезаписывается.
+   * @param {Object<string, {gold?: number, ap?: number, oj?: number}>} serverPrices
+   */
+  const mergeServerPrices = useCallback((serverPrices) => {
+    setPricesState(prev => {
+      const merged = { ...prev }
+      for (const [itemName, priceData] of Object.entries(serverPrices)) {
+        if (priceRefreshable[itemName] === false) continue
+        merged[itemName] = {
+          ...merged[itemName],
+          ...priceData,
+        }
+      }
+      return merged
+    })
+  }, [priceRefreshable])
+
+  /**
+   * Применяет цены из prices.json (built-in) для предметов с Auto=true.
+   * Используется кнопкой "Update" в EconomyPriceConfigModal.
+   * @param {Object<string, {gold?: number, ap?: number, oj?: number}>} builtinPrices
+   */
+  const applyBuiltinPrices = useCallback((builtinPrices) => {
+    setPricesState(prev => {
+      const updated = { ...prev }
+      for (const [itemName, priceData] of Object.entries(builtinPrices)) {
+        if (priceRefreshable[itemName] === false) continue
+        updated[itemName] = {
+          ...updated[itemName],
+          ...priceData,
+        }
+      }
+      return updated
+    })
+  }, [priceRefreshable])
+
   const openSimpleOverlay = useCallback(() => setSimpleOverlayOpen(true), [])
   const closeSimpleOverlay = useCallback(() => setSimpleOverlayOpen(false), [])
 
@@ -174,8 +218,11 @@ export function useEconomy() {
     removeFromAdvancedState,
     manualAdditions,
     addManualAddition,
+    removeManualAddition,
     priceRefreshable,
     setPriceRefreshable,
+    mergeServerPrices,
+    applyBuiltinPrices,
     simpleOverlayOpen,
     openSimpleOverlay,
     closeSimpleOverlay,

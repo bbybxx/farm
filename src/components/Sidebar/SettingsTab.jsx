@@ -1,7 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useEconomyContext } from '../../plugins/economy/EconomyContext'
-import EconomyPriceConfig from '../../plugins/economy/components/EconomyPriceConfig'
 
 export default function SettingsTab({
   pinnedEnabled,
@@ -155,17 +154,9 @@ export default function SettingsTab({
       )}
 
       {economyEnabled && isPriceConfigOpen && (
-        <EconomyPriceConfig
-          isOpen={isPriceConfigOpen}
-          onClose={() => setIsPriceConfigOpen(false)}
-          prices={economyPrices}
-          onSetPrice={setPrice}
-          priceRefreshable={priceRefreshable}
-          onSetRefreshable={setPriceRefreshable}
-          exchangeRates={exchangeRates}
-          onSetExchangeRates={setExchangeRates}
-          allItems={[]}
-        />
+        <div className="economy-price-config-placeholder glass" style={{ padding: '1rem', marginTop: '0.5rem', borderRadius: '8px' }}>
+          <p style={{ opacity: 0.7, fontSize: '0.85rem' }}>Price configuration will be available in the Economy plugin.</p>
+        </div>
       )}
 
       <h3 className="section-title">Exploring</h3>

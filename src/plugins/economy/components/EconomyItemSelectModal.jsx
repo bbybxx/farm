@@ -8,43 +8,21 @@ import { normalizeItemsMap } from '../../../utils/itemImageUtils'
 
 const STATIC_ITEMS_MAP = normalizeItemsMap(itemsAPI)
 
-/**
- * EconomyItemSelect — самодостаточный оверлей выбора предмета или локации
- * для экономического режима. Полная копия стиля ItemSelectModal.
- *
- * Пропсы:
- *   isOpen       — boolean
- *   mode         — 'craft' | 'location'
- *   onSelect     — (name: string, amount: number) => void
- *   onClose      — () => void
- */
-export default function EconomyItemSelect({ isOpen, mode, onSelect, onClose }) {
+export default function EconomyItemSelectModal({ isOpen, mode, onSelect, onClose }) {
   const [filter, setFilter] = useState('')
   const [quantity, setQuantity] = useState(1)
   const listRef = useRef(null)
 
-  // Список предметов (craft) — получаем напрямую из recipeUtils
   const craftItems = useMemo(() => {
     const recipes = getCombinedRecipes()
     return Object.keys(recipes || {}).sort()
   }, [])
 
-  // Список локаций — статический
   const locations = useMemo(() => [
-    'Forest',
-    'Small Cave',
-    'Highland Hills',
-    'Cane Pole Ridge',
-    'Ember Lagoon',
-    'Mount Banon',
-    'Jundland Desert',
-    'Black Rock Canyon',
-    'Whispering Creek',
-    'Misty Forest',
-    'Haunted House',
-    "Santa's Workshop",
-    'Small Spring',
-    'Garys Crushroom',
+    'Forest', 'Small Cave', 'Highland Hills', 'Cane Pole Ridge',
+    'Ember Lagoon', 'Mount Banon', 'Jundland Desert', 'Black Rock Canyon',
+    'Whispering Creek', 'Misty Forest', 'Haunted House', "Santa's Workshop",
+    'Small Spring', 'Garys Crushroom',
   ], [])
 
   const items = mode === 'craft' ? craftItems : locations
@@ -65,18 +43,16 @@ export default function EconomyItemSelect({ isOpen, mode, onSelect, onClose }) {
     onClose()
   }
 
-  const handleBackdropClick = () => {
-    setFilter('')
-    setQuantity(1)
-    onClose()
-  }
+  useEffect(() => {
+    if (listRef.current) listRef.current.scrollTop = 0
+  }, [filter])
 
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
           className="modal-wrapper"
-          onClick={handleBackdropClick}
+          onClick={onClose}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -86,42 +62,30 @@ export default function EconomyItemSelect({ isOpen, mode, onSelect, onClose }) {
             className="glass item-select-content"
             role="dialog"
             aria-modal="true"
-            aria-labelledby="economy-item-select-title"
             initial={{ scale: 0.95 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0.95 }}
             onClick={e => e.stopPropagation()}
           >
             <div className="item-select-header">
-              <h2 id="economy-item-select-title" className="item-select-title">
-                {title}
-              </h2>
+              <h2 className="item-select-title">{title}</h2>
               <div className="item-select-search-wrapper" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                 <input
                   className="calc-input item-select-search"
                   placeholder={placeholder}
                   value={filter}
                   onChange={e => setFilter(e.target.value)}
-                  aria-label={placeholder}
                   autoFocus
                   style={{ flex: 1 }}
                 />
                 <input
-                  type="number"
-                  min="1"
-                  step="1"
-                  value={quantity}
+                  type="number" min="1" step="1" value={quantity}
                   onChange={e => setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))}
-                  aria-label="Quantity"
                   style={{
-                    width: '70px',
-                    padding: '6px 8px',
-                    borderRadius: '6px',
+                    width: '70px', padding: '6px 8px', borderRadius: '6px',
                     border: '1px solid rgba(255,255,255,0.15)',
-                    background: 'rgba(0,0,0,0.2)',
-                    color: 'inherit',
-                    fontSize: '0.9rem',
-                    textAlign: 'center',
+                    background: 'rgba(0,0,0,0.2)', color: 'inherit',
+                    fontSize: '0.9rem', textAlign: 'center',
                   }}
                 />
               </div>
@@ -133,12 +97,7 @@ export default function EconomyItemSelect({ isOpen, mode, onSelect, onClose }) {
                 </div>
               ) : (
                 filtered.map(name => (
-                  <button
-                    key={name}
-                    className=""
-                    onClick={() => handleSelect(name)}
-                    type="button"
-                  >
+                  <button key={name} onClick={() => handleSelect(name)} type="button">
                     {mode === 'craft' ? (
                       <ItemDisplay itemName={name} itemsData={STATIC_ITEMS_MAP} />
                     ) : (

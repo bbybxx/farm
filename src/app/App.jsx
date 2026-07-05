@@ -1227,7 +1227,7 @@ export default function App() {
 
 
         {economyEnabled ? (
-          <EconomyPlugin />
+          <EconomyPlugin craftChain={craftChain} setCraftChain={setCraftChain} />
         ) : (
           <>
         {questsMode ? (

@@ -67,7 +67,7 @@ function computeDisplayValue(itemName, budget, location, activePerks, exploringM
  * Рендерится внутри .main, не использует createPortal.
  * Не имеет своего хедера, breadcrumbs, цепочек — только чистая логика.
  */
-export default function EconomyPlugin() {
+export default function EconomyPlugin({ craftChain, setCraftChain }) {
   const { economyEnabled, setEconomyEnabled } = useEconomyContext()
   const { activePerks, exploringMode } = useActivePerks()
 
@@ -167,7 +167,10 @@ export default function EconomyPlugin() {
     setSelectedItem(itemName)
     setAmount(quantity)
     setView('craft')
-  }, [hasItemContent])
+    if (setCraftChain) {
+      setCraftChain(prev => [...prev, { name: itemName, amount: quantity }])
+    }
+  }, [hasItemContent, setCraftChain])
 
   // --- Location logic (копия из App.jsx) ---
   const locObj = APPLE_CIDER_REAL_DROP_RATES.locations?.[selectedLocation]
@@ -225,6 +228,9 @@ export default function EconomyPlugin() {
     setAmount(qty)
     setItemSelectMode(null)
     setView('craft')
+    if (setCraftChain) {
+      setCraftChain([{ name, amount: qty }])
+    }
   }
 
   const handleLocationSelect = (name, qty) => {
@@ -232,6 +238,9 @@ export default function EconomyPlugin() {
     setLocationAmount(qty)
     setItemSelectMode(null)
     setView('location')
+    if (setCraftChain) {
+      setCraftChain([{ name, amount: qty, isLocation: true }])
+    }
   }
 
   if (!economyEnabled) return null

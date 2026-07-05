@@ -59,7 +59,7 @@ export default function EconomyAppHeader({
         </div>
       )}
       
-      <div className="craft-chain" onClick={(e) => e.stopPropagation()} style={{ flex: 1, overflow: 'hidden' }}>
+      <div className="craft-chain" onClick={(e) => e.stopPropagation()} style={{ flex: 1, overflow: 'hidden', minWidth: 0 }}>
         {craftChain && craftChain.length > 1 ? (
           <nav ref={breadcrumbsRef} className="breadcrumbs" aria-label="Craft chain" style={{ overflowX: 'auto', whiteSpace: 'nowrap', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {craftChain.slice(0, Math.max(0, craftChain.length - 1)).map((node, idx) => {

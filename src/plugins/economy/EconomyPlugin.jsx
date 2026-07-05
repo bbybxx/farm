@@ -172,8 +172,12 @@ export default function EconomyPlugin() {
     setSelectedItem(itemName)
     setAmount(quantity)
     setView('craft')
-    setCraftChain(prev => [...prev, { name: itemName, amount: quantity }])
-  }, [hasItemContent, setCraftChain])
+    // Если переходим из локации — начинаем свежую цепочку, не тащим локацию
+    setCraftChain(prev => view === 'location'
+      ? [{ name: itemName, amount: quantity }]
+      : [...prev, { name: itemName, amount: quantity }]
+    )
+  }, [hasItemContent, setCraftChain, view])
 
   // --- Location logic (копия из App.jsx) ---
   const locObj = APPLE_CIDER_REAL_DROP_RATES.locations?.[selectedLocation]

@@ -15,8 +15,35 @@ export default function EconomyAppHeader({
   setAmount,
   itemsData,
   buddyFarmLinksEnabled,
-  onExit
+  onExit,
+  // Economy-specific props
+  view,
+  setView,
+  selectedLocation,
+  setSelectedLocation,
+  locationAmount,
+  setLocationAmount,
 }) {
+  const [modeOpen, setModeOpen] = React.useState(false)
+  const modeRef = React.useRef(null)
+
+  // Close mode dropdown on outside click or ESC
+  React.useEffect(() => {
+    function onDoc(e) {
+      if (!modeRef.current) return
+      if (!modeRef.current.contains(e.target)) setModeOpen(false)
+    }
+    function onKey(e) {
+      if (e.key === 'Escape') setModeOpen(false)
+    }
+    document.addEventListener('mousedown', onDoc)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDoc)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [])
+
   return (
     <header className={"glass header" + (headerVisible ? '' : ' hidden') + (isCaching ? ' caching' : '')} style={isCaching ? { '--caching-progress': `${cachingProgress}%` } : {}}>
       <button
@@ -53,8 +80,15 @@ export default function EconomyAppHeader({
                       const target = newChain[idx]
                       
                       if (target && typeof target === 'object' && target.isLocation) {
-                        // location node — handled by plugin's own logic
+                        // Restore location view
+                        if (setView) setView('location')
+                        if (setSelectedLocation) setSelectedLocation(target.name)
+                        if (target.savedAmount !== undefined && target.savedAmount !== null && setLocationAmount) {
+                          setLocationAmount(target.savedAmount)
+                        }
                       } else {
+                        // Restore craft view
+                        if (setView) setView('craft')
                         const targetName = (typeof target === 'string') ? target : (target && target.name) || ''
                         const targetAmt = (typeof target === 'object' && target && target.amount) ? target.amount : 1
                         if (targetName && setSelectedItem) setSelectedItem(targetName)
@@ -101,11 +135,55 @@ export default function EconomyAppHeader({
         )}
       </div>
       
-      {/* Header right controls: Mode button */}
+      {/* Header right controls: Mode dropdown */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 'auto', marginRight: 0 }}>
-        <button className="chip" type="button" onClick={onExit}>
-          mode
-        </button>
+        <div style={{ position: 'relative' }} ref={modeRef}>
+          <button
+            className="chip"
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setModeOpen(!modeOpen) }}
+            aria-expanded={modeOpen}
+          >
+            mode
+          </button>
+          <AnimatePresence>
+            {modeOpen && (
+              <motion.div className="mode-dropdown glass" style={{ position: 'absolute', right: 0, marginTop: 8, minWidth: 160, zIndex: 9999 }}
+                initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                transition={{ duration: 0.12 }}
+              >
+                {/* Craft — показываем когда не в craft режиме */}
+                {view !== 'craft' && (
+                  <button
+                    className="mode-option"
+                    type="button"
+                    onClick={() => {
+                      if (setView) setView('craft')
+                      setModeOpen(false)
+                    }}
+                  >
+                    Craft
+                  </button>
+                )}
+                {/* Location — показываем когда не в location режиме */}
+                {view !== 'location' && (
+                  <button
+                    className="mode-option"
+                    type="button"
+                    onClick={() => {
+                      if (setView) setView('location')
+                      setModeOpen(false)
+                    }}
+                  >
+                    Location
+                  </button>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </header>
   )

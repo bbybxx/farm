@@ -1,18 +1,27 @@
-# План: интеграция экономического режима как 4-го режима
+# Economy Plugin — Header Fix Checklist
 
-- [x] Шаг 1: useUIState — добавить economyMode
-- [x] Шаг 2: AppHeader — добавить Economy в дропдаун режимов
-- [x] Шаг 3: App.jsx — убрать жёсткое скрытие UI, передать economyMode
-- [x] Шаг 4: EconomyPlugin — убрать EconomyStartScreen, перейти на economyMode
-- [x] Шаг 5: Перехват кликов — navigateToItem проверяет economyMode
-- [x] Шаг 6: Проверить, что всё работает вместе (сборка успешна)
+## Проблема: EconomyAppHeader не соответствует AppHeader
 
-## Итог
+### Найденные расхождения:
 
-Экономический режим теперь работает как 4-й режим (наряду с Crafts, Locations, Quests):
+1. **Клик по breadcrumbs — заглушка вместо логики**
+   - `EconomyAppHeader` строка 55-62: location node — комментарий "handled by plugin's own logic", но реально ничего не делает
+   - Не переключает `view` на `'location'` / `'craft'`
+   - Не восстанавливает `selectedLocation` / `locationAmount`
+   - В `AppHeader` есть полноценная логика: `setLocationsMode(true)`, `setSelectedLocation(target.name)`, восстановление amount
 
-1. **useUIState** — добавлен `economyMode` с localStorage
-2. **AppHeader** — в дропдауне режимов появилась кнопка "💰 Economy" (когда `economyEnabled && !economyMode`). Когда `economyMode === true` — показываются Crafts, Locations, Quests для выхода
-3. **App.jsx** — убрано жёсткое скрытие UI. При `economyMode === true` обычный UI (хедер, сайдбар, ItemSelectModal, CraftSection, LocationDropsSection) работает как обычно
-4. **EconomyPlugin** — убран EconomyStartScreen. Плагин только добавляет золотую кнопку и оверлеи ПОВЕРХ обычного UI
-5. **navigateToItem** — при `economyMode === true` предмет добавляется в `economyChain` (через `addToEconomyChain`), а не в `craftChain`
+2. **Кнопка "mode" — заглушка вместо дропдауна**
+   - В `EconomyAppHeader` просто вызывает `onExit`
+   - В `AppHeader` — полноценный дропдаун с 3 опциями (Crafts/Locations/Quests), анимацией framer-motion, сохранением breadcrumbs
+
+3. **Нет автоскролла breadcrumbs**
+   - В `App.jsx` есть `useEffect` скроллящий breadcrumbs вправо
+   - В `EconomyPlugin.jsx` такого нет
+
+### План фикса:
+
+- [x] Проанализировать расхождения
+- [ ] Исправить EconomyAppHeader — клик по breadcrumbs
+- [ ] Исправить EconomyAppHeader — кнопка mode → дропдаун
+- [ ] Добавить автоскролл breadcrumbs в EconomyPlugin
+- [ ] Проверить что не сломалось

@@ -225,6 +225,18 @@ export default function EconomyPlugin() {
     } catch (e) { console.error('Error calculating required amount:', e) }
   }, [selectedLocation, activePerks, exploringMode])
 
+  // Auto-scroll breadcrumbs to the rightmost (latest) node when chain updates
+  React.useEffect(() => {
+    try {
+      if (breadcrumbsRef && breadcrumbsRef.current) {
+        const el = breadcrumbsRef.current
+        el.scrollTo({ left: el.scrollWidth, behavior: 'smooth' })
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, [craftChain])
+
   // --- Handlers ---
   const handleCraftSelect = (name, qty) => {
     setSelectedItem(name)
@@ -263,6 +275,12 @@ export default function EconomyPlugin() {
         itemsData={STATIC_ITEMS_MAP}
         buddyFarmLinksEnabled={false}
         onExit={() => setEconomyEnabled(false)}
+        view={view}
+        setView={setView}
+        selectedLocation={selectedLocation}
+        setSelectedLocation={setSelectedLocation}
+        locationAmount={locationAmount}
+        setLocationAmount={setLocationAmount}
       />
       <EconomyItemSelectModal
         isOpen={itemSelectMode !== null}

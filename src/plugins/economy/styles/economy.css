@@ -10,10 +10,6 @@
   overflow-x: hidden;
 }
 
-.economy-plugin .header {
-  overflow: hidden;
-}
-
 .economy-plugin-header {
   display: flex;
   align-items: center;

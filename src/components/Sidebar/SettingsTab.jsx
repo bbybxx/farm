@@ -1,5 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import { useEconomy } from '../../economy/hooks/useEconomy'
 
 export default function SettingsTab({
   pinnedEnabled,
@@ -25,6 +26,7 @@ export default function SettingsTab({
   onRefreshPrices,
   onClearPrices
 }) {
+  const { economyEnabled, setEconomyEnabled } = useEconomy()
 
   return (
     <div className="settings-section">
@@ -90,6 +92,24 @@ export default function SettingsTab({
         </label>
         <p className="setting-description">
           Make item icons clickable to open buddy.farm pages
+        </p>
+      </div>
+
+      {/* Economy Mode */}
+      <h3 className="section-title">Economy Mode</h3>
+      
+      <div className="setting-item">
+        <label className="setting-label">
+          <input
+            type="checkbox"
+            checked={economyEnabled}
+            onChange={(e) => setEconomyEnabled(e.target.checked)}
+            className="setting-checkbox"
+          />
+          Enable Economy Mode
+        </label>
+        <p className="setting-description">
+          Calculate profit/loss for crafting chains. Chain starts fresh when enabling.
         </p>
       </div>
 

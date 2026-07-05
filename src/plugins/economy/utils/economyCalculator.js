@@ -295,12 +295,14 @@ export function decomposeChain(chain, recipes, resourceSaverPercent = 0, getLoca
   if (!chain || chain.length === 0) return { gathered, consumed, produced }
 
   let isInGatherMode = false // true после локации, пока не встретим крафт
+  let locationDropsAdded = false // true если getLocationDrops уже сработал
 
   for (let i = 0; i < chain.length; i++) {
     const node = chain[i]
 
     if (node.isLocation) {
       isInGatherMode = true
+      locationDropsAdded = false
       // Если есть колбэк для дропов локации — добавляем все дропы в gathered
       if (typeof getLocationDrops === 'function') {
         const budget = Number(node.amount) || 0
@@ -312,6 +314,7 @@ export function decomposeChain(chain, recipes, resourceSaverPercent = 0, getLoca
             }
           }
         }
+        locationDropsAdded = true
       }
       continue
     }
@@ -322,6 +325,7 @@ export function decomposeChain(chain, recipes, resourceSaverPercent = 0, getLoca
     if (ingredients) {
       // Это крафт — выходим из gather mode
       isInGatherMode = false
+      locationDropsAdded = false
       const craftQty = Number(node.amount) || 0
       for (const [ingName, ingQty] of Object.entries(ingredients)) {
         const adjustedQty = resourceSaverPercent > 0 ? (ingQty / (1 + resourceSaverPercent)) : ingQty
@@ -329,10 +333,11 @@ export function decomposeChain(chain, recipes, resourceSaverPercent = 0, getLoca
         consumed[ingName] = (consumed[ingName] || 0) + totalIngredientQty
       }
       produced[node.name] = (produced[node.name] || 0) + craftQty
-    } else {
-      // Нет рецепта — это gathered (либо из локации, либо базовый предмет)
+    } else if (!locationDropsAdded) {
+      // Нет рецепта и getLocationDrops не сработал — это gathered
       gathered[node.name] = (gathered[node.name] || 0) + (Number(node.amount) || 0)
     }
+    // else: locationDropsAdded=true, этот предмет уже в gathered — пропускаем
   }
 
   return { gathered, consumed, produced }

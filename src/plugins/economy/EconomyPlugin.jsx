@@ -171,13 +171,23 @@ export default function EconomyPlugin() {
     if (!hasItemContent(itemName)) return
     setSelectedItem(itemName)
     setAmount(quantity)
-    setView('craft')
-    // Если переходим из локации — начинаем свежую цепочку, не тащим локацию
-    setCraftChain(prev => view === 'location'
-      ? [{ name: itemName, amount: quantity }]
-      : [...prev, { name: itemName, amount: quantity }]
-    )
-  }, [hasItemContent, setCraftChain, view])
+    // Если мы в локации — не переключаем view, а сохраняем локацию в цепочку
+    if (view === 'location') {
+      setCraftChain(prev => {
+        // Если цепочка пустая или первый элемент не локация — добавляем локацию как корень
+        if (prev.length === 0 || !prev[0]?.isLocation) {
+          return [
+            { name: selectedLocation, amount: locationAmount, isLocation: true, savedAmount: locationAmount },
+            { name: itemName, amount: quantity }
+          ]
+        }
+        return [...prev, { name: itemName, amount: quantity }]
+      })
+    } else {
+      setView('craft')
+      setCraftChain(prev => [...prev, { name: itemName, amount: quantity }])
+    }
+  }, [hasItemContent, setCraftChain, view, selectedLocation, locationAmount])
 
   // --- Location logic (копия из App.jsx) ---
   const locObj = APPLE_CIDER_REAL_DROP_RATES.locations?.[selectedLocation]
@@ -417,6 +427,74 @@ export default function EconomyPlugin() {
               ))}
             </ul>
           </section>
+
+          {/* Item resources inside location mode — показаны когда выбран дроп */}
+          {selectedItem && combinedRecipes[selectedItem] && (
+            <>
+              {/* Direct Ingredients */}
+              {Object.keys(directIngredients).length > 0 && (
+                <section className="glass card">
+                  <h2>Resources</h2>
+                  <ul className="list">
+                    {Object.entries(directIngredients).map(([name, qty]) => (
+                      <li key={name} className="resource-item">
+                        <div
+                          className={`resource-content ${hasItemContent(name) ? 'clickable' : ''}`}
+                          onClick={() => { if (hasItemContent(name)) navigateToItem(name, qty) }}
+                          style={hasItemContent(name) ? { cursor: 'pointer' } : { cursor: 'default' }}
+                        >
+                          <span className="k"><ItemDisplay itemName={name} itemsData={STATIC_ITEMS_MAP} /></span>
+                          <span className="v">{formatNumberRounded(qty)}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+              {/* All Base Resources */}
+              {result && Object.keys(result.base).length > 0 && (
+                <section className="glass card">
+                  <h2>All Base Resources</h2>
+                  <ul className="list">
+                    {Object.entries(result.base).map(([name, qty]) => (
+                      <li key={name} className="resource-item">
+                        <div
+                          className={`resource-content ${hasItemContent(name) ? 'clickable' : ''}`}
+                          onClick={() => { if (hasItemContent(name)) navigateToItem(name, qty) }}
+                          style={hasItemContent(name) ? { cursor: 'pointer' } : { cursor: 'default' }}
+                        >
+                          <span className="k"><ItemDisplay itemName={name} itemsData={STATIC_ITEMS_MAP} /></span>
+                          <span className="v">{formatNumberRounded(qty)}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+              {/* Used In */}
+              {availableCrafts.length > 0 && (
+                <section className="glass card">
+                  <h2>Used In</h2>
+                  <ul className="list">
+                    {availableCrafts.map(c => (
+                      <li key={c.name} className="resource-item">
+                        <div
+                          className={`resource-content ${hasItemContent(c.name) ? 'clickable' : ''}`}
+                          onClick={() => { if (hasItemContent(c.name)) navigateToItem(c.name, c.craftableCount || 1) }}
+                          style={hasItemContent(c.name) ? { cursor: 'pointer' } : undefined}
+                        >
+                          <span className="k"><ItemDisplay itemName={c.name} itemsData={STATIC_ITEMS_MAP} /></span>
+                          <span className="v">{formatNumberRounded(c.craftableCount != null ? c.craftableCount : 0)}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+            </>
+          )}
         </>
       )}
     </div>

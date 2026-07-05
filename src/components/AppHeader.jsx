@@ -167,7 +167,7 @@ export default function AppHeader({
                 transition={{ duration: 0.12 }}
               >
                 {/* Crafts — показываем когда не в crafts режиме */}
-                {(questsMode || locationsMode) && (
+                {(questsMode || locationsMode || economyEnabled) && (
                   <button
                     className="mode-option"
                     type="button"
@@ -178,6 +178,7 @@ export default function AppHeader({
                       else setCraftChain([{ name: item, amount: amount }])
                       setQuestsMode(false)
                       setLocationsMode(false)
+                      setEconomyEnabled(false)
                       setModeOpen(false)
                     }}
                   >
@@ -185,7 +186,7 @@ export default function AppHeader({
                   </button>
                 )}
                 {/* Locations — показываем когда не в locations режиме */}
-                {!locationsMode && (
+                {(!locationsMode || economyEnabled) && (
                   <button
                     className="mode-option"
                     type="button"
@@ -196,6 +197,7 @@ export default function AppHeader({
                       else setCraftChain([{ name: selectedLocation || 'Forest', amount: 1, isLocation: true }])
                       setQuestsMode(false)
                       setLocationsMode(true)
+                      setEconomyEnabled(false)
                       setModeOpen(false)
                       if (!selectedLocation) setSelectedLocation('Forest')
                     }}
@@ -204,7 +206,7 @@ export default function AppHeader({
                   </button>
                 )}
                 {/* Quests — показываем когда не в quests режиме */}
-                {!questsMode && (
+                {(!questsMode || economyEnabled) && (
                   <button
                     className="mode-option"
                     type="button"
@@ -215,6 +217,7 @@ export default function AppHeader({
                       else setCraftChain([{ name: 'Quests', amount: 1, isPlaceholder: true }])
                       setQuestsMode(true)
                       setLocationsMode(false)
+                      setEconomyEnabled(false)
                       setModeOpen(false)
                     }}
                   >

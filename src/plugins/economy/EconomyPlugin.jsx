@@ -234,18 +234,6 @@ export default function EconomyPlugin() {
     setView('location')
   }
 
-  const handleBack = () => {
-    setSelectedItem(null)
-    setAmount(1)
-    setSelectedLocation(null)
-    setLocationAmount(1)
-    setView('start')
-  }
-
-  const handleExit = () => {
-    setEconomyEnabled(false)
-  }
-
   if (!economyEnabled) return null
 
   return (
@@ -256,19 +244,6 @@ export default function EconomyPlugin() {
         onSelect={itemSelectMode === 'craft' ? handleCraftSelect : handleLocationSelect}
         onClose={() => setItemSelectMode(null)}
       />
-
-      {/* Простой хедер: кнопка назад + название + закрыть */}
-      <div className="economy-plugin-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {view !== 'start' && (
-            <button className="economy-plugin-back" onClick={handleBack} type="button">←</button>
-          )}
-          <span className="economy-plugin-title">
-            {view === 'start' ? 'Economy' : view === 'craft' ? (selectedItem || 'Craft') : (selectedLocation || 'Locations')}
-          </span>
-        </div>
-        <button className="economy-plugin-close" onClick={handleExit} type="button">×</button>
-      </div>
 
       {/* Стартовый экран — две простые кнопки */}
       {view === 'start' && (

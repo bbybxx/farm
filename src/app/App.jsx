@@ -45,6 +45,7 @@ import ClearDataModals from '../components/ClearDataModals.jsx'
 import FolderConfigModal from '../components/FolderConfigModal.jsx'
 import QuickPinModal from '../components/QuickPinModal.jsx'
 import PluginsRenderer from '../plugins'
+import EconomyPlugin from '../plugins/economy/EconomyPlugin'
 
 const STATIC_ITEMS_MAP = normalizeItemsMap(itemsAPI)
 
@@ -1225,7 +1226,9 @@ export default function App() {
         />
 
 
-        {questsMode ? (
+        {economyEnabled ? (
+          <EconomyPlugin />
+        ) : questsMode ? (
 
 
           <QuestsPanel 

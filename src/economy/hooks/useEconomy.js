@@ -12,6 +12,7 @@ export function useEconomy() {
   const [priceRefreshable, setPriceRefreshableState] = useState(() => loadFromStorage('economy_priceRefreshable', {}))
   const [simpleOverlayOpen, setSimpleOverlayOpen] = useState(false)
   const [advancedTabOpen, setAdvancedTabOpen] = useState(false)
+  const [isPriceConfigOpen, setIsPriceConfigOpen] = useState(false)
 
   // Persist each state to localStorage
   useEffect(() => {
@@ -181,5 +182,7 @@ export function useEconomy() {
     advancedTabOpen,
     openAdvancedTab,
     closeAdvancedTab,
+    isPriceConfigOpen,
+    setIsPriceConfigOpen,
   }
 }

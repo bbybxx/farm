@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useEconomy } from '../../economy/hooks/useEconomy'
+import EconomyPriceConfig from '../../economy/components/EconomyPriceConfig'
 
 export default function SettingsTab({
   pinnedEnabled,
@@ -26,7 +27,15 @@ export default function SettingsTab({
   onRefreshPrices,
   onClearPrices
 }) {
-  const { economyEnabled, setEconomyEnabled } = useEconomy()
+  const {
+    economyEnabled, setEconomyEnabled,
+    currency, setCurrency,
+    exchangeRates, setExchangeRates,
+    prices: economyPrices,
+    setPrice,
+    priceRefreshable, setPriceRefreshable,
+    isPriceConfigOpen, setIsPriceConfigOpen
+  } = useEconomy()
 
   return (
     <div className="settings-section">
@@ -112,6 +121,47 @@ export default function SettingsTab({
           Calculate profit/loss for crafting chains. Chain starts fresh when enabling.
         </p>
       </div>
+
+      {economyEnabled && (
+        <>
+          <div className="setting-item">
+            <label className="setting-label">
+              <span style={{ fontWeight: 600 }}>Display Currency</span>
+              <select
+                className="setting-select"
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value)}
+              >
+                <option value="gold">Gold (G)</option>
+                <option value="ap">AP</option>
+                <option value="oj">Orange Juice (OJ)</option>
+              </select>
+            </label>
+          </div>
+
+          <button
+            className="chip wide"
+            onClick={() => setIsPriceConfigOpen(true)}
+            type="button"
+          >
+            ⚙ Configure Prices
+          </button>
+        </>
+      )}
+
+      {economyEnabled && isPriceConfigOpen && (
+        <EconomyPriceConfig
+          isOpen={isPriceConfigOpen}
+          onClose={() => setIsPriceConfigOpen(false)}
+          prices={economyPrices}
+          onSetPrice={setPrice}
+          priceRefreshable={priceRefreshable}
+          onSetRefreshable={setPriceRefreshable}
+          exchangeRates={exchangeRates}
+          onSetExchangeRates={setExchangeRates}
+          allItems={[]}
+        />
+      )}
 
       <h3 className="section-title">Exploring</h3>
       <div className="setting-item">

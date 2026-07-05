@@ -1,7 +1,7 @@
 > ⚠️ **КРИТИЧЕСКИЕ ОГРАНИЧЕНИЯ (читай перед началом)**
 > - **НЕ ТРОГАЙ** `App.jsx`, `AppHeader.jsx`, `SettingsTab.jsx` (кроме случаев, когда шаг явно разрешает).
 > - **НЕ ИСПОЛЬЗУЙ** `craftChain` — только `economyChain`.
-> - **ВСЕ НОВЫЕ ФАЙЛЫ** создавай в `src/economy/`.
+> - **ВСЕ НОВЫЕ ФАЙЛЫ** создавай в `src/plugins/` (для экономики — `src/plugins/economy/`).
 > - **ПОСЛЕ ШАГА** запусти `npm run build` и проверь, что обычный режим работает.
 
 
@@ -22,13 +22,13 @@ plan/
 ├── README.md                          ← этот файл
 ├── 01-useEconomy-hook.md              ← хук useEconomy
 ├── 02-economyCalculator-utils.md      ← economyCalculator.js
-├── 03-settings-toggle.md              ← тоггл в настройках
+├── 03-settings-toggle.md              ← тоггл в настройках (секция "Plugins")
 ├── 04-economy-start-screen.md         ← EconomyStartScreen
 ├── 05-gold-coin-button.md             ← GoldCoinButton
 ├── 06-economy-simple-overlay.md       ← EconomySimpleOverlay
 ├── 07-economy-advanced.md             ← EconomyAdvanced
 ├── 08-economy-price-config.md         ← EconomyPriceConfig
-├── 09-economy-plugin.md               ← EconomyPlugin (самодостаточный плагин)
+├── 09-app-jsx-integration.md          ← EconomyPlugin + PluginsRenderer
 └── 11-economy-css-styles.md           ← CSS-стили
 ```
 
@@ -36,17 +36,17 @@ plan/
 
 | Шаг | Что делается | Файлы |
 |-----|-------------|-------|
-| 1 | Хук `useEconomy` | `src/economy/hooks/useEconomy.js` |
-| 2 | Утилиты расчёта `economyCalculator.js` | `src/economy/utils/economyCalculator.js` |
-| 3 | Тоггл в настройках | `src/components/Sidebar/SettingsTab.jsx` (импорт `useEconomy`) |
-| 4 | Стартовый экран экономики | `src/economy/components/EconomyStartScreen.jsx` |
-| 5 | Золотая кнопка (FAB) | `src/economy/components/GoldCoinButton.jsx` |
-| 6 | Оверлей Simple-режима | `src/economy/components/EconomySimpleOverlay.jsx` |
-| 7 | Вкладка Advanced | `src/economy/components/EconomyAdvanced.jsx` |
-| 8 | Конфигуратор цен | `src/economy/components/EconomyPriceConfig.jsx` |
-| 9 | Создание EconomyPlugin | `src/economy/EconomyPlugin.jsx` (самодостаточный плагин) |
-| 10 | Ручная интеграция | Пользователь вручную добавляет `<EconomyPlugin />` в `App.jsx` |
-| 11 | CSS-стили | `src/economy/styles/economy.css`, импорт в `EconomyPlugin` или `main.jsx` |
+| 1 | Хук `useEconomy` | `src/plugins/economy/hooks/useEconomy.js` |
+| 2 | Утилиты расчёта `economyCalculator.js` | `src/plugins/economy/utils/economyCalculator.js` |
+| 3 | Тоггл в настройках (секция "Plugins") | `src/components/Sidebar/SettingsTab.jsx` (импорт `useEconomy`) |
+| 4 | Стартовый экран экономики | `src/plugins/economy/components/EconomyStartScreen.jsx` |
+| 5 | Золотая кнопка (FAB) | `src/plugins/economy/components/GoldCoinButton.jsx` |
+| 6 | Оверлей Simple-режима | `src/plugins/economy/components/EconomySimpleOverlay.jsx` |
+| 7 | Вкладка Advanced | `src/plugins/economy/components/EconomyAdvanced.jsx` |
+| 8 | Конфигуратор цен | `src/plugins/economy/components/EconomyPriceConfig.jsx` |
+| 9 | Создание EconomyPlugin + PluginsRenderer | `src/plugins/economy/EconomyPlugin.jsx` + `src/plugins/index.jsx` |
+| 10 | Ручная интеграция | Пользователь вручную добавляет `<PluginsRenderer />` в `App.jsx` |
+| 11 | CSS-стили | `src/plugins/economy/styles/economy.css`, импорт в `EconomyPlugin` или `main.jsx` |
 
 ## Инструкция для агента
 
@@ -73,24 +73,27 @@ economyChain = [
 
 ```
 src/
-├── economy/
-│   ├── EconomyPlugin.jsx              ← новый (шаг 9) — самодостаточный плагин
-│   ├── hooks/
-│   │   └── useEconomy.js              ← новый (шаг 1)
-│   ├── utils/
-│   │   └── economyCalculator.js       ← новый (шаг 2)
-│   ├── components/
-│   │   ├── EconomyStartScreen.jsx     ← новый (шаг 4)
-│   │   ├── GoldCoinButton.jsx         ← новый (шаг 5)
-│   │   ├── EconomySimpleOverlay.jsx   ← новый (шаг 6)
-│   │   ├── EconomyAdvanced.jsx        ← новый (шаг 7)
-│   │   └── EconomyPriceConfig.jsx     ← новый (шаг 8)
-│   └── styles/
-│       └── economy.css                ← новый (шаг 11)
+├── plugins/
+│   ├── index.jsx                          ← новый (шаг 9) — PluginsRenderer
+│   ├── shared/                            ← опционально, общие утилиты
+│   └── economy/
+│       ├── EconomyPlugin.jsx              ← новый (шаг 9) — самодостаточный плагин
+│       ├── hooks/
+│       │   └── useEconomy.js              ← новый (шаг 1)
+│       ├── utils/
+│       │   └── economyCalculator.js       ← новый (шаг 2)
+│       ├── components/
+│       │   ├── EconomyStartScreen.jsx     ← новый (шаг 4)
+│       │   ├── GoldCoinButton.jsx         ← новый (шаг 5)
+│       │   ├── EconomySimpleOverlay.jsx   ← новый (шаг 6)
+│       │   ├── EconomyAdvanced.jsx        ← новый (шаг 7)
+│       │   └── EconomyPriceConfig.jsx     ← новый (шаг 8)
+│       └── styles/
+│           └── economy.css                ← новый (шаг 11)
 ├── components/
 │   └── Sidebar/
-│       └── SettingsTab.jsx            ← ИЗМЕНИТЬ (шаг 3) — импорт useEconomy
+│       └── SettingsTab.jsx                ← ИЗМЕНИТЬ (шаг 3) — секция "Plugins" + импорт useEconomy
 ├── app/
-│   └── App.jsx                        ← НЕ ТРОГАТЬ (пользователь вручную добавит EconomyPlugin)
-└── main.jsx                           ← ИЗМЕНИТЬ (шаг 11) — импорт economy.css
+│   └── App.jsx                            ← НЕ ТРОГАТЬ (пользователь вручную добавит <PluginsRenderer />)
+└── main.jsx                               ← ИЗМЕНИТЬ (шаг 11) — импорт economy.css
 ```

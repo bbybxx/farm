@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useRef, memo } from 'react'
-import { formatNumberRounded } from '../../utils/formatters'
+import { formatNumberRounded } from '../../../utils/formatters'
 import { runAdvanced, getItemPrice } from '../utils/economyCalculator'
 
 const CURRENCY_LABELS = {

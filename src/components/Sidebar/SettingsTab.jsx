@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { useEconomy } from '../../economy/hooks/useEconomy'
-import EconomyPriceConfig from '../../economy/components/EconomyPriceConfig'
+import { useEconomy } from '../../plugins/economy/hooks/useEconomy'
+import EconomyPriceConfig from '../../plugins/economy/components/EconomyPriceConfig'
 
 export default function SettingsTab({
   pinnedEnabled,
@@ -104,8 +104,13 @@ export default function SettingsTab({
         </p>
       </div>
 
+      {/* Plugins — общая секция для всех плагинов */}
+      <h3 className="section-title">Plugins</h3>
+
       {/* Economy Mode */}
-      <h3 className="section-title">Economy Mode</h3>
+      <h4 className="subsection-title" style={{ fontSize: '0.85rem', color: '#aaa', margin: '8px 0 4px', textTransform: 'uppercase', letterSpacing: 1 }}>
+        💰 Economy Mode
+      </h4>
       
       <div className="setting-item">
         <label className="setting-label">

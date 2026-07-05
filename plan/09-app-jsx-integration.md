@@ -1,30 +1,36 @@
 > ⚠️ **КРИТИЧЕСКИЕ ОГРАНИЧЕНИЯ (читай перед началом)**
 > - **НЕ ТРОГАЙ** `App.jsx`, `AppHeader.jsx`, `SettingsTab.jsx` (кроме случаев, когда шаг явно разрешает).
 > - **НЕ ИСПОЛЬЗУЙ** `craftChain` — только `economyChain`.
-> - **ВСЕ НОВЫЕ ФАЙЛЫ** создавай в `src/economy/`.
+> - **ВСЕ НОВЫЕ ФАЙЛЫ** создавай в `src/plugins/` (для экономики — `src/plugins/economy/`).
 > - **ПОСЛЕ ШАГА** запусти `npm run build` и проверь, что обычный режим работает.
 
 
-# Шаг 9: EconomyPlugin — самодостаточный плагин экономического режима
+# Шаг 9: EconomyPlugin + PluginsRenderer — плагинная архитектура
 
 ## Задача
 
-Создать файл `src/economy/EconomyPlugin.jsx` — самодостаточный плагин, который рендерит весь экономический интерфейс. Плагин **не принимает пропсы** из App.jsx, а самостоятельно использует существующие хуки (`useCraft`, `useUIState`, `useEconomy`).
+Создать универсальную платформу для плагинов:
+
+1. **EconomyPlugin** (`src/plugins/economy/EconomyPlugin.jsx`) — самодостаточный плагин экономического режима, который рендерит весь экономический интерфейс. Плагин **не принимает пропсы** из App.jsx, а самостоятельно использует существующие хуки (`useCraft`, `useUIState`, `useEconomy`).
+
+2. **PluginsRenderer** (`src/plugins/index.jsx`) — точка входа для всех плагинов. Рендерит все зарегистрированные плагины как React-компоненты. Плагины сами управляют своей видимостью.
 
 ## Что нужно сделать
 
 ### 1. Создать EconomyPlugin.jsx
 
-Файл: `src/economy/EconomyPlugin.jsx`
+Файл: `src/plugins/economy/EconomyPlugin.jsx`
 
 ```jsx
+import React, { useMemo } from 'react'
 import { useEconomy } from './hooks/useEconomy'
-import { useCraft } from '../hooks/useCraft'
-import { useUIState } from '../hooks/useUIState'
+import { useCraft } from '../../hooks/useCraft'
+import { useUIState } from '../../hooks/useUIState'
 import EconomyStartScreen from './components/EconomyStartScreen'
 import GoldCoinButton from './components/GoldCoinButton'
 import EconomySimpleOverlay from './components/EconomySimpleOverlay'
 import EconomyAdvanced from './components/EconomyAdvanced'
+import { calculateLeftovers } from './utils/economyCalculator'
 ```
 
 ### 2. Логика плагина
@@ -54,8 +60,8 @@ export default function EconomyPlugin() {
     closeAdvancedTab,
   } = useEconomy()
 
-  // Существующие хуки приложения
-  const { item, amount, craftChain, combinedRecipes } = useCraft()
+  // Существующие хуки приложения (только для чтения)
+  const { item, amount, combinedRecipes } = useCraft()
   const { locationsMode, setIsItemSelectModalOpen } = useUIState()
 ```
 
@@ -106,15 +112,11 @@ return (
     {/* Advanced вкладка */}
     {advancedTabOpen && (
       <>
-        {/* Кнопка "← Back" для возврата из Advanced */}
-        <button
-          className="economy-back-btn"
-          onClick={closeAdvancedTab}
-        >
+        <button className="economy-back-btn" onClick={closeAdvancedTab}>
           ← Back
         </button>
         <EconomyAdvanced
-          leftovers={/* рассчитать из economyChain + prices */}
+          leftovers={leftovers}
           advancedState={advancedState}
           onUpdateCraft={updateAdvancedCraft}
           onRemoveItem={removeFromAdvancedState}
@@ -124,9 +126,7 @@ return (
           currency={currency}
           exchangeRates={exchangeRates}
           combinedRecipes={combinedRecipes}
-          getItemPrice={(itemName, currency) => {
-            // функция получения цены
-          }}
+          getItemPrice={getItemPrice}
         />
       </>
     )}
@@ -134,50 +134,57 @@ return (
 )
 ```
 
-### 4. Кнопка переключения Advanced (внутри плагина)
+### 4. Создать PluginsRenderer
 
-Кнопка "Advanced" **НЕ добавляется в AppHeader**. Вместо этого:
+Файл: `src/plugins/index.jsx`
 
-- Внутри `EconomySimpleOverlay` есть кнопка "Open Advanced ▸", которая вызывает `onOpenAdvanced()`
-- Внутри `EconomyPlugin` можно добавить собственную кнопку "Advanced" (например, в углу экрана), которая переключает `advancedTabOpen`
-- Кнопка "← Back" рендерится внутри плагина при открытом Advanced
+```jsx
+import EconomyPlugin from './economy/EconomyPlugin'
+
+const PLUGINS = [EconomyPlugin]
+
+export default function PluginsRenderer() {
+  return PLUGINS.map((Plugin, i) => <Plugin key={i} />)
+}
+```
 
 ### 5. Важно
 
 - **Плагин НЕ принимает пропсы** — все данные получает через хуки
-- **App.jsx НЕ МЕНЯЕТСЯ агентом** — строчку `<EconomyPlugin />` добавляет пользователь вручную
+- **App.jsx НЕ МЕНЯЕТСЯ агентом** — строчку `<PluginsRenderer />` добавляет пользователь вручную
 - Плагин использует `useCraft` и `useUIState` только для чтения (не меняет их)
 - Все переключения между Simple и Advanced происходят внутри плагина
-- Если какой-то пропс нужен, но его нет в хуках — используй `useSettings` или другие существующие хуки
+- PluginsRenderer не знает о внутренностях плагинов — он просто рендерит их как компоненты
+- Каждый плагин хранит своё состояние в localStorage со своим префиксом
 
 ## Проверки
 
-1. `npm run build` — без ошибок (возможны ошибки, так как плагин ещё не подключён в App.jsx — это нормально)
-2. `git add -A && git commit -m "feat: create EconomyPlugin" && git push`
+1. `npm run build` — без ошибок (возможны ошибки, так как PluginsRenderer ещё не подключён в App.jsx — это нормально)
+2. `git add -A && git commit -m "feat: create EconomyPlugin and PluginsRenderer" && git push`
 
 ## После шага 9: ручная интеграция пользователем
 
 После завершения шага 9, пользователь должен вручную выполнить следующие действия:
 
-### 1. Добавить EconomyPlugin в App.jsx
+### 1. Добавить PluginsRenderer в App.jsx
 
 Открыть `src/app/App.jsx` и:
 
 1. Добавить импорт:
 ```js
-import EconomyPlugin from '../economy/EconomyPlugin'
+import PluginsRenderer from '../plugins'
 ```
 
-2. Добавить `<EconomyPlugin />` в JSX (после существующих компонентов, например перед закрывающим `</div>` или `</>`):
+2. Добавить `<PluginsRenderer />` в JSX (после существующих компонентов, например перед закрывающим `</div>` или `</>`):
 ```jsx
-<EconomyPlugin />
+<PluginsRenderer />
 ```
 
 ### 2. Импортировать economy.css (если не сделано в шаге 11)
 
 В `src/main.jsx` добавить:
 ```js
-import './economy/styles/economy.css'
+import './plugins/economy/styles/economy.css'
 ```
 
 ### 3. Проверить сборку
@@ -188,7 +195,7 @@ npm run build
 
 ### 4. Проверить в браузере
 
-- Включить Economy Mode в настройках
+- Включить Economy Mode в настройках (секция "Plugins")
 - Должен появиться стартовый экран экономики
 - Выбрать предмет → должна появиться золотая кнопка
 - Нажать на кнопку → должен открыться Simple оверлей

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { loadFromStorage, saveToStorage } from '../../utils/storage'
+import { loadFromStorage, saveToStorage } from '../../../utils/storage'
 
 export function useEconomy() {
   const [economyEnabled, setEconomyEnabledState] = useState(() => loadFromStorage('economy_enabled', false))

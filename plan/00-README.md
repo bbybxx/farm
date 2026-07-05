@@ -1,7 +1,7 @@
 > ⚠️ **КРИТИЧЕСКИЕ ОГРАНИЧЕНИЯ (читай перед началом)**
 > - **НЕ ТРОГАЙ** `App.jsx`, `AppHeader.jsx`, `SettingsTab.jsx` (кроме случаев, когда шаг явно разрешает).
 > - **НЕ ИСПОЛЬЗУЙ** `craftChain` — только `economyChain`.
-> - **ВСЕ НОВЫЕ ФАЙЛЫ** создавай в `src/economy/`.
+> - **ВСЕ НОВЫЕ ФАЙЛЫ** создавай в `src/plugins/` (для экономики — `src/plugins/economy/`).
 > - **ПОСЛЕ ШАГА** запусти `npm run build` и проверь, что обычный режим работает.
 
 
@@ -11,26 +11,29 @@
 
 ```
 src/
-├── economy/
-│   ├── EconomyPlugin.jsx              # Самодостаточный плагин (шаг 9)
-│   ├── hooks/
-│   │   └── useEconomy.js              # Хук состояния экономического режима (шаг 1)
-│   ├── utils/
-│   │   └── economyCalculator.js       # Логика экономических расчётов (шаг 2)
-│   ├── components/
-│   │   ├── EconomyStartScreen.jsx     # Главный экран (Locations/Craft) (шаг 4)
-│   │   ├── GoldCoinButton.jsx         # Золотая кнопка (FAB) (шаг 5)
-│   │   ├── EconomySimpleOverlay.jsx   # Оверлей Simple-режима (шаг 6)
-│   │   ├── EconomyAdvanced.jsx        # Advanced вкладка + строки остатков (шаг 7)
-│   │   └── EconomyPriceConfig.jsx     # Конфигуратор цен (шаг 8)
-│   └── styles/
-│       └── economy.css                # Стили для экономического режима (шаг 11)
+├── plugins/
+│   ├── index.jsx                          # PluginsRenderer — точка входа для всех плагинов (шаг 9)
+│   ├── shared/                            # Общие утилиты для плагинов (опционально)
+│   └── economy/
+│       ├── EconomyPlugin.jsx              # Самодостаточный плагин экономики (шаг 9)
+│       ├── hooks/
+│       │   └── useEconomy.js              # Хук состояния экономического режима (шаг 1)
+│       ├── utils/
+│       │   └── economyCalculator.js       # Логика экономических расчётов (шаг 2)
+│       ├── components/
+│       │   ├── EconomyStartScreen.jsx     # Главный экран (Locations/Craft) (шаг 4)
+│       │   ├── GoldCoinButton.jsx         # Золотая кнопка (FAB) (шаг 5)
+│       │   ├── EconomySimpleOverlay.jsx   # Оверлей Simple-режима (шаг 6)
+│       │   ├── EconomyAdvanced.jsx        # Advanced вкладка + строки остатков (шаг 7)
+│       │   └── EconomyPriceConfig.jsx     # Конфигуратор цен (шаг 8)
+│       └── styles/
+│           └── economy.css                # Стили для экономического режима (шаг 11)
 ├── components/
 │   └── Sidebar/
-│       └── SettingsTab.jsx            # Изменяется: импорт useEconomi + чекбокс (шаг 3)
+│       └── SettingsTab.jsx                # Изменяется: секция "Plugins" с чекбоксом экономики (шаг 3)
 ├── app/
-│   └── App.jsx                        # НЕ ТРОГАЕТСЯ агентом (пользователь вручную добавит EconomyPlugin)
-└── main.jsx                           # Изменяется: импорт economy.css (шаг 11)
+│   └── App.jsx                            # НЕ ТРОГАЕТСЯ агентом (пользователь вручную добавит <PluginsRenderer />)
+└── main.jsx                               # Изменяется: импорт economy.css (шаг 11)
 ```
 
 ## Принципы
@@ -53,18 +56,24 @@ src/
 - Используется хук `useEconomy` (аналог `useUIState`, `useSettings`)
 - Все изменения сохраняются автоматически
 
+### Платформа плагинов
+- `src/plugins/index.jsx` (PluginsRenderer) — единая точка входа
+- Каждый плагин — React-компонент, сам решает, показываться или нет
+- Добавление нового плагина: создать папку в `src/plugins/` + импорт в `index.jsx`
+- В SettingsTab есть общая секция "Plugins" с переключателями для каждого плагина
+
 ## Порядок реализации
 
 | Шаг | Файл | Описание |
 |-----|------|----------|
 | 01 | `useEconomy.js` | Хук состояния экономического режима |
 | 02 | `economyCalculator.js` | Утилиты расчётов |
-| 03 | Settings toggle | Переключатель в настройках (импорт useEconomy) |
+| 03 | Settings toggle | Переключатель в настройках (секция "Plugins" + импорт useEconomy) |
 | 04 | EconomyStartScreen | Главный экран режима |
 | 05 | GoldCoinButton | Золотая кнопка (FAB) |
 | 06 | EconomySimpleOverlay | Оверлей Simple |
 | 07 | EconomyAdvanced | Вкладка Advanced |
 | 08 | EconomyPriceConfig | Конфигуратор цен |
-| 09 | EconomyPlugin | Создание самодостаточного плагина |
-| 10 | Ручная интеграция | Пользователь вручную добавляет `<EconomyPlugin />` в App.jsx |
+| 09 | EconomyPlugin + PluginsRenderer | Создание самодостаточного плагина и точки входа |
+| 10 | Ручная интеграция | Пользователь вручную добавляет `<PluginsRenderer />` в App.jsx |
 | 11 | Economy CSS | Стили |

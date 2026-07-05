@@ -24,7 +24,7 @@ export default function EconomyAppHeader({
         onClick={onExit}
         aria-label="Exit economy mode"
         type="button"
-      >←</button>
+      >≡</button>
       
       {isOffline && (
         <div className="offline-indicator" title="Working offline - all data cached locally">
@@ -32,9 +32,9 @@ export default function EconomyAppHeader({
         </div>
       )}
       
-      <div className="craft-chain" onClick={(e) => e.stopPropagation()}>
+      <div className="craft-chain" onClick={(e) => e.stopPropagation()} style={{ flex: 1, overflow: 'hidden' }}>
         {craftChain && craftChain.length > 1 ? (
-          <nav ref={breadcrumbsRef} className="breadcrumbs" aria-label="Craft chain">
+          <nav ref={breadcrumbsRef} className="breadcrumbs" aria-label="Craft chain" style={{ overflowX: 'auto', whiteSpace: 'nowrap', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {craftChain.slice(0, Math.max(0, craftChain.length - 1)).map((node, idx) => {
               const displayName = (typeof node === 'string') ? node : (node && node.name) || ''
               const truncatedName = displayName.length > 13 
@@ -104,7 +104,7 @@ export default function EconomyAppHeader({
       {/* Header right controls: Mode button */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 'auto', marginRight: 0 }}>
         <button className="chip" type="button" onClick={onExit}>
-          Exit
+          mode
         </button>
       </div>
     </header>

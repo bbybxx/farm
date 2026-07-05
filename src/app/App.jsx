@@ -1188,6 +1188,10 @@ export default function App() {
       </aside>
 
       <div className="main">
+        {economyEnabled ? (
+          <EconomyPlugin />
+        ) : (
+          <>
         <AppHeader
           headerVisible={headerVisible}
           isCaching={isCaching}
@@ -1222,12 +1226,6 @@ export default function App() {
           itemsData={itemsData}
           buddyFarmLinksEnabled={buddyFarmLinksEnabled}
         />
-
-
-        {economyEnabled ? (
-          <EconomyPlugin />
-        ) : (
-          <>
         {questsMode ? (
 
 

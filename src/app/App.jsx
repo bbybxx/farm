@@ -42,6 +42,7 @@ import LocationDropsSection from '../components/LocationDropsSection.jsx'
 import ClearDataModals from '../components/ClearDataModals.jsx'
 import FolderConfigModal from '../components/FolderConfigModal.jsx'
 import QuickPinModal from '../components/QuickPinModal.jsx'
+import PluginsRenderer from '../plugins'
 
 const STATIC_ITEMS_MAP = normalizeItemsMap(itemsAPI)
 
@@ -1589,6 +1590,7 @@ export default function App() {
   {/* Vercel Web Analytics */}
   <Analytics />
   {/* debug overlay removed */}
+        <PluginsRenderer />
       </div>
     </div>
   )

@@ -1,5 +1,10 @@
 /* Economy Plugin — минимальные стили */
 
+/* Force flexbox to shrink .craft-chain to available width */
+.economy-plugin .craft-chain {
+  min-width: 0;
+}
+
 .economy-plugin {
   width: 100%;
 }

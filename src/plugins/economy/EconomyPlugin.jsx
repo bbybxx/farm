@@ -73,7 +73,6 @@ export default function EconomyPlugin() {
   const { activePerks, exploringMode } = useActivePerks()
 
   const [view, setView] = useState('start') // 'start' | 'craft' | 'location'
-  const [activeMode, setActiveMode] = useState('craft') // 'craft' | 'location' — для селектора режимов
   const [itemSelectMode, setItemSelectMode] = useState(null) // null | 'craft' | 'location'
 
   // Craft state
@@ -175,7 +174,6 @@ export default function EconomyPlugin() {
     setView('craft')
     // Если мы в локации — сохраняем локацию как корень цепочки
     if (view === 'location') {
-      setActiveMode('location')
       setCraftChain(prev => {
         if (prev.length === 0 || !prev[0]?.isLocation) {
           return [
@@ -186,7 +184,6 @@ export default function EconomyPlugin() {
         return [...prev, { name: itemName, amount: quantity }]
       })
     } else {
-      setActiveMode('craft')
       setCraftChain(prev => [...prev, { name: itemName, amount: quantity }])
     }
   }, [hasItemContent, setCraftChain, view, selectedLocation, locationAmount])
@@ -259,7 +256,6 @@ export default function EconomyPlugin() {
     setAmount(qty)
     setItemSelectMode(null)
     setView('craft')
-    setActiveMode('craft')
     if (setCraftChain) {
       setCraftChain([{ name, amount: qty }])
     }
@@ -270,7 +266,6 @@ export default function EconomyPlugin() {
     setLocationAmount(qty)
     setItemSelectMode(null)
     setView('location')
-    setActiveMode('location')
     if (setCraftChain) {
       setCraftChain([{ name, amount: qty, isLocation: true }])
     }
@@ -295,8 +290,6 @@ export default function EconomyPlugin() {
         onExit={() => setEconomyEnabled(false)}
         view={view}
         setView={setView}
-        activeMode={activeMode}
-        setActiveMode={setActiveMode}
         selectedLocation={selectedLocation}
         setSelectedLocation={setSelectedLocation}
         locationAmount={locationAmount}

@@ -19,8 +19,6 @@ export default function EconomyAppHeader({
   // Economy-specific props
   view,
   setView,
-  activeMode,
-  setActiveMode,
   selectedLocation,
   setSelectedLocation,
   locationAmount,
@@ -156,29 +154,30 @@ export default function EconomyAppHeader({
                 exit={{ opacity: 0, y: -6, scale: 0.98 }}
                 transition={{ duration: 0.12 }}
               >
-                {/* Craft — показываем когда не в craft activeMode */}
-                {activeMode !== 'craft' && (
+                {/*
+                  Показываем Craft когда:
+                    - view === 'location' (мы на экране локации)
+                    - ИЛИ craftChain начинается с локации (мы в крафте, но пришли из локации)
+                  Иначе показываем Location.
+                */}
+                {(view === 'location' || craftChain?.[0]?.isLocation) ? (
                   <button
                     className="mode-option"
                     type="button"
                     onClick={() => {
                       if (setView) setView('craft')
-                      if (setActiveMode) setActiveMode('craft')
                       if (setCraftChain) setCraftChain([])
                       setModeOpen(false)
                     }}
                   >
                     Craft
                   </button>
-                )}
-                {/* Location — показываем когда не в location activeMode */}
-                {activeMode !== 'location' && (
+                ) : (
                   <button
                     className="mode-option"
                     type="button"
                     onClick={() => {
                       if (setView) setView('location')
-                      if (setActiveMode) setActiveMode('location')
                       if (setCraftChain) setCraftChain([])
                       setModeOpen(false)
                     }}

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { useEconomy } from './hooks/useEconomy'
-import { useCraft } from '../../hooks/useCraft'
 import { useUIState } from '../../hooks/useUIState'
+import { getCombinedRecipes } from '../../utils/recipeUtils'
 import EconomyStartScreen from './components/EconomyStartScreen'
 import GoldCoinButton from './components/GoldCoinButton'
 import EconomySimpleOverlay from './components/EconomySimpleOverlay'
@@ -36,8 +36,13 @@ export default function EconomyPlugin() {
   } = useEconomy()
 
   // Существующие хуки приложения (только для чтения)
-  const { item, amount, combinedRecipes } = useCraft()
-  const { locationsMode, setIsItemSelectModalOpen } = useUIState()
+  const { locationsMode, setLocationsMode } = useUIState()
+
+  // Получаем объединенные рецепты напрямую (useCraft не существует как отдельный хук)
+  const combinedRecipes = useMemo(() => getCombinedRecipes(), [])
+
+  // Проверяем, есть ли предметы в экономической цепочке
+  const hasEconomyItem = economyChain.length > 0
 
   // Вычисляем leftovers из economyChain для Advanced
   const leftovers = useMemo(() => {
@@ -59,15 +64,16 @@ export default function EconomyPlugin() {
   return (
     <>
       {/* Стартовый экран (когда не в locations и не в craft) */}
-      {!locationsMode && !item && (
+      {!locationsMode && !hasEconomyItem && (
         <EconomyStartScreen
           onOpenLocations={() => {
             // Устанавливаем locationsMode через useUIState
-            // Используем setLocationsMode если доступно, иначе заглушка
+            if (setLocationsMode) setLocationsMode(true)
           }}
           onOpenCraft={() => {
-            // Открываем ItemSelectModal
-            if (setIsItemSelectModalOpen) setIsItemSelectModalOpen(true)
+            // ItemSelectModal — состояние App.jsx, плагин не может его открыть без пропсов.
+            // Заглушка: можно открыть SimpleOverlay или PriceConfig
+            // Пользователь может выбрать предмет через основной интерфейс
           }}
         />
       )}

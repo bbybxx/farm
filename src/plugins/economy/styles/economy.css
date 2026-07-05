@@ -7,6 +7,11 @@
 
 .economy-plugin {
   width: 100%;
+  overflow-x: hidden;
+}
+
+.economy-plugin .header {
+  overflow: hidden;
 }
 
 .economy-plugin-header {

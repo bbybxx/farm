@@ -7,6 +7,7 @@ import GoldCoinButton from './components/GoldCoinButton'
 import EconomySimpleOverlay from './components/EconomySimpleOverlay'
 import EconomyAdvanced from './components/EconomyAdvanced'
 import { calculateLeftovers } from './utils/economyCalculator'
+import './styles/economy.css'
 
 /**
  * EconomyPlugin — самодостаточный плагин экономического режима.
@@ -112,19 +113,6 @@ export default function EconomyPlugin() {
           <button
             className="economy-back-btn"
             onClick={closeAdvancedTab}
-            style={{
-              position: 'fixed',
-              top: '12px',
-              left: '12px',
-              zIndex: 1001,
-              padding: '8px 16px',
-              borderRadius: '8px',
-              border: '1px solid rgba(255,255,255,0.15)',
-              background: 'rgba(0,0,0,0.6)',
-              color: 'inherit',
-              cursor: 'pointer',
-              fontSize: '0.9rem',
-            }}
           >
             ← Back
           </button>

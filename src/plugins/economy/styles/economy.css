@@ -3,6 +3,17 @@
    ============================================ */
 
 /* ------------------------------------------
+   0. Hide main app content when economy is active
+   ------------------------------------------ */
+body.economy-active .main > .stack,
+body.economy-active .main > section.controls,
+body.economy-active .main > footer.spacer,
+body.economy-active .main > header:not(.economy-header) {
+  display: none !important;
+}
+
+
+/* ------------------------------------------
    1. EconomyStartScreen
    ------------------------------------------ */
 .economy-start-screen {
@@ -571,4 +582,127 @@
 
 .economy-back-btn:hover {
   background: rgba(255,255,255,0.1);
+}
+
+/* ------------------------------------------
+   7. Economy Header (breadcrumb + close)
+   ------------------------------------------ */
+.economy-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.economy-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.economy-header-back {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.economy-header-back:hover {
+  opacity: 1;
+}
+
+.economy-header .economy-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.economy-breadcrumb-sep {
+  opacity: 0.4;
+  margin: 0 2px;
+  font-size: 1rem;
+}
+
+.economy-breadcrumb-link {
+  background: none;
+  border: none;
+  color: #64B5F6;
+  cursor: pointer;
+  padding: 0.15rem 0.25rem;
+  font-size: inherit;
+  font-family: inherit;
+  transition: color 0.2s;
+}
+
+.economy-breadcrumb-link:hover {
+  color: #90CAF9;
+  text-decoration: underline;
+}
+
+.economy-breadcrumb-current {
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.economy-header-close {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  line-height: 1;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.economy-header-close:hover {
+  opacity: 1;
+}
+
+/* ------------------------------------------
+   8. Economy stack layout (копия .stack из app.css)
+   ------------------------------------------ */
+.economy-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ------------------------------------------
+   9. EconomyCraftPanel / EconomyLocationPanel
+   ------------------------------------------ */
+.economy-add-chain-btn {
+  background: var(--accent, #4CAF50) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  font-size: 0.75rem !important;
+  padding: 2px 8px !important;
+  margin-left: auto !important;
+  flex-shrink: 0 !important;
+  border: none !important;
+}
+
+.economy-add-chain-btn:hover {
+  filter: brightness(1.15);
 }

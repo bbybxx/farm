@@ -30,8 +30,10 @@ import { useClearData } from '../hooks/useClearData.js'
 import { useSettings } from '../hooks/useSettings.js'
 import { useUIState } from '../hooks/useUIState.js'
 import { usePrices } from '../hooks/usePrices.js'
+import { useEconomyContext } from '../plugins/economy/EconomyContext'
 
 import SettingsTab from '../components/Sidebar/SettingsTab.jsx'
+
 import PerksTab from '../components/Sidebar/PerksTab.jsx'
 import HistoryTab from '../components/Sidebar/HistoryTab.jsx'
 import PinnedTab from '../components/Sidebar/PinnedTab.jsx'
@@ -154,10 +156,17 @@ export default function App() {
   const [isItemSelectOpen, setIsItemSelectOpen] = useState(false)
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   const [modeOpen, setModeOpen] = useState(false)
+  const sidebarRef = useRef(null)
+  const menuBtnRef = useRef(null)
+  const breadcrumbsRef = useRef(null)
+  const modeRef = useRef(null)
   const itemSelectListRef = useRef(null)
   const [isOffline, setIsOffline] = useState(false)
   const [isCaching, setIsCaching] = useState(false)
   const [cachingProgress, setCachingProgress] = useState(0)
+  
+  // Helper to determine overlay (mobile) layout
+  const isOverlayNow = () => (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 899px)').matches)
   
   // Debounce ref for craftChain updates during typing
   const craftChainDebounceRef = useRef(null)
@@ -206,12 +215,15 @@ export default function App() {
     locationsMode, setLocationsMode,
     selectedLocation, setSelectedLocation,
     questsMode, setQuestsMode,
+    economyMode, setEconomyMode,
     craftBreadcrumbs, setCraftBreadcrumbs,
     locationsBreadcrumbs, setLocationsBreadcrumbs,
     questsBreadcrumbs, setQuestsBreadcrumbs,
     resourcesSectionCollapsed, setResourcesSectionCollapsed,
     usedInSectionCollapsed, setUsedInSectionCollapsed
   } = useUIState()
+
+  const { economyEnabled, setEconomyEnabled } = useEconomyContext()
 
   // Pinned resources system (replaces cart)
   const {
@@ -490,6 +502,7 @@ export default function App() {
     hapticFeedback('medium')
     
     // Add to history if enabled
+
     addToHistory(item, amount, itemName, quantity, craftChain)
     
     // Set item and amount
@@ -1047,51 +1060,6 @@ export default function App() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [lastScrollY])
 
-  // refs for accessibility handling
-  const sidebarRef = React.useRef(null)
-  const menuBtnRef = React.useRef(null)
-  const breadcrumbsRef = React.useRef(null)
-  const modeRef = React.useRef(null)
-
-  // Helper to determine overlay (mobile) layout
-  const isOverlayNow = () => (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 899px)').matches)
-
-  // Breadcrumb logic removed
-
-  // Manage inert/aria-hidden and focus when sidebar toggles to avoid hiding a focused element
-  // Only apply inert/aria-hidden for overlay (mobile) layouts; desktop sidebar is sticky and must remain interactive
-  useEffect(() => {
-    const asideEl = sidebarRef.current
-    const menuBtn = menuBtnRef.current || document.querySelector('[aria-controls="perks-sidebar"]')
-    if (!asideEl) return
-
-  const isOverlay = isOverlayNow()
-
-  if (!isOverlay) {
-      // Desktop: ensure sidebar is interactive and visible to AT
-      try { asideEl.inert = false } catch (e) {}
-      asideEl.removeAttribute('aria-hidden')
-      return
-    }
-
-    if (sidebarOpen) {
-      // opening on overlay: make interactive and visible to AT
-      try { asideEl.inert = false } catch (e) {}
-      asideEl.setAttribute('aria-hidden', 'false')
-    } else {
-      // closing on overlay: if focus is inside the aside, move it to the menu button first
-      const active = document.activeElement
-      if (active && asideEl.contains(active)) {
-        try {
-          if (menuBtn && typeof menuBtn.focus === 'function') menuBtn.focus()
-          else (document.body && document.body.focus && document.body.focus())
-        } catch (err) {}
-      }
-      try { asideEl.inert = true } catch (e) {}
-      asideEl.setAttribute('aria-hidden', 'true')
-    }
-  }, [sidebarOpen])
-
   return (
   <div className="app layout">
       <aside id="perks-sidebar" ref={sidebarRef} className={"sidebar glass" + (sidebarOpen ? ' open' : '')}>
@@ -1252,9 +1220,14 @@ export default function App() {
           selectedLocation={selectedLocation}
           itemsData={itemsData}
           buddyFarmLinksEnabled={buddyFarmLinksEnabled}
+          economyEnabled={economyEnabled}
+          setEconomyEnabled={setEconomyEnabled}
         />
 
+
         {questsMode ? (
+
+
           <QuestsPanel 
             itemsData={itemsData} enableBuddyFarmLinks={buddyFarmLinksEnabled}
             savedQuestlineId={localStorage.getItem('selectedQuestlineId')}

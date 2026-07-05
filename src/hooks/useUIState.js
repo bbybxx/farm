@@ -5,6 +5,7 @@ export function useUIState() {
   const [locationsMode, setLocationsMode] = useState(() => loadFromStorage('craftCalculator_locationsMode', false))
   const [selectedLocation, setSelectedLocation] = useState(() => loadFromStorage('craftCalculator_selectedLocation', 'Forest'))
   const [questsMode, setQuestsMode] = useState(() => loadFromStorage('craftCalculator_questsMode', false))
+  const [economyMode, setEconomyMode] = useState(() => loadFromStorage('craftCalculator_economyMode', false))
   
   const [craftBreadcrumbs, setCraftBreadcrumbs] = useState(() => loadFromStorage('craftCalculator_craftBreadcrumbs', []))
   const [locationsBreadcrumbs, setLocationsBreadcrumbs] = useState(() => loadFromStorage('craftCalculator_locationsBreadcrumbs', []))
@@ -12,6 +13,10 @@ export function useUIState() {
   
   const [resourcesSectionCollapsed, setResourcesSectionCollapsed] = useState(() => loadFromStorage('craftCalculator_resourcesSectionCollapsed', false))
   const [usedInSectionCollapsed, setUsedInSectionCollapsed] = useState(() => loadFromStorage('craftCalculator_usedInSectionCollapsed', true))
+
+  useEffect(() => {
+    saveToStorage('craftCalculator_economyMode', economyMode)
+  }, [economyMode])
 
   useEffect(() => {
     saveToStorage('craftCalculator_locationsMode', locationsMode)
@@ -49,6 +54,7 @@ export function useUIState() {
     locationsMode, setLocationsMode,
     selectedLocation, setSelectedLocation,
     questsMode, setQuestsMode,
+    economyMode, setEconomyMode,
     craftBreadcrumbs, setCraftBreadcrumbs,
     locationsBreadcrumbs, setLocationsBreadcrumbs,
     questsBreadcrumbs, setQuestsBreadcrumbs,

@@ -35,7 +35,9 @@ export default function AppHeader({
   amount,
   selectedLocation,
   itemsData,
-  buddyFarmLinksEnabled
+  buddyFarmLinksEnabled,
+  economyEnabled,
+  setEconomyEnabled
 }) {
   return (
     <header className={"glass header" + (headerVisible ? '' : ' hidden') + (isCaching ? ' caching' : '')} style={isCaching ? { '--caching-progress': `${cachingProgress}%` } : {}}>
@@ -164,6 +166,7 @@ export default function AppHeader({
                 exit={{ opacity: 0, y: -6, scale: 0.98 }}
                 transition={{ duration: 0.12 }}
               >
+                {/* Crafts — показываем когда не в crafts режиме */}
                 {(questsMode || locationsMode) && (
                   <button
                     className="mode-option"
@@ -181,6 +184,7 @@ export default function AppHeader({
                     Crafts
                   </button>
                 )}
+                {/* Locations — показываем когда не в locations режиме */}
                 {!locationsMode && (
                   <button
                     className="mode-option"
@@ -199,6 +203,7 @@ export default function AppHeader({
                     Locations
                   </button>
                 )}
+                {/* Quests — показываем когда не в quests режиме */}
                 {!questsMode && (
                   <button
                     className="mode-option"
@@ -216,6 +221,17 @@ export default function AppHeader({
                     Quests
                   </button>
                 )}
+                {/* Economy — показываем всегда */}
+                <button
+                  className="mode-option"
+                  type="button"
+                  onClick={() => {
+                    setEconomyEnabled(true)
+                    setModeOpen(false)
+                  }}
+                >
+                  Economy
+                </button>
               </motion.div>
             )}
           </AnimatePresence>

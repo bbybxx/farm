@@ -1,23 +1,49 @@
-import React, { useMemo } from 'react'
-import { useEconomy } from './hooks/useEconomy'
-import { useUIState } from '../../hooks/useUIState'
+import React, { useState, useMemo, useEffect } from 'react'
+import { useEconomyContext } from './EconomyContext'
 import { getCombinedRecipes } from '../../utils/recipeUtils'
-import EconomyStartScreen from './components/EconomyStartScreen'
 import GoldCoinButton from './components/GoldCoinButton'
 import EconomySimpleOverlay from './components/EconomySimpleOverlay'
 import EconomyAdvanced from './components/EconomyAdvanced'
+import EconomyStartScreen from './components/EconomyStartScreen'
+import EconomyItemSelect from './components/EconomyItemSelect'
+import EconomyCraftPanel from './components/EconomyCraftPanel'
+import EconomyLocationPanel from './components/EconomyLocationPanel'
 import { calculateLeftovers } from './utils/economyCalculator'
 import './styles/economy.css'
 
 /**
  * EconomyPlugin — самодостаточный плагин экономического режима.
- * Не принимает пропсы. Все данные получает через хуки.
- * Рендерит себя только когда economyEnabled === true.
+ *
+ * Плагин НЕ зависит от economyMode из useUIState.
+ * Он активируется исключительно по economyEnabled (свой флаг).
+ *
+ * Логика потока:
+ *   1. economyEnabled=true → EconomyStartScreen (выбор Craft/Locations)
+ *   2. Клик Craft/Locations → EconomyItemSelect (модалка выбора в стиле ItemSelectModal)
+ *   3. Выбор предмета/локации → EconomyCraftPanel / EconomyLocationPanel (на странице)
+ *   4. После добавления в цепочку → можно вернуться к StartScreen
+ *
+ * Панели рендерятся как основной контент на странице (не оверлей),
+ * полностью копируя стиль и поведение оригинальных режимов крафта/локаций.
+ *
+ * Связь с крафтовым стейтом (item, amount, craftChain) ОТСУТСТВУЕТ.
  */
 export default function EconomyPlugin() {
-  // Хуки экономики
+  // Состояние текущего view: 'start' | 'craft' | 'location'
+  const [view, setView] = useState('start')
+
+  // Состояние выбора: null | 'craft' | 'location'
+  const [itemSelectMode, setItemSelectMode] = useState(null)
+
+  // Выбранный предмет/локация
+  const [selectedCraftItem, setSelectedCraftItem] = useState(null)
+  const [selectedCraftAmount, setSelectedCraftAmount] = useState(1)
+  const [selectedLocation, setSelectedLocation] = useState(null)
+
+  // Хуки экономики (через контекст — единый экземпляр)
   const {
     economyEnabled,
+    setEconomyEnabled,
     economyChain,
     prices,
     setPrice,
@@ -34,16 +60,17 @@ export default function EconomyPlugin() {
     advancedTabOpen,
     openAdvancedTab,
     closeAdvancedTab,
-  } = useEconomy()
+    addToEconomyChain,
+  } = useEconomyContext()
 
-  // Существующие хуки приложения (только для чтения)
-  const { locationsMode, setLocationsMode } = useUIState()
+  // Скрываем основной контент App.jsx когда экономический режим активен
+  useEffect(() => {
+    document.body.classList.toggle('economy-active', economyEnabled)
+    return () => document.body.classList.remove('economy-active')
+  }, [economyEnabled])
 
-  // Получаем объединенные рецепты напрямую (useCraft не существует как отдельный хук)
+  // Получаем объединенные рецепты напрямую
   const combinedRecipes = useMemo(() => getCombinedRecipes(), [])
-
-  // Проверяем, есть ли предметы в экономической цепочке
-  const hasEconomyItem = economyChain.length > 0
 
   // Вычисляем leftovers из economyChain для Advanced
   const leftovers = useMemo(() => {
@@ -60,32 +87,144 @@ export default function EconomyPlugin() {
     return null
   }
 
+  // Обработчик выбора предмета из EconomyItemSelect (craft mode)
+  const handleCraftSelect = (name, amount) => {
+    setSelectedCraftItem(name)
+    setSelectedCraftAmount(amount)
+    setItemSelectMode(null)
+    setView('craft')
+  }
+
+  // Обработчик выбора локации из EconomyItemSelect (location mode)
+  const handleLocationSelect = (name, amount) => {
+    setSelectedLocation(name)
+    setItemSelectMode(null)
+    setView('location')
+  }
+
+  // Обработчик открытия EconomyItemSelect для крафта
+  const handleOpenCraftSelect = () => {
+    setItemSelectMode('craft')
+  }
+
+  // Обработчик открытия EconomyItemSelect для локаций
+  const handleOpenLocationSelect = () => {
+    setItemSelectMode('location')
+  }
+
+  // Закрытие EconomyItemSelect
+  const handleItemSelectClose = () => {
+    setItemSelectMode(null)
+  }
+
+  // Возврат к стартовому экрану
+  const handleBackToStart = () => {
+    setSelectedCraftItem(null)
+    setSelectedCraftAmount(1)
+    setSelectedLocation(null)
+    setView('start')
+  }
+
+  // Выход из экономического режима
+  const handleExitEconomy = () => {
+    setEconomyEnabled(false)
+  }
+
+  // Построение breadcrumb
+  const breadcrumbParts = useMemo(() => {
+    const parts = [{ label: 'Economy', onClick: handleBackToStart }]
+    if (view === 'craft') {
+      parts.push({ label: 'Craft', onClick: handleBackToStart })
+      if (selectedCraftItem) parts.push({ label: selectedCraftItem })
+    } else if (view === 'location') {
+      parts.push({ label: 'Locations', onClick: handleBackToStart })
+      if (selectedLocation) parts.push({ label: selectedLocation })
+    }
+    return parts
+  }, [view, selectedCraftItem, selectedLocation])
+
+  // Плагин активен только когда economyEnabled === true
   if (!economyEnabled) return null
+
+  // Стартовый экран: когда нет открытых оверлеев Simple/Advanced
+  if (!simpleOverlayOpen && !advancedTabOpen) {
+    return (
+      <>
+        {/* EconomyItemSelect — модалка выбора (поверх всего) */}
+        <EconomyItemSelect
+          isOpen={itemSelectMode !== null}
+          mode={itemSelectMode}
+          onSelect={itemSelectMode === 'craft' ? handleCraftSelect : handleLocationSelect}
+          onClose={handleItemSelectClose}
+        />
+
+        {/* Свой хедер с breadcrumb */}
+        <header className="economy-header glass">
+          <div className="economy-header-left">
+            {view !== 'start' && (
+              <button className="economy-header-back" onClick={handleBackToStart} type="button" aria-label="Back">
+                ←
+              </button>
+            )}
+            <nav className="economy-breadcrumb">
+              {breadcrumbParts.map((part, i) => (
+                <React.Fragment key={i}>
+                  {i > 0 && <span className="economy-breadcrumb-sep">›</span>}
+                  {part.onClick ? (
+                    <button className="economy-breadcrumb-link" onClick={part.onClick} type="button">
+                      {part.label}
+                    </button>
+                  ) : (
+                    <span className="economy-breadcrumb-current">{part.label}</span>
+                  )}
+                </React.Fragment>
+              ))}
+            </nav>
+          </div>
+          <button className="economy-header-close" onClick={handleExitEconomy} type="button" aria-label="Close economy mode">
+            ×
+          </button>
+        </header>
+
+        {/* Основной контент в .economy-stack (копия .stack, но не трогается CSS .main > .stack) */}
+        <div className="economy-stack">
+          {view === 'start' && (
+            <EconomyStartScreen
+              onOpenLocations={handleOpenLocationSelect}
+              onOpenCraft={handleOpenCraftSelect}
+            />
+          )}
+
+          {view === 'craft' && (
+            <EconomyCraftPanel
+              selectedItem={selectedCraftItem}
+              amount={selectedCraftAmount}
+              onOpenSelect={handleOpenCraftSelect}
+            />
+          )}
+
+          {view === 'location' && (
+            <EconomyLocationPanel
+              selectedLocation={selectedLocation}
+              onOpenSelect={handleOpenLocationSelect}
+            />
+          )}
+        </div>
+
+        {/* Золотая кнопка (FAB) — показывается когда есть предметы в цепочке */}
+        {economyChain.length > 0 && (
+          <GoldCoinButton
+            itemCount={economyChain.length}
+            onClick={openSimpleOverlay}
+            isActive={true}
+          />
+        )}
+      </>
+    )
+  }
 
   return (
     <>
-      {/* Стартовый экран (когда не в locations и не в craft) */}
-      {!locationsMode && !hasEconomyItem && (
-        <EconomyStartScreen
-          onOpenLocations={() => {
-            // Устанавливаем locationsMode через useUIState
-            if (setLocationsMode) setLocationsMode(true)
-          }}
-          onOpenCraft={() => {
-            // ItemSelectModal — состояние App.jsx, плагин не может его открыть без пропсов.
-            // Заглушка: можно открыть SimpleOverlay или PriceConfig
-            // Пользователь может выбрать предмет через основной интерфейс
-          }}
-        />
-      )}
-
-      {/* Золотая кнопка (FAB) — показывается всегда, когда есть предметы */}
-      <GoldCoinButton
-        itemCount={economyChain.length}
-        onClick={openSimpleOverlay}
-        isActive={economyChain.length > 0}
-      />
-
       {/* Simple оверлей */}
       {simpleOverlayOpen && (
         <EconomySimpleOverlay

@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { useEconomy } from '../../plugins/economy/hooks/useEconomy'
+import { useEconomyContext } from '../../plugins/economy/EconomyContext'
 import EconomyPriceConfig from '../../plugins/economy/components/EconomyPriceConfig'
 
 export default function SettingsTab({
@@ -35,7 +35,7 @@ export default function SettingsTab({
     setPrice,
     priceRefreshable, setPriceRefreshable,
     isPriceConfigOpen, setIsPriceConfigOpen
-  } = useEconomy()
+  } = useEconomyContext()
 
   return (
     <div className="settings-section">

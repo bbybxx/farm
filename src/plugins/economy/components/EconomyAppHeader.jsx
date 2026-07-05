@@ -161,6 +161,7 @@ export default function EconomyAppHeader({
                     type="button"
                     onClick={() => {
                       if (setView) setView('craft')
+                      if (setCraftChain) setCraftChain([])
                       setModeOpen(false)
                     }}
                   >
@@ -174,6 +175,7 @@ export default function EconomyAppHeader({
                     type="button"
                     onClick={() => {
                       if (setView) setView('location')
+                      if (setCraftChain) setCraftChain([])
                       setModeOpen(false)
                     }}
                   >

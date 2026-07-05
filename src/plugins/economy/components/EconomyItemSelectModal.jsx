@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { getCombinedRecipes } from '../../../utils/recipeUtils'
+import { getCombinedRecipes, findRecipesThatUse } from '../../../utils/recipeUtils'
 import ItemDisplay from '../../../components/ItemDisplay'
 import LocationImage from '../../../components/LocationImage'
 import itemsAPI from '../../../data/items-api.json' with { type: 'json' }
@@ -15,7 +15,9 @@ export default function EconomyItemSelectModal({ isOpen, mode, onSelect, onClose
 
   const craftItems = useMemo(() => {
     const recipes = getCombinedRecipes()
-    return Object.keys(recipes || {}).sort()
+    return Object.keys(recipes || {})
+      .filter(itemName => findRecipesThatUse(itemName).length > 0)
+      .sort()
   }, [])
 
   const locations = useMemo(() => [

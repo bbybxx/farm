@@ -332,48 +332,6 @@ export default function EconomyPlugin() {
             </label>
           </section>
 
-          {/* Resources */}
-          {Object.keys(directIngredients).length > 0 && (
-            <section className="glass card">
-              <h2>Resources</h2>
-              <ul className="list">
-                {Object.entries(directIngredients).map(([name, qty]) => (
-                  <li key={name} className="resource-item">
-                    <div
-                      className={`resource-content ${hasItemContent(name) ? 'clickable' : ''}`}
-                      onClick={() => { if (hasItemContent(name)) navigateToItem(name, qty) }}
-                      style={hasItemContent(name) ? { cursor: 'pointer' } : { cursor: 'default' }}
-                    >
-                      <span className="k"><ItemDisplay itemName={name} itemsData={STATIC_ITEMS_MAP} /></span>
-                      <span className="v">{formatNumberRounded(qty)}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {/* All Base Resources */}
-          {result && Object.keys(result.base).length > 0 && (
-            <section className="glass card">
-              <h2>All Base Resources</h2>
-              <ul className="list">
-                {Object.entries(result.base).map(([name, qty]) => (
-                  <li key={name} className="resource-item">
-                    <div
-                      className={`resource-content ${hasItemContent(name) ? 'clickable' : ''}`}
-                      onClick={() => { if (hasItemContent(name)) navigateToItem(name, qty) }}
-                      style={hasItemContent(name) ? { cursor: 'pointer' } : { cursor: 'default' }}
-                    >
-                      <span className="k"><ItemDisplay itemName={name} itemsData={STATIC_ITEMS_MAP} /></span>
-                      <span className="v">{formatNumberRounded(qty)}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
           {/* Used In */}
           {availableCrafts.length > 0 && (
             <section className="glass card">

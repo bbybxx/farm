@@ -1,7 +1,10 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import { getCombinedRecipes } from '../../../utils/recipeUtils'
+import { findRecipesThatUse } from '../../../utils/recipeUtils'
+import { getItemLocations } from '../../../utils/exploringUtils'
 import { calculateAllResources } from '../../../utils/calculator'
 import { useEconomyContext } from '../EconomyContext'
+import { useActivePerks } from '../hooks/useActivePerks'
 import ItemDisplay from '../../../components/ItemDisplay'
 import itemsAPI from '../../../data/items-api.json' with { type: 'json' }
 import { normalizeItemsMap } from '../../../utils/itemImageUtils'
@@ -14,8 +17,8 @@ const STATIC_ITEMS_MAP = normalizeItemsMap(itemsAPI)
  *
  * Полная копия CraftSection + controls из App.jsx.
  * Рендерится на странице (не оверлей), как оригинальный режим крафта.
- * Вместо pin-кнопок — "Add to Economy Chain".
- * Intermediate Crafts не показываются.
+ * Перки применяются через useActivePerks (чтение из localStorage).
+ * Ресурсы кликабельны — ведут к навигации внутри плагина.
  *
  * Пропсы:
  *   selectedItem — string | null
@@ -24,6 +27,7 @@ const STATIC_ITEMS_MAP = normalizeItemsMap(itemsAPI)
  */
 export default function EconomyCraftPanel({ selectedItem, amount: propAmount, onOpenSelect }) {
   const { addToEconomyChain } = useEconomyContext()
+  const { activePerks } = useActivePerks()
 
   const [amount, setAmount] = useState(propAmount || 1)
   const [resourcesCollapsed, setResourcesCollapsed] = useState(false)
@@ -36,11 +40,11 @@ export default function EconomyCraftPanel({ selectedItem, amount: propAmount, on
   // Рецепты
   const combinedRecipes = useMemo(() => getCombinedRecipes(), [])
 
-  // Результат расчёта ресурсов для выбранного предмета
+  // Результат расчёта ресурсов для выбранного предмета с учётом перков
   const result = useMemo(() => {
     if (!selectedItem || !combinedRecipes[selectedItem]) return null
-    return calculateAllResources(selectedItem, amount, [], combinedRecipes)
-  }, [selectedItem, amount, combinedRecipes])
+    return calculateAllResources(selectedItem, amount, activePerks, combinedRecipes)
+  }, [selectedItem, amount, activePerks, combinedRecipes])
 
   // Прямые ингредиенты (из оригинального рецепта)
   const directIngredients = useMemo(() => {
@@ -49,16 +53,29 @@ export default function EconomyCraftPanel({ selectedItem, amount: propAmount, on
     return recipe.из || recipe.ingredients || {}
   }, [selectedItem, combinedRecipes])
 
-  // Добавление предмета в экономическую цепочку
-  const handleAddToChain = useCallback((name, qty) => {
-    addToEconomyChain(name, qty || amount)
-  }, [addToEconomyChain, amount])
-
   // Проверка, есть ли рецепт у предмета
   const isCraftable = useCallback((name) => {
     const recipe = combinedRecipes[name]
     return recipe && (recipe.из || recipe.ingredients)
   }, [combinedRecipes])
+
+  // Проверка, есть ли контент у предмета (рецепт, используется в крафтах, дроп в локациях)
+  const hasItemContent = useCallback((itemName) => {
+    if (isCraftable(itemName)) return true
+    const usedIn = findRecipesThatUse(itemName) || []
+    if (usedIn.length > 0) return true
+    const locations = getItemLocations(itemName) || []
+    if (locations.length > 0) return true
+    return false
+  }, [isCraftable])
+
+  // Обработчик клика по ресурсу — навигация внутри плагина
+  const handleResourceClick = useCallback((resourceName, quantity) => {
+    if (!hasItemContent(resourceName)) return
+    // Добавляем текущий предмет в цепочку и переключаемся на ресурс
+    addToEconomyChain({ name: selectedItem, amount: Number(amount) || 1 })
+    onOpenSelect(resourceName)
+  }, [hasItemContent, selectedItem, amount, addToEconomyChain, onOpenSelect])
 
   // Обработчик изменения amount (как в App.jsx — integer)
   const handleAmountChange = useCallback((e) => {
@@ -118,13 +135,21 @@ export default function EconomyCraftPanel({ selectedItem, amount: propAmount, on
             <ul className="list">
               {Object.entries(directIngredients).map(([name, qty]) => {
                 const totalQty = Math.ceil(qty * (typeof amount === 'number' ? amount : parseInt(amount) || 1))
-                const hasRecipe = isCraftable(name)
+                const clickable = hasItemContent(name)
                 return (
                   <li key={name} className="resource-item">
-                    <div className="resource-content" style={{ cursor: 'default' }}>
+                    <div
+                      className={`resource-content ${clickable ? 'clickable' : ''}`}
+                      onClick={() => {
+                        if (!clickable) return
+                        handleResourceClick(name, totalQty)
+                      }}
+                      style={clickable ? { cursor: 'pointer' } : { cursor: 'default' }}
+                      title={clickable ? `View ${name}` : undefined}
+                    >
                       <span className="k">
                         <ItemDisplay itemName={name} itemsData={STATIC_ITEMS_MAP}>
-                          {hasRecipe && (
+                          {clickable && (
                             <span className="craft-indicator">
                               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                                 <path d="M2 8L6 4L10 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -135,13 +160,6 @@ export default function EconomyCraftPanel({ selectedItem, amount: propAmount, on
                       </span>
                       <span className="v">{formatNumberRounded(totalQty)}</span>
                     </div>
-                    <button
-                      type="button"
-                      className="chip economy-add-chain-btn"
-                      onClick={() => handleAddToChain(name, totalQty)}
-                    >
-                      + Add
-                    </button>
                   </li>
                 )
               })}
@@ -169,23 +187,27 @@ export default function EconomyCraftPanel({ selectedItem, amount: propAmount, on
           </h2>
           {!resourcesCollapsed && (
             <ul className="list">
-              {Object.entries(result.base).map(([name, qty]) => (
-                <li key={name} className="resource-item">
-                  <div className="resource-content" style={{ cursor: 'default' }}>
-                    <span className="k">
-                      <ItemDisplay itemName={name} itemsData={STATIC_ITEMS_MAP} />
-                    </span>
-                    <span className="v">{formatNumberRounded(qty)}</span>
-                  </div>
-                  <button
-                    type="button"
-                    className="chip economy-add-chain-btn"
-                    onClick={() => handleAddToChain(name, qty)}
-                  >
-                    + Add
-                  </button>
-                </li>
-              ))}
+              {Object.entries(result.base).map(([name, qty]) => {
+                const clickable = hasItemContent(name)
+                return (
+                  <li key={name} className="resource-item">
+                    <div
+                      className={`resource-content ${clickable ? 'clickable' : ''}`}
+                      onClick={() => {
+                        if (!clickable) return
+                        handleResourceClick(name, qty)
+                      }}
+                      style={clickable ? { cursor: 'pointer' } : { cursor: 'default' }}
+                      title={clickable ? `View ${name}` : undefined}
+                    >
+                      <span className="k">
+                        <ItemDisplay itemName={name} itemsData={STATIC_ITEMS_MAP} />
+                      </span>
+                      <span className="v">{formatNumberRounded(qty)}</span>
+                    </div>
+                  </li>
+                )
+              })}
             </ul>
           )}
         </section>

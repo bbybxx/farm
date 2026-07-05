@@ -23,6 +23,7 @@ export function saveToStorage(key, data) {
   if (!isStorageAvailable()) return
   try {
     window.localStorage.setItem(key, JSON.stringify(data))
+    window.dispatchEvent(new CustomEvent('storage-update', { detail: { key } }))
   } catch (error) {
     console.error('Failed to save to localStorage:', error)
   }

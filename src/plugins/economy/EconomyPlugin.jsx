@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { useEconomyContext } from './EconomyContext'
 import { getCombinedRecipes } from '../../utils/recipeUtils'
 import GoldCoinButton from './components/GoldCoinButton'
@@ -8,27 +9,27 @@ import EconomyStartScreen from './components/EconomyStartScreen'
 import EconomyItemSelect from './components/EconomyItemSelect'
 import EconomyCraftPanel from './components/EconomyCraftPanel'
 import EconomyLocationPanel from './components/EconomyLocationPanel'
+import ItemDisplay from '../../components/ItemDisplay'
+import LocationImage from '../../components/LocationImage'
+import itemsAPI from '../../data/items-api.json' with { type: 'json' }
+import { normalizeItemsMap } from '../../utils/itemImageUtils'
 import { calculateLeftovers } from './utils/economyCalculator'
 import './styles/economy.css'
+
+const STATIC_ITEMS_MAP = normalizeItemsMap(itemsAPI)
 
 /**
  * EconomyPlugin — самодостаточный плагин экономического режима.
  *
- * Плагин НЕ зависит от economyMode из useUIState.
- * Он активируется исключительно по economyEnabled (свой флаг).
+ * Рендерится в position:fixed контейнере поверх всего приложения,
+ * полностью изолирован от .main и .stack.
  *
- * Логика потока:
- *   1. economyEnabled=true → EconomyStartScreen (выбор Craft/Locations)
- *   2. Клик Craft/Locations → EconomyItemSelect (модалка выбора в стиле ItemSelectModal)
- *   3. Выбор предмета/локации → EconomyCraftPanel / EconomyLocationPanel (на странице)
- *   4. После добавления в цепочку → можно вернуться к StartScreen
- *
- * Панели рендерятся как основной контент на странице (не оверлей),
- * полностью копируя стиль и поведение оригинальных режимов крафта/локаций.
- *
- * Связь с крафтовым стейтом (item, amount, craftChain) ОТСУТСТВУЕТ.
+ * Breadcrumbs построены по тому же принципу, что и в AppHeader.jsx:
+ * используется economyChain как источник данных, с ItemDisplay для иконок.
  */
 export default function EconomyPlugin() {
+  const breadcrumbsRef = useRef(null)
+
   // Состояние текущего view: 'start' | 'craft' | 'location'
   const [view, setView] = useState('start')
 
@@ -63,11 +64,8 @@ export default function EconomyPlugin() {
     addToEconomyChain,
   } = useEconomyContext()
 
-  // Скрываем основной контент App.jsx когда экономический режим активен
-  useEffect(() => {
-    document.body.classList.toggle('economy-active', economyEnabled)
-    return () => document.body.classList.remove('economy-active')
-  }, [economyEnabled])
+  // Плагин рендерится через createPortal в document.body,
+  // поэтому не нужно скрывать .main — плагин поверх всего.
 
   // Получаем объединенные рецепты напрямую
   const combinedRecipes = useMemo(() => getCombinedRecipes(), [])
@@ -130,26 +128,23 @@ export default function EconomyPlugin() {
     setEconomyEnabled(false)
   }
 
-  // Построение breadcrumb
-  const breadcrumbParts = useMemo(() => {
-    const parts = [{ label: 'Economy', onClick: handleBackToStart }]
-    if (view === 'craft') {
-      parts.push({ label: 'Craft', onClick: handleBackToStart })
-      if (selectedCraftItem) parts.push({ label: selectedCraftItem })
-    } else if (view === 'location') {
-      parts.push({ label: 'Locations', onClick: handleBackToStart })
-      if (selectedLocation) parts.push({ label: selectedLocation })
-    }
-    return parts
-  }, [view, selectedCraftItem, selectedLocation])
+  // Auto-scroll breadcrumbs to the rightmost (latest) node when chain updates
+  useEffect(() => {
+    try {
+      if (breadcrumbsRef && breadcrumbsRef.current) {
+        const el = breadcrumbsRef.current
+        el.scrollLeft = el.scrollWidth
+      }
+    } catch (_) { /* ignore */ }
+  }, [economyChain])
 
   // Плагин активен только когда economyEnabled === true
   if (!economyEnabled) return null
 
   // Стартовый экран: когда нет открытых оверлеев Simple/Advanced
   if (!simpleOverlayOpen && !advancedTabOpen) {
-    return (
-      <>
+    return createPortal(
+      <div className="economy-container">
         {/* EconomyItemSelect — модалка выбора (поверх всего) */}
         <EconomyItemSelect
           isOpen={itemSelectMode !== null}
@@ -158,7 +153,7 @@ export default function EconomyPlugin() {
           onClose={handleItemSelectClose}
         />
 
-        {/* Свой хедер с breadcrumb */}
+        {/* Свой хедер с breadcrumb (как в AppHeader.jsx) */}
         <header className="economy-header glass">
           <div className="economy-header-left">
             {view !== 'start' && (
@@ -166,19 +161,49 @@ export default function EconomyPlugin() {
                 ←
               </button>
             )}
-            <nav className="economy-breadcrumb">
-              {breadcrumbParts.map((part, i) => (
-                <React.Fragment key={i}>
-                  {i > 0 && <span className="economy-breadcrumb-sep">›</span>}
-                  {part.onClick ? (
-                    <button className="economy-breadcrumb-link" onClick={part.onClick} type="button">
-                      {part.label}
-                    </button>
-                  ) : (
-                    <span className="economy-breadcrumb-current">{part.label}</span>
+            <nav ref={breadcrumbsRef} className="breadcrumbs" aria-label="Economy chain">
+              {economyChain && economyChain.length > 1 ? (
+                <>
+                  {economyChain.slice(0, Math.max(0, economyChain.length - 1)).map((node, idx) => (
+                    <span key={idx} className="breadcrumb-item-wrapper">
+                      <button
+                        type="button"
+                        className="breadcrumb-item"
+                        onClick={handleBackToStart}
+                      >
+                        {node.isLocation ? (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <LocationImage name={node.name} size={20} />
+                            <span style={{ fontWeight: 600 }}>{node.name}</span>
+                          </div>
+                        ) : (
+                          <ItemDisplay itemName={node.name} itemsData={STATIC_ITEMS_MAP} />
+                        )}
+                      </button>
+                      <span className="breadcrumb-separator">›</span>
+                    </span>
+                  ))}
+                  {economyChain.length > 0 && (
+                    <span className="breadcrumb-item current">
+                      {(() => {
+                        const last = economyChain[economyChain.length - 1]
+                        return last.isLocation ? (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <LocationImage name={last.name} size={20} />
+                            <span style={{ fontWeight: 600 }}>{last.name}</span>
+                          </div>
+                        ) : (
+                          <ItemDisplay itemName={last.name} itemsData={STATIC_ITEMS_MAP} />
+                        )
+                      })()}
+                    </span>
                   )}
-                </React.Fragment>
-              ))}
+                </>
+              ) : (
+                <div className="breadcrumb-mode" aria-label="Mode">
+                  {view === 'craft' ? 'Craft' : view === 'location' ? 'Locations' : 'Economy'}
+                </div>
+              )}
             </nav>
           </div>
           <button className="economy-header-close" onClick={handleExitEconomy} type="button" aria-label="Close economy mode">
@@ -186,7 +211,7 @@ export default function EconomyPlugin() {
           </button>
         </header>
 
-        {/* Основной контент в .economy-stack (копия .stack, но не трогается CSS .main > .stack) */}
+        {/* Основной контент */}
         <div className="economy-stack">
           {view === 'start' && (
             <EconomyStartScreen
@@ -219,12 +244,13 @@ export default function EconomyPlugin() {
             isActive={true}
           />
         )}
-      </>
+      </div>,
+      document.body
     )
   }
 
-  return (
-    <>
+  return createPortal(
+    <div className="economy-container">
       {/* Simple оверлей */}
       {simpleOverlayOpen && (
         <EconomySimpleOverlay
@@ -270,6 +296,7 @@ export default function EconomyPlugin() {
           />
         </>
       )}
-    </>
+    </div>,
+    document.body
   )
 }

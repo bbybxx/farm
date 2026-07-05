@@ -3,15 +3,18 @@
    ============================================ */
 
 /* ------------------------------------------
-   0. Hide main app content when economy is active
+   0a. Economy container — полноэкранная изоляция
    ------------------------------------------ */
-body.economy-active .main > .stack,
-body.economy-active .main > section.controls,
-body.economy-active .main > footer.spacer,
-body.economy-active .main > header:not(.economy-header) {
-  display: none !important;
+.economy-container {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--bg, linear-gradient(135deg, #0b1020, #121a2e));
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 }
-
 
 /* ------------------------------------------
    1. EconomyStartScreen
@@ -375,34 +378,6 @@ body.economy-active .main > header:not(.economy-header) {
   color: #F44336;
 }
 
-/* Breadcrumb */
-.economy-breadcrumb {
-  display: flex;
-  gap: 0.25rem;
-  overflow-x: auto;
-  white-space: nowrap;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.8rem;
-  opacity: 0.7;
-  scrollbar-width: thin;
-}
-
-.economy-breadcrumb-item {
-  cursor: pointer;
-  color: #64B5F6;
-  transition: color 0.2s;
-}
-
-.economy-breadcrumb-item:hover {
-  color: #90CAF9;
-  text-decoration: underline;
-}
-
-.economy-breadcrumb-separator {
-  opacity: 0.4;
-  margin: 0 2px;
-}
-
 /* Expanded craft section */
 .economy-crafts {
   padding: 0.5rem 1rem 1rem;
@@ -596,6 +571,7 @@ body.economy-active .main > header:not(.economy-header) {
   position: sticky;
   top: 0;
   z-index: 50;
+  flex-shrink: 0;
 }
 
 .economy-header-left {
@@ -622,41 +598,7 @@ body.economy-active .main > header:not(.economy-header) {
   opacity: 1;
 }
 
-.economy-header .economy-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.9rem;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.economy-breadcrumb-sep {
-  opacity: 0.4;
-  margin: 0 2px;
-  font-size: 1rem;
-}
-
-.economy-breadcrumb-link {
-  background: none;
-  border: none;
-  color: #64B5F6;
-  cursor: pointer;
-  padding: 0.15rem 0.25rem;
-  font-size: inherit;
-  font-family: inherit;
-  transition: color 0.2s;
-}
-
-.economy-breadcrumb-link:hover {
-  color: #90CAF9;
-  text-decoration: underline;
-}
-
-.economy-breadcrumb-current {
-  opacity: 0.8;
-  font-weight: 500;
-}
+/* Breadcrumbs используют стандартные классы .breadcrumbs, .breadcrumb-item и т.д. из app.css */
 
 .economy-header-close {
   background: none;
@@ -687,22 +629,5 @@ body.economy-active .main > header:not(.economy-header) {
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
-}
-
-/* ------------------------------------------
-   9. EconomyCraftPanel / EconomyLocationPanel
-   ------------------------------------------ */
-.economy-add-chain-btn {
-  background: var(--accent, #4CAF50) !important;
-  color: #fff !important;
-  font-weight: 600 !important;
-  font-size: 0.75rem !important;
-  padding: 2px 8px !important;
-  margin-left: auto !important;
-  flex-shrink: 0 !important;
-  border: none !important;
-}
-
-.economy-add-chain-btn:hover {
-  filter: brightness(1.15);
+  flex: 1;
 }

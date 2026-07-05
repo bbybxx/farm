@@ -1,20 +1,19 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { getCombinedRecipes, findRecipesThatUse } from '../../../utils/recipeUtils'
 import ItemDisplay from '../../../components/ItemDisplay'
 import LocationImage from '../../../components/LocationImage'
-import itemsAPI from '../../../data/items-api.json' with { type: 'json' }
-import { normalizeItemsMap } from '../../../utils/itemImageUtils'
+import { getItemsMap, getRecipes, getUsedItemsSet } from '../utils/economyData'
 
-const STATIC_ITEMS_MAP = normalizeItemsMap(itemsAPI)
+const STATIC_ITEMS_MAP = getItemsMap()
 
 export default function EconomyItemSelectModal({ isOpen, mode, onSelect, onClose }) {
   const [filter, setFilter] = useState('')
   const [quantity, setQuantity] = useState(1)
   const listRef = useRef(null)
 
+  // Ленивый useMemo — вычисляем craftItems только когда модалка открыта
   const craftItems = useMemo(() => {
-    const recipes = getCombinedRecipes()
+    if (!isOpen) return []
+    const recipes = getRecipes()
     const itemsSet = new Set()
 
     // Все крафтовые предметы (у кого есть рецепт)
@@ -33,10 +32,12 @@ export default function EconomyItemSelectModal({ isOpen, mode, onSelect, onClose
     })
 
     // Оставляем только те, что используются в других рецептах
+    // Используем прекомпьютированный Set — O(1) на проверку вместо O(n)
+    const usedSet = getUsedItemsSet()
     return Array.from(itemsSet)
-      .filter(itemName => findRecipesThatUse(itemName).length > 0)
+      .filter(itemName => usedSet.has(itemName))
       .sort()
-  }, [])
+  }, [isOpen])
 
   const locations = useMemo(() => [
     'Forest', 'Small Cave', 'Highland Hills', 'Cane Pole Ridge',
@@ -67,26 +68,20 @@ export default function EconomyItemSelectModal({ isOpen, mode, onSelect, onClose
     if (listRef.current) listRef.current.scrollTop = 0
   }, [filter])
 
+  if (!isOpen) return null
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          className="modal-wrapper"
-          onClick={onClose}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          style={{ zIndex: 9999 }}
-        >
-          <motion.div
-            className="glass item-select-content"
-            role="dialog"
-            aria-modal="true"
-            initial={{ scale: 0.95 }}
-            animate={{ scale: 1 }}
-            exit={{ scale: 0.95 }}
-            onClick={e => e.stopPropagation()}
-          >
+    <div
+      className="modal-wrapper"
+      onClick={onClose}
+      style={{ zIndex: 9999 }}
+    >
+      <div
+        className="glass item-select-content"
+        role="dialog"
+        aria-modal="true"
+        onClick={e => e.stopPropagation()}
+      >
             <div className="item-select-header">
               <h2 className="item-select-title">{title}</h2>
               <div className="item-select-search-wrapper" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -130,9 +125,7 @@ export default function EconomyItemSelectModal({ isOpen, mode, onSelect, onClose
                 ))
               )}
             </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+      </div>
+    </div>
   )
 }

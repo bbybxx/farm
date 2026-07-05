@@ -1,6 +1,50 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { loadFromStorage, saveToStorage } from '../../../utils/storage'
 import { parseItemPrices } from '../utils/parsePriceString'
+
+/**
+ * Batched localStorage persistence.
+ * Instead of 9 separate useEffect + saveToStorage calls,
+ * we batch all state into one object and write it via requestIdleCallback.
+ */
+function useBatchedStorage(states) {
+  const prevRef = useRef(null)
+  const timerRef = useRef(null)
+
+  useEffect(() => {
+    const current = {}
+    for (const [key, value] of Object.entries(states)) {
+      current[key] = value
+    }
+
+    // Skip if nothing changed
+    const prev = prevRef.current
+    if (prev) {
+      let changed = false
+      for (const key of Object.keys(current)) {
+        if (prev[key] !== current[key]) { changed = true; break }
+      }
+      if (!changed) return
+    }
+    prevRef.current = current
+
+    // Debounce + batch via requestIdleCallback
+    if (timerRef.current) clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(() => {
+      if (typeof requestIdleCallback === 'function') {
+        requestIdleCallback(() => {
+          for (const [key, value] of Object.entries(current)) {
+            saveToStorage(key, value)
+          }
+        }, { timeout: 500 })
+      } else {
+        for (const [key, value] of Object.entries(current)) {
+          saveToStorage(key, value)
+        }
+      }
+    }, 300)
+  }, [states])
+}
 
 export function useEconomy() {
   const [economyEnabled, setEconomyEnabledState] = useState(() => loadFromStorage('economy_enabled', false))
@@ -15,38 +59,17 @@ export function useEconomy() {
   const [advancedTabOpen, setAdvancedTabOpen] = useState(false)
   const [isPriceConfigOpen, setIsPriceConfigOpen] = useState(false)
 
-  // Persist each state to localStorage
-  useEffect(() => {
-    saveToStorage('economy_enabled', economyEnabled)
-  }, [economyEnabled])
-
-  useEffect(() => {
-    saveToStorage('economy_chain', economyChain)
-  }, [economyChain])
-
-  useEffect(() => {
-    saveToStorage('economy_prices', prices)
-  }, [prices])
-
-  useEffect(() => {
-    saveToStorage('economy_currency', currency)
-  }, [currency])
-
-  useEffect(() => {
-    saveToStorage('economy_exchangeRates', exchangeRates)
-  }, [exchangeRates])
-
-  useEffect(() => {
-    saveToStorage('economy_advancedState', advancedState)
-  }, [advancedState])
-
-  useEffect(() => {
-    saveToStorage('economy_manualAdditions', manualAdditions)
-  }, [manualAdditions])
-
-  useEffect(() => {
-    saveToStorage('economy_priceRefreshable', priceRefreshable)
-  }, [priceRefreshable])
+  // Batched localStorage persistence — replaces 9 separate useEffect
+  useBatchedStorage({
+    economy_enabled: economyEnabled,
+    economy_chain: economyChain,
+    economy_prices: prices,
+    economy_currency: currency,
+    economy_exchangeRates: exchangeRates,
+    economy_advancedState: advancedState,
+    economy_manualAdditions: manualAdditions,
+    economy_priceRefreshable: priceRefreshable,
+  })
 
   // Wrapped setters
   const setEconomyEnabled = useCallback((bool) => {

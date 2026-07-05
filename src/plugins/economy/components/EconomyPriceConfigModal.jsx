@@ -13,38 +13,44 @@
  */
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import ItemDisplay from '../../../components/ItemDisplay'
-import itemsAPI from '../../../data/items-api.json' with { type: 'json' }
-import { normalizeItemsMap } from '../../../utils/itemImageUtils'
 import { formatNumberRounded } from '../../../utils/formatters'
 import { parseItemPrices } from '../utils/parsePriceString'
-import communityPrices from '../../../../prices.json'
+import { getItemsMap } from '../utils/economyData'
 
-const STATIC_ITEMS_MAP = normalizeItemsMap(itemsAPI)
+const STATIC_ITEMS_MAP = getItemsMap()
 
-/**
- * Парсит prices.json в плоский объект { "Item Name": { gold: {value, divisor}, ap: ..., oj: ... } }
- * Пропускает PC-предметы.
- */
-function parseCommunityPrices() {
+// Lazy-loaded builtin prices — parsed once on first access
+let _builtinPrices = null
+let _builtinItemNames = null
+
+async function ensureBuiltinPrices() {
+  if (_builtinPrices) return
+  const communityPrices = await import('../../../../prices.json')
   const result = {}
-  if (!communityPrices?.items) return result
-  for (const item of communityPrices.items) {
-    if (item.PC) continue
-    // Убираем суффикс вида " (<i>meal</i>)" целиком, чтобы имена совпадали с items-api.json
-    const name = item.name.replace(/\s*\(<i>[^<]*<\/i>\)/g, '').trim()
-    result[name] = parseItemPrices(item)
+  if (communityPrices.default?.items) {
+    for (const item of communityPrices.default.items) {
+      if (item.PC) continue
+      const name = item.name.replace(/\s*\(<i>[^<]*<\/i>\)/g, '').trim()
+      result[name] = parseItemPrices(item)
+    }
   }
-  return result
+  _builtinPrices = result
+  _builtinItemNames = Object.keys(result).sort((a, b) => a.localeCompare(b))
 }
 
-const BUILTIN_PRICES = parseCommunityPrices()
-const BUILTIN_ITEM_NAMES = Object.keys(BUILTIN_PRICES).sort((a, b) => a.localeCompare(b))
+function getBuiltinPrices() {
+  return _builtinPrices || {}
+}
+
+function getBuiltinItemNames() {
+  return _builtinItemNames || []
+}
 
 /**
  * Проверяет, есть ли у предмета хотя бы одна цена с divisor === 1000 (/k).
  */
 function hasKPrice(itemName) {
-  const p = BUILTIN_PRICES[itemName]
+  const p = getBuiltinPrices()[itemName]
   if (!p) return false
   return (p.gold?.divisor === 1000) || (p.ap?.divisor === 1000) || (p.oj?.divisor === 1000)
 }
@@ -87,7 +93,15 @@ export default function EconomyPriceConfigModal({
   const [search, setSearch] = useState('')
   const [editingCell, setEditingCell] = useState(null)
   const [editValue, setEditValue] = useState('')
+  const [pricesLoaded, setPricesLoaded] = useState(false)
   const inputRef = useRef(null)
+
+  // Lazy-load prices.json when modal opens
+  useEffect(() => {
+    if (isOpen && !pricesLoaded) {
+      ensureBuiltinPrices().then(() => setPricesLoaded(true))
+    }
+  }, [isOpen, pricesLoaded])
 
   useEffect(() => {
     if (editingCell && inputRef.current) {
@@ -98,9 +112,10 @@ export default function EconomyPriceConfigModal({
 
   // Фильтр по поиску
   const filteredItems = useMemo(() => {
-    if (!search.trim()) return BUILTIN_ITEM_NAMES
+    const names = getBuiltinItemNames()
+    if (!search.trim()) return names
     const q = stripDoubleParens(search.trim().toLowerCase())
-    return BUILTIN_ITEM_NAMES.filter(name => name.toLowerCase().includes(q))
+    return names.filter(name => name.toLowerCase().includes(q))
   }, [search])
 
   const pricedCount = useMemo(() => {

@@ -1,5 +1,5 @@
 import { devLog } from '../utils/devLog'
-import React, { useCallback, useEffect, useMemo, useState, useRef, useDeferredValue } from 'react'
+import React, { useCallback, useEffect, useMemo, useState, useRef, useDeferredValue, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { calculateAllResources, getResourceSaverPercent } from '../utils/calculator'
 import { getCombinedRecipes, findRecipesThatUse } from '../utils/recipeUtils'
@@ -45,7 +45,7 @@ import ClearDataModals from '../components/ClearDataModals.jsx'
 import FolderConfigModal from '../components/FolderConfigModal.jsx'
 import QuickPinModal from '../components/QuickPinModal.jsx'
 import PluginsRenderer from '../plugins'
-import EconomyPlugin from '../plugins/economy/EconomyPlugin'
+const EconomyPlugin = React.lazy(() => import('../plugins/economy/EconomyPlugin'))
 
 const STATIC_ITEMS_MAP = normalizeItemsMap(itemsAPI)
 
@@ -1183,7 +1183,9 @@ export default function App() {
 
       <div className="main">
         {economyEnabled ? (
-          <EconomyPlugin />
+          <Suspense fallback={<div className="glass card" style={{ padding: '1rem', textAlign: 'center', opacity: 0.6 }}>Loading Economy...</div>}>
+            <EconomyPlugin />
+          </Suspense>
         ) : (
           <>
         <AppHeader

@@ -1,22 +1,23 @@
-import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react'
+import React, { useState, useMemo, useCallback, useRef, useEffect, lazy, Suspense } from 'react'
 import { useEconomyContext } from './EconomyContext'
 import { useActivePerks } from './hooks/useActivePerks'
-import { getCombinedRecipes, findRecipesThatUse } from '../../utils/recipeUtils'
 import { getItemLocations } from '../../utils/exploringUtils'
 import { calculateAllResources, getResourceSaverPercent } from '../../utils/calculator'
 import { APPLE_CIDER_REAL_DROP_RATES } from '../../data/apple-cider-real-drop-rates'
 import { computePinnedEstimate } from '../../utils/exploringUtils'
 import ItemDisplay from '../../components/ItemDisplay'
 import LocationImage from '../../components/LocationImage'
-import itemsAPI from '../../data/items-api.json' with { type: 'json' }
-import { normalizeItemsMap } from '../../utils/itemImageUtils'
 import { formatNumberRounded, roundToTwo } from '../../utils/formatters'
+import { getItemsMap, getRecipes, getUsedItemsSet } from './utils/economyData'
 import EconomyItemSelectModal from './components/EconomyItemSelectModal'
 import EconomyAppHeader from './components/EconomyAppHeader'
-import EconomyAdvancedView from './components/EconomyAdvancedView'
 import './styles/economy.css'
 
-const STATIC_ITEMS_MAP = normalizeItemsMap(itemsAPI)
+// Lazy-load EconomyAdvancedView — only loaded when user enters Advanced mode
+const LazyEconomyAdvancedView = lazy(() => import('./components/EconomyAdvancedView'))
+
+const STATIC_ITEMS_MAP = getItemsMap()
+const combinedRecipesSingleton = getRecipes()
 
 // ---------- helpers (копия из App.jsx) ----------
 
@@ -173,7 +174,8 @@ export default function EconomyPlugin() {
   const [craftChain, setCraftChain] = useState([])
   const breadcrumbsRef = useRef(null)
 
-  const combinedRecipes = useMemo(() => getCombinedRecipes(), [])
+  // Используем синглтон из economyData — вычисляется 1 раз при первом обращении
+  const combinedRecipes = combinedRecipesSingleton
 
   // --- Полный пересчёт цепочки при изменении перков или exploringMode ---
   // Пересчитываем все узлы цепочки от корня
@@ -250,14 +252,17 @@ export default function EconomyPlugin() {
     return recipe && (recipe.из || recipe.ingredients)
   }, [combinedRecipes])
 
+  // Прекомпьютированный Set предметов, используемых как ингредиенты
+  const usedItemsSet = useMemo(() => getUsedItemsSet(), [])
+
   const hasItemContent = useCallback((itemName) => {
     if (isCraftable(itemName)) return true
-    const usedIn = findRecipesThatUse(itemName) || []
-    if (usedIn.length > 0) return true
+    // O(1) проверка через прекомпьютированный Set вместо O(n) findRecipesThatUse
+    if (usedItemsSet.has(itemName)) return true
     const locations = getItemLocations(itemName) || []
     if (locations.length > 0) return true
     return false
-  }, [isCraftable])
+  }, [isCraftable, usedItemsSet])
 
   const navigateToItem = useCallback((itemName, quantity) => {
     if (!hasItemContent(itemName)) return
@@ -344,6 +349,11 @@ export default function EconomyPlugin() {
     }
   }
 
+  // --- Колбэк для крафта из leftovers (добавляет ноду в цепочку) ---
+  const handleCraftFromLeftover = useCallback((itemName, quantity) => {
+    setCraftChain(prev => [...prev, { name: itemName, amount: quantity, editable: false }])
+  }, [setCraftChain])
+
   // --- getLocationDrops — колбэк для получения всех дропов локации ---
   const getLocationDrops = useCallback((locationName, budget) => {
     if (!locationName || !budget || budget <= 0) return []
@@ -366,10 +376,11 @@ export default function EconomyPlugin() {
   const isCurrentEditable = recalculatedChain.length <= 1 ||
     (recalculatedChain[recalculatedChain.length - 1]?.editable !== false)
 
-  if (!economyEnabled) return null
-
+  // Не размонтируем компонент при выключении — скрываем через CSS.
+  // Это сохраняет состояние (selectedItem, amount, craftChain, view) в памяти,
+  // и при повторном включении не происходит пересоздания всех useMemo/useEffect.
   return (
-    <div className="economy-plugin">
+    <div className="economy-plugin" style={{ display: economyEnabled ? '' : 'none' }}>
       <EconomyAppHeader
         headerVisible={true}
         isCaching={false}
@@ -476,22 +487,25 @@ export default function EconomyPlugin() {
         </>
       )}
 
-      {/* Advanced mode — экономический расчёт */}
+      {/* Advanced mode — экономический расчёт (ленивая загрузка) */}
       {view === 'advanced' && (
-        <EconomyAdvancedView
-          chain={recalculatedChain}
-          prices={prices}
-          currency={currency}
-          exchangeRates={exchangeRates}
-          advancedState={advancedState}
-          setAdvancedState={setAdvancedState}
-          manualAdditions={manualAdditions}
-          addManualAddition={addManualAddition}
-          removeManualAddition={removeManualAddition}
-          recipes={combinedRecipes}
-          resourceSaverPercent={getResourceSaverPercent(activePerks || [])}
-          getLocationDrops={getLocationDrops}
-        />
+        <Suspense fallback={<div className="glass card" style={{ padding: '1rem', textAlign: 'center', opacity: 0.6 }}>Loading Advanced...</div>}>
+          <LazyEconomyAdvancedView
+            chain={recalculatedChain}
+            prices={prices}
+            currency={currency}
+            exchangeRates={exchangeRates}
+            advancedState={advancedState}
+            setAdvancedState={setAdvancedState}
+            manualAdditions={manualAdditions}
+            addManualAddition={addManualAddition}
+            removeManualAddition={removeManualAddition}
+            recipes={combinedRecipes}
+            resourceSaverPercent={getResourceSaverPercent(activePerks || [])}
+            getLocationDrops={getLocationDrops}
+            onCraftFromLeftover={handleCraftFromLeftover}
+          />
+        </Suspense>
       )}
 
       {/* Location mode — controls + drops */}

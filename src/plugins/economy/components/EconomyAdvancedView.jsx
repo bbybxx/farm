@@ -5,10 +5,9 @@
  */
 import React, { useMemo, useCallback, useState } from 'react'
 import ItemDisplay from '../../../components/ItemDisplay'
-import itemsAPI from '../../../data/items-api.json' with { type: 'json' }
-import { normalizeItemsMap } from '../../../utils/itemImageUtils'
 import { formatNumberRounded } from '../../../utils/formatters'
 import { findRecipesThatUse } from '../../../utils/recipeUtils'
+import { getItemsMap } from '../utils/economyData'
 import {
   calculateCost,
   calculateRevenue,
@@ -20,10 +19,10 @@ import {
   mergeManualAdditions,
 } from '../utils/economyCalculator'
 
-const STATIC_ITEMS_MAP = normalizeItemsMap(itemsAPI)
+const STATIC_ITEMS_MAP = getItemsMap()
 
 // Все предметы из itemsAPI для поиска в Add
-const ALL_ITEMS = Object.keys(itemsAPI).sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }))
+const ALL_ITEMS = Object.keys(STATIC_ITEMS_MAP).sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }))
 
 /**
  * @param {Object} props
@@ -40,6 +39,8 @@ const ALL_ITEMS = Object.keys(itemsAPI).sort((a, b) => a.localeCompare(b, 'en', 
  * @param {number} props.resourceSaverPercent — процент экономии ресурсов (0..1)
  * @param {(locationName: string, budget: number) => Array<{name: string, amount: number}>} [props.getLocationDrops]
  *        колбэк для получения всех дропов локации с estimated amounts
+ * @param {(itemName: string, quantity: number) => void} [props.onCraftFromLeftover]
+ *        колбэк для добавления крафта из leftovers в цепочку (chain)
  */
 export default function EconomyAdvancedView({
   chain = [],
@@ -54,6 +55,7 @@ export default function EconomyAdvancedView({
   recipes = {},
   resourceSaverPercent = 0,
   getLocationDrops,
+  onCraftFromLeftover,
 }) {
   // Состояние для раскрытых Used In (по имени предмета)
   const [expandedItems, setExpandedItems] = useState(new Set())
@@ -70,15 +72,30 @@ export default function EconomyAdvancedView({
   // isTradableFn — пока все предметы считаем торгуемыми
   const isTradableFn = useCallback(() => true, [])
 
-  // --- Расчёт реальных остатков ---
-  const { leftovers, deficit } = useMemo(() => {
-    return computeActualLeftovers(chain, recipes, prices, isTradableFn, resourceSaverPercent, getLocationDrops)
-  }, [chain, recipes, prices, isTradableFn, resourceSaverPercent, getLocationDrops])
+  // --- Мерджим advancedState в цепочку для расчётов ---
+  // Крафты из advancedState добавляются как дополнительные ноды в chain,
+  // чтобы leftovers, spent, C/R/P учитывали их
+  const extendedChain = useMemo(() => {
+    if (!advancedState || advancedState.length === 0) return chain
+    const extraNodes = []
+    for (const entry of advancedState) {
+      for (const craft of entry.crafts) {
+        extraNodes.push({ name: entry.itemName, amount: craft.quantity, fixed: true })
+      }
+    }
+    if (extraNodes.length === 0) return chain
+    return [...chain, ...extraNodes]
+  }, [chain, advancedState])
 
-  // --- Таблица трат по крафтам ---
+  // --- Расчёт реальных остатков (на расширенной цепочке) ---
+  const { leftovers, deficit } = useMemo(() => {
+    return computeActualLeftovers(extendedChain, recipes, prices, isTradableFn, resourceSaverPercent, getLocationDrops)
+  }, [extendedChain, recipes, prices, isTradableFn, resourceSaverPercent, getLocationDrops])
+
+  // --- Таблица трат по крафтам (на расширенной цепочке) ---
   const spentByCraft = useMemo(() => {
-    return computeSpentByCraft(chain, recipes, resourceSaverPercent)
-  }, [chain, recipes, resourceSaverPercent])
+    return computeSpentByCraft(extendedChain, recipes, resourceSaverPercent)
+  }, [extendedChain, recipes, resourceSaverPercent])
 
   // --- Группировка по цепочкам ---
   const spentChains = useMemo(() => {
@@ -90,13 +107,13 @@ export default function EconomyAdvancedView({
     return mergeManualAdditions(leftovers, manualAdditions, prices)
   }, [leftovers, manualAdditions, prices])
 
-  // --- C/R/P расчёт ---
+  // --- C/R/P расчёт (на расширенной цепочке) ---
   const { cost, revenue, profit } = useMemo(() => {
-    const c = calculateCost(chain, prices)
+    const c = calculateCost(extendedChain, prices)
     const r = calculateRevenue(mergedLeftovers, prices)
     const p = calculateProfit(c, r)
     return { cost: c, revenue: r, profit: p }
-  }, [chain, prices, mergedLeftovers])
+  }, [extendedChain, prices, mergedLeftovers])
 
   // --- Форматирование цены в выбранной валюте ---
   const formatPrice = useCallback((value) => {
@@ -156,28 +173,37 @@ export default function EconomyAdvancedView({
     const recipe = recipes[recipeName]
     if (!recipe) return
 
+    // Определяем имя создаваемого предмета: у рецепта может быть поле amount или output,
+    // но сам предмет — это recipeName (имя рецепта совпадает с именем предмета в FarmRPG)
+    const craftedItemName = recipeName
+
     // Сохраняем крафт в advancedState
     if (setAdvancedState) {
       setAdvancedState(prev => {
-        const existingIndex = prev.findIndex(entry => entry.itemName === recipeName)
+        const existingIndex = prev.findIndex(entry => entry.itemName === craftedItemName)
         if (existingIndex >= 0) {
           const entry = prev[existingIndex]
-          const craftIndex = entry.crafts.findIndex(c => c.recipeName === recipeName)
+          const craftIndex = entry.crafts.findIndex(c => c.recipeName === craftedItemName)
           let newCrafts
           if (craftIndex >= 0) {
             newCrafts = entry.crafts.map((c, i) =>
               i === craftIndex ? { ...c, quantity: (c.quantity || 0) + craftQty } : c
             )
           } else {
-            newCrafts = [...entry.crafts, { recipeName, quantity: craftQty }]
+            newCrafts = [...entry.crafts, { recipeName: craftedItemName, quantity: craftQty }]
           }
           return prev.map((entry, i) =>
             i === existingIndex ? { ...entry, crafts: newCrafts } : entry
           )
         } else {
-          return [...prev, { itemName: recipeName, crafts: [{ recipeName, quantity: craftQty }] }]
+          return [...prev, { itemName: craftedItemName, crafts: [{ recipeName: craftedItemName, quantity: craftQty }] }]
         }
       })
+    }
+
+    // Добавляем крафт в цепочку (chain) через колбэк, чтобы leftovers обновились
+    if (onCraftFromLeftover) {
+      onCraftFromLeftover(craftedItemName, craftQty)
     }
 
     // Сбрасываем инпут
@@ -190,7 +216,7 @@ export default function EconomyAdvancedView({
       }
       return next
     })
-  }, [recipes, setAdvancedState])
+  }, [recipes, setAdvancedState, onCraftFromLeftover])
 
   // --- Добавить manual addition ---
   const handleAddItem = useCallback(() => {

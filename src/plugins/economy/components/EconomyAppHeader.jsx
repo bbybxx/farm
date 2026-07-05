@@ -1,5 +1,4 @@
 import React from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import ItemDisplay from '../../../components/ItemDisplay'
 import LocationImage from '../../../components/LocationImage'
 
@@ -146,53 +145,46 @@ export default function EconomyAppHeader({
           >
             mode
           </button>
-          <AnimatePresence>
-            {modeOpen && (
-              <motion.div className="mode-dropdown glass" style={{ position: 'absolute', right: 0, marginTop: 8, minWidth: 160, zIndex: 9999 }}
-                initial={{ opacity: 0, y: -6, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -6, scale: 0.98 }}
-                transition={{ duration: 0.12 }}
+          {modeOpen && (
+            <div className="mode-dropdown glass" style={{ position: 'absolute', right: 0, marginTop: 8, minWidth: 160, zIndex: 9999 }}>
+              <button
+                className="mode-option"
+                type="button"
+                onClick={() => {
+                  if (setView) setView('craft')
+                  if (setSelectedItem) setSelectedItem(null)
+                  if (setAmount) setAmount(1)
+                  if (setCraftChain) setCraftChain([])
+                  setModeOpen(false)
+                }}
               >
-                <button
-                  className="mode-option"
-                  type="button"
-                  onClick={() => {
-                    if (setView) setView('craft')
-                    if (setSelectedItem) setSelectedItem(null)
-                    if (setAmount) setAmount(1)
-                    if (setCraftChain) setCraftChain([])
-                    setModeOpen(false)
-                  }}
-                >
-                  Craft
-                </button>
-                <button
-                  className="mode-option"
-                  type="button"
-                  onClick={() => {
-                    if (setView) setView('location')
-                    if (setSelectedItem) setSelectedItem(null)
-                    if (setAmount) setAmount(1)
-                    if (setCraftChain) setCraftChain([])
-                    setModeOpen(false)
-                  }}
-                >
-                  Location
-                </button>
-                <button
-                  className="mode-option"
-                  type="button"
-                  onClick={() => {
-                    if (setView) setView('advanced')
-                    setModeOpen(false)
-                  }}
-                >
-                  Advanced
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                Craft
+              </button>
+              <button
+                className="mode-option"
+                type="button"
+                onClick={() => {
+                  if (setView) setView('location')
+                  if (setSelectedItem) setSelectedItem(null)
+                  if (setAmount) setAmount(1)
+                  if (setCraftChain) setCraftChain([])
+                  setModeOpen(false)
+                }}
+              >
+                Location
+              </button>
+              <button
+                className="mode-option"
+                type="button"
+                onClick={() => {
+                  if (setView) setView('advanced')
+                  setModeOpen(false)
+                }}
+              >
+                Advanced
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

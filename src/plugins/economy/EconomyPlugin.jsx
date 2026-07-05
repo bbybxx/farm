@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useState, useMemo, useCallback, useRef } from 'react'
 import { useEconomyContext } from './EconomyContext'
 import { useActivePerks } from './hooks/useActivePerks'
 import { getCombinedRecipes, findRecipesThatUse } from '../../utils/recipeUtils'
@@ -13,6 +13,7 @@ import itemsAPI from '../../data/items-api.json' with { type: 'json' }
 import { normalizeItemsMap } from '../../utils/itemImageUtils'
 import { formatNumberRounded, roundToTwo } from '../../utils/formatters'
 import EconomyItemSelectModal from './components/EconomyItemSelectModal'
+import EconomyAppHeader from './components/EconomyAppHeader'
 import './styles/economy.css'
 
 const STATIC_ITEMS_MAP = normalizeItemsMap(itemsAPI)
@@ -67,7 +68,7 @@ function computeDisplayValue(itemName, budget, location, activePerks, exploringM
  * Рендерится внутри .main, не использует createPortal.
  * Не имеет своего хедера, breadcrumbs, цепочек — только чистая логика.
  */
-export default function EconomyPlugin({ craftChain, setCraftChain }) {
+export default function EconomyPlugin() {
   const { economyEnabled, setEconomyEnabled } = useEconomyContext()
   const { activePerks, exploringMode } = useActivePerks()
 
@@ -81,6 +82,10 @@ export default function EconomyPlugin({ craftChain, setCraftChain }) {
   // Location state
   const [selectedLocation, setSelectedLocation] = useState(null)
   const [locationAmount, setLocationAmount] = useState(1)
+
+  // Breadcrumbs (свой собственный craftChain, не из App.jsx)
+  const [craftChain, setCraftChain] = useState([])
+  const breadcrumbsRef = useRef(null)
 
   const combinedRecipes = useMemo(() => getCombinedRecipes(), [])
 
@@ -167,9 +172,7 @@ export default function EconomyPlugin({ craftChain, setCraftChain }) {
     setSelectedItem(itemName)
     setAmount(quantity)
     setView('craft')
-    if (setCraftChain) {
-      setCraftChain(prev => [...prev, { name: itemName, amount: quantity }])
-    }
+    setCraftChain(prev => [...prev, { name: itemName, amount: quantity }])
   }, [hasItemContent, setCraftChain])
 
   // --- Location logic (копия из App.jsx) ---
@@ -247,6 +250,20 @@ export default function EconomyPlugin({ craftChain, setCraftChain }) {
 
   return (
     <div className="economy-plugin">
+      <EconomyAppHeader
+        headerVisible={true}
+        isCaching={false}
+        cachingProgress={0}
+        isOffline={false}
+        craftChain={craftChain}
+        setCraftChain={setCraftChain}
+        breadcrumbsRef={breadcrumbsRef}
+        setSelectedItem={setSelectedItem}
+        setAmount={setAmount}
+        itemsData={STATIC_ITEMS_MAP}
+        buddyFarmLinksEnabled={false}
+        onExit={() => setEconomyEnabled(false)}
+      />
       <EconomyItemSelectModal
         isOpen={itemSelectMode !== null}
         mode={itemSelectMode}

@@ -1221,13 +1221,11 @@ export default function App() {
           selectedLocation={selectedLocation}
           itemsData={itemsData}
           buddyFarmLinksEnabled={buddyFarmLinksEnabled}
-          economyEnabled={economyEnabled}
-          setEconomyEnabled={setEconomyEnabled}
         />
 
 
         {economyEnabled ? (
-          <EconomyPlugin craftChain={craftChain} setCraftChain={setCraftChain} />
+          <EconomyPlugin />
         ) : (
           <>
         {questsMode ? (

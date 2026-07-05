@@ -35,9 +35,7 @@ export default function AppHeader({
   amount,
   selectedLocation,
   itemsData,
-  buddyFarmLinksEnabled,
-  economyEnabled,
-  setEconomyEnabled
+  buddyFarmLinksEnabled
 }) {
   return (
     <header className={"glass header" + (headerVisible ? '' : ' hidden') + (isCaching ? ' caching' : '')} style={isCaching ? { '--caching-progress': `${cachingProgress}%` } : {}}>
@@ -142,7 +140,7 @@ export default function AppHeader({
           </nav>
         ) : (
           <div className="breadcrumb-mode" aria-label="Mode">
-            {economyEnabled ? 'Economy' : (questsMode ? 'Quests' : (locationsMode ? 'Locations' : 'Crafts'))}
+            {questsMode ? 'Quests' : (locationsMode ? 'Locations' : 'Crafts')}
           </div>
         )}
       </div>
@@ -167,7 +165,7 @@ export default function AppHeader({
                 transition={{ duration: 0.12 }}
               >
                 {/* Crafts — показываем когда не в crafts режиме */}
-                {(questsMode || locationsMode || economyEnabled) && (
+                {(questsMode || locationsMode) && (
                   <button
                     className="mode-option"
                     type="button"
@@ -178,7 +176,6 @@ export default function AppHeader({
                       else setCraftChain([{ name: item, amount: amount }])
                       setQuestsMode(false)
                       setLocationsMode(false)
-                      setEconomyEnabled(false)
                       setModeOpen(false)
                     }}
                   >
@@ -186,7 +183,7 @@ export default function AppHeader({
                   </button>
                 )}
                 {/* Locations — показываем когда не в locations режиме */}
-                {(!locationsMode || economyEnabled) && (
+                {!locationsMode && (
                   <button
                     className="mode-option"
                     type="button"
@@ -197,7 +194,6 @@ export default function AppHeader({
                       else setCraftChain([{ name: selectedLocation || 'Forest', amount: 1, isLocation: true }])
                       setQuestsMode(false)
                       setLocationsMode(true)
-                      setEconomyEnabled(false)
                       setModeOpen(false)
                       if (!selectedLocation) setSelectedLocation('Forest')
                     }}
@@ -206,7 +202,7 @@ export default function AppHeader({
                   </button>
                 )}
                 {/* Quests — показываем когда не в quests режиме */}
-                {(!questsMode || economyEnabled) && (
+                {!questsMode && (
                   <button
                     className="mode-option"
                     type="button"
@@ -217,24 +213,12 @@ export default function AppHeader({
                       else setCraftChain([{ name: 'Quests', amount: 1, isPlaceholder: true }])
                       setQuestsMode(true)
                       setLocationsMode(false)
-                      setEconomyEnabled(false)
                       setModeOpen(false)
                     }}
                   >
                     Quests
                   </button>
                 )}
-                {/* Economy — показываем всегда */}
-                <button
-                  className="mode-option"
-                  type="button"
-                  onClick={() => {
-                    setEconomyEnabled(true)
-                    setModeOpen(false)
-                  }}
-                >
-                  Economy
-                </button>
               </motion.div>
             )}
           </AnimatePresence>

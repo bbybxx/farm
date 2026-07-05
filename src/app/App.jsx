@@ -1228,7 +1228,9 @@ export default function App() {
 
         {economyEnabled ? (
           <EconomyPlugin />
-        ) : questsMode ? (
+        ) : (
+          <>
+        {questsMode ? (
 
 
           <QuestsPanel 
@@ -1567,6 +1569,8 @@ export default function App() {
   <Analytics />
   {/* debug overlay removed */}
         <PluginsRenderer />
+          </>
+        )}
       </div>
     </div>
   )

@@ -142,7 +142,7 @@ export default function AppHeader({
           </nav>
         ) : (
           <div className="breadcrumb-mode" aria-label="Mode">
-            {questsMode ? 'Quests' : (locationsMode ? 'Locations' : 'Crafts')}
+            {economyEnabled ? 'Economy' : (questsMode ? 'Quests' : (locationsMode ? 'Locations' : 'Crafts'))}
           </div>
         )}
       </div>

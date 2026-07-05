@@ -60,7 +60,11 @@ export default function AppHeader({
       )}
       
       <div className="craft-chain" onClick={(e) => e.stopPropagation()}>
-        {craftChain && craftChain.length > 1 ? (
+        {economyEnabled ? (
+          <div className="breadcrumb-mode" aria-label="Mode">
+            Economy
+          </div>
+        ) : craftChain && craftChain.length > 1 ? (
           <nav ref={breadcrumbsRef} className="breadcrumbs" aria-label="Craft chain">
             {craftChain.slice(0, Math.max(0, craftChain.length - 1)).map((node, idx) => {
               const displayName = (typeof node === 'string') ? node : (node && node.name) || ''

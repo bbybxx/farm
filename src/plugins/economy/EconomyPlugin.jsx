@@ -641,8 +641,8 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
       getResourceSaverPercent(activePerks || []),
       exploringMode, staminaSource, cranberryStamina,
       getLocationConfig, wandererPerks,
-      has('Neigh'), has('Sprint Shoes I'), has('Sprint Shoes II'),
-      has('Sprint Shoes III'), has('Cinnamon Sticks'),
+      has('Neigh'), false, false,
+      false, has('Cinnamon Sticks'),
     )
     const c = actualCostResult.cost
     const r = calculateRevenue(mergedLeftovers, prices, exchangeRates)

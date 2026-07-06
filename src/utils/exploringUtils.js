@@ -37,20 +37,15 @@ function parsePerks(activePerks = []) {
   if (has('Wanderer IV')) wandererPerks.push(4)
   return {
     hasCinnamon: has('Cinnamon Sticks'),
-    hasSprintI: has('Sprint Shoes I'),
-    hasSprintII: has('Sprint Shoes II'),
-    hasSprintIII: has('Sprint Shoes III'),
     hasNeigh: has('Neigh'),
-    hasCabbage: has('Cabbage Stew'),
-  hasLemonSqueezer: has('Lemon Squeezer'),
-  // New Runecube-related perk: Eagle Eye (Runecube)
-  hasEagleEyeRunecube: has('Eagle Eye (Runecube)'),
-  // Cockatrice Ether Source - doubles drop rate for specific insects
-  hasCockatriceEtherSource: has('Cockatrice Ether Source'),
-  // Arnold Palmer meals
-  hasLemonSeltzerMeal: has('Lemon Seltzer'),
-  hasQuandaryChowderMeal: has('Quandary Chowder'),
-  hasLemonCreamPieMeal: has('Lemon Cream Pie'),
+    hasLemonSqueezer: has('Lemon Squeezer'),
+    // New Runecube-related perk: Eagle Eye (Runecube)
+    hasEagleEyeRunecube: has('Eagle Eye (Runecube)'),
+    // Cockatrice Ether Source - doubles drop rate for specific insects
+    hasCockatriceEtherSource: has('Cockatrice Ether Source'),
+    // Arnold Palmer meals
+    hasLemonSeltzerMeal: has('Lemon Seltzer'),
+    hasQuandaryChowderMeal: has('Quandary Chowder'),
     wandererPerks
   }
 }
@@ -211,8 +206,8 @@ export function computePinnedEstimate(pinnedItem, quantity, activePerks, explori
   const ee = locCfg.exploringEffectiveness || 0
   // Cinnamon should increase explores (so more drops per cider) but should NOT increase stamina per cider.
   // Compute explores used for drop-scaling with cinnamon (if present), but compute stamina using the non-cinnamon explores
-  const exploresPerCider = AppleCiderCalculator.calculateExplores(ee, perks.hasSprintI, perks.hasSprintII, perks.hasSprintIII, perks.hasCinnamon)
-  const exploresPerCiderForStamina = AppleCiderCalculator.calculateExplores(ee, perks.hasSprintI, perks.hasSprintII, perks.hasSprintIII, false)
+  const exploresPerCider = AppleCiderCalculator.calculateExplores(ee, false, false, false, perks.hasCinnamon)
+  const exploresPerCiderForStamina = AppleCiderCalculator.calculateExplores(ee, false, false, false, false)
   // Scale dropsPerCider by explores scaling factor so Cinnamon / Sprint increase effective drops per cider
   const baseExplores = APPLE_CIDER_DATA.basic.baseExplores || 1010
   const scalingFactor = exploresPerCider / baseExplores
@@ -240,16 +235,13 @@ export function computePinnedEstimate(pinnedItem, quantity, activePerks, explori
       if (itemsPerAPBase && itemsPerAPBase > 0) {
         // Apply Arnold Palmer meals:
         // - Lemon Seltzer (+50%) and Quandary Chowder (+10%) increase items per AP (affect apNeeded)
-        // - Lemon Cream Pie does NOT reduce AP needed; it allows using multiple AP per click (speed)
         let apItemMultiplier = 1
         if (perks.hasLemonSeltzerMeal) apItemMultiplier *= 1.5
         if (perks.hasQuandaryChowderMeal) apItemMultiplier *= 1.10
-        const clickMultiplier = perks.hasLemonCreamPieMeal ? 5 : 1
 
         const itemsPerAP = itemsPerAPBase * apItemMultiplier
         const apNeeded = Math.ceil(quantity / itemsPerAP)
-        const actionsNeeded = Math.ceil(apNeeded / clickMultiplier)
-        const candidateAP = { location: loc.name, itemsPerAP, apNeeded, actionsNeeded, apItemMultiplier, clickMultiplier }
+        const candidateAP = { location: loc.name, itemsPerAP, apNeeded, apItemMultiplier }
         if (!bestAP || apNeeded < bestAP.apNeeded) bestAP = candidateAP
       }
     } catch (e) {

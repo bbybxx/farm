@@ -1020,10 +1020,7 @@ export default function App() {
         'Wanderer I',
         'Wanderer II',
         'Wanderer III',
-        'Wanderer IV',
-        'Sprint Shoes I',
-        'Sprint Shoes II',
-        'Sprint Shoes III'
+        'Wanderer IV'
       ]
     },
     {
@@ -1032,11 +1029,11 @@ export default function App() {
     },
     {
       title: 'Apple Cider Meals',
-      perks: ['Cabbage Stew', 'Neigh']
+      perks: ['Neigh']
     },
     {
       title: 'Arnold Palmer Meals',
-      perks: ['Lemon Cream Pie', 'Lemon Seltzer', 'Quandary Chowder']
+      perks: ['Lemon Seltzer', 'Quandary Chowder']
     }
   ]
 

@@ -354,9 +354,6 @@ export function calculateStaminaCost(stamina, staminaSource, cranberryStamina, p
  *        колбэк для получения конфига локации (exploringEffectiveness)
  * @param {number[]} [wandererPerks] — массив активных Wanderer перков [1,2,3,4]
  * @param {boolean} [hasNeigh] — активен ли Neigh Neigh
- * @param {boolean} [hasSprintI] — активен ли Sprint Shoes I
- * @param {boolean} [hasSprintII] — активен ли Sprint Shoes II
- * @param {boolean} [hasSprintIII] — активен ли Sprint Shoes III
  * @param {boolean} [hasCinnamon] — активен ли Cinnamon Sticks
  * @returns {{ cost: number, breakdown: { exploring: number, stamina: number, silver: number, ciderCost: number, apCost: number } }}
  */
@@ -372,9 +369,6 @@ export function calculateActualCost(
   getLocationConfig,
   wandererPerks = [],
   hasNeigh = false,
-  hasSprintI = false,
-  hasSprintII = false,
-  hasSprintIII = false,
   hasCinnamon = false,
 ) {
   const breakdown = {
@@ -409,9 +403,9 @@ export function calculateActualCost(
       }
 
       // Рассчитываем explores per cider для этой локации
-      const exploresPerCider = AppleCiderCalculator.calculateExplores(ee, hasSprintI, hasSprintII, hasSprintIII, hasCinnamon)
+      const exploresPerCider = AppleCiderCalculator.calculateExplores(ee, false, false, false, hasCinnamon)
       // Стамина на 1 сидр (без Cinnamon — Cinnamon влияет только на дропы, не на стамину)
-      const exploresPerCiderForStamina = AppleCiderCalculator.calculateExplores(ee, hasSprintI, hasSprintII, hasSprintIII, false)
+      const exploresPerCiderForStamina = AppleCiderCalculator.calculateExplores(ee, false, false, false, false)
       const staminaPerCider = AppleCiderCalculator.calculateStamina(exploresPerCiderForStamina, wandererPerks, hasNeigh)
 
       totalStamina += budget * staminaPerCider

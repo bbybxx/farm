@@ -84,17 +84,18 @@ export default function EconomyAdvancedView({
   // --- Мерджим advancedState в цепочку для расчётов ---
   // Крафты из advancedState добавляются как дополнительные ноды в chain,
   // чтобы leftovers, spent, C/R/P учитывали их
+  // ВАЖНО: если advancedState пуст — возвращаем [] (не используем chain из простого режима)
   const extendedChain = useMemo(() => {
-    if (!advancedState || advancedState.length === 0) return chain
+    if (!advancedState || advancedState.length === 0) return []
     const extraNodes = []
     for (const entry of advancedState) {
       for (const craft of entry.crafts) {
         extraNodes.push({ name: entry.itemName, amount: craft.quantity, fixed: true })
       }
     }
-    if (extraNodes.length === 0) return chain
-    return [...chain, ...extraNodes]
+    return extraNodes
   }, [chain, advancedState])
+
 
   // --- Расчёт реальных остатков (на расширенной цепочке) ---
   const { leftovers, deficit } = useMemo(() => {
@@ -351,10 +352,15 @@ export default function EconomyAdvancedView({
       {/* Список остатков */}
       <section className="glass card">
           <h2>Leftovers {mergedLeftovers.length > 0 && `(${mergedLeftovers.length})`}</h2>
-        {mergedLeftovers.length === 0 ? (
+        {mergedLeftovers.length === 0 && (!advancedState || advancedState.length === 0) ? (
+          <div className="empty-state" style={{ padding: '12px 16px', color: '#9aa' }}>
+            Use the gold button to send data to Advanced, or add items manually via + Add.
+          </div>
+        ) : mergedLeftovers.length === 0 ? (
           <div className="empty-state" style={{ padding: '12px 16px', color: '#9aa' }}>
             No items in chain yet. Use Craft or Location mode to build a chain.
           </div>
+
         ) : (
           <ul className="list">
             {mergedLeftovers.map((item) => {

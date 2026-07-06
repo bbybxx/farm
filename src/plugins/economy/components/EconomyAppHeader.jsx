@@ -168,13 +168,18 @@ export default function EconomyAppHeader({
           <button
             className="chip"
             type="button"
-            onClick={() => { if (onClearAdvanced) onClearAdvanced() }}
+            onClick={() => {
+              if (onClearAdvanced) onClearAdvanced()
+              // После очистки advanced возвращаемся в craft-режим
+              if (setView) setView('craft')
+            }}
             style={{ color: '#ff6b6b' }}
             title="Clear advanced state"
           >
             clear
           </button>
         )}
+
         <div style={{ position: 'relative' }} ref={modeRef}>
           <button
             className="chip"

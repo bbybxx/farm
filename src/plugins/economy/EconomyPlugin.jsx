@@ -479,11 +479,17 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
   const advancedCRP = useMemo(() => {
     if (view !== 'advanced') return null
 
+    // Если advancedState пуст И manualAdditions пуст — ничего не показываем
+    if ((!advancedState || advancedState.length === 0) && (!manualAdditions || manualAdditions.length === 0)) {
+      return null
+    }
+
     // Если advancedState не пуст — используем ТОЛЬКО его, игнорируем recalculatedChain
     // recalculatedChain содержит craft-данные из простого режима, которые не должны
     // примешиваться к advanced-расчёту
     const extendedChain = (() => {
-      if (!advancedState || advancedState.length === 0) return recalculatedChain
+      if (!advancedState || advancedState.length === 0) return []
+
       const nodes = []
       for (const entry of advancedState) {
         for (const craft of entry.crafts) {

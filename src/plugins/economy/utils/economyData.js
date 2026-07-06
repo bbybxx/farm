@@ -10,7 +10,7 @@ import itemsAPI from '../../../data/items-api.json' with { type: 'json' }
 import { normalizeItemsMap } from '../../../utils/itemImageUtils'
 import { getCombinedRecipes } from '../../../utils/recipeUtils'
 import communityPrices from '../../../../prices.json'
-import { parseItemPrices } from './parsePriceString'
+import { parseItemPrices, parsePriceString } from './parsePriceString'
 
 let cache = null
 
@@ -73,8 +73,27 @@ function ensureBuiltinPrices() {
   if (communityPrices?.items) {
     for (const item of communityPrices.items) {
       if (item.PC) continue
-      const name = item.name.replace(/<[^>]*>/g, '').trim()
-      result[name] = parseItemPrices(item)
+      // Удаляем всю конструкцию (<i>meal</i>) целиком, а не только HTML-теги
+      const name = item.name.replace(/\s*\(<i>meal<\/i>\)\s*/g, '').trim()
+      const parsed = parseItemPrices(item)
+
+      // Для крафтовых meal-предметов: если цена не содержит /k, /100 или [100], добавляем [100]
+      // Дроповые meals (Acorn Pie, Crunchy Omelette, Fish and Chips) — цена за 1, [100] не добавляем
+      if (item.name.includes('<i>meal</i>') && name in getRecipes()) {
+        for (const currency of ['gold', 'ap', 'oj']) {
+          const raw = item[currency]
+          if (raw && typeof raw === 'string' && raw.trim()) {
+            const lower = raw.toLowerCase()
+            if (!lower.includes('/k') && !lower.includes('/100') && !lower.includes('[100]')) {
+              // Перепарсиваем с добавленным [100]
+              const newRaw = raw.trim() + ' [100]'
+              parsed[currency] = parsePriceString(newRaw)
+            }
+          }
+        }
+      }
+
+      result[name] = parsed
     }
   }
   _builtinPrices = result

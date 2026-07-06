@@ -35,6 +35,15 @@ function hasKPrice(itemName) {
 }
 
 /**
+ * Проверяет, есть ли у предмета хотя бы одна цена с divisor === 100 (/100).
+ */
+function hasHundredPrice(itemName) {
+  const p = getBuiltinPrices()[itemName]
+  if (!p) return false
+  return (p.gold?.divisor === 100) || (p.ap?.divisor === 100) || (p.oj?.divisor === 100)
+}
+
+/**
  * Убирает двойные скобки ((...)) из строки, если они есть.
  * Если строка начинается с (( и заканчивается на )), возвращает содержимое внутри.
  * Иначе возвращает исходную строку.
@@ -177,11 +186,11 @@ export default function EconomyPriceConfigModal({
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                <th style={{ textAlign: 'left', padding: '4px 6px', fontWeight: 600, opacity: 0.7 }}>Item</th>
-                <th style={{ textAlign: 'right', padding: '4px 6px', fontWeight: 600, opacity: 0.7, width: 80 }}>Gold</th>
-                <th style={{ textAlign: 'right', padding: '4px 6px', fontWeight: 600, opacity: 0.7, width: 80 }}>Arnold Palmer (AP)</th>
-                <th style={{ textAlign: 'right', padding: '4px 6px', fontWeight: 600, opacity: 0.7, width: 80 }}>Orange Juice (OJ)</th>
-                <th style={{ textAlign: 'center', padding: '4px 6px', fontWeight: 600, opacity: 0.7, width: 60 }}>Auto</th>
+                <th style={{ textAlign: 'left', padding: '2px 4px', fontWeight: 600, opacity: 0.7 }}>Item</th>
+                <th style={{ textAlign: 'right', padding: '2px 4px', fontWeight: 600, opacity: 0.7, width: 75 }}>Gold</th>
+                <th style={{ textAlign: 'right', padding: '2px 4px', fontWeight: 600, opacity: 0.7, width: 75 }}>Arnold Palmer (AP)</th>
+                <th style={{ textAlign: 'right', padding: '2px 4px', fontWeight: 600, opacity: 0.7, width: 75 }}>Orange Juice (OJ)</th>
+                <th style={{ textAlign: 'center', padding: '2px 4px', fontWeight: 600, opacity: 0.7, width: 50 }}>Auto</th>
               </tr>
             </thead>
             <tbody>
@@ -196,24 +205,27 @@ export default function EconomyPriceConfigModal({
                     onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                   >
-                    <td style={{ padding: '3px 6px', textAlign: 'center' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                    <td style={{ padding: '2px 4px', textAlign: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '1px' }}>
                         <ItemDisplay itemName={itemName} itemsData={STATIC_ITEMS_MAP} showName={false} enableBuddyFarmLinks />
                         {hasKPrice(itemName) && (
                           <span style={{ fontSize: '10px', opacity: 0.5, userSelect: 'none' }}>/k</span>
                         )}
+                        {hasHundredPrice(itemName) && (
+                          <span style={{ fontSize: '10px', opacity: 0.5, userSelect: 'none' }}>/100</span>
+                        )}
                       </div>
                     </td>
-                    <td style={{ padding: '3px 6px', textAlign: 'right' }}>
+                    <td style={{ padding: '2px 4px', textAlign: 'right' }}>
                       {renderCell(itemName, 'gold', itemPrice.gold?.value, editingCell, editValue, startEdit, commitEdit, cancelEdit, handleKeyDown, inputRef, setEditValue)}
                     </td>
-                    <td style={{ padding: '3px 6px', textAlign: 'right' }}>
+                    <td style={{ padding: '2px 4px', textAlign: 'right' }}>
                       {renderCell(itemName, 'ap', itemPrice.ap?.value, editingCell, editValue, startEdit, commitEdit, cancelEdit, handleKeyDown, inputRef, setEditValue)}
                     </td>
-                    <td style={{ padding: '3px 6px', textAlign: 'right' }}>
+                    <td style={{ padding: '2px 4px', textAlign: 'right' }}>
                       {renderCell(itemName, 'oj', itemPrice.oj?.value, editingCell, editValue, startEdit, commitEdit, cancelEdit, handleKeyDown, inputRef, setEditValue)}
                     </td>
-                    <td style={{ padding: '3px 6px', textAlign: 'center' }}>
+                    <td style={{ padding: '2px 4px', textAlign: 'center' }}>
                       <input
                         type="checkbox"
                         checked={isRefreshable}

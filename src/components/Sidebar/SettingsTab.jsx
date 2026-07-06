@@ -143,7 +143,7 @@ export default function SettingsTab({
           Enable Economy Mode
         </label>
         <p className="setting-description">
-          Calculate profit/loss for crafting chains. Chain starts fresh when enabling.
+          Adds Economy mode to the calculator's mode selector. Calculate profit/loss for crafting chains.
         </p>
       </div>
 

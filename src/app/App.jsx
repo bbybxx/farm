@@ -739,10 +739,10 @@ export default function App() {
 
   // Close sidebar when economy mode is enabled
   useEffect(() => {
-    if (economyEnabled) {
+    if (economyMode && economyEnabled) {
       setSidebarOpen(false)
     }
-  }, [economyEnabled])
+  }, [economyMode, economyEnabled])
 
   // Close inline inputs on ESC
   useEffect(() => {
@@ -1204,9 +1204,9 @@ export default function App() {
       </aside>
 
       <div className="main">
-        {economyEnabled ? (
+        {economyMode && economyEnabled ? (
           <Suspense fallback={<div className="glass card" style={{ padding: '1rem', textAlign: 'center', opacity: 0.6 }}>Loading Economy...</div>}>
-            <EconomyPlugin setSidebarOpen={setSidebarOpen} />
+            <EconomyPlugin setSidebarOpen={setSidebarOpen} onExit={() => setEconomyMode(false)} />
           </Suspense>
 
         ) : (
@@ -1244,6 +1244,9 @@ export default function App() {
           selectedLocation={selectedLocation}
           itemsData={itemsData}
           buddyFarmLinksEnabled={buddyFarmLinksEnabled}
+          economyEnabled={economyEnabled}
+          economyMode={economyMode}
+          setEconomyMode={setEconomyMode}
         />
         {questsMode ? (
 

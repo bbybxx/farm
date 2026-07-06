@@ -142,11 +142,10 @@ function recalcChainFromRoot(chain, activePerks, exploringMode, combinedRecipes)
  * Рендерится внутри .main, не использует createPortal.
  * Не имеет своего хедера, breadcrumbs, цепочек — только чистая логика.
  */
-export default function EconomyPlugin({ setSidebarOpen }) {
+export default function EconomyPlugin({ setSidebarOpen, onExit }) {
 
   const {
     economyEnabled,
-    setEconomyEnabled,
     economyChain,
     setEconomyChain,
     prices,
@@ -404,7 +403,7 @@ export default function EconomyPlugin({ setSidebarOpen }) {
         setAmount={setAmount}
         itemsData={STATIC_ITEMS_MAP}
         buddyFarmLinksEnabled={false}
-        onExit={() => setEconomyEnabled(false)}
+        onExit={onExit}
         view={view}
         setView={setView}
         selectedLocation={selectedLocation}

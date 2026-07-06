@@ -1,4 +1,5 @@
 import React from 'react'
+import { createPortal } from 'react-dom'
 import ItemDisplay from '../../../components/ItemDisplay'
 import LocationImage from '../../../components/LocationImage'
 
@@ -26,13 +27,17 @@ export default function EconomyAppHeader({
 }) {
 
   const [modeOpen, setModeOpen] = React.useState(false)
+  const [modePos, setModePos] = React.useState(null) // { top, right, bottom } for fixed positioning
   const modeRef = React.useRef(null)
+  const modeBtnRef = React.useRef(null)
+  const modePortalRef = React.useRef(null)
 
   // Close mode dropdown on outside click or ESC
   React.useEffect(() => {
     function onDoc(e) {
-      if (!modeRef.current) return
-      if (!modeRef.current.contains(e.target)) setModeOpen(false)
+      if (modeRef.current && modeRef.current.contains(e.target)) return
+      if (modePortalRef.current && modePortalRef.current.contains(e.target)) return
+      setModeOpen(false)
     }
     function onKey(e) {
       if (e.key === 'Escape') setModeOpen(false)
@@ -44,6 +49,85 @@ export default function EconomyAppHeader({
       document.removeEventListener('keydown', onKey)
     }
   }, [])
+
+  function handleModeClick() {
+    if (!modeOpen) {
+      const btnRect = modeBtnRef.current.getBoundingClientRect()
+      const spaceBelow = window.innerHeight - btnRect.bottom - 16
+      const estimatedHeight = 240
+      if (spaceBelow < estimatedHeight) {
+        // Open upward
+        setModePos({
+          right: window.innerWidth - btnRect.right + 'px',
+          bottom: (window.innerHeight - btnRect.top + 8) + 'px',
+          maxHeight: Math.max(80, spaceBelow) + 'px',
+          overflowY: 'auto'
+        })
+      } else {
+        // Open downward
+        setModePos({
+          right: window.innerWidth - btnRect.right + 'px',
+          top: (btnRect.bottom + 8) + 'px',
+        })
+      }
+    } else {
+      setModePos(null)
+    }
+    setModeOpen(!modeOpen)
+  }
+
+  const dropdownContent = modeOpen ? (
+    <div ref={modePortalRef} className="mode-dropdown glass" style={{ position: 'fixed', minWidth: '160px', zIndex: 9999, ...modePos }}>
+      <button
+        className="mode-option"
+        type="button"
+        onClick={() => {
+          if (setView) setView('craft')
+          if (setSelectedItem) setSelectedItem(null)
+          if (setAmount) setAmount(1)
+          if (setCraftChain) setCraftChain([])
+          setModeOpen(false)
+        }}
+      >
+        Craft
+      </button>
+      <button
+        className="mode-option"
+        type="button"
+        onClick={() => {
+          if (setView) setView('location')
+          if (setSelectedItem) setSelectedItem(null)
+          if (setAmount) setAmount(1)
+          if (setCraftChain) setCraftChain([])
+          setModeOpen(false)
+        }}
+      >
+        Location
+      </button>
+      <button
+        className="mode-option"
+        type="button"
+        onClick={() => {
+          if (setView) setView('advanced')
+          setModeOpen(false)
+        }}
+      >
+        Advanced
+      </button>
+      <div className="mode-divider" style={{ height: 1, background: 'rgba(255,255,255,0.1)', margin: '4px 0' }} />
+      <button
+        className="mode-option"
+        type="button"
+        onClick={() => {
+          if (onExit) onExit()
+          setModeOpen(false)
+        }}
+        style={{ color: '#ff6b6b' }}
+      >
+        ✕ Exit Economy
+      </button>
+    </div>
+  ) : null
 
   return (
     <header className={"glass header" + (headerVisible ? '' : ' hidden') + (isCaching ? ' caching' : '')} style={isCaching ? { '--caching-progress': `${cachingProgress}%` } : {}}>
@@ -141,66 +225,15 @@ export default function EconomyAppHeader({
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 'auto', marginRight: 0 }}>
         <div style={{ position: 'relative' }} ref={modeRef}>
           <button
+            ref={modeBtnRef}
             className="chip"
             type="button"
-            onClick={(e) => { e.stopPropagation(); setModeOpen(!modeOpen) }}
+            onClick={(e) => { e.stopPropagation(); handleModeClick() }}
             aria-expanded={modeOpen}
           >
             mode
           </button>
-          {modeOpen && (
-            <div className="mode-dropdown glass" style={{ position: 'absolute', right: 0, marginTop: 8, minWidth: 160, zIndex: 9999 }}>
-              <button
-                className="mode-option"
-                type="button"
-                onClick={() => {
-                  if (setView) setView('craft')
-                  if (setSelectedItem) setSelectedItem(null)
-                  if (setAmount) setAmount(1)
-                  if (setCraftChain) setCraftChain([])
-                  setModeOpen(false)
-                }}
-              >
-                Craft
-              </button>
-              <button
-                className="mode-option"
-                type="button"
-                onClick={() => {
-                  if (setView) setView('location')
-                  if (setSelectedItem) setSelectedItem(null)
-                  if (setAmount) setAmount(1)
-                  if (setCraftChain) setCraftChain([])
-                  setModeOpen(false)
-                }}
-              >
-                Location
-              </button>
-              <button
-                className="mode-option"
-                type="button"
-                onClick={() => {
-                  if (setView) setView('advanced')
-                  setModeOpen(false)
-                }}
-              >
-                Advanced
-              </button>
-              <div className="mode-divider" style={{ height: 1, background: 'rgba(255,255,255,0.1)', margin: '4px 0' }} />
-              <button
-                className="mode-option"
-                type="button"
-                onClick={() => {
-                  if (onExit) onExit()
-                  setModeOpen(false)
-                }}
-                style={{ color: '#ff6b6b' }}
-              >
-                ✕ Exit Economy
-              </button>
-            </div>
-
-          )}
+          {createPortal(dropdownContent, document.body)}
         </div>
       </div>
     </header>

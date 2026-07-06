@@ -35,7 +35,11 @@ export default function AppHeader({
   amount,
   selectedLocation,
   itemsData,
-  buddyFarmLinksEnabled
+  buddyFarmLinksEnabled,
+  // Economy mode props
+  economyEnabled,
+  economyMode,
+  setEconomyMode
 }) {
   return (
     <header className={"glass header" + (headerVisible ? '' : ' hidden') + (isCaching ? ' caching' : '')} style={isCaching ? { '--caching-progress': `${cachingProgress}%` } : {}}>
@@ -217,6 +221,19 @@ export default function AppHeader({
                     }}
                   >
                     Quests
+                  </button>
+                )}
+                {/* Economy — показываем когда economyEnabled включён и не в economy режиме */}
+                {economyEnabled && !economyMode && (
+                  <button
+                    className="mode-option"
+                    type="button"
+                    onClick={() => {
+                      setEconomyMode(true)
+                      setModeOpen(false)
+                    }}
+                  >
+                    💰 Economy
                   </button>
                 )}
               </motion.div>

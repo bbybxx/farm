@@ -650,6 +650,28 @@ select.input option {
   padding-left: 8px;
 }
 
+/* Row layout for quest + item search bars — side by side on wide, stacked on narrow */
+.quest-search-row {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+.quest-search-row .item-select-search-wrapper {
+  flex: 1;
+  padding-left: 0;
+}
+@media (max-width: 899px) {
+  .quest-search-row {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .quest-search-row .item-select-search-wrapper {
+    width: 100%;
+  }
+}
+
 .item-select-header .item-select-search {
   /* ensure the input can scroll internally when text is long */
   white-space: nowrap;

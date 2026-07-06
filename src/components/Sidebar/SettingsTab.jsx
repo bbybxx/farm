@@ -148,18 +148,91 @@ export default function SettingsTab({
       {economyEnabled && (
         <>
           <div className="setting-item">
-            <label className="setting-label">
+            <div className="setting-label" style={{ alignItems: 'center', gap: 12 }}>
               <span style={{ fontWeight: 600 }}>Display Currency</span>
-              <select
-                className="setting-select"
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value)}
-              >
-                <option value="gold">Gold (G)</option>
-                <option value="ap">AP</option>
-                <option value="oj">Orange Juice (OJ)</option>
-              </select>
-            </label>
+              <div className="exploring-chips">
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
+                  className={`chip${currency === 'gold' ? ' active' : ''}`}
+                  onClick={() => setCurrency('gold')}
+                  type="button"
+                >
+                  Gold (G)
+                </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
+                  className={`chip${currency === 'ap' ? ' active' : ''}`}
+                  onClick={() => setCurrency('ap')}
+                  type="button"
+                >
+                  AP
+                </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
+                  className={`chip${currency === 'oj' ? ' active' : ''}`}
+                  onClick={() => setCurrency('oj')}
+                  type="button"
+                >
+                  Orange Juice (OJ)
+                </motion.button>
+              </div>
+            </div>
+          </div>
+
+          {/* Exchange Rates */}
+          <div className="setting-item" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <span style={{ fontWeight: 600, fontSize: '0.85rem', opacity: 0.7 }}>Exchange Rates</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: '0.85rem', whiteSpace: 'nowrap', minWidth: 80 }}>1000 AP =</span>
+              <input
+                className="setting-input"
+                type="number"
+                min={0}
+                step="any"
+                value={exchangeRates.apToGold ?? ''}
+                onChange={e => {
+                  const val = e.target.value === '' ? null : Number(e.target.value)
+                  setExchangeRates({ ...exchangeRates, apToGold: val })
+                }}
+                placeholder="0"
+                style={{ width: 80, textAlign: 'center' }}
+              />
+              <span style={{ fontSize: '0.85rem' }}>G</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: '0.85rem', whiteSpace: 'nowrap', minWidth: 80 }}>1000 OJ =</span>
+              <input
+                className="setting-input"
+                type="number"
+                min={0}
+                step="any"
+                value={exchangeRates.ojToGold ?? ''}
+                onChange={e => {
+                  const val = e.target.value === '' ? null : Number(e.target.value)
+                  setExchangeRates({ ...exchangeRates, ojToGold: val })
+                }}
+                placeholder="0"
+                style={{ width: 80, textAlign: 'center' }}
+              />
+              <span style={{ fontSize: '0.85rem' }}>G</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: '0.85rem', whiteSpace: 'nowrap', minWidth: 80 }}>1000 OJ =</span>
+              <input
+                className="setting-input"
+                type="number"
+                min={0}
+                step="any"
+                value={exchangeRates.ojToAp ?? ''}
+                onChange={e => {
+                  const val = e.target.value === '' ? null : Number(e.target.value)
+                  setExchangeRates({ ...exchangeRates, ojToAp: val })
+                }}
+                placeholder="0"
+                style={{ width: 80, textAlign: 'center' }}
+              />
+              <span style={{ fontSize: '0.85rem' }}>AP</span>
+            </div>
           </div>
 
           <button
@@ -171,6 +244,7 @@ export default function SettingsTab({
           </button>
         </>
       )}
+
 
       <EconomyPriceConfigModal
         isOpen={economyEnabled && isPriceConfigOpen}

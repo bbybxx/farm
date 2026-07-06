@@ -13,11 +13,13 @@ import {
   calculateRevenue,
   calculateProfit,
   getItemPrice,
+  convertPrice,
   computeActualLeftovers,
   computeSpentByCraft,
   groupSpentByChain,
   applyManualAdditions,
 } from '../utils/economyCalculator'
+
 
 const STATIC_ITEMS_MAP = getItemsMap()
 
@@ -108,12 +110,28 @@ export default function EconomyAdvancedView({
   }, [leftovers, deficit, manualAdditions, prices])
 
   // --- C/R/P расчёт (на расширенной цепочке) ---
+  // Всегда считаем в gold, потом конвертируем в выбранную валюту
   const { cost, revenue, profit } = useMemo(() => {
     const c = calculateCost(extendedChain, prices)
     const r = calculateRevenue(mergedLeftovers, prices)
     const p = calculateProfit(c, r)
     return { cost: c, revenue: r, profit: p }
   }, [extendedChain, prices, mergedLeftovers])
+
+  // Конвертируем cost/revenue/profit из gold в выбранную валюту
+  const { costDisplay, revenueDisplay, profitDisplay } = useMemo(() => {
+    if (currency === 'gold') {
+      return { costDisplay: cost, revenueDisplay: revenue, profitDisplay: profit }
+    }
+    const c = convertPrice(cost, 'gold', currency, exchangeRates)
+    const r = convertPrice(revenue, 'gold', currency, exchangeRates)
+    const p = convertPrice(profit, 'gold', currency, exchangeRates)
+    return {
+      costDisplay: c ?? cost,
+      revenueDisplay: r ?? revenue,
+      profitDisplay: p ?? profit,
+    }
+  }, [cost, revenue, profit, currency, exchangeRates])
 
   // --- Форматирование цены в выбранной валюте ---
   const formatPrice = useCallback((value) => {
@@ -130,6 +148,7 @@ export default function EconomyAdvancedView({
   }, [currency, exchangeRates])
 
   const currencySuffix = currency === 'gold' ? 'G' : currency === 'ap' ? 'AP' : 'OJ'
+
 
   // --- Toggle раскрытия Used In ---
   const toggleExpand = useCallback((itemName) => {
@@ -252,22 +271,25 @@ export default function EconomyAdvancedView({
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
             <span style={{ color: '#ff6b6b', fontWeight: 700, fontSize: '1.1rem' }}>C</span>
             <span style={{ color: '#ff6b6b', fontWeight: 600, fontSize: '1.05rem' }}>
-              {formatNumberRounded(Math.round(cost))}
+              {formatNumberRounded(Math.round(costDisplay))}
             </span>
+
             <span style={{ color: '#ff6b6b', fontSize: '0.85rem', opacity: 0.7 }}>{currencySuffix}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
             <span style={{ color: '#e9ecf1', fontWeight: 700, fontSize: '1.1rem' }}>R</span>
             <span style={{ color: '#e9ecf1', fontWeight: 600, fontSize: '1.05rem' }}>
-              {formatNumberRounded(Math.round(revenue))}
+              {formatNumberRounded(Math.round(revenueDisplay))}
             </span>
+
             <span style={{ color: '#e9ecf1', fontSize: '0.85rem', opacity: 0.7 }}>{currencySuffix}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
             <span style={{ color: '#51cf66', fontWeight: 700, fontSize: '1.1rem' }}>P</span>
             <span style={{ color: '#51cf66', fontWeight: 600, fontSize: '1.05rem' }}>
-              {formatNumberRounded(Math.round(profit))}
+              {formatNumberRounded(Math.round(profitDisplay))}
             </span>
+
             <span style={{ color: '#51cf66', fontSize: '0.85rem', opacity: 0.7 }}>{currencySuffix}</span>
           </div>
         </div>

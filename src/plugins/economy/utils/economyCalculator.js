@@ -505,7 +505,80 @@ export function groupSpentByChain(spentByCraft) {
 }
 
 /**
- * Мерджит manualAdditions в массив остатков.
+ * Применяет manualAdditions к остаткам и дефициту.
+ * Сначала покрывает дефицит, остаток идёт в leftovers.
+ *
+ * @param {Array<{name: string, quantity: number, ...}>} leftovers
+ * @param {Array<{name: string, quantity: number, ...}>} deficit
+ * @param {Array<{itemName: string, quantity: number}>} manualAdditions
+ * @param {Object<string, {gold?: {value: number|null, divisor: number}}>} prices
+ * @returns {{ leftovers: Array, deficit: Array }}
+ */
+export function applyManualAdditions(leftovers, deficit, manualAdditions, prices) {
+  // Копируем leftovers в Map
+  const leftoversMap = new Map()
+  for (const item of leftovers) {
+    leftoversMap.set(item.name, { ...item })
+  }
+
+  // Копируем deficit в Map (quantity там отрицательный)
+  const deficitMap = new Map()
+  for (const item of deficit) {
+    deficitMap.set(item.name, { ...item })
+  }
+
+  for (const add of manualAdditions) {
+    const deficitEntry = deficitMap.get(add.itemName)
+
+    if (deficitEntry) {
+      // Есть дефицит — пытаемся покрыть
+      const deficitQty = Math.abs(deficitEntry.quantity)
+      if (add.quantity <= deficitQty) {
+        // Частично покрыли дефицит
+        deficitEntry.quantity += add.quantity // стало менее отрицательным
+        if (deficitEntry.quantity === 0) {
+          deficitMap.delete(add.itemName)
+        }
+      } else {
+        // Полностью покрыли дефицит + остаётся излишек
+        deficitMap.delete(add.itemName)
+        const surplus = add.quantity - deficitQty
+        const existing = leftoversMap.get(add.itemName)
+        if (existing) {
+          existing.quantity += surplus
+        } else {
+          leftoversMap.set(add.itemName, {
+            name: add.itemName,
+            quantity: surplus,
+            price: prices[add.itemName] ?? null,
+            isTradable: true,
+          })
+        }
+      }
+    } else {
+      // Нет дефицита — просто добавляем к leftovers
+      const existing = leftoversMap.get(add.itemName)
+      if (existing) {
+        existing.quantity += add.quantity
+      } else {
+        leftoversMap.set(add.itemName, {
+          name: add.itemName,
+          quantity: add.quantity,
+          price: prices[add.itemName] ?? null,
+          isTradable: true,
+        })
+      }
+    }
+  }
+
+  return {
+    leftovers: Array.from(leftoversMap.values()),
+    deficit: Array.from(deficitMap.values()),
+  }
+}
+
+/**
+ * Мерджит manualAdditions в массив остатков (старая версия, только для совместимости).
  */
 export function mergeManualAdditions(leftovers, manualAdditions, prices) {
   const map = new Map()

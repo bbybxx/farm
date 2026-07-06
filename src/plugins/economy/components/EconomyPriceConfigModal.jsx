@@ -16,19 +16,21 @@ import ItemDisplay from '../../../components/ItemDisplay'
 import { formatNumberRounded } from '../../../utils/formatters'
 import { parseItemPrices } from '../utils/parsePriceString'
 import { getItemsMap } from '../utils/economyData'
+import communityPrices from '../../../../prices.json'
 
 const STATIC_ITEMS_MAP = getItemsMap()
 
-// Lazy-loaded builtin prices — parsed once on first access
+// Builtin prices — parsed synchronously once on module load.
+// prices.json is already in the bundle (SettingsTab imports it),
+// so async import only delays the data and breaks UX.
 let _builtinPrices = null
 let _builtinItemNames = null
 
-async function ensureBuiltinPrices() {
+function ensureBuiltinPrices() {
   if (_builtinPrices) return
-  const communityPrices = await import('../../../../prices.json')
   const result = {}
-  if (communityPrices.default?.items) {
-    for (const item of communityPrices.default.items) {
+  if (communityPrices?.items) {
+    for (const item of communityPrices.items) {
       if (item.PC) continue
       const name = item.name.replace(/\s*\(<i>[^<]*<\/i>\)/g, '').trim()
       result[name] = parseItemPrices(item)
@@ -39,10 +41,12 @@ async function ensureBuiltinPrices() {
 }
 
 function getBuiltinPrices() {
+  if (!_builtinPrices) ensureBuiltinPrices()
   return _builtinPrices || {}
 }
 
 function getBuiltinItemNames() {
+  if (!_builtinItemNames) ensureBuiltinPrices()
   return _builtinItemNames || []
 }
 
@@ -93,15 +97,7 @@ export default function EconomyPriceConfigModal({
   const [search, setSearch] = useState('')
   const [editingCell, setEditingCell] = useState(null)
   const [editValue, setEditValue] = useState('')
-  const [pricesLoaded, setPricesLoaded] = useState(false)
   const inputRef = useRef(null)
-
-  // Lazy-load prices.json when modal opens
-  useEffect(() => {
-    if (isOpen && !pricesLoaded) {
-      ensureBuiltinPrices().then(() => setPricesLoaded(true))
-    }
-  }, [isOpen, pricesLoaded])
 
   useEffect(() => {
     if (editingCell && inputRef.current) {

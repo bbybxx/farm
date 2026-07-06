@@ -16,12 +16,12 @@ import {
   computeActualLeftovers,
   computeSpentByCraft,
   groupSpentByChain,
-  mergeManualAdditions,
+  applyManualAdditions,
 } from '../utils/economyCalculator'
 
 const STATIC_ITEMS_MAP = getItemsMap()
 
-// Все предметы из itemsAPI для поиска в Add
+// Все предметы для автокомплита в Add
 const ALL_ITEMS = Object.keys(STATIC_ITEMS_MAP).sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }))
 
 /**
@@ -102,10 +102,10 @@ export default function EconomyAdvancedView({
     return groupSpentByChain(spentByCraft)
   }, [spentByCraft])
 
-  // --- Мерджим manualAdditions ---
-  const mergedLeftovers = useMemo(() => {
-    return mergeManualAdditions(leftovers, manualAdditions, prices)
-  }, [leftovers, manualAdditions, prices])
+  // --- Применяем manualAdditions к leftovers и deficit ---
+  const { leftovers: mergedLeftovers, deficit: mergedDeficit } = useMemo(() => {
+    return applyManualAdditions(leftovers, deficit, manualAdditions, prices)
+  }, [leftovers, deficit, manualAdditions, prices])
 
   // --- C/R/P расчёт (на расширенной цепочке) ---
   const { cost, revenue, profit } = useMemo(() => {
@@ -218,6 +218,13 @@ export default function EconomyAdvancedView({
     })
   }, [recipes, setAdvancedState, onCraftFromLeftover])
 
+  // --- Фильтр для автокомплита в Add ---
+  const filteredAddItems = useMemo(() => {
+    if (!addItemFilter) return []
+    const lower = addItemFilter.toLowerCase()
+    return ALL_ITEMS.filter(name => name.toLowerCase().includes(lower))
+  }, [addItemFilter])
+
   // --- Добавить manual addition ---
   const handleAddItem = useCallback(() => {
     if (!addItemName || addQuantity <= 0) return
@@ -236,13 +243,6 @@ export default function EconomyAdvancedView({
       removeManualAddition(index)
     }
   }, [removeManualAddition])
-
-  // --- Фильтр для Add модалки ---
-  const filteredAddItems = useMemo(() => {
-    if (!addItemFilter) return ALL_ITEMS.slice(0, 50)
-    const lower = addItemFilter.toLowerCase()
-    return ALL_ITEMS.filter(name => name.toLowerCase().includes(lower))
-  }, [addItemFilter])
 
   return (
     <>
@@ -355,12 +355,12 @@ export default function EconomyAdvancedView({
         </section>
       )}
 
-      {/* Дефицит (если есть) */}
-      {deficit.length > 0 && (
+      {/* Дефицит (если есть) — с учётом manualAdditions */}
+      {mergedDeficit.length > 0 && (
         <section className="glass card" style={{ borderLeft: '3px solid #ff6b6b' }}>
-          <h2 style={{ color: '#ff6b6b' }}>⚠️ Deficit ({deficit.length})</h2>
+          <h2 style={{ color: '#ff6b6b' }}>⚠️ Deficit ({mergedDeficit.length})</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', padding: '8px 0' }}>
-            {deficit.map(item => (
+            {mergedDeficit.map(item => (
               <div key={item.name} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.9rem' }}>
                 <ItemDisplay itemName={item.name} itemsData={STATIC_ITEMS_MAP} />
                 <span style={{ color: '#ff6b6b', fontWeight: 600 }}>
@@ -544,7 +544,7 @@ export default function EconomyAdvancedView({
         )}
       </section>
 
-      {/* Модалка Add Item — с выбором из списка */}
+      {/* Модалка Add Item — с автокомплитом */}
       {showAddModal && (
         <div
           className="modal-wrapper"
@@ -554,15 +554,21 @@ export default function EconomyAdvancedView({
           <div
             className="glass item-select-content"
             onClick={e => e.stopPropagation()}
-            style={{ maxWidth: 450, padding: 20, maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}
+            style={{ maxWidth: 400, padding: 20 }}
           >
             <h2 style={{ margin: '0 0 12px 0' }}>Add Item to Leftovers</h2>
-            <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+            <p style={{ fontSize: '0.85rem', opacity: 0.6, marginBottom: 12 }}>
+              Type to search and select an item from the list below
+            </p>
+            <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
               <input
                 className="calc-input"
                 placeholder="Search items..."
                 value={addItemFilter}
-                onChange={e => setAddItemFilter(e.target.value)}
+                onChange={e => {
+                  setAddItemFilter(e.target.value)
+                  setAddItemName(e.target.value)
+                }}
                 autoFocus
                 style={{ flex: 1, padding: '8px 12px' }}
               />
@@ -585,40 +591,35 @@ export default function EconomyAdvancedView({
                 }}
               />
             </div>
-            <div style={{
-              flex: 1,
-              overflowY: 'auto',
-              maxHeight: '50vh',
-              marginBottom: 12,
-            }}>
-              {filteredAddItems.length === 0 ? (
-                <div style={{ padding: '1rem', textAlign: 'center', opacity: 0.5 }}>No items found</div>
-              ) : (
-                filteredAddItems.map(name => (
+            {/* Выпадающий список автокомплита */}
+            {addItemFilter && filteredAddItems.length > 0 && (
+              <div style={{
+                maxHeight: 250,
+                overflowY: 'auto',
+                marginBottom: 12,
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: 6,
+                background: 'rgba(0,0,0,0.3)',
+              }}>
+                {filteredAddItems.map(name => (
                   <button
                     key={name}
                     type="button"
                     onClick={() => {
                       setAddItemName(name)
-                      // Автоматически добавляем при клике
-                      if (addManualAddition) {
-                        addManualAddition(name, addQuantity)
-                      }
-                      setAddItemFilter('')
-                      setAddQuantity(1)
-                      setShowAddModal(false)
+                      setAddItemFilter(name)
                     }}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
                       gap: 8,
                       width: '100%',
-                      padding: '6px 8px',
+                      padding: '6px 10px',
                       border: 'none',
                       background: addItemName === name ? 'rgba(81, 207, 102, 0.15)' : 'transparent',
                       color: 'inherit',
                       cursor: 'pointer',
-                      borderRadius: 4,
+                      borderRadius: 0,
                       fontSize: '0.9rem',
                       textAlign: 'left',
                     }}
@@ -626,19 +627,34 @@ export default function EconomyAdvancedView({
                     <ItemDisplay itemName={name} itemsData={STATIC_ITEMS_MAP} showName={false} />
                     <span>{name}</span>
                   </button>
-                ))
-              )}
-            </div>
+                ))}
+              </div>
+            )}
+            {addItemFilter && filteredAddItems.length === 0 && (
+              <div style={{ padding: '8px 0', textAlign: 'center', opacity: 0.5, fontSize: '0.85rem', marginBottom: 8 }}>
+                No items found
+              </div>
+            )}
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
               <button
                 type="button"
                 className="chip"
                 onClick={() => {
                   setShowAddModal(false)
+                  setAddItemName('')
                   setAddItemFilter('')
+                  setAddQuantity(1)
                 }}
               >
                 Cancel
+              </button>
+              <button
+                type="button"
+                className="chip"
+                style={{ background: 'rgba(81, 207, 102, 0.2)', color: '#51cf66' }}
+                onClick={handleAddItem}
+              >
+                Add
               </button>
             </div>
           </div>

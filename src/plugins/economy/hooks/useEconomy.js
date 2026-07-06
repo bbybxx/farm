@@ -129,6 +129,10 @@ export function useEconomy() {
     setManualAdditionsState(prev => prev.filter((_, i) => i !== index))
   }, [])
 
+  const clearManualAdditions = useCallback(() => {
+    setManualAdditionsState([])
+  }, [])
+
   const setAdvancedState = useCallback((state) => {
     setAdvancedStateState(state)
   }, [])
@@ -254,6 +258,7 @@ export function useEconomy() {
     manualAdditions,
     addManualAddition,
     removeManualAddition,
+    clearManualAdditions,
     priceRefreshable,
     setPriceRefreshable,
     staminaSource,

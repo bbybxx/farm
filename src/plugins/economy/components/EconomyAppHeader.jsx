@@ -24,6 +24,7 @@ export default function EconomyAppHeader({
   locationAmount,
   setLocationAmount,
   setSidebarOpen,
+  onClearAdvancedState,
 }) {
 
   const [modeOpen, setModeOpen] = React.useState(false)
@@ -86,6 +87,7 @@ export default function EconomyAppHeader({
           if (setSelectedItem) setSelectedItem(null)
           if (setAmount) setAmount(1)
           if (setCraftChain) setCraftChain([])
+          if (onClearAdvancedState) onClearAdvancedState()
           setModeOpen(false)
         }}
       >
@@ -99,6 +101,7 @@ export default function EconomyAppHeader({
           if (setSelectedItem) setSelectedItem(null)
           if (setAmount) setAmount(1)
           if (setCraftChain) setCraftChain([])
+          if (onClearAdvancedState) onClearAdvancedState()
           setModeOpen(false)
         }}
       >

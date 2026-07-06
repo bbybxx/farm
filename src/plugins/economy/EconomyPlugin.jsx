@@ -156,8 +156,10 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
     manualAdditions,
     addManualAddition,
     removeManualAddition,
+    clearManualAdditions,
     staminaSource,
     cranberryStamina,
+    clearEconomyChain,
   } = useEconomyContext()
   const { activePerks, exploringMode } = useActivePerks()
 
@@ -339,6 +341,10 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
     if (setCraftChain) {
       setCraftChain([{ name, amount: qty, editable: true }])
     }
+    // При выборе нового предмета очищаем advancedState и manualAdditions,
+    // чтобы в Advanced режиме не отображались данные от предыдущего выбора
+    setAdvancedState([])
+    clearManualAdditions()
   }
 
   const handleLocationSelect = (name, qty) => {
@@ -349,6 +355,9 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
     if (setCraftChain) {
       setCraftChain([{ name, amount: qty, isLocation: true, savedAmount: qty, editable: true }])
     }
+    // При выборе новой локации очищаем advancedState и manualAdditions
+    setAdvancedState([])
+    clearManualAdditions()
   }
 
   // --- Колбэк для крафта из leftovers (добавляет ноду в цепочку) ---
@@ -411,6 +420,7 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
         locationAmount={locationAmount}
         setLocationAmount={setLocationAmount}
         setSidebarOpen={setSidebarOpen}
+        onClearAdvancedState={() => { setAdvancedState([]); clearManualAdditions() }}
       />
 
       <EconomyItemSelectModal

@@ -33,6 +33,7 @@ export default memo(function QuestsPanel({
   const ITEMS_PER_PAGE = 20
   const [visibleItemCount, setVisibleItemCount] = useState(ITEMS_PER_PAGE)
   const deferredItemSearch = useDeferredValue(itemSearchFilter)
+  const deferredSearchFilter = useDeferredValue(searchFilter)
 
   // Load and transform quests data
   useEffect(() => {
@@ -245,16 +246,16 @@ export default memo(function QuestsPanel({
 
   // Filter questlines by search (only questlines, not individual quests)
   const filteredQuestlines = useMemo(() => {
-    if (!searchFilter.trim()) return questChains
-    const query = searchFilter.toLowerCase()
-    const isAbbrMode = searchFilter === searchFilter.toUpperCase() && searchFilter.length >= 2
+    if (!deferredSearchFilter.trim()) return questChains
+    const query = deferredSearchFilter.toLowerCase()
+    const isAbbrMode = deferredSearchFilter === deferredSearchFilter.toUpperCase() && deferredSearchFilter.length >= 2
     return questChains.filter(chain => {
       const cleanName = chain.name.replace(/<br\s*\/?>/gi, ' ')
       
       if (isAbbrMode) {
         // Abbreviation mode: exact abbreviation match
         const abbr = getAbbreviation(chain.name)
-        if (abbr === searchFilter) return true
+        if (abbr === deferredSearchFilter) return true
         // Exception: if name has 2+ consecutive uppercase letters, also do substring search
         if (hasConsecutiveUppercase(chain.name) && cleanName.toLowerCase().includes(query)) return true
         return false
@@ -263,7 +264,7 @@ export default memo(function QuestsPanel({
       // Normal mode: substring search
       return cleanName.toLowerCase().includes(query)
     })
-  }, [questChains, searchFilter])
+  }, [questChains, deferredSearchFilter])
 
   // Search quests by required item name (uses deferred value to avoid freezes)
   const itemFilteredResults = useMemo(() => {

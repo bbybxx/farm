@@ -1,0 +1,22 @@
+name: Deploy Beta to Vercel
+
+on:
+  push:
+    branches:
+      - experimental/economy-refactor
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Deploy to Vercel (farm-beta)
+        run: |
+          vercel deploy --prod \
+            --token=${{ secrets.VERCEL_TOKEN_FARM_BETA }} \
+            --yes \
+            --name=farm-beta 2>&1

@@ -142,7 +142,8 @@ function recalcChainFromRoot(chain, activePerks, exploringMode, combinedRecipes)
  * Рендерится внутри .main, не использует createPortal.
  * Не имеет своего хедера, breadcrumbs, цепочек — только чистая логика.
  */
-export default function EconomyPlugin() {
+export default function EconomyPlugin({ setSidebarOpen }) {
+
   const {
     economyEnabled,
     setEconomyEnabled,
@@ -156,6 +157,8 @@ export default function EconomyPlugin() {
     manualAdditions,
     addManualAddition,
     removeManualAddition,
+    staminaSource,
+    cranberryStamina,
   } = useEconomyContext()
   const { activePerks, exploringMode } = useActivePerks()
 
@@ -372,7 +375,15 @@ export default function EconomyPlugin() {
     }).filter(d => d.amount > 0)
   }, [activePerks, exploringMode])
 
+  // Close sidebar when item select modal opens
+  useEffect(() => {
+    if (itemSelectMode !== null && setSidebarOpen) {
+      setSidebarOpen(false)
+    }
+  }, [itemSelectMode, setSidebarOpen])
+
   // Определяем, является ли текущий узел редактируемым
+
   const isCurrentEditable = recalculatedChain.length <= 1 ||
     (recalculatedChain[recalculatedChain.length - 1]?.editable !== false)
 
@@ -400,7 +411,9 @@ export default function EconomyPlugin() {
         setSelectedLocation={setSelectedLocation}
         locationAmount={locationAmount}
         setLocationAmount={setLocationAmount}
+        setSidebarOpen={setSidebarOpen}
       />
+
       <EconomyItemSelectModal
         isOpen={itemSelectMode !== null}
         mode={itemSelectMode}
@@ -504,6 +517,10 @@ export default function EconomyPlugin() {
             resourceSaverPercent={getResourceSaverPercent(activePerks || [])}
             getLocationDrops={getLocationDrops}
             onCraftFromLeftover={handleCraftFromLeftover}
+            exploringMode={exploringMode}
+            staminaSource={staminaSource}
+            cranberryStamina={cranberryStamina}
+            activePerks={activePerks}
           />
         </Suspense>
       )}

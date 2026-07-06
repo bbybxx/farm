@@ -8,8 +8,10 @@ import ItemDisplay from '../../../components/ItemDisplay'
 import { formatNumberRounded } from '../../../utils/formatters'
 import { findRecipesThatUse } from '../../../utils/recipeUtils'
 import { getItemsMap } from '../utils/economyData'
+import { getLocationConfig } from '../../../data/location-config.js'
 import {
-  calculateCost,
+  calculateCostWithSaver,
+  calculateActualCost,
   calculateRevenue,
   calculateProfit,
   getItemPrice,
@@ -43,6 +45,10 @@ const ALL_ITEMS = Object.keys(STATIC_ITEMS_MAP).sort((a, b) => a.localeCompare(b
  *        колбэк для получения всех дропов локации с estimated amounts
  * @param {(itemName: string, quantity: number) => void} [props.onCraftFromLeftover]
  *        колбэк для добавления крафта из leftovers в цепочку (chain)
+ * @param {'Apple Cider'|'Arnold Palmer'} [props.exploringMode]
+ * @param {'apple'|'oj'|'cranberry'} [props.staminaSource]
+ * @param {number} [props.cranberryStamina]
+ * @param {string[]} [props.activePerks]
  */
 export default function EconomyAdvancedView({
   chain = [],
@@ -58,6 +64,10 @@ export default function EconomyAdvancedView({
   resourceSaverPercent = 0,
   getLocationDrops,
   onCraftFromLeftover,
+  exploringMode = 'Apple Cider',
+  staminaSource = 'apple',
+  cranberryStamina = 2700000,
+  activePerks = [],
 }) {
   // Состояние для раскрытых Used In (по имени предмета)
   const [expandedItems, setExpandedItems] = useState(new Set())
@@ -111,12 +121,47 @@ export default function EconomyAdvancedView({
 
   // --- C/R/P расчёт (на расширенной цепочке) ---
   // Всегда считаем в gold, потом конвертируем в выбранную валюту
+  //
+  // Cost: используем calculateActualCost — считаем только то, что реально потрачено:
+  // расходники на эксплоринг (AP или Apple Cider + stamina) + серебро на крафты.
+  // Gathered ресурсы считаются бесплатными.
+  // Revenue: считаем от mergedLeftovers (уже с учётом resourceSaverPercent).
   const { cost, revenue, profit } = useMemo(() => {
-    const c = calculateCost(extendedChain, prices, exchangeRates)
+    // Парсим перки для AppleCiderCalculator
+    const normalize = (s = '') => String(s).replace(/\s*\((?!Runecube\b).*?\)\s*/g, '').trim()
+    const has = (name) => activePerks.some(p => normalize(p) === normalize(name))
+    const wandererPerks = []
+    if (has('Wanderer I')) wandererPerks.push(1)
+    if (has('Wanderer II')) wandererPerks.push(2)
+    if (has('Wanderer III')) wandererPerks.push(3)
+    if (has('Wanderer IV')) wandererPerks.push(4)
+
+    const actualCostResult = calculateActualCost(
+      extendedChain,
+      recipes,
+      prices,
+      exchangeRates,
+      resourceSaverPercent,
+      exploringMode,
+      staminaSource,
+      cranberryStamina,
+      getLocationConfig, // импортирован из location-config.js
+      wandererPerks,
+      has('Neigh'),
+      has('Sprint Shoes I'),
+      has('Sprint Shoes II'),
+      has('Sprint Shoes III'),
+      has('Cinnamon Sticks'),
+    )
+    const c = actualCostResult.cost
     const r = calculateRevenue(mergedLeftovers, prices, exchangeRates)
     const p = calculateProfit(c, r)
     return { cost: c, revenue: r, profit: p }
-  }, [extendedChain, prices, mergedLeftovers, exchangeRates])
+  }, [
+    extendedChain, recipes, prices, exchangeRates, resourceSaverPercent,
+    getLocationDrops, mergedLeftovers, exploringMode, staminaSource,
+    cranberryStamina, activePerks,
+  ])
 
   // Конвертируем cost/revenue/profit из gold в выбранную валюту
   const { costDisplay, revenueDisplay, profitDisplay } = useMemo(() => {

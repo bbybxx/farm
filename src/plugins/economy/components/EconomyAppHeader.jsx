@@ -22,7 +22,9 @@ export default function EconomyAppHeader({
   setSelectedLocation,
   locationAmount,
   setLocationAmount,
+  setSidebarOpen,
 }) {
+
   const [modeOpen, setModeOpen] = React.useState(false)
   const modeRef = React.useRef(null)
 
@@ -47,10 +49,11 @@ export default function EconomyAppHeader({
     <header className={"glass header" + (headerVisible ? '' : ' hidden') + (isCaching ? ' caching' : '')} style={isCaching ? { '--caching-progress': `${cachingProgress}%` } : {}}>
       <button
         className="icon menu"
-        onClick={onExit}
-        aria-label="Exit economy mode"
+        onClick={() => { if (setSidebarOpen) setSidebarOpen(true) }}
+        aria-label="Open sidebar"
         type="button"
       >≡</button>
+
       
       {isOffline && (
         <div className="offline-indicator" title="Working offline - all data cached locally">
@@ -183,7 +186,20 @@ export default function EconomyAppHeader({
               >
                 Advanced
               </button>
+              <div className="mode-divider" style={{ height: 1, background: 'rgba(255,255,255,0.1)', margin: '4px 0' }} />
+              <button
+                className="mode-option"
+                type="button"
+                onClick={() => {
+                  if (onExit) onExit()
+                  setModeOpen(false)
+                }}
+                style={{ color: '#ff6b6b' }}
+              >
+                ✕ Exit Economy
+              </button>
             </div>
+
           )}
         </div>
       </div>

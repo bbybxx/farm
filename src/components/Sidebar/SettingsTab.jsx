@@ -46,6 +46,8 @@ export default function SettingsTab({
     prices: economyPrices,
     setPrice,
     priceRefreshable, setPriceRefreshable,
+    staminaSource, setStaminaSource,
+    cranberryStamina, setCranberryStamina,
     applyBuiltinPrices,
     isPriceConfigOpen, setIsPriceConfigOpen
   } = useEconomyContext()
@@ -234,6 +236,71 @@ export default function SettingsTab({
               <span style={{ fontSize: '0.85rem' }}>AP</span>
             </div>
           </div>
+
+          {/* Stamina Source */}
+          <div className="setting-item">
+            <div className="setting-label" style={{ alignItems: 'center', gap: 12 }}>
+              <span style={{ fontWeight: 600 }}>Stamina Source</span>
+              <div className="exploring-chips">
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
+                  className={`chip${staminaSource === 'apple' ? ' active' : ''}`}
+                  onClick={() => setStaminaSource('apple')}
+                  type="button"
+                >
+                  🍎 Apple
+                </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
+                  className={`chip${staminaSource === 'oj' ? ' active' : ''}`}
+                  onClick={() => setStaminaSource('oj')}
+                  type="button"
+                >
+                  🍊 OJ
+                </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
+                  className={`chip${staminaSource === 'cranberry' ? ' active' : ''}`}
+                  onClick={() => setStaminaSource('cranberry')}
+                  type="button"
+                >
+                  Cranberry Juice
+                </motion.button>
+              </div>
+            </div>
+            <p className="setting-description">
+              Source used to calculate stamina cost in economy mode.
+              {staminaSource === 'apple' && ' 1 Apple = 15 stamina'}
+              {staminaSource === 'oj' && ' 1 Orange Juice = 100 stamina'}
+              {staminaSource === 'cranberry' && ' 1 Cranberry Juice = 275g'}
+            </p>
+          </div>
+
+          {/* Cranberry stamina input (only when cranberry selected) */}
+          {staminaSource === 'cranberry' && (
+            <div className="setting-item" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <span style={{ fontWeight: 600, fontSize: '0.85rem', opacity: 0.7 }}>Cranberry Juice Stamina</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <input
+                  className="setting-input"
+                  type="number"
+                  min={1}
+                  step="any"
+                  value={cranberryStamina}
+                  onChange={e => {
+                    const val = e.target.value === '' ? 2700000 : Number(e.target.value)
+                    if (val > 0) setCranberryStamina(val)
+                  }}
+                  placeholder="2700000"
+                  style={{ width: 120, textAlign: 'center' }}
+                />
+                <span style={{ fontSize: '0.85rem', opacity: 0.6 }}>stamina per juice</span>
+              </div>
+              <p className="setting-description">
+                How much stamina one Cranberry Juice restores. Default: 2,700,000
+              </p>
+            </div>
+          )}
 
           <button
             className="chip wide"

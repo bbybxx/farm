@@ -8,9 +8,10 @@
  */
 
 import { getPerUnitPrice } from './parsePriceString'
+import { AppleCiderCalculator } from '../../../data/apple-cider-complete-data.js'
 
 /**
- * Общая стоимость всех ресурсов в цепочке.
+ * Общая стоимость всех ресурсов в цепочке (БЕЗ учёта resourceSaver).
  * @param {Array<{name: string, amount: number, fixed?: boolean}>} chain — economyChain
  * @param {Object<string, {gold?: {value: number|null, divisor: number}, ap?: ..., oj?: ...}>} prices — объект цен
  * @param {{apToGold?: number|null, ojToGold?: number|null, ojToAp?: number|null}} exchangeRates — курсы обмена
@@ -21,6 +22,32 @@ export function calculateCost(chain, prices, exchangeRates = {}) {
     const perUnitGold = getItemPrice(item.name, 'gold', prices, exchangeRates)
     return sum + (perUnitGold ?? 0) * item.amount
   }, 0)
+}
+
+/**
+ * Правильный расчёт стоимости: только то, что реально потрачено на крафт (consumed),
+ * с учётом resourceSaverPercent.
+ * Использует decomposeChain, чтобы отделить gathered/consumed/produced.
+ *
+ * @param {Array<{name: string, amount: number, isLocation?: boolean}>} chain
+ * @param {Object<string, {ingredients?: Object, из?: Object}>} recipes — рецепты для определения крафтов
+ * @param {Object<string, {gold?: {value: number|null, divisor: number}}>} prices
+ * @param {{apToGold?: number|null, ojToGold?: number|null, ojToAp?: number|null}} exchangeRates
+ * @param {number} resourceSaverPercent — процент экономии ресурсов (0..1)
+ * @param {(locationName: string, budget: number) => Array<{name: string, amount: number}>} [getLocationDrops]
+ * @returns {number}
+ */
+export function calculateCostWithSaver(chain, recipes, prices, exchangeRates = {}, resourceSaverPercent = 0, getLocationDrops) {
+  const { consumed } = decomposeChain(chain, recipes, resourceSaverPercent, getLocationDrops)
+
+  let total = 0
+  for (const [name, qty] of Object.entries(consumed)) {
+    const perUnitGold = getItemPrice(name, 'gold', prices, exchangeRates)
+    if (perUnitGold != null) {
+      total += perUnitGold * qty
+    }
+  }
+  return total
 }
 
 /**
@@ -273,8 +300,158 @@ export function runAdvanced(leftovers, advancedState, prices, recipes) {
   }
 }
 
-export function findOptimalPath(chain, prices, recipes, exchangeRates) {
-  return chain
+/**
+ * Рассчитывает стоимость стамины в gold на основе выбранного источника.
+ *
+ * @param {number} stamina — количество стамины
+ * @param {'apple'|'oj'|'cranberry'} staminaSource — источник стамины
+ * @param {number} cranberryStamina — сколько стамины даёт 1 Cranberry Juice (если выбран cranberry)
+ * @param {Object<string, {gold?: {value: number|null, divisor: number}}>} prices
+ * @param {{apToGold?: number|null, ojToGold?: number|null, ojToAp?: number|null}} exchangeRates
+ * @returns {number|null} — стоимость стамины в gold, или null если не удалось рассчитать
+ */
+export function calculateStaminaCost(stamina, staminaSource, cranberryStamina, prices, exchangeRates) {
+  if (!stamina || stamina <= 0) return 0
+
+  switch (staminaSource) {
+    case 'apple': {
+      const applePrice = getItemPrice('Apple', 'gold', prices, exchangeRates)
+      if (applePrice == null) return null
+      // 1 Apple = 15 stamina
+      return (stamina / 15) * applePrice
+    }
+    case 'oj': {
+      const ojPrice = getItemPrice('Orange Juice', 'gold', prices, exchangeRates)
+      if (ojPrice == null) return null
+      // 1 OJ = 100 stamina
+      return (stamina / 100) * ojPrice
+    }
+    case 'cranberry': {
+      if (!cranberryStamina || cranberryStamina <= 0) return null
+      // 1 Cranberry Juice = 275g (фиксированная цена)
+      return (stamina / cranberryStamina) * 275
+    }
+    default:
+      return null
+  }
+}
+
+/**
+ * Рассчитывает реальную стоимость цепочки в advanced-режиме.
+ * В отличие от calculateCostWithSaver, эта функция считает только то,
+ * что реально потрачено: расходники на эксплоринг (AP или Apple Cider + stamina)
+ * и серебро на крафты. Gathered ресурсы считаются бесплатными.
+ *
+ * @param {Array<{name: string, amount: number, isLocation?: boolean}>} chain
+ * @param {Object<string, {ingredients?: Object, из?: Object}>} recipes
+ * @param {Object<string, {gold?: {value: number|null, divisor: number}}>} prices
+ * @param {{apToGold?: number|null, ojToGold?: number|null, ojToAp?: number|null}} exchangeRates
+ * @param {number} resourceSaverPercent — процент экономии ресурсов (0..1)
+ * @param {'Apple Cider'|'Arnold Palmer'} exploringMode
+ * @param {'apple'|'oj'|'cranberry'} staminaSource
+ * @param {number} cranberryStamina
+ * @param {(locationName: string) => { exploringEffectiveness: number, multiplier: number }} [getLocationConfig]
+ *        колбэк для получения конфига локации (exploringEffectiveness)
+ * @param {number[]} [wandererPerks] — массив активных Wanderer перков [1,2,3,4]
+ * @param {boolean} [hasNeigh] — активен ли Neigh Neigh
+ * @param {boolean} [hasSprintI] — активен ли Sprint Shoes I
+ * @param {boolean} [hasSprintII] — активен ли Sprint Shoes II
+ * @param {boolean} [hasSprintIII] — активен ли Sprint Shoes III
+ * @param {boolean} [hasCinnamon] — активен ли Cinnamon Sticks
+ * @returns {{ cost: number, breakdown: { exploring: number, stamina: number, silver: number, ciderCost: number, apCost: number } }}
+ */
+export function calculateActualCost(
+  chain,
+  recipes,
+  prices,
+  exchangeRates = {},
+  resourceSaverPercent = 0,
+  exploringMode = 'Apple Cider',
+  staminaSource = 'apple',
+  cranberryStamina = 2700000,
+  getLocationConfig,
+  wandererPerks = [],
+  hasNeigh = false,
+  hasSprintI = false,
+  hasSprintII = false,
+  hasSprintIII = false,
+  hasCinnamon = false,
+) {
+  const breakdown = {
+    exploring: 0,  // стоимость расходников на эксплоринг (AP или Cider)
+    stamina: 0,    // стоимость стамины (только для Apple Cider)
+    silver: 0,     // серебро, потраченное на крафты
+    ciderCost: 0,  // сколько потрачено на Cider (в gold)
+    apCost: 0,     // сколько потрачено на AP (в gold)
+  }
+
+  if (!chain || chain.length === 0) return { cost: 0, breakdown }
+
+  // Собираем все location nodes
+  let totalBudget = 0
+  let totalStamina = 0
+
+  for (const node of chain) {
+    if (!node.isLocation) continue
+    const budget = Number(node.amount) || 0
+    if (budget <= 0) continue
+
+    totalBudget += budget
+
+    // Если режим Apple Cider — считаем стамину для этой локации
+    if (exploringMode === 'Apple Cider') {
+      let ee = 1
+      if (typeof getLocationConfig === 'function') {
+        const cfg = getLocationConfig(node.name)
+        if (cfg) {
+          ee = cfg.exploringEffectiveness || 1
+        }
+      }
+
+      // Рассчитываем explores per cider для этой локации
+      const exploresPerCider = AppleCiderCalculator.calculateExplores(ee, hasSprintI, hasSprintII, hasSprintIII, hasCinnamon)
+      // Стамина на 1 сидр (без Cinnamon — Cinnamon влияет только на дропы, не на стамину)
+      const exploresPerCiderForStamina = AppleCiderCalculator.calculateExplores(ee, hasSprintI, hasSprintII, hasSprintIII, false)
+      const staminaPerCider = AppleCiderCalculator.calculateStamina(exploresPerCiderForStamina, wandererPerks, hasNeigh)
+
+      totalStamina += budget * staminaPerCider
+    }
+  }
+
+  // Считаем стоимость расходников
+  if (exploringMode === 'Arnold Palmer') {
+    const apPrice = getItemPrice('Arnold Palmer', 'gold', prices, exchangeRates)
+    if (apPrice != null) {
+      breakdown.apCost = totalBudget * apPrice
+      breakdown.exploring = breakdown.apCost
+    }
+  } else if (exploringMode === 'Apple Cider') {
+    const ciderPrice = getItemPrice('Apple Cider', 'gold', prices, exchangeRates)
+    if (ciderPrice != null) {
+      breakdown.ciderCost = totalBudget * ciderPrice
+    }
+    // Стоимость стамины
+    const staminaCost = calculateStaminaCost(totalStamina, staminaSource, cranberryStamina, prices, exchangeRates)
+    if (staminaCost != null) {
+      breakdown.stamina = staminaCost
+    }
+    breakdown.exploring = breakdown.ciderCost + breakdown.stamina
+  }
+
+  // Считаем серебро, потраченное на крафты
+  // Используем decomposeChain чтобы найти все крафты и их серебряные затраты
+  const { consumed } = decomposeChain(chain, recipes, resourceSaverPercent)
+  for (const [itemName, qty] of Object.entries(consumed)) {
+    // Серебро считается только для крафтовых предметов (у которых есть рецепт с Silver)
+    const recipe = recipes[itemName]
+    if (recipe && recipe.Silver) {
+      breakdown.silver += Math.ceil(recipe.Silver * qty)
+    }
+  }
+
+  const totalCost = breakdown.exploring + breakdown.silver
+
+  return { cost: totalCost, breakdown }
 }
 
 // ============================================================

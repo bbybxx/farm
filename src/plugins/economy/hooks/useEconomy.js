@@ -55,6 +55,8 @@ export function useEconomy() {
   const [advancedState, setAdvancedStateState] = useState(() => loadFromStorage('economy_advancedState', []))
   const [manualAdditions, setManualAdditionsState] = useState(() => loadFromStorage('economy_manualAdditions', []))
   const [priceRefreshable, setPriceRefreshableState] = useState(() => loadFromStorage('economy_priceRefreshable', {}))
+  const [staminaSource, setStaminaSourceState] = useState(() => loadFromStorage('economy_staminaSource', 'apple'))
+  const [cranberryStamina, setCranberryStaminaState] = useState(() => loadFromStorage('economy_cranberryStamina', 2700000))
   const [simpleOverlayOpen, setSimpleOverlayOpen] = useState(false)
   const [advancedTabOpen, setAdvancedTabOpen] = useState(false)
   const [isPriceConfigOpen, setIsPriceConfigOpen] = useState(false)
@@ -170,6 +172,16 @@ export function useEconomy() {
     setAdvancedStateState(prev => prev.filter((_, i) => i !== itemIndex))
   }, [])
 
+  const setStaminaSource = useCallback((source) => {
+    setStaminaSourceState(source)
+    saveToStorage('economy_staminaSource', source)
+  }, [])
+
+  const setCranberryStamina = useCallback((value) => {
+    setCranberryStaminaState(value)
+    saveToStorage('economy_cranberryStamina', value)
+  }, [])
+
   const setPriceRefreshable = useCallback((itemName, bool) => {
     setPriceRefreshableState(prev => ({
       ...prev,
@@ -244,6 +256,10 @@ export function useEconomy() {
     removeManualAddition,
     priceRefreshable,
     setPriceRefreshable,
+    staminaSource,
+    setStaminaSource,
+    cranberryStamina,
+    setCranberryStamina,
     mergeServerPrices,
     applyBuiltinPrices,
     simpleOverlayOpen,

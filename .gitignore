@@ -57,3 +57,5 @@ keystore.*
 # Generated/temp
 /all-items_files/
 backup-*/
+.vercel
+.env*

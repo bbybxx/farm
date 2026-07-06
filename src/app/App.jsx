@@ -722,6 +722,28 @@ export default function App() {
     }
   }, [])
 
+  // Close sidebar on click outside (desktop + mobile)
+  useEffect(() => {
+    function onDoc(e) {
+      if (!sidebarOpen) return
+      if (!sidebarRef.current) return
+      // Don't close if click is inside the sidebar
+      if (sidebarRef.current.contains(e.target)) return
+      // Don't close if click is on the menu button that opens it
+      if (menuBtnRef.current && menuBtnRef.current.contains(e.target)) return
+      setSidebarOpen(false)
+    }
+    document.addEventListener('mousedown', onDoc)
+    return () => document.removeEventListener('mousedown', onDoc)
+  }, [sidebarOpen])
+
+  // Close sidebar when economy mode is enabled
+  useEffect(() => {
+    if (economyEnabled) {
+      setSidebarOpen(false)
+    }
+  }, [economyEnabled])
+
   // Close inline inputs on ESC
   useEffect(() => {
     function onKey(e) {
@@ -1184,8 +1206,9 @@ export default function App() {
       <div className="main">
         {economyEnabled ? (
           <Suspense fallback={<div className="glass card" style={{ padding: '1rem', textAlign: 'center', opacity: 0.6 }}>Loading Economy...</div>}>
-            <EconomyPlugin />
+            <EconomyPlugin setSidebarOpen={setSidebarOpen} />
           </Suspense>
+
         ) : (
           <>
         <AppHeader

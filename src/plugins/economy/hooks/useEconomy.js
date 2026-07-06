@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { loadFromStorage, saveToStorage } from '../../../utils/storage'
 import { parseItemPrices } from '../utils/parsePriceString'
+import { getBuiltinPrices } from '../utils/economyData'
 
 /**
  * Batched localStorage persistence.
@@ -227,6 +228,18 @@ export function useEconomy() {
       return updated
     })
   }, [priceRefreshable])
+
+  // Автозагрузка builtin цен при старте, если economy_prices пуст
+  useEffect(() => {
+    setPricesState(prev => {
+      if (prev && Object.keys(prev).length > 0) return prev // уже есть цены
+      const builtin = getBuiltinPrices()
+      if (builtin && Object.keys(builtin).length > 0) {
+        return builtin
+      }
+      return prev
+    })
+  }, [])
 
   const openSimpleOverlay = useCallback(() => setSimpleOverlayOpen(true), [])
   const closeSimpleOverlay = useCallback(() => setSimpleOverlayOpen(false), [])

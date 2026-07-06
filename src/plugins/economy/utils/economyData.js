@@ -9,6 +9,8 @@
 import itemsAPI from '../../../data/items-api.json' with { type: 'json' }
 import { normalizeItemsMap } from '../../../utils/itemImageUtils'
 import { getCombinedRecipes } from '../../../utils/recipeUtils'
+import communityPrices from '../../../../prices.json'
+import { parseItemPrices } from './parsePriceString'
 
 let cache = null
 
@@ -56,4 +58,33 @@ export function getUsedItemsSet() {
     usedItemsSetCache = buildUsedItemsSet(getRecipes())
   }
   return usedItemsSetCache
+}
+
+/**
+ * Builtin prices parsed from prices.json (community prices).
+ * Cached forever after first access.
+ * Skips PC items.
+ */
+let _builtinPrices = null
+
+function ensureBuiltinPrices() {
+  if (_builtinPrices) return
+  const result = {}
+  if (communityPrices?.items) {
+    for (const item of communityPrices.items) {
+      if (item.PC) continue
+      const name = item.name.replace(/<[^>]*>/g, '').trim()
+      result[name] = parseItemPrices(item)
+    }
+  }
+  _builtinPrices = result
+}
+
+/**
+ * Returns the parsed builtin prices object.
+ * @returns {Object<string, {gold: {value: number|null, divisor: number}, ap: ..., oj: ...}>}
+ */
+export function getBuiltinPrices() {
+  ensureBuiltinPrices()
+  return _builtinPrices || {}
 }

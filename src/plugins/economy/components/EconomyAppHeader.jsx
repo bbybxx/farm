@@ -142,8 +142,9 @@ export default function EconomyAppHeader({
       </div>
       
       {/* Advanced C/R/P — показываем только в advanced режиме, по центру хедера */}
+      {/* На мобилках (<900px) скрыт, на десктопе виден */}
       {view === 'advanced' && advancedCRP && (
-        <div style={{
+        <div className="economy-header-crp" style={{
           flex: '1 1 auto',
           textAlign: 'center',
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16,

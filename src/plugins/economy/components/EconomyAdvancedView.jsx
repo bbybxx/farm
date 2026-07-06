@@ -90,7 +90,12 @@ export default function EconomyAdvancedView({
     const extraNodes = []
     for (const entry of advancedState) {
       for (const craft of entry.crafts) {
-        extraNodes.push({ name: entry.itemName, amount: craft.quantity, fixed: true })
+        extraNodes.push({
+          name: entry.itemName,
+          amount: craft.quantity,
+          fixed: true,
+          gathered: !!entry.gathered, // дроп из локации — не крафт
+        })
       }
     }
     return extraNodes

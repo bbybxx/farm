@@ -263,6 +263,7 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
               itemName: drop.name,
               crafts: [{ recipeName: drop.name, quantity: drop.amount }],
               isLocation: false,
+              gathered: true, // дроп из локации — не крафт
             })
           }
         }
@@ -440,6 +441,10 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
     setAmount(qty)
     setItemSelectMode(null)
     setView('craft')
+    // Очищаем advancedState при старте новой цепочки — иначе кнопка Send to Advanced
+    // не появится (условие advancedState.length === 0), а при ручном переходе в advanced
+    // старые данные склеятся с новыми
+    if (advancedState.length > 0) clearAdvancedData()
     if (setCraftChain) {
       setCraftChain([{ name, amount: qty, editable: true }])
     }
@@ -450,6 +455,10 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
     setLocationAmount(qty)
     setItemSelectMode(null)
     setView('location')
+    // Очищаем advancedState при старте новой цепочки — иначе кнопка Send to Advanced
+    // не появится (условие advancedState.length === 0), а при ручном переходе в advanced
+    // старые данные склеятся с новыми
+    if (advancedState.length > 0) clearAdvancedData()
     if (setCraftChain) {
       setCraftChain([{ name, amount: qty, isLocation: true, savedAmount: qty, editable: true }])
     }
@@ -486,11 +495,20 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
 
     // Если advancedState не пуст — используем ТОЛЬКО его, игнорируем recalculatedChain
     // recalculatedChain содержит craft-данные из простого режима, которые не должны
-    // примешиваться к advanced-расчёту
+    // примешиваться к advanced-расчёту.
+    // НО: локации из recalculatedChain добавляем отдельно, чтобы calculateActualCost
+    // мог корректно посчитать стоимость расходников (Apple Cider / Arnold Palmer).
     const extendedChain = (() => {
       if (!advancedState || advancedState.length === 0) return []
 
       const nodes = []
+      // Сначала добавляем локации из recalculatedChain (нужны для расчёта стоимости расходников)
+      for (const node of recalculatedChain) {
+        if (node.isLocation) {
+          nodes.push({ ...node })
+        }
+      }
+      // Потом добавляем крафты из advancedState
       for (const entry of advancedState) {
         for (const craft of entry.crafts) {
           nodes.push({
@@ -498,6 +516,7 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
             amount: craft.quantity,
             fixed: true,
             isLocation: !!entry.isLocation,
+            gathered: !!entry.gathered, // дроп из локации — не крафт
           })
         }
       }
@@ -585,6 +604,22 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
         advancedCRP={advancedCRP}
         onClearAdvanced={clearAdvancedData}
       />
+
+      {/* Отдельная строка C/R/P для мобильных — показывается только в advanced режиме,
+          скрыта на десктопе (≥900px) через CSS */}
+      {view === 'advanced' && advancedCRP && (
+        <div className="economy-crp-row">
+          <span style={{ color: '#ff6b6b' }}>
+            C: {advancedCRP.costDisplay != null ? advancedCRP.costDisplay.toLocaleString() : '…'} {advancedCRP.currencySuffix}
+          </span>
+          <span style={{ color: '#e9ecf1' }}>
+            R: {advancedCRP.revenueDisplay != null ? advancedCRP.revenueDisplay.toLocaleString() : '…'} {advancedCRP.currencySuffix}
+          </span>
+          <span style={{ color: '#51cf66' }}>
+            P: {advancedCRP.profitDisplay != null ? advancedCRP.profitDisplay.toLocaleString() : '…'} {advancedCRP.currencySuffix}
+          </span>
+        </div>
+      )}
 
       <EconomyItemSelectModal
         isOpen={itemSelectMode !== null}

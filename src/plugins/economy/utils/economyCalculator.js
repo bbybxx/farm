@@ -515,6 +515,12 @@ export function decomposeChain(chain, recipes, resourceSaverPercent = 0, getLoca
       continue
     }
 
+    // Если узел помечен как gathered — это дроп из локации, не крафт
+    if (node.gathered) {
+      gathered[node.name] = (gathered[node.name] || 0) + (Number(node.amount) || 0)
+      continue
+    }
+
     const recipe = recipes[node.name]
     const ingredients = recipe ? getRecipeIngredients(recipe) : null
 
@@ -615,6 +621,14 @@ export function computeSpentByCraft(chain, recipes, resourceSaverPercent = 0) {
     const node = chain[i]
 
     if (node.isLocation) {
+      continue
+    }
+
+    // Если узел помечен как gathered — это дроп из локации, не крафт
+    if (node.gathered) {
+      const name = node.name
+      const qty = Number(node.amount) || 0
+      available[name] = (available[name] || 0) + qty
       continue
     }
 

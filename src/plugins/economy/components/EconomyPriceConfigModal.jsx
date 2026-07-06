@@ -14,40 +14,15 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import ItemDisplay from '../../../components/ItemDisplay'
 import { formatNumberRounded } from '../../../utils/formatters'
-import { parseItemPrices } from '../utils/parsePriceString'
-import { getItemsMap } from '../utils/economyData'
-import communityPrices from '../../../../prices.json'
+import { getItemsMap, getBuiltinPrices } from '../utils/economyData'
 
 const STATIC_ITEMS_MAP = getItemsMap()
 
-// Builtin prices — parsed synchronously once on module load.
-// prices.json is already in the bundle (SettingsTab imports it),
-// so async import only delays the data and breaks UX.
-let _builtinPrices = null
-let _builtinItemNames = null
-
-function ensureBuiltinPrices() {
-  if (_builtinPrices) return
-  const result = {}
-  if (communityPrices?.items) {
-    for (const item of communityPrices.items) {
-      if (item.PC) continue
-      const name = item.name.replace(/\s*\(<i>[^<]*<\/i>\)/g, '').trim()
-      result[name] = parseItemPrices(item)
-    }
-  }
-  _builtinPrices = result
-  _builtinItemNames = Object.keys(result).sort((a, b) => a.localeCompare(b))
-}
-
-function getBuiltinPrices() {
-  if (!_builtinPrices) ensureBuiltinPrices()
-  return _builtinPrices || {}
-}
-
+/**
+ * Returns sorted list of item names that have builtin prices.
+ */
 function getBuiltinItemNames() {
-  if (!_builtinItemNames) ensureBuiltinPrices()
-  return _builtinItemNames || []
+  return Object.keys(getBuiltinPrices()).sort((a, b) => a.localeCompare(b))
 }
 
 /**

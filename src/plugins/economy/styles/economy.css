@@ -125,3 +125,34 @@
 .no-spinner {
   -moz-appearance: textfield;
 }
+
+/* C/R/P в хедере — скрываем на мобилках, показываем на десктопе */
+@media (max-width: 899px) {
+  .economy-header-crp {
+    display: none !important;
+  }
+}
+
+/* Отдельная строка C/R/P — показываем только на мобилках */
+.economy-crp-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 8px 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur)) saturate(1.1);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(1.1);
+  border: 1px solid var(--glass-stroke);
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+  margin-bottom: 8px;
+}
+
+@media (min-width: 900px) {
+  .economy-crp-row {
+    display: none !important;
+  }
+}

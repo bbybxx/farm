@@ -2,28 +2,10 @@ import React, { useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { useEconomyContext } from '../../plugins/economy/EconomyContext'
 import EconomyPriceConfigModal from '../../plugins/economy/components/EconomyPriceConfigModal'
-import { parseItemPrices } from '../../plugins/economy/utils/parsePriceString'
-import communityPrices from '../../../prices.json'
+import { getBuiltinPrices } from '../../plugins/economy/utils/economyData'
 import goldIcon from '../../plugins/economy/gold.png'
 import apIcon from '../../plugins/economy/ap.png'
 import ojIcon from '../../plugins/economy/oj.png'
-
-/**
- * Парсит prices.json в плоский объект { "Item Name": { gold, ap, oj } }
- * Пропускает PC-предметы.
- */
-function parseCommunityPrices() {
-  const result = {}
-  if (!communityPrices?.items) return result
-  for (const item of communityPrices.items) {
-    if (item.PC) continue
-    const name = item.name.replace(/<[^>]*>/g, '').trim()
-    result[name] = parseItemPrices(item)
-  }
-  return result
-}
-
-const BUILTIN_PRICES = parseCommunityPrices()
 
 export default function SettingsTab({
   pinnedEnabled,
@@ -57,7 +39,7 @@ export default function SettingsTab({
 
   // Применить цены из prices.json для предметов с Auto=true
   const handleUpdateFromBuiltin = useCallback(() => {
-    applyBuiltinPrices(BUILTIN_PRICES)
+    applyBuiltinPrices(getBuiltinPrices())
   }, [applyBuiltinPrices])
 
   return (

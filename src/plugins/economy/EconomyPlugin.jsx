@@ -248,8 +248,26 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
 
     if (!chainToSend || chainToSend.length === 0) return
 
+    // Собираем Set всех имён предметов, которые выпадают из локаций,
+    // чтобы не дублировать их как крафты (иначе у предметов с рецептом
+    // возникнет фантомный дефицит их ингредиентов)
+    const allDropNames = new Set()
+    for (const node of chainToSend) {
+      if (node.isLocation) {
+        const budget = Number(node.amount) || 0
+        if (budget <= 0) continue
+        const drops = getLocationDrops(node.name, budget)
+        if (drops && drops.length > 0) {
+          for (const drop of drops) {
+            allDropNames.add(drop.name)
+          }
+        }
+      }
+    }
+
     // Разворачиваем цепочку: location-ноды заменяем на их дропы,
-    // остальные ноды (крафты/предметы) переносим как есть
+    // остальные ноды (крафты/предметы) переносим как есть,
+    // НО пропускаем те, что уже учтены в дропах локации
     const newAdvancedState = []
     for (const node of chainToSend) {
       if (node.isLocation) {
@@ -267,6 +285,10 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
             })
           }
         }
+      } else if (allDropNames.has(node.name)) {
+        // Этот предмет уже учтён в дропах локации — пропускаем,
+        // чтобы не создавать фантомный дефицит его ингредиентов
+        continue
       } else {
         // Крафт или предмет — переносим как есть
         const qty = Number(node.amount) || 0

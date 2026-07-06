@@ -1,0 +1,31 @@
+name: Deploy Experimental Economy to Vercel (farm-beta)
+
+on:
+  push:
+    branches:
+      - experimental/economy-refactor
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel (farm-beta)
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN_FARM_BETA }}
+        run: |
+          curl -X POST "https://api.vercel.com/v13/deployments" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "farm-beta",
+              "project": "farm-beta",
+              "target": "production",
+              "gitSource": {
+                "type": "github",
+                "repoId": "bbybxx/farm",
+                "ref": "experimental/economy-refactor"
+              }
+            }'

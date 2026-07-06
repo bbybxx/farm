@@ -7,7 +7,6 @@ const STATIC_ITEMS_MAP = getItemsMap()
 
 export default function EconomyItemSelectModal({ isOpen, mode, onSelect, onClose }) {
   const [filter, setFilter] = useState('')
-  const [quantity, setQuantity] = useState(1)
   const listRef = useRef(null)
 
   // Ленивый useMemo — вычисляем craftItems только когда модалка открыта
@@ -57,10 +56,8 @@ export default function EconomyItemSelectModal({ isOpen, mode, onSelect, onClose
   }, [items, filter])
 
   const handleSelect = (name) => {
-    const qty = parseInt(quantity, 10) || 1
-    onSelect(name, Math.max(1, qty))
+    onSelect(name, 1)
     setFilter('')
-    setQuantity(1)
     onClose()
   }
 
@@ -84,24 +81,13 @@ export default function EconomyItemSelectModal({ isOpen, mode, onSelect, onClose
       >
             <div className="item-select-header">
               <h2 className="item-select-title">{title}</h2>
-              <div className="item-select-search-wrapper" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <div className="item-select-search-wrapper">
                 <input
                   className="calc-input item-select-search"
                   placeholder={placeholder}
                   value={filter}
                   onChange={e => setFilter(e.target.value)}
                   autoFocus
-                  style={{ flex: 1 }}
-                />
-                <input
-                  type="number" min="1" step="1" value={quantity}
-                  onChange={e => setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))}
-                  style={{
-                    width: '70px', padding: '6px 8px', borderRadius: '6px',
-                    border: '1px solid rgba(255,255,255,0.15)',
-                    background: 'rgba(0,0,0,0.2)', color: 'inherit',
-                    fontSize: '0.9rem', textAlign: 'center',
-                  }}
                 />
               </div>
             </div>

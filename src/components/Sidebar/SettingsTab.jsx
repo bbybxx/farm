@@ -4,6 +4,9 @@ import { useEconomyContext } from '../../plugins/economy/EconomyContext'
 import EconomyPriceConfigModal from '../../plugins/economy/components/EconomyPriceConfigModal'
 import { parseItemPrices } from '../../plugins/economy/utils/parsePriceString'
 import communityPrices from '../../../prices.json'
+import goldIcon from '../../plugins/economy/gold.png'
+import apIcon from '../../plugins/economy/ap.png'
+import ojIcon from '../../plugins/economy/oj.png'
 
 /**
  * Парсит prices.json в плоский объект { "Item Name": { gold, ap, oj } }
@@ -155,27 +158,30 @@ export default function SettingsTab({
               <div className="exploring-chips">
                 <motion.button
                   whileTap={{ scale: 0.98 }}
-                  className={`chip${currency === 'gold' ? ' active' : ''}`}
+                  className={`chip currency-btn${currency === 'gold' ? ' active' : ''}`}
                   onClick={() => setCurrency('gold')}
                   type="button"
+                  title="Gold"
                 >
-                  Gold (G)
+                  <img src={goldIcon} alt="Gold" width={24} height={24} />
                 </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.98 }}
-                  className={`chip${currency === 'ap' ? ' active' : ''}`}
+                  className={`chip currency-btn${currency === 'ap' ? ' active' : ''}`}
                   onClick={() => setCurrency('ap')}
                   type="button"
+                  title="Arnold Palmer (AP)"
                 >
-                  AP
+                  <img src={apIcon} alt="AP" width={24} height={24} />
                 </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.98 }}
-                  className={`chip${currency === 'oj' ? ' active' : ''}`}
+                  className={`chip currency-btn${currency === 'oj' ? ' active' : ''}`}
                   onClick={() => setCurrency('oj')}
                   type="button"
+                  title="Orange Juice (OJ)"
                 >
-                  Orange Juice (OJ)
+                  <img src={ojIcon} alt="OJ" width={24} height={24} />
                 </motion.button>
               </div>
             </div>
@@ -199,7 +205,7 @@ export default function SettingsTab({
                 placeholder="0"
                 style={{ width: 80, textAlign: 'center' }}
               />
-              <span style={{ fontSize: '0.85rem' }}>G</span>
+              <span style={{ fontSize: '0.85rem', minWidth: 28, textAlign: 'left' }}>G</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ fontSize: '0.85rem', whiteSpace: 'nowrap', minWidth: 80 }}>1000 OJ =</span>
@@ -216,7 +222,7 @@ export default function SettingsTab({
                 placeholder="0"
                 style={{ width: 80, textAlign: 'center' }}
               />
-              <span style={{ fontSize: '0.85rem' }}>G</span>
+              <span style={{ fontSize: '0.85rem', minWidth: 28, textAlign: 'left' }}>G</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ fontSize: '0.85rem', whiteSpace: 'nowrap', minWidth: 80 }}>1000 OJ =</span>
@@ -233,7 +239,7 @@ export default function SettingsTab({
                 placeholder="0"
                 style={{ width: 80, textAlign: 'center' }}
               />
-              <span style={{ fontSize: '0.85rem' }}>AP</span>
+              <span style={{ fontSize: '0.85rem', minWidth: 28, textAlign: 'left' }}>AP</span>
             </div>
           </div>
 
@@ -244,27 +250,30 @@ export default function SettingsTab({
               <div className="exploring-chips">
                 <motion.button
                   whileTap={{ scale: 0.98 }}
-                  className={`chip${staminaSource === 'apple' ? ' active' : ''}`}
+                  className={`chip currency-btn${staminaSource === 'apple' ? ' active' : ''}`}
                   onClick={() => setStaminaSource('apple')}
                   type="button"
+                  title="Apple"
                 >
-                  🍎 Apple
+                  <img src="/source-index_files/8297.png" alt="Apple" width={24} height={24} />
                 </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.98 }}
-                  className={`chip${staminaSource === 'oj' ? ' active' : ''}`}
+                  className={`chip currency-btn${staminaSource === 'oj' ? ' active' : ''}`}
                   onClick={() => setStaminaSource('oj')}
                   type="button"
+                  title="Orange Juice (OJ)"
                 >
-                  🍊 OJ
+                  <img src="/source-index_files/orangejuice.png" alt="OJ" width={24} height={24} />
                 </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.98 }}
-                  className={`chip${staminaSource === 'cranberry' ? ' active' : ''}`}
+                  className={`chip currency-btn${staminaSource === 'cranberry' ? ' active' : ''}`}
                   onClick={() => setStaminaSource('cranberry')}
                   type="button"
+                  title="Cranberry Juice"
                 >
-                  Cranberry Juice
+                  <img src="/source-index_files/cranjuice2.png" alt="Cranberry Juice" width={24} height={24} />
                 </motion.button>
               </div>
             </div>

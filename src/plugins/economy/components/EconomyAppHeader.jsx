@@ -23,6 +23,9 @@ export default function EconomyAppHeader({
   locationAmount,
   setLocationAmount,
   setSidebarOpen,
+  // Advanced C/R/P (подняты из EconomyAdvancedView)
+  advancedCRP,
+  onClearAdvanced,
 }) {
 
   const [modeOpen, setModeOpen] = React.useState(false)
@@ -61,7 +64,7 @@ export default function EconomyAppHeader({
         </div>
       )}
       
-      <div className="craft-chain" onClick={(e) => e.stopPropagation()}>
+      <div className="craft-chain" onClick={(e) => e.stopPropagation()} style={view === 'advanced' ? { flexShrink: 1, minWidth: 0 } : undefined}>
         {craftChain && craftChain.length > 1 ? (
           <nav ref={breadcrumbsRef} className="breadcrumbs" aria-label="Craft chain">
             {craftChain.slice(0, Math.max(0, craftChain.length - 1)).map((node, idx) => {
@@ -137,8 +140,40 @@ export default function EconomyAppHeader({
         )}
       </div>
       
-      {/* Header right controls: Mode dropdown */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 'auto', marginRight: 0 }}>
+      {/* Advanced C/R/P — показываем только в advanced режиме, по центру хедера */}
+      {view === 'advanced' && advancedCRP && (
+        <div style={{
+          flex: '1 1 auto',
+          textAlign: 'center',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16,
+          fontSize: '0.85rem', whiteSpace: 'nowrap',
+          minWidth: 0,
+        }}>
+          <span style={{ color: '#ff6b6b' }}>
+            C: {advancedCRP.costDisplay != null ? advancedCRP.costDisplay.toLocaleString() : '…'} {advancedCRP.currencySuffix}
+          </span>
+          <span style={{ color: '#e9ecf1' }}>
+            R: {advancedCRP.revenueDisplay != null ? advancedCRP.revenueDisplay.toLocaleString() : '…'} {advancedCRP.currencySuffix}
+          </span>
+          <span style={{ color: '#51cf66' }}>
+            P: {advancedCRP.profitDisplay != null ? advancedCRP.profitDisplay.toLocaleString() : '…'} {advancedCRP.currencySuffix}
+          </span>
+        </div>
+      )}
+
+      {/* Header right controls: Clear + Mode dropdown */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
+        {view === 'advanced' && onClearAdvanced && (
+          <button
+            className="chip"
+            type="button"
+            onClick={() => { if (onClearAdvanced) onClearAdvanced() }}
+            style={{ color: '#ff6b6b' }}
+            title="Clear advanced state"
+          >
+            clear
+          </button>
+        )}
         <div style={{ position: 'relative' }} ref={modeRef}>
           <button
             className="chip"

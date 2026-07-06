@@ -8,14 +8,8 @@ import ItemDisplay from '../../../components/ItemDisplay'
 import { formatNumberRounded } from '../../../utils/formatters'
 import { findRecipesThatUse } from '../../../utils/recipeUtils'
 import { getItemsMap } from '../utils/economyData'
-import { getLocationConfig } from '../../../data/location-config.js'
 import {
-  calculateCostWithSaver,
-  calculateActualCost,
-  calculateRevenue,
-  calculateProfit,
   getItemPrice,
-  convertPrice,
   computeActualLeftovers,
   computeSpentByCraft,
   groupSpentByChain,
@@ -68,6 +62,8 @@ export default function EconomyAdvancedView({
   staminaSource = 'apple',
   cranberryStamina = 2700000,
   activePerks = [],
+  // Готовые C/R/P из EconomyPlugin (хедер уже в EconomyAppHeader)
+  advancedCRP,
 }) {
   // Состояние для раскрытых Used In (по имени предмета)
   const [expandedItems, setExpandedItems] = useState(new Set())
@@ -119,79 +115,7 @@ export default function EconomyAdvancedView({
     return applyManualAdditions(leftovers, deficit, manualAdditions, prices)
   }, [leftovers, deficit, manualAdditions, prices])
 
-  // --- C/R/P расчёт (на расширенной цепочке) ---
-  // Всегда считаем в gold, потом конвертируем в выбранную валюту
-  //
-  // Cost: используем calculateActualCost — считаем только то, что реально потрачено:
-  // расходники на эксплоринг (AP или Apple Cider + stamina) + серебро на крафты.
-  // Gathered ресурсы считаются бесплатными.
-  // Revenue: считаем от mergedLeftovers (уже с учётом resourceSaverPercent).
-  const { cost, revenue, profit } = useMemo(() => {
-    // Парсим перки для AppleCiderCalculator
-    const normalize = (s = '') => String(s).replace(/\s*\((?!Runecube\b).*?\)\s*/g, '').trim()
-    const has = (name) => activePerks.some(p => normalize(p) === normalize(name))
-    const wandererPerks = []
-    if (has('Wanderer I')) wandererPerks.push(1)
-    if (has('Wanderer II')) wandererPerks.push(2)
-    if (has('Wanderer III')) wandererPerks.push(3)
-    if (has('Wanderer IV')) wandererPerks.push(4)
-
-    const actualCostResult = calculateActualCost(
-      extendedChain,
-      recipes,
-      prices,
-      exchangeRates,
-      resourceSaverPercent,
-      exploringMode,
-      staminaSource,
-      cranberryStamina,
-      getLocationConfig, // импортирован из location-config.js
-      wandererPerks,
-      has('Neigh'),
-      has('Sprint Shoes I'),
-      has('Sprint Shoes II'),
-      has('Sprint Shoes III'),
-      has('Cinnamon Sticks'),
-    )
-    const c = actualCostResult.cost
-    const r = calculateRevenue(mergedLeftovers, prices, exchangeRates)
-    const p = calculateProfit(c, r)
-    return { cost: c, revenue: r, profit: p }
-  }, [
-    extendedChain, recipes, prices, exchangeRates, resourceSaverPercent,
-    getLocationDrops, mergedLeftovers, exploringMode, staminaSource,
-    cranberryStamina, activePerks,
-  ])
-
-  // Конвертируем cost/revenue/profit из gold в выбранную валюту
-  const { costDisplay, revenueDisplay, profitDisplay } = useMemo(() => {
-    if (currency === 'gold') {
-      return { costDisplay: cost, revenueDisplay: revenue, profitDisplay: profit }
-    }
-    const c = convertPrice(cost, 'gold', currency, exchangeRates)
-    const r = convertPrice(revenue, 'gold', currency, exchangeRates)
-    const p = convertPrice(profit, 'gold', currency, exchangeRates)
-    return {
-      costDisplay: c ?? cost,
-      revenueDisplay: r ?? revenue,
-      profitDisplay: p ?? profit,
-    }
-  }, [cost, revenue, profit, currency, exchangeRates])
-
-  // --- Форматирование цены в выбранной валюте ---
-  const formatPrice = useCallback((value) => {
-    if (value == null || isNaN(value)) return '—'
-    const converted = getItemPrice(
-      '__internal__',
-      currency,
-      { '__internal__': { [currency]: { value, divisor: 1 } } },
-      exchangeRates
-    )
-    const displayValue = converted ?? value
-    const suffix = currency === 'gold' ? 'G' : currency === 'ap' ? 'AP' : 'OJ'
-    return `${formatNumberRounded(Math.round(displayValue))} ${suffix}`
-  }, [currency, exchangeRates])
-
+  // currencySuffix для отображения валюты в leftovers
   const currencySuffix = currency === 'gold' ? 'G' : currency === 'ap' ? 'AP' : 'OJ'
 
 
@@ -291,9 +215,10 @@ export default function EconomyAdvancedView({
 
   // --- Добавить manual addition ---
   const handleAddItem = useCallback(() => {
-    if (!addItemName || addQuantity <= 0) return
+    const qty = parseInt(addQuantity, 10)
+    if (!addItemName || isNaN(qty) || qty <= 0) return
     if (addManualAddition) {
-      addManualAddition(addItemName, addQuantity)
+      addManualAddition(addItemName, qty)
     }
     setAddItemName('')
     setAddItemFilter('')
@@ -310,36 +235,6 @@ export default function EconomyAdvancedView({
 
   return (
     <>
-      {/* Хедер Advanced: C / R / P */}
-      <section className="glass controls" style={{ display: 'flex', gap: 16, padding: '12px 16px', marginBottom: 8 }}>
-        <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', width: '100%', justifyContent: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-            <span style={{ color: '#ff6b6b', fontWeight: 700, fontSize: '1.1rem' }}>C</span>
-            <span style={{ color: '#ff6b6b', fontWeight: 600, fontSize: '1.05rem' }}>
-              {formatNumberRounded(Math.round(costDisplay))}
-            </span>
-
-            <span style={{ color: '#ff6b6b', fontSize: '0.85rem', opacity: 0.7 }}>{currencySuffix}</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-            <span style={{ color: '#e9ecf1', fontWeight: 700, fontSize: '1.1rem' }}>R</span>
-            <span style={{ color: '#e9ecf1', fontWeight: 600, fontSize: '1.05rem' }}>
-              {formatNumberRounded(Math.round(revenueDisplay))}
-            </span>
-
-            <span style={{ color: '#e9ecf1', fontSize: '0.85rem', opacity: 0.7 }}>{currencySuffix}</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-            <span style={{ color: '#51cf66', fontWeight: 700, fontSize: '1.1rem' }}>P</span>
-            <span style={{ color: '#51cf66', fontWeight: 600, fontSize: '1.05rem' }}>
-              {formatNumberRounded(Math.round(profitDisplay))}
-            </span>
-
-            <span style={{ color: '#51cf66', fontSize: '0.85rem', opacity: 0.7 }}>{currencySuffix}</span>
-          </div>
-        </div>
-      </section>
-
       {/* Таблица трат (Spent) — сгруппирована по цепочкам */}
       {spentChains.length > 0 && (
         <section className="glass card">
@@ -500,7 +395,7 @@ export default function EconomyAdvancedView({
                         const recipeData = recipes[recipe.name]
                         const ingredients = recipeData ? (recipeData.ingredients || recipeData.из || {}) : {}
                         const requiredPerCraft = ingredients[item.name] || 1
-                        const currentCraftQty = craftInputs[item.name]?.[recipe.name] || 1
+                        const currentCraftQty = craftInputs[item.name]?.[recipe.name] ?? ''
 
                         return (
                           <div key={recipe.name} style={{
@@ -519,14 +414,27 @@ export default function EconomyAdvancedView({
                               min={1}
                               value={currentCraftQty}
                               onChange={e => {
-                                const val = Math.max(1, parseInt(e.target.value, 10) || 1)
-                                setCraftInputs(prev => ({
-                                  ...prev,
-                                  [item.name]: {
-                                    ...(prev[item.name] || {}),
-                                    [recipe.name]: val,
-                                  }
-                                }))
+                                const raw = e.target.value
+                                if (raw === '') {
+                                  setCraftInputs(prev => ({
+                                    ...prev,
+                                    [item.name]: {
+                                      ...(prev[item.name] || {}),
+                                      [recipe.name]: '',
+                                    }
+                                  }))
+                                  return
+                                }
+                                const val = parseInt(raw, 10)
+                                if (!isNaN(val) && val >= 1) {
+                                  setCraftInputs(prev => ({
+                                    ...prev,
+                                    [item.name]: {
+                                      ...(prev[item.name] || {}),
+                                      [recipe.name]: val,
+                                    }
+                                  }))
+                                }
                               }}
                               style={{
                                 width: '60px',
@@ -644,7 +552,17 @@ export default function EconomyAdvancedView({
                 type="number"
                 min={1}
                 value={addQuantity}
-                onChange={e => setAddQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))}
+                onChange={e => {
+                  const raw = e.target.value
+                  if (raw === '') {
+                    setAddQuantity('')
+                    return
+                  }
+                  const val = parseInt(raw, 10)
+                  if (!isNaN(val) && val >= 1) {
+                    setAddQuantity(val)
+                  }
+                }}
                 className="no-spinner"
                 style={{
                   width: '70px',

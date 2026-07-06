@@ -12,6 +12,19 @@ import { getItemsMap, getRecipes, getUsedItemsSet } from './utils/economyData'
 import EconomyItemSelectModal from './components/EconomyItemSelectModal'
 import EconomyAppHeader from './components/EconomyAppHeader'
 import './styles/economy.css'
+import goldIcon from './gold.png'
+import {
+  calculateActualCost,
+  calculateRevenue,
+  calculateProfit,
+  getItemPrice,
+  convertPrice,
+  computeActualLeftovers,
+  computeSpentByCraft,
+  groupSpentByChain,
+  applyManualAdditions,
+} from './utils/economyCalculator'
+import { getLocationConfig } from '../../data/location-config.js'
 
 // Lazy-load EconomyAdvancedView — only loaded when user enters Advanced mode
 const LazyEconomyAdvancedView = lazy(() => import('./components/EconomyAdvancedView'))
@@ -142,7 +155,7 @@ function recalcChainFromRoot(chain, activePerks, exploringMode, combinedRecipes)
  * Рендерится внутри .main, не использует createPortal.
  * Не имеет своего хедера, breadcrumbs, цепочек — только чистая логика.
  */
-export default function EconomyPlugin({ setSidebarOpen }) {
+export default function EconomyPlugin({ setSidebarOpen, onExit }) {
 
   const {
     economyEnabled,
@@ -154,6 +167,7 @@ export default function EconomyPlugin({ setSidebarOpen }) {
     exchangeRates,
     advancedState,
     setAdvancedState,
+    clearAdvancedData,
     manualAdditions,
     addManualAddition,
     removeManualAddition,
@@ -162,7 +176,7 @@ export default function EconomyPlugin({ setSidebarOpen }) {
   } = useEconomyContext()
   const { activePerks, exploringMode } = useActivePerks()
 
-  const [view, setView] = useState('start') // 'start' | 'craft' | 'location' | 'advanced'
+  const [view, setViewState] = useState('location') // 'craft' | 'location' | 'advanced'
   const [itemSelectMode, setItemSelectMode] = useState(null) // null | 'craft' | 'location'
 
   // Craft state
@@ -175,6 +189,19 @@ export default function EconomyPlugin({ setSidebarOpen }) {
 
   // Breadcrumbs (свой собственный craftChain, не из App.jsx)
   const [craftChain, setCraftChain] = useState([])
+
+  // При переключении в advanced — насильно убираем контент предыдущего режима
+  const setView = useCallback((newView) => {
+    setViewState(newView)
+    if (newView === 'advanced') {
+      setCraftChain([])
+      setSelectedItem(null)
+      setAmount(1)
+      setSelectedLocation(null)
+      setLocationAmount(1)
+    }
+  }, [])
+
   const breadcrumbsRef = useRef(null)
 
   // Используем синглтон из economyData — вычисляется 1 раз при первом обращении
@@ -185,6 +212,28 @@ export default function EconomyPlugin({ setSidebarOpen }) {
   const recalculatedChain = useMemo(() => {
     return recalcChainFromRoot(craftChain, activePerks, exploringMode, combinedRecipes)
   }, [craftChain, activePerks, exploringMode, combinedRecipes])
+
+  // --- Отправка текущей цепочки в advanced-режим ---
+  const handleSendToAdvanced = useCallback(() => {
+    if (!recalculatedChain || recalculatedChain.length === 0) return
+
+    // Конвертируем каждый non-location узел цепочки в advancedState
+    const newAdvancedState = []
+    for (const node of recalculatedChain) {
+      if (node.isLocation) continue // локации не нужны в advancedState
+      const qty = Number(node.amount) || 0
+      if (qty <= 0) continue
+      newAdvancedState.push({
+        itemName: node.name,
+        crafts: [{ recipeName: node.name, quantity: qty }],
+      })
+    }
+
+    if (newAdvancedState.length === 0) return
+
+    setAdvancedState(newAdvancedState)
+    setView('advanced')
+  }, [recalculatedChain, setAdvancedState, setView])
 
   // Синхронизируем amount/locationAmount с пересчитанной цепочкой
   // для текущего отображаемого узла
@@ -387,6 +436,75 @@ export default function EconomyPlugin({ setSidebarOpen }) {
   const isCurrentEditable = recalculatedChain.length <= 1 ||
     (recalculatedChain[recalculatedChain.length - 1]?.editable !== false)
 
+  // --- C/R/P расчёт для Advanced режима (поднят на уровень плагина) ---
+  const isTradableFn = useCallback(() => true, [])
+
+  const advancedCRP = useMemo(() => {
+    if (view !== 'advanced') return null
+
+    // Мерджим advancedState в цепочку
+    const extendedChain = (() => {
+      if (!advancedState || advancedState.length === 0) return recalculatedChain
+      const extraNodes = []
+      for (const entry of advancedState) {
+        for (const craft of entry.crafts) {
+          extraNodes.push({ name: entry.itemName, amount: craft.quantity, fixed: true })
+        }
+      }
+      if (extraNodes.length === 0) return recalculatedChain
+      return [...recalculatedChain, ...extraNodes]
+    })()
+
+    // Leftovers
+    const { leftovers, deficit } = computeActualLeftovers(
+      extendedChain, combinedRecipes, prices, isTradableFn,
+      getResourceSaverPercent(activePerks || []), getLocationDrops
+    )
+
+    // Manual additions
+    const { leftovers: mergedLeftovers } = applyManualAdditions(leftovers, deficit, manualAdditions, prices)
+
+    // Cost
+    const normalize = (s = '') => String(s).replace(/\s*\((?!Runecube\b).*?\)\s*/g, '').trim()
+    const has = (name) => activePerks.some(p => normalize(p) === normalize(name))
+    const wandererPerks = []
+    if (has('Wanderer I')) wandererPerks.push(1)
+    if (has('Wanderer II')) wandererPerks.push(2)
+    if (has('Wanderer III')) wandererPerks.push(3)
+    if (has('Wanderer IV')) wandererPerks.push(4)
+
+    const actualCostResult = calculateActualCost(
+      extendedChain, combinedRecipes, prices, exchangeRates,
+      getResourceSaverPercent(activePerks || []),
+      exploringMode, staminaSource, cranberryStamina,
+      getLocationConfig, wandererPerks,
+      has('Neigh'), has('Sprint Shoes I'), has('Sprint Shoes II'),
+      has('Sprint Shoes III'), has('Cinnamon Sticks'),
+    )
+    const c = actualCostResult.cost
+    const r = calculateRevenue(mergedLeftovers, prices, exchangeRates)
+    const p = calculateProfit(c, r)
+
+    // Конвертация в выбранную валюту
+    let costDisplay, revenueDisplay, profitDisplay
+    if (currency === 'gold') {
+      costDisplay = c; revenueDisplay = r; profitDisplay = p
+    } else {
+      costDisplay = convertPrice(c, 'gold', currency, exchangeRates) ?? c
+      revenueDisplay = convertPrice(r, 'gold', currency, exchangeRates) ?? r
+      profitDisplay = convertPrice(p, 'gold', currency, exchangeRates) ?? p
+    }
+
+    const currencySuffix = currency === 'gold' ? 'G' : currency === 'ap' ? 'AP' : 'OJ'
+
+    return { costDisplay, revenueDisplay, profitDisplay, currencySuffix }
+  }, [
+    view, recalculatedChain, advancedState, manualAdditions,
+    combinedRecipes, prices, exchangeRates, currency,
+    activePerks, exploringMode, staminaSource, cranberryStamina,
+    getLocationDrops, isTradableFn,
+  ])
+
   // Не размонтируем компонент при выключении — скрываем через CSS.
   // Это сохраняет состояние (selectedItem, amount, craftChain, view) в памяти,
   // и при повторном включении не происходит пересоздания всех useMemo/useEffect.
@@ -404,7 +522,7 @@ export default function EconomyPlugin({ setSidebarOpen }) {
         setAmount={setAmount}
         itemsData={STATIC_ITEMS_MAP}
         buddyFarmLinksEnabled={false}
-        onExit={() => setEconomyEnabled(false)}
+        onExit={() => { if (onExit) onExit() }}
         view={view}
         setView={setView}
         selectedLocation={selectedLocation}
@@ -412,6 +530,9 @@ export default function EconomyPlugin({ setSidebarOpen }) {
         locationAmount={locationAmount}
         setLocationAmount={setLocationAmount}
         setSidebarOpen={setSidebarOpen}
+        // Advanced C/R/P для хедера
+        advancedCRP={advancedCRP}
+        onClearAdvanced={clearAdvancedData}
       />
 
       <EconomyItemSelectModal
@@ -421,26 +542,18 @@ export default function EconomyPlugin({ setSidebarOpen }) {
         onClose={() => setItemSelectMode(null)}
       />
 
-      {/* Стартовый экран — две простые кнопки */}
-      {view === 'start' && (
-        <div className="economy-start">
-          <button className="glass economy-mode-btn" onClick={() => setItemSelectMode('craft')} type="button">
-            🔧 Craft
-          </button>
-          <button className="glass economy-mode-btn" onClick={() => setItemSelectMode('location')} type="button">
-            📍 Locations
-          </button>
-        </div>
-      )}
-
       {/* Craft mode — controls + ресурсы */}
       {view === 'craft' && (
         <>
           <section className="glass controls">
             <label className="field">
               <span className="label">Item</span>
-              <button className="input" onClick={() => setItemSelectMode('craft')} type="button">
-                <ItemDisplay itemName={selectedItem} itemsData={STATIC_ITEMS_MAP} />
+              <button className="input" onClick={() => setItemSelectMode('craft')} type="button" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                {selectedItem ? (
+                  <ItemDisplay itemName={selectedItem} itemsData={STATIC_ITEMS_MAP} />
+                ) : (
+                  <span>Select item</span>
+                )}
               </button>
             </label>
             <label className="field">
@@ -478,7 +591,14 @@ export default function EconomyPlugin({ setSidebarOpen }) {
           </section>
 
           {/* Used In */}
-          {availableCrafts.length > 0 && (
+          {!selectedItem ? (
+            <section className="glass card">
+              <h2>Used In</h2>
+              <ul className="list">
+                <li className="empty-state" style={{ padding: '12px 16px', color: '#9aa' }}>Select an item to see crafts.</li>
+              </ul>
+            </section>
+          ) : availableCrafts.length > 0 ? (
             <section className="glass card">
               <h2>Used In</h2>
               <ul className="list">
@@ -496,7 +616,7 @@ export default function EconomyPlugin({ setSidebarOpen }) {
                 ))}
               </ul>
             </section>
-          )}
+          ) : null}
         </>
       )}
 
@@ -521,8 +641,25 @@ export default function EconomyPlugin({ setSidebarOpen }) {
             staminaSource={staminaSource}
             cranberryStamina={cranberryStamina}
             activePerks={activePerks}
+            // Передаём готовые C/R/P из плагина (хедер уже в EconomyAppHeader)
+            advancedCRP={advancedCRP}
           />
         </Suspense>
+      )}
+
+      {/* Кнопка отправки в advanced — показывается в craft/location режимах,
+          когда в advanced пусто и есть что переносить */}
+      {(view === 'craft' || view === 'location') && (
+        advancedState.length === 0 && manualAdditions.length === 0 && recalculatedChain.length > 0 && (
+          <button
+            className="economy-send-to-advanced"
+            type="button"
+            onClick={handleSendToAdvanced}
+            title="Send to Advanced"
+          >
+            <img src={goldIcon} alt="Advanced" width={24} height={24} />
+          </button>
+        )
       )}
 
       {/* Location mode — controls + drops */}

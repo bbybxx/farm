@@ -35,7 +35,10 @@ export default function AppHeader({
   amount,
   selectedLocation,
   itemsData,
-  buddyFarmLinksEnabled
+  buddyFarmLinksEnabled,
+  // Economy props
+  economyEnabled,
+  onSwitchToEconomy,
 }) {
   return (
     <header className={"glass header" + (headerVisible ? '' : ' hidden') + (isCaching ? ' caching' : '')} style={isCaching ? { '--caching-progress': `${cachingProgress}%` } : {}}>
@@ -217,6 +220,19 @@ export default function AppHeader({
                     }}
                   >
                     Quests
+                  </button>
+                )}
+                {/* Economy — показываем только если включено в настройках */}
+                {economyEnabled && (
+                  <button
+                    className="mode-option"
+                    type="button"
+                    onClick={() => {
+                      setModeOpen(false)
+                      if (onSwitchToEconomy) onSwitchToEconomy()
+                    }}
+                  >
+                    Economy
                   </button>
                 )}
               </motion.div>

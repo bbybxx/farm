@@ -737,12 +737,25 @@ export default function App() {
     return () => document.removeEventListener('mousedown', onDoc)
   }, [sidebarOpen])
 
-  // Close sidebar when economy mode is enabled
+  // Состояние активного режима: 'craft' | 'locations' | 'quests' | 'economy'
+  const [activeMode, setActiveMode] = useState('craft')
+
+  // При выключении economy в настройках — если мы были в economy, возвращаемся в craft
   useEffect(() => {
-    if (economyEnabled) {
-      setSidebarOpen(false)
+    if (!economyEnabled && activeMode === 'economy') {
+      setActiveMode('craft')
     }
-  }, [economyEnabled])
+  }, [economyEnabled, activeMode])
+
+  // Функция выхода из economy — просто возвращаемся в предыдущий режим, не выключая economyEnabled
+  const exitEconomy = useCallback(() => {
+    setActiveMode('craft')
+  }, [])
+
+  // Функция входа в economy
+  const enterEconomy = useCallback(() => {
+    setActiveMode('economy')
+  }, [])
 
   // Close inline inputs on ESC
   useEffect(() => {
@@ -1204,14 +1217,16 @@ export default function App() {
       </aside>
 
       <div className="main">
-        {economyEnabled ? (
+        {activeMode === 'economy' ? (
           <Suspense fallback={<div className="glass card" style={{ padding: '1rem', textAlign: 'center', opacity: 0.6 }}>Loading Economy...</div>}>
-            <EconomyPlugin setSidebarOpen={setSidebarOpen} />
+            <EconomyPlugin setSidebarOpen={setSidebarOpen} onExit={exitEconomy} />
           </Suspense>
 
         ) : (
           <>
         <AppHeader
+          economyEnabled={economyEnabled}
+          onSwitchToEconomy={enterEconomy}
           headerVisible={headerVisible}
           isCaching={isCaching}
           cachingProgress={cachingProgress}
@@ -1309,10 +1324,10 @@ export default function App() {
                   // keep digits and at most one dot
                   const cleaned = normalized.replace(/[^\d.]/g, '')
                   const parts = cleaned.split('.')
-                  const integer = parts[0] || '0'
+                  const integer = parts[0] || ''
                   const frac = parts[1] ? parts[1].slice(0,2) : ''
                   const final = frac ? `${integer}.${frac}` : integer
-                  if (final === '' || final === '.' ) {
+                  if (final === '' || final === '.' || final === '0') {
                     setAmount('')
                     debouncedSetCraftChain(1)
                     return

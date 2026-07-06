@@ -68,6 +68,51 @@
   transform: translateY(0);
 }
 
+/* Кнопка отправки цепочки в advanced-режим */
+.economy-send-to-advanced {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 215, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  padding: 0;
+}
+
+.economy-send-to-advanced:hover {
+  transform: scale(1.1);
+  border-color: rgba(255, 215, 0, 0.9);
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
+}
+
+.economy-send-to-advanced:active {
+  transform: scale(0.95);
+}
+
+/* Currency selector buttons — same size, icon only */
+.currency-btn {
+  width: 48px !important;
+  height: 40px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+.currency-btn img {
+  display: block;
+  object-fit: contain;
+}
+
 /* Hide number input spinners */
 .no-spinner::-webkit-inner-spin-button,
 .no-spinner::-webkit-outer-spin-button {

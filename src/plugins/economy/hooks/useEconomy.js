@@ -76,11 +76,7 @@ export function useEconomy() {
   // Wrapped setters
   const setEconomyEnabled = useCallback((bool) => {
     setEconomyEnabledState(bool)
-    if (bool) {
-      setEconomyChainState([])
-      setAdvancedStateState([])
-      setManualAdditionsState([])
-    }
+    // Больше не очищаем данные при включении — сохраняем состояние между сессиями
   }, [])
 
   const addToEconomyChain = useCallback((name, amount) => {
@@ -127,6 +123,11 @@ export function useEconomy() {
 
   const removeManualAddition = useCallback((index) => {
     setManualAdditionsState(prev => prev.filter((_, i) => i !== index))
+  }, [])
+
+  const clearAdvancedData = useCallback(() => {
+    setAdvancedStateState([])
+    setManualAdditionsState([])
   }, [])
 
   const setAdvancedState = useCallback((state) => {
@@ -249,6 +250,7 @@ export function useEconomy() {
     setExchangeRates,
     advancedState,
     setAdvancedState,
+    clearAdvancedData,
     updateAdvancedCraft,
     removeFromAdvancedState,
     manualAdditions,

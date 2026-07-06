@@ -499,6 +499,77 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
     }
   }, [itemSelectMode, setSidebarOpen])
 
+  // --- Обработка кнопки "Назад" (popstate) ---
+  // На телефонах системная кнопка "Назад" не должна закрывать весь режим economy.
+  // Вместо этого отменяем последнее действие, как в основном приложении.
+  useEffect(() => {
+    const handleBack = () => {
+      // Используем ref, чтобы получить актуальное состояние без пересоздания эффекта
+      // (избегаем stale closure проблемы)
+      setCraftChain(prev => {
+        if (prev.length > 1) {
+          // Отменяем последний шаг — убираем последний элемент цепочки
+          const newChain = prev.slice(0, -1)
+          const lastNode = newChain[newChain.length - 1]
+          // Восстанавливаем view и selection на основе нового последнего узла
+          // Используем setTimeout, чтобы setState выполнился после текущего рендера
+          setTimeout(() => {
+            if (lastNode) {
+              if (lastNode.isLocation) {
+                setView('location')
+                setSelectedLocation(lastNode.name)
+                if (lastNode.savedAmount !== undefined && lastNode.savedAmount !== null) {
+                  setLocationAmount(lastNode.savedAmount)
+                }
+              } else {
+                setView('craft')
+                setSelectedItem(lastNode.name)
+                setAmount(Number(lastNode.amount) || 1)
+              }
+            }
+          }, 0)
+          return newChain
+        }
+
+        if (prev.length === 1) {
+          // Сбрасываем выбор, но остаёмся в economy
+          setTimeout(() => {
+            setSelectedItem(null)
+            setSelectedLocation(null)
+            setAmount(1)
+            setLocationAmount(1)
+            setView('location')
+          }, 0)
+          return []
+        }
+
+        // Цепочка пуста — выходим из economy
+        setTimeout(() => {
+          if (onExit) onExit()
+        }, 0)
+        return prev
+      })
+    }
+
+    // Регистрируем обработчик popstate
+    window.addEventListener('popstate', handleBack)
+
+    // Добавляем запись в историю, чтобы popstate срабатывал
+    // (если это первый рендер и история пуста)
+    if (window.history.state === null) {
+      window.history.pushState({ economy: true }, '')
+    }
+
+    return () => {
+      window.removeEventListener('popstate', handleBack)
+    }
+  }, [
+    setCraftChain, setView, setSelectedItem, setSelectedLocation,
+    setAmount, setLocationAmount, onExit,
+  ])
+
+
+
   // Определяем, является ли текущий узел редактируемым
 
   const isCurrentEditable = recalculatedChain.length <= 1 ||

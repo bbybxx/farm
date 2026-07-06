@@ -224,13 +224,39 @@ export default memo(function QuestsPanel({
     }
   }
 
+  // Generate abbreviation from questline name (first letter of each word)
+  const getAbbreviation = (name) => {
+    const cleanName = name.replace(/<br\s*\/?>/gi, ' ')
+    const words = cleanName.split(/\s+/).filter(w => w.length > 0)
+    return words.map(w => w[0].toUpperCase()).join('')
+  }
+
+  // Check if name contains 2+ consecutive uppercase letters (exception case)
+  const hasConsecutiveUppercase = (name) => {
+    const cleanName = name.replace(/<br\s*\/?>/gi, ' ')
+    return /[A-Z]{2,}/.test(cleanName)
+  }
+
   // Filter questlines by search (only questlines, not individual quests)
   const filteredQuestlines = useMemo(() => {
     if (!searchFilter.trim()) return questChains
     const query = searchFilter.toLowerCase()
-    return questChains.filter(chain => 
-      chain.name.toLowerCase().includes(query)
-    )
+    const isAbbrMode = searchFilter === searchFilter.toUpperCase() && searchFilter.length >= 2
+    return questChains.filter(chain => {
+      const cleanName = chain.name.replace(/<br\s*\/?>/gi, ' ')
+      
+      if (isAbbrMode) {
+        // Abbreviation mode: exact abbreviation match
+        const abbr = getAbbreviation(chain.name)
+        if (abbr === searchFilter) return true
+        // Exception: if name has 2+ consecutive uppercase letters, also do substring search
+        if (hasConsecutiveUppercase(chain.name) && cleanName.toLowerCase().includes(query)) return true
+        return false
+      }
+      
+      // Normal mode: substring search
+      return cleanName.toLowerCase().includes(query)
+    })
   }, [questChains, searchFilter])
 
   const handleQuestSelect = (quest) => {

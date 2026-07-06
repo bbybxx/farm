@@ -59,11 +59,34 @@ export default function QuickPinModal({
                     // Show questlines for Quests folder
                     (() => {
                       try {
+                        const getAbbreviation = (name) => {
+                          const cleanName = name.replace(/<br\s*\/?>/gi, ' ')
+                          const words = cleanName.split(/\s+/).filter(w => w.length > 0)
+                          return words.map(w => w[0].toUpperCase()).join('')
+                        }
+                        const hasConsecutiveUppercase = (name) => {
+                          const cleanName = name.replace(/<br\s*\/?>/gi, ' ')
+                          return /[A-Z]{2,}/.test(cleanName)
+                        }
                         const questlines = questsApiData?.data?.questlines || []
                         return questlines
                           .filter(chain => {
                             if (!quickPinFilter) return true
-                            return String(chain.title).toLowerCase().includes(quickPinFilter.toLowerCase())
+                            const query = quickPinFilter.toLowerCase()
+                            const cleanName = String(chain.title).replace(/<br\s*\/?>/gi, ' ')
+                            const isAbbrMode = quickPinFilter === quickPinFilter.toUpperCase() && quickPinFilter.length >= 2
+                            
+                            if (isAbbrMode) {
+                              // Abbreviation mode: exact abbreviation match
+                              const abbr = getAbbreviation(chain.title)
+                              if (abbr === quickPinFilter) return true
+                              // Exception: if name has 2+ consecutive uppercase letters, also do substring search
+                              if (hasConsecutiveUppercase(chain.title) && cleanName.toLowerCase().includes(query)) return true
+                              return false
+                            }
+                            
+                            // Normal mode: substring search
+                            return cleanName.toLowerCase().includes(query)
                           })
                           .map((chain) => (
                             <button

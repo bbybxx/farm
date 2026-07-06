@@ -159,9 +159,9 @@ export default function EconomyPriceConfigModal({
           onClick={onClose}
           type="button"
           style={{ fontSize: '0.8rem', padding: '2px 8px' }}
-        >
-          ✕
-        </button>
+          >
+            ×
+          </button>
       </div>
 
       {/* Поиск + кнопка Update */}
@@ -183,7 +183,7 @@ export default function EconomyPriceConfigModal({
           style={{ fontSize: '0.8rem' }}
           title="Apply prices from prices.json for items with Auto enabled"
         >
-          🔄 Update
+          ↻ Update
         </button>
         <span style={{ fontSize: '0.8rem', opacity: 0.6 }}>
           {pricedCount} items with prices

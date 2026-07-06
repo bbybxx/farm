@@ -132,7 +132,7 @@ export default function SettingsTab({
 
       {/* Economy Mode */}
       <h4 className="subsection-title" style={{ fontSize: '0.85rem', color: '#aaa', margin: '8px 0 4px', textTransform: 'uppercase', letterSpacing: 1 }}>
-        💰 Economy Mode
+        Economy Mode
       </h4>
       
       <div className="setting-item">
@@ -316,7 +316,7 @@ export default function SettingsTab({
             onClick={() => setIsPriceConfigOpen(true)}
             type="button"
           >
-            ⚙ Configure Prices
+            Configure Prices
           </button>
         </>
       )}

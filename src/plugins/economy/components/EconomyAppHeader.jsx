@@ -240,7 +240,7 @@ export default function EconomyAppHeader({
                   }}
                   style={{ color: '#ff6b6b' }}
                 >
-                  ✕ Exit Economy
+                  × Exit Economy
                 </button>
               </motion.div>
             )}

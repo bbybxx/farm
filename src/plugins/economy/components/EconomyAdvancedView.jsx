@@ -239,7 +239,7 @@ export default function EconomyAdvancedView({
       {/* Таблица трат (Spent) — сгруппирована по цепочкам */}
       {spentChains.length > 0 && (
         <section className="glass card">
-          <h2>📊 Spent ({spentByCraft.length} crafts, {spentChains.length} chains)</h2>
+          <h2>Spent ({spentByCraft.length} crafts, {spentChains.length} chains)</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '4px 0' }}>
             {spentChains.map((chainGroup, chainIdx) => {
               const isExpanded = expandedChains.has(chainIdx)
@@ -308,12 +308,12 @@ export default function EconomyAdvancedView({
                                   </span>
                                   {ing.compensated > 0 && (
                                     <span style={{ color: '#51cf66', fontSize: '0.75rem' }}>
-                                      ✅ {formatNumberRounded(ing.compensated)}
+                                      +{formatNumberRounded(ing.compensated)}
                                     </span>
                                   )}
                                   {ing.deficit > 0 && (
                                     <span style={{ color: '#ff6b6b', fontSize: '0.75rem', opacity: 0.7 }}>
-                                      ⚠️ -{formatNumberRounded(ing.deficit)}
+                                      -{formatNumberRounded(ing.deficit)}
                                     </span>
                                   )}
                                 </div>
@@ -334,7 +334,7 @@ export default function EconomyAdvancedView({
       {/* Дефицит (если есть) — с учётом manualAdditions */}
       {mergedDeficit.length > 0 && (
         <section className="glass card" style={{ borderLeft: '3px solid #ff6b6b' }}>
-          <h2 style={{ color: '#ff6b6b' }}>⚠️ Deficit ({mergedDeficit.length})</h2>
+          <h2 style={{ color: '#ff6b6b' }}>Deficit ({mergedDeficit.length})</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', padding: '8px 0' }}>
             {mergedDeficit.map(item => (
               <div key={item.name} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.9rem' }}>
@@ -350,7 +350,7 @@ export default function EconomyAdvancedView({
 
       {/* Список остатков */}
       <section className="glass card">
-        <h2>📦 Leftovers {mergedLeftovers.length > 0 && `(${mergedLeftovers.length})`}</h2>
+          <h2>Leftovers {mergedLeftovers.length > 0 && `(${mergedLeftovers.length})`}</h2>
         {mergedLeftovers.length === 0 ? (
           <div className="empty-state" style={{ padding: '12px 16px', color: '#9aa' }}>
             No items in chain yet. Use Craft or Location mode to build a chain.
@@ -497,7 +497,7 @@ export default function EconomyAdvancedView({
       {/* Кнопка Add и список manual добавлений */}
       <section className="glass card" style={{ marginTop: 8 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-          <h2 style={{ margin: 0, flex: 1 }}>➕ Add</h2>
+          <h2 style={{ margin: 0, flex: 1 }}>+ Add</h2>
           <button
             type="button"
             className="chip"
@@ -547,7 +547,7 @@ export default function EconomyAdvancedView({
                       borderRadius: 4,
                     }}
                   >
-                    ✕
+                    ×
                   </button>
                 </motion.div>
               ))}

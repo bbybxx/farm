@@ -1,4 +1,5 @@
 import React from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import ItemDisplay from '../../../components/ItemDisplay'
 import LocationImage from '../../../components/LocationImage'
 
@@ -183,59 +184,67 @@ export default function EconomyAppHeader({
           >
             mode
           </button>
-          {modeOpen && (
-            <div className="mode-dropdown glass" style={{ position: 'absolute', right: 0, marginTop: 8, minWidth: 160, zIndex: 9999 }}>
-              <button
-                className="mode-option"
-                type="button"
-                onClick={() => {
-                  if (setView) setView('craft')
-                  if (setSelectedItem) setSelectedItem(null)
-                  if (setAmount) setAmount(1)
-                  if (setCraftChain) setCraftChain([])
-                  setModeOpen(false)
-                }}
+          <AnimatePresence>
+            {modeOpen && (
+              <motion.div
+                className="mode-dropdown glass"
+                initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                transition={{ duration: 0.15, ease: 'easeOut' }}
+                style={{ position: 'absolute', right: 0, marginTop: 8, minWidth: 160, zIndex: 9999, transformOrigin: 'top right' }}
               >
-                Craft
-              </button>
-              <button
-                className="mode-option"
-                type="button"
-                onClick={() => {
-                  if (setView) setView('location')
-                  if (setSelectedItem) setSelectedItem(null)
-                  if (setAmount) setAmount(1)
-                  if (setCraftChain) setCraftChain([])
-                  setModeOpen(false)
-                }}
-              >
-                Location
-              </button>
-              <button
-                className="mode-option"
-                type="button"
-                onClick={() => {
-                  if (setView) setView('advanced')
-                  setModeOpen(false)
-                }}
-              >
-                Advanced
-              </button>
-              <div className="mode-divider" style={{ height: 1, background: 'rgba(255,255,255,0.1)', margin: '4px 0' }} />
-              <button
-                className="mode-option"
-                type="button"
-                onClick={() => {
-                  if (onExit) onExit()
-                  setModeOpen(false)
-                }}
-                style={{ color: '#ff6b6b' }}
-              >
-                ✕ Exit Economy
-              </button>
-            </div>
-
-          )}
+                <button
+                  className="mode-option"
+                  type="button"
+                  onClick={() => {
+                    if (setView) setView('craft')
+                    if (setSelectedItem) setSelectedItem(null)
+                    if (setAmount) setAmount(1)
+                    if (setCraftChain) setCraftChain([])
+                    setModeOpen(false)
+                  }}
+                >
+                  Craft
+                </button>
+                <button
+                  className="mode-option"
+                  type="button"
+                  onClick={() => {
+                    if (setView) setView('location')
+                    if (setSelectedItem) setSelectedItem(null)
+                    if (setAmount) setAmount(1)
+                    if (setCraftChain) setCraftChain([])
+                    setModeOpen(false)
+                  }}
+                >
+                  Location
+                </button>
+                <button
+                  className="mode-option"
+                  type="button"
+                  onClick={() => {
+                    if (setView) setView('advanced')
+                    setModeOpen(false)
+                  }}
+                >
+                  Advanced
+                </button>
+                <div className="mode-divider" style={{ height: 1, background: 'rgba(255,255,255,0.1)', margin: '4px 0' }} />
+                <button
+                  className="mode-option"
+                  type="button"
+                  onClick={() => {
+                    if (onExit) onExit()
+                    setModeOpen(false)
+                  }}
+                  style={{ color: '#ff6b6b' }}
+                >
+                  ✕ Exit Economy
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </header>

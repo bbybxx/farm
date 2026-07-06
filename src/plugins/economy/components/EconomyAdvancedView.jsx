@@ -4,6 +4,7 @@
  * кликабельными остатками с инлайн Used In, и кнопкой Add.
  */
 import React, { useMemo, useCallback, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import ItemDisplay from '../../../components/ItemDisplay'
 import { formatNumberRounded } from '../../../utils/formatters'
 import { findRecipesThatUse } from '../../../utils/recipeUtils'
@@ -275,41 +276,54 @@ export default function EconomyAdvancedView({
                   </div>
 
                   {/* Детали цепочки (разворачиваются) */}
-                  {isExpanded && chainGroup.chain.map((craft, idx) => (
-                    <div key={idx} style={{
-                      padding: '6px 0 6px 20px',
-                      borderLeft: '1px solid rgba(255,255,255,0.08)',
-                      marginLeft: 8,
-                    }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                        <span style={{ fontSize: '0.75rem', opacity: 0.4 }}>Step {idx + 1}:</span>
-                        <ItemDisplay itemName={craft.craftName} itemsData={STATIC_ITEMS_MAP} />
-                        <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#e9ecf1' }}>
-                          ×{formatNumberRounded(craft.craftQty)}
-                        </span>
-                      </div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 12px', paddingLeft: 8 }}>
-                        {craft.ingredients.map((ing, iIdx) => (
-                          <div key={iIdx} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.85rem' }}>
-                            <ItemDisplay itemName={ing.name} itemsData={STATIC_ITEMS_MAP} />
-                            <span style={{ color: '#ff6b6b', fontWeight: 600 }}>
-                              -{formatNumberRounded(ing.needed)}
-                            </span>
-                            {ing.compensated > 0 && (
-                              <span style={{ color: '#51cf66', fontSize: '0.75rem' }}>
-                                ✅ {formatNumberRounded(ing.compensated)}
+                  <AnimatePresence initial={false}>
+                    {isExpanded && (
+                      <motion.div
+                        key="chain-details"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2, ease: 'easeInOut' }}
+                        style={{ overflow: 'hidden' }}
+                      >
+                        {chainGroup.chain.map((craft, idx) => (
+                          <div key={idx} style={{
+                            padding: '6px 0 6px 20px',
+                            borderLeft: '1px solid rgba(255,255,255,0.08)',
+                            marginLeft: 8,
+                          }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                              <span style={{ fontSize: '0.75rem', opacity: 0.4 }}>Step {idx + 1}:</span>
+                              <ItemDisplay itemName={craft.craftName} itemsData={STATIC_ITEMS_MAP} />
+                              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#e9ecf1' }}>
+                                ×{formatNumberRounded(craft.craftQty)}
                               </span>
-                            )}
-                            {ing.deficit > 0 && (
-                              <span style={{ color: '#ff6b6b', fontSize: '0.75rem', opacity: 0.7 }}>
-                                ⚠️ -{formatNumberRounded(ing.deficit)}
-                              </span>
-                            )}
+                            </div>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 12px', paddingLeft: 8 }}>
+                              {craft.ingredients.map((ing, iIdx) => (
+                                <div key={iIdx} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.85rem' }}>
+                                  <ItemDisplay itemName={ing.name} itemsData={STATIC_ITEMS_MAP} />
+                                  <span style={{ color: '#ff6b6b', fontWeight: 600 }}>
+                                    -{formatNumberRounded(ing.needed)}
+                                  </span>
+                                  {ing.compensated > 0 && (
+                                    <span style={{ color: '#51cf66', fontSize: '0.75rem' }}>
+                                      ✅ {formatNumberRounded(ing.compensated)}
+                                    </span>
+                                  )}
+                                  {ing.deficit > 0 && (
+                                    <span style={{ color: '#ff6b6b', fontSize: '0.75rem', opacity: 0.7 }}>
+                                      ⚠️ -{formatNumberRounded(ing.deficit)}
+                                    </span>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         ))}
-                      </div>
-                    </div>
-                  ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               )
             })}
@@ -383,85 +397,96 @@ export default function EconomyAdvancedView({
                   </div>
 
                   {/* Раскрытый Used In */}
-                  {isExpanded && hasUsedIn && (
-                    <div style={{
-                      width: '100%',
-                      padding: '8px 0 4px 24px',
-                      borderTop: '1px solid rgba(255,255,255,0.06)',
-                      marginTop: 4,
-                    }}>
-                      <div style={{ fontSize: '0.8rem', opacity: 0.6, marginBottom: 6 }}>Used In:</div>
-                      {usedIn.map(recipe => {
-                        const recipeData = recipes[recipe.name]
-                        const ingredients = recipeData ? (recipeData.ingredients || recipeData.из || {}) : {}
-                        const requiredPerCraft = ingredients[item.name] || 1
-                        const currentCraftQty = craftInputs[item.name]?.[recipe.name] ?? ''
+                  <AnimatePresence initial={false}>
+                    {isExpanded && hasUsedIn && (
+                      <motion.div
+                        key="used-in"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2, ease: 'easeInOut' }}
+                        style={{
+                          width: '100%',
+                          overflow: 'hidden',
+                          borderTop: '1px solid rgba(255,255,255,0.06)',
+                          marginTop: 4,
+                        }}
+                      >
+                        <div style={{ padding: '8px 0 4px 24px' }}>
+                          <div style={{ fontSize: '0.8rem', opacity: 0.6, marginBottom: 6 }}>Used In:</div>
+                          {usedIn.map(recipe => {
+                            const recipeData = recipes[recipe.name]
+                            const ingredients = recipeData ? (recipeData.ingredients || recipeData.из || {}) : {}
+                            const requiredPerCraft = ingredients[item.name] || 1
+                            const currentCraftQty = craftInputs[item.name]?.[recipe.name] ?? ''
 
-                        return (
-                          <div key={recipe.name} style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 8,
-                            padding: '4px 0',
-                            flexWrap: 'wrap',
-                          }}>
-                            <ItemDisplay itemName={recipe.name} itemsData={STATIC_ITEMS_MAP} />
-                            <span style={{ fontSize: '0.8rem', opacity: 0.6 }}>
-                              (÷{requiredPerCraft})
-                            </span>
-                            <input
-                              type="number"
-                              min={1}
-                              value={currentCraftQty}
-                              onChange={e => {
-                                const raw = e.target.value
-                                if (raw === '') {
-                                  setCraftInputs(prev => ({
-                                    ...prev,
-                                    [item.name]: {
-                                      ...(prev[item.name] || {}),
-                                      [recipe.name]: '',
+                            return (
+                              <div key={recipe.name} style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 8,
+                                padding: '4px 0',
+                                flexWrap: 'wrap',
+                              }}>
+                                <ItemDisplay itemName={recipe.name} itemsData={STATIC_ITEMS_MAP} />
+                                <span style={{ fontSize: '0.8rem', opacity: 0.6 }}>
+                                  (÷{requiredPerCraft})
+                                </span>
+                                <input
+                                  type="number"
+                                  min={1}
+                                  value={currentCraftQty}
+                                  onChange={e => {
+                                    const raw = e.target.value
+                                    if (raw === '') {
+                                      setCraftInputs(prev => ({
+                                        ...prev,
+                                        [item.name]: {
+                                          ...(prev[item.name] || {}),
+                                          [recipe.name]: '',
+                                        }
+                                      }))
+                                      return
                                     }
-                                  }))
-                                  return
-                                }
-                                const val = parseInt(raw, 10)
-                                if (!isNaN(val) && val >= 1) {
-                                  setCraftInputs(prev => ({
-                                    ...prev,
-                                    [item.name]: {
-                                      ...(prev[item.name] || {}),
-                                      [recipe.name]: val,
+                                    const val = parseInt(raw, 10)
+                                    if (!isNaN(val) && val >= 1) {
+                                      setCraftInputs(prev => ({
+                                        ...prev,
+                                        [item.name]: {
+                                          ...(prev[item.name] || {}),
+                                          [recipe.name]: val,
+                                        }
+                                      }))
                                     }
-                                  }))
-                                }
-                              }}
-                              style={{
-                                width: '60px',
-                                padding: '2px 6px',
-                                borderRadius: '4px',
-                                border: '1px solid rgba(255,255,255,0.1)',
-                                background: 'rgba(0,0,0,0.2)',
-                                color: 'inherit',
-                                fontSize: '0.8rem',
-                                textAlign: 'center',
-                                MozAppearance: 'textfield',
-                              }}
-                              className="no-spinner"
-                            />
-                            <button
-                              type="button"
-                              className="chip"
-                              style={{ fontSize: '0.75rem', padding: '2px 8px' }}
-                              onClick={() => handleCraftFromUsedIn(item.name, recipe.name, currentCraftQty)}
-                            >
-                              Craft
-                            </button>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  )}
+                                  }}
+                                  style={{
+                                    width: '60px',
+                                    padding: '2px 6px',
+                                    borderRadius: '4px',
+                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    background: 'rgba(0,0,0,0.2)',
+                                    color: 'inherit',
+                                    fontSize: '0.8rem',
+                                    textAlign: 'center',
+                                    MozAppearance: 'textfield',
+                                  }}
+                                  className="no-spinner"
+                                />
+                                <button
+                                  type="button"
+                                  className="chip"
+                                  style={{ fontSize: '0.75rem', padding: '2px 8px' }}
+                                  onClick={() => handleCraftFromUsedIn(item.name, recipe.name, currentCraftQty)}
+                                >
+                                  Craft
+                                </button>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </li>
               )
             })}
@@ -485,167 +510,188 @@ export default function EconomyAdvancedView({
         {/* Список manual добавлений */}
         {manualAdditions.length > 0 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            {manualAdditions.map((add, idx) => (
-              <div key={idx} style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                padding: '4px 8px',
-                background: 'rgba(255,255,255,0.03)',
-                borderRadius: 6,
-              }}>
-                <ItemDisplay itemName={add.itemName} itemsData={STATIC_ITEMS_MAP} />
-                <span style={{ color: '#51cf66', fontWeight: 600 }}>+{formatNumberRounded(add.quantity)}</span>
-                <span style={{ fontSize: '0.75rem', opacity: 0.5, flex: 1 }}>
-                  {new Date(add.timestamp || Date.now()).toLocaleTimeString()}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => handleRemoveManual(idx)}
+            <AnimatePresence initial={false}>
+              {manualAdditions.map((add, idx) => (
+                <motion.div
+                  key={`${add.itemName}-${add.timestamp || idx}`}
+                  layout
+                  initial={{ opacity: 0, x: -20, height: 0 }}
+                  animate={{ opacity: 1, x: 0, height: 'auto' }}
+                  exit={{ opacity: 0, x: 20, height: 0 }}
+                  transition={{ duration: 0.2, ease: 'easeInOut' }}
                   style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#ff6b6b',
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                    padding: '2px 6px',
-                    borderRadius: 4,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    padding: '4px 8px',
+                    background: 'rgba(255,255,255,0.03)',
+                    borderRadius: 6,
+                    overflow: 'hidden',
                   }}
                 >
-                  ✕
-                </button>
-              </div>
-            ))}
+                  <ItemDisplay itemName={add.itemName} itemsData={STATIC_ITEMS_MAP} />
+                  <span style={{ color: '#51cf66', fontWeight: 600 }}>+{formatNumberRounded(add.quantity)}</span>
+                  <span style={{ fontSize: '0.75rem', opacity: 0.5, flex: 1 }}>
+                    {new Date(add.timestamp || Date.now()).toLocaleTimeString()}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveManual(idx)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#ff6b6b',
+                      cursor: 'pointer',
+                      fontSize: '1rem',
+                      padding: '2px 6px',
+                      borderRadius: 4,
+                    }}
+                  >
+                    ✕
+                  </button>
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
         )}
       </section>
 
       {/* Модалка Add Item — с автокомплитом */}
-      {showAddModal && (
-        <div
-          className="modal-wrapper"
-          onClick={() => setShowAddModal(false)}
-          style={{ zIndex: 9999 }}
-        >
-          <div
-            className="glass item-select-content"
-            onClick={e => e.stopPropagation()}
-            style={{ maxWidth: 400, padding: 20 }}
+      <AnimatePresence>
+        {showAddModal && (
+          <motion.div
+            className="modal-wrapper"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            onClick={() => setShowAddModal(false)}
+            style={{ zIndex: 9999 }}
           >
-            <h2 style={{ margin: '0 0 12px 0' }}>Add Item to Leftovers</h2>
-            <p style={{ fontSize: '0.85rem', opacity: 0.6, marginBottom: 12 }}>
-              Type to search and select an item from the list below
-            </p>
-            <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-              <input
-                className="calc-input"
-                placeholder="Search items..."
-                value={addItemFilter}
-                onChange={e => {
-                  setAddItemFilter(e.target.value)
-                  setAddItemName(e.target.value)
-                }}
-                autoFocus
-                style={{ flex: 1, padding: '8px 12px' }}
-              />
-              <input
-                type="number"
-                min={1}
-                value={addQuantity}
-                onChange={e => {
-                  const raw = e.target.value
-                  if (raw === '') {
-                    setAddQuantity('')
-                    return
-                  }
-                  const val = parseInt(raw, 10)
-                  if (!isNaN(val) && val >= 1) {
-                    setAddQuantity(val)
-                  }
-                }}
-                className="no-spinner"
-                style={{
-                  width: '70px',
-                  padding: '8px 12px',
-                  borderRadius: '6px',
-                  border: '1px solid rgba(255,255,255,0.15)',
-                  background: 'rgba(0,0,0,0.2)',
-                  color: 'inherit',
-                  fontSize: '0.9rem',
-                  textAlign: 'center',
-                  MozAppearance: 'textfield',
-                }}
-              />
-            </div>
-            {/* Выпадающий список автокомплита */}
-            {addItemFilter && filteredAddItems.length > 0 && (
-              <div style={{
-                maxHeight: 250,
-                overflowY: 'auto',
-                marginBottom: 12,
-                border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: 6,
-                background: 'rgba(0,0,0,0.3)',
-              }}>
-                {filteredAddItems.map(name => (
-                  <button
-                    key={name}
-                    type="button"
-                    onClick={() => {
-                      setAddItemName(name)
-                      setAddItemFilter(name)
-                    }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      width: '100%',
-                      padding: '6px 10px',
-                      border: 'none',
-                      background: addItemName === name ? 'rgba(81, 207, 102, 0.15)' : 'transparent',
-                      color: 'inherit',
-                      cursor: 'pointer',
-                      borderRadius: 0,
-                      fontSize: '0.9rem',
-                      textAlign: 'left',
-                    }}
-                  >
-                    <ItemDisplay itemName={name} itemsData={STATIC_ITEMS_MAP} showName={false} />
-                    <span>{name}</span>
-                  </button>
-                ))}
+            <motion.div
+              className="glass item-select-content"
+              initial={{ opacity: 0, scale: 0.92, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 10 }}
+              transition={{ duration: 0.18, ease: 'easeOut' }}
+              onClick={e => e.stopPropagation()}
+              style={{ maxWidth: 400, padding: 20 }}
+            >
+              <h2 style={{ margin: '0 0 12px 0' }}>Add Item to Leftovers</h2>
+              <p style={{ fontSize: '0.85rem', opacity: 0.6, marginBottom: 12 }}>
+                Type to search and select an item from the list below
+              </p>
+              <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+                <input
+                  className="calc-input"
+                  placeholder="Search items..."
+                  value={addItemFilter}
+                  onChange={e => {
+                    setAddItemFilter(e.target.value)
+                    setAddItemName(e.target.value)
+                  }}
+                  autoFocus
+                  style={{ flex: 1, padding: '8px 12px' }}
+                />
+                <input
+                  type="number"
+                  min={1}
+                  value={addQuantity}
+                  onChange={e => {
+                    const raw = e.target.value
+                    if (raw === '') {
+                      setAddQuantity('')
+                      return
+                    }
+                    const val = parseInt(raw, 10)
+                    if (!isNaN(val) && val >= 1) {
+                      setAddQuantity(val)
+                    }
+                  }}
+                  className="no-spinner"
+                  style={{
+                    width: '70px',
+                    padding: '8px 12px',
+                    borderRadius: '6px',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    background: 'rgba(0,0,0,0.2)',
+                    color: 'inherit',
+                    fontSize: '0.9rem',
+                    textAlign: 'center',
+                    MozAppearance: 'textfield',
+                  }}
+                />
               </div>
-            )}
-            {addItemFilter && filteredAddItems.length === 0 && (
-              <div style={{ padding: '8px 0', textAlign: 'center', opacity: 0.5, fontSize: '0.85rem', marginBottom: 8 }}>
-                No items found
+              {/* Выпадающий список автокомплита */}
+              {addItemFilter && filteredAddItems.length > 0 && (
+                <div style={{
+                  maxHeight: 250,
+                  overflowY: 'auto',
+                  marginBottom: 12,
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: 6,
+                  background: 'rgba(0,0,0,0.3)',
+                }}>
+                  {filteredAddItems.map(name => (
+                    <button
+                      key={name}
+                      type="button"
+                      onClick={() => {
+                        setAddItemName(name)
+                        setAddItemFilter(name)
+                      }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 8,
+                        width: '100%',
+                        padding: '6px 10px',
+                        border: 'none',
+                        background: addItemName === name ? 'rgba(81, 207, 102, 0.15)' : 'transparent',
+                        color: 'inherit',
+                        cursor: 'pointer',
+                        borderRadius: 0,
+                        fontSize: '0.9rem',
+                        textAlign: 'left',
+                      }}
+                    >
+                      <ItemDisplay itemName={name} itemsData={STATIC_ITEMS_MAP} showName={false} />
+                      <span>{name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+              {addItemFilter && filteredAddItems.length === 0 && (
+                <div style={{ padding: '8px 0', textAlign: 'center', opacity: 0.5, fontSize: '0.85rem', marginBottom: 8 }}>
+                  No items found
+                </div>
+              )}
+              <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+                <button
+                  type="button"
+                  className="chip"
+                  onClick={() => {
+                    setShowAddModal(false)
+                    setAddItemName('')
+                    setAddItemFilter('')
+                    setAddQuantity(1)
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="chip"
+                  style={{ background: 'rgba(81, 207, 102, 0.2)', color: '#51cf66' }}
+                  onClick={handleAddItem}
+                >
+                  Add
+                </button>
               </div>
-            )}
-            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-              <button
-                type="button"
-                className="chip"
-                onClick={() => {
-                  setShowAddModal(false)
-                  setAddItemName('')
-                  setAddItemFilter('')
-                  setAddQuantity(1)
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="chip"
-                style={{ background: 'rgba(81, 207, 102, 0.2)', color: '#51cf66' }}
-                onClick={handleAddItem}
-              >
-                Add
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   )
 }

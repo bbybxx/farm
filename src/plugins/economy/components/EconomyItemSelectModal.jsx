@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import ItemDisplay from '../../../components/ItemDisplay'
 import LocationImage from '../../../components/LocationImage'
 import { getItemsMap, getRecipes, getUsedItemsSet } from '../utils/economyData'
@@ -65,20 +66,28 @@ export default function EconomyItemSelectModal({ isOpen, mode, onSelect, onClose
     if (listRef.current) listRef.current.scrollTop = 0
   }, [filter])
 
-  if (!isOpen) return null
-
   return (
-    <div
-      className="modal-wrapper"
-      onClick={onClose}
-      style={{ zIndex: 9999 }}
-    >
-      <div
-        className="glass item-select-content"
-        role="dialog"
-        aria-modal="true"
-        onClick={e => e.stopPropagation()}
-      >
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="modal-wrapper"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+          onClick={onClose}
+          style={{ zIndex: 9999 }}
+        >
+          <motion.div
+            className="glass item-select-content"
+            role="dialog"
+            aria-modal="true"
+            initial={{ opacity: 0, scale: 0.92, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.92, y: 10 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
+            onClick={e => e.stopPropagation()}
+          >
             <div className="item-select-header">
               <h2 className="item-select-title">{title}</h2>
               <div className="item-select-search-wrapper">
@@ -111,7 +120,9 @@ export default function EconomyItemSelectModal({ isOpen, mode, onSelect, onClose
                 ))
               )}
             </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }

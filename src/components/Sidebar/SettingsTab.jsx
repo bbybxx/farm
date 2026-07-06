@@ -15,6 +15,8 @@ export default function SettingsTab({
   setHistoryEnabled,
   buddyFarmLinksEnabled,
   setBuddyFarmLinksEnabled,
+  questItemSearchEnabled,
+  setQuestItemSearchEnabled,
   exploringMode,
   setExploringMode,
   setIsLocationConfigOpen,
@@ -106,6 +108,21 @@ export default function SettingsTab({
         </label>
         <p className="setting-description">
           Make item icons clickable to open buddy.farm pages
+        </p>
+      </div>
+
+      <div className="setting-item">
+        <label className="setting-label">
+          <input
+            type="checkbox"
+            checked={questItemSearchEnabled}
+            onChange={(e) => setQuestItemSearchEnabled(e.target.checked)}
+            className="setting-checkbox"
+          />
+          Enable Item Search in Quests
+        </label>
+        <p className="setting-description">
+          Show a second search field in quests to find questlines that require specific items
         </p>
       </div>
 

@@ -15,12 +15,14 @@ export default memo(function QuestsPanel({
   recentlyAddedItems,
   onItemClick,
   hasItemContent,
-  enableBuddyFarmLinks
+  enableBuddyFarmLinks,
+  questItemSearchEnabled
 }) {
   const [selectedQuestline, setSelectedQuestline] = useState(null)
   const [selectedQuest, setSelectedQuest] = useState(null)
   const [expandedDescriptions, setExpandedDescriptions] = useState({})
   const [searchFilter, setSearchFilter] = useState('')
+  const [itemSearchFilter, setItemSearchFilter] = useState('')
   const [questChains, setQuestChains] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -258,6 +260,38 @@ export default memo(function QuestsPanel({
       return cleanName.toLowerCase().includes(query)
     })
   }, [questChains, searchFilter])
+
+  // Search quests by required item name
+  const itemFilteredResults = useMemo(() => {
+    if (!itemSearchFilter.trim()) return null
+    const query = itemSearchFilter.toLowerCase().trim()
+    
+    const results = []
+    
+    questChains.forEach(chain => {
+      const matchingQuests = chain.quests.filter(quest => {
+        // Check requirements items
+        return quest.requirements.items.some(req => 
+          req.name.toLowerCase().includes(query)
+        )
+      })
+      
+      if (matchingQuests.length > 0) {
+        results.push({
+          questline: chain,
+          matchingQuests: matchingQuests.map(quest => ({
+            quest,
+            // Collect which items matched and their quantities for display
+            matchedItems: quest.requirements.items.filter(req =>
+              req.name.toLowerCase().includes(query)
+            )
+          }))
+        })
+      }
+    })
+    
+    return results
+  }, [questChains, itemSearchFilter])
 
   const handleQuestSelect = (quest) => {
     // Find and open the questline
@@ -1229,41 +1263,136 @@ export default memo(function QuestsPanel({
                   autoFocus
                 />
               </div>
+              {questItemSearchEnabled && (
+                <div className="item-select-search-wrapper" style={{ marginTop: '8px' }}>
+                  <input
+                    type="text"
+                    className="calc-input item-select-search"
+                    placeholder="Search by required item..."
+                    value={itemSearchFilter}
+                    onChange={(e) => setItemSearchFilter(e.target.value)}
+                  />
+                </div>
+              )}
             </div>
 
             <div ref={questSelectListRef} className="item-select-list">
-              {filteredQuestlines.length === 0 ? (
-                <div style={{ 
-                  textAlign: 'center', 
-                  padding: '40px',
-                  color: 'rgba(255,255,255,0.5)',
-                  fontSize: '14px'
-                }}>
-                  No questlines found
-                </div>
+              {itemSearchFilter.trim() && itemFilteredResults ? (
+                itemFilteredResults.length === 0 ? (
+                  <div style={{ 
+                    textAlign: 'center', 
+                    padding: '40px',
+                    color: 'rgba(255,255,255,0.5)',
+                    fontSize: '14px'
+                  }}>
+                    No quests found requiring "{itemSearchFilter}"
+                  </div>
+                ) : (
+                  itemFilteredResults.map(({ questline, matchingQuests }) => (
+                    <div key={questline.id} style={{ marginBottom: '12px' }}>
+                      <div style={{ 
+                        fontSize: '13px', 
+                        fontWeight: 700, 
+                        color: 'rgba(255,255,255,0.6)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px',
+                        padding: '8px 12px 4px'
+                      }}>
+                        {questline.name.replace(/<br\s*\/?>/gi, ' ')}
+                      </div>
+                      {matchingQuests.map(({ quest, matchedItems }) => (
+                        <button
+                          key={quest.id}
+                          onClick={() => {
+                            setSelectedQuestline(questline)
+                            setSelectedQuest(quest)
+                            setViewMode('quest')
+                            setIsQuestSelectOpen(false)
+                            if (onQuestlineChange) onQuestlineChange(questline.id)
+                            if (onQuestChange) onQuestChange(quest.id)
+                          }}
+                          type="button"
+                          style={{
+                            width: '100%',
+                            textAlign: 'left',
+                            padding: '10px 12px',
+                            background: 'rgba(255,255,255,0.03)',
+                            border: 'none',
+                            borderBottom: '1px solid rgba(255,255,255,0.06)',
+                            color: '#fff',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            flexWrap: 'wrap'
+                          }}
+                        >
+                          <span style={{ fontSize: '14px', fontWeight: 500, flex: 1, minWidth: 0 }}>
+                            {quest.name.replace(/<br\s*\/?>/gi, ' ')}
+                          </span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+                            {matchedItems.map(item => (
+                              <span key={item.name} style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                                padding: '2px 8px',
+                                background: 'rgba(234, 179, 8, 0.15)',
+                                borderRadius: '4px',
+                                fontSize: '12px',
+                                color: '#fcd34d',
+                                fontWeight: 600
+                              }}>
+                                <ItemDisplay
+                                  itemName={item.name}
+                                  itemsData={itemsData}
+                                  size="small"
+                                  enableBuddyFarmLinks={enableBuddyFarmLinks}
+                                />
+                                ×{item.quantity}
+                              </span>
+                            ))}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  ))
+                )
               ) : (
-                filteredQuestlines.map(questline => (
-                  <button
-                    key={questline.id}
-                    data-selected={selectedQuestline?.id === questline.id}
-                    className={selectedQuestline?.id === questline.id ? 'active' : ''}
-                    onClick={() => {
-                      setSelectedQuestline(questline)
-                      setViewMode('questline')
-                      setIsQuestSelectOpen(false)
-                      if (onQuestlineChange) onQuestlineChange(questline.id)
-                      if (onQuestChange) onQuestChange(null)
-                    }}
-                    type="button"
-                  >
-                    <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '4px' }}>
-                      {questline.name.replace(/<br\s*\/?>/gi, ' ')}
-                    </div>
-                    <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>
-                      {questline.quests.length} quests
-                    </div>
-                  </button>
-                ))
+                /* Show normal questline list when item search is empty */
+                filteredQuestlines.length === 0 ? (
+                  <div style={{ 
+                    textAlign: 'center', 
+                    padding: '40px',
+                    color: 'rgba(255,255,255,0.5)',
+                    fontSize: '14px'
+                  }}>
+                    No questlines found
+                  </div>
+                ) : (
+                  filteredQuestlines.map(questline => (
+                    <button
+                      key={questline.id}
+                      data-selected={selectedQuestline?.id === questline.id}
+                      className={selectedQuestline?.id === questline.id ? 'active' : ''}
+                      onClick={() => {
+                        setSelectedQuestline(questline)
+                        setViewMode('questline')
+                        setIsQuestSelectOpen(false)
+                        if (onQuestlineChange) onQuestlineChange(questline.id)
+                        if (onQuestChange) onQuestChange(null)
+                      }}
+                      type="button"
+                    >
+                      <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '4px' }}>
+                        {questline.name.replace(/<br\s*\/?>/gi, ' ')}
+                      </div>
+                      <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>
+                        {questline.quests.length} quests
+                      </div>
+                    </button>
+                  ))
+                )
               )}
             </div>
           </div>

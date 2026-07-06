@@ -5,6 +5,7 @@ export function useSettings() {
   const [useThousandsFormat, setUseThousandsFormat] = useState(() => loadFromStorage('craftCalculator_useThousandsFormat', true))
   const [pinnedEnabled, setPinnedEnabled] = useState(() => loadFromStorage('craftCalculator_pinnedEnabled', true))
   const [buddyFarmLinksEnabled, setBuddyFarmLinksEnabled] = useState(() => loadFromStorage('craftCalculator_buddyFarmLinksEnabled', false))
+  const [questItemSearchEnabled, setQuestItemSearchEnabled] = useState(() => loadFromStorage('craftCalculator_questItemSearchEnabled', false))
   
   const [exploringMode, setExploringMode] = useState(() => {
     const stored = loadFromStorage('craftCalculator_exploringMode', null)
@@ -40,6 +41,10 @@ export function useSettings() {
     saveToStorage('craftCalculator_buddyFarmLinksEnabled', buddyFarmLinksEnabled)
   }, [buddyFarmLinksEnabled])
 
+  useEffect(() => {
+    saveToStorage('craftCalculator_questItemSearchEnabled', questItemSearchEnabled)
+  }, [questItemSearchEnabled])
+
   return {
     useThousandsFormat,
     setUseThousandsFormat,
@@ -47,6 +52,8 @@ export function useSettings() {
     setPinnedEnabled,
     buddyFarmLinksEnabled,
     setBuddyFarmLinksEnabled,
+    questItemSearchEnabled,
+    setQuestItemSearchEnabled,
     exploringMode,
     setExploringMode
   }

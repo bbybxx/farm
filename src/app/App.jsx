@@ -146,6 +146,8 @@ export default function App() {
     setPinnedEnabled,
     buddyFarmLinksEnabled,
     setBuddyFarmLinksEnabled,
+    questItemSearchEnabled,
+    setQuestItemSearchEnabled,
     exploringMode,
     setExploringMode
   } = useSettings()
@@ -1199,6 +1201,8 @@ export default function App() {
               setHistoryEnabled={setHistoryEnabled}
               buddyFarmLinksEnabled={buddyFarmLinksEnabled}
               setBuddyFarmLinksEnabled={setBuddyFarmLinksEnabled}
+              questItemSearchEnabled={questItemSearchEnabled}
+              setQuestItemSearchEnabled={setQuestItemSearchEnabled}
               exploringMode={exploringMode}
               setExploringMode={setExploringMode}
               setIsLocationConfigOpen={setIsLocationConfigOpen}
@@ -1275,6 +1279,7 @@ export default function App() {
             recentlyAddedItems={recentlyAddedItems}
             onItemClick={handleQuestItemClick}
             hasItemContent={hasItemContent}
+            questItemSearchEnabled={questItemSearchEnabled}
           />
         ) : (
           <>

@@ -77,6 +77,8 @@ export default function EconomyAdvancedView({
   const [addQuantity, setAddQuantity] = useState(1)
   // Состояние для инлайн-крафта в Used In
   const [craftInputs, setCraftInputs] = useState({}) // { itemName: { recipeName: quantity } }
+  // Состояние для фильтра Used In рецептов
+  const [usedInFilter, setUsedInFilter] = useState('')
 
   // isTradableFn — пока все предметы считаем торгуемыми
   const isTradableFn = useCallback(() => true, [])
@@ -425,11 +427,59 @@ export default function EconomyAdvancedView({
                       >
                         <div style={{ padding: '8px 0 4px 24px' }}>
                           <div style={{ fontSize: '0.8rem', opacity: 0.6, marginBottom: 6 }}>Used In:</div>
-                          {usedIn.map(recipe => {
+                          {/* Поле поиска среди рецептов */}
+                          {usedIn.length > 5 && (
+                            <input
+                              type="text"
+                              placeholder="Search recipes..."
+                              value={usedInFilter}
+                              onChange={e => setUsedInFilter(e.target.value)}
+                              style={{
+                                width: '100%',
+                                padding: '4px 8px',
+                                marginBottom: 6,
+                                borderRadius: '4px',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                                background: 'rgba(0,0,0,0.2)',
+                                color: 'inherit',
+                                fontSize: '0.8rem',
+                                boxSizing: 'border-box',
+                              }}
+                            />
+                          )}
+                          {usedIn
+                            .filter(recipe => {
+                              if (!usedInFilter) return true
+                              const lower = usedInFilter.toLowerCase()
+                              return recipe.name.toLowerCase().includes(lower)
+                            })
+                            .map(recipe => {
                             const recipeData = recipes[recipe.name]
                             const ingredients = recipeData ? (recipeData.ingredients || recipeData.из || {}) : {}
                             const requiredPerCraft = ingredients[item.name] || 1
                             const currentCraftQty = craftInputs[item.name]?.[recipe.name] ?? ''
+
+                            // Функция для расчёта максимального количества крафтов
+                            const computeMaxCraft = () => {
+                              if (!recipeData) return 0
+                              const ings = recipeData.ingredients || recipeData.из || {}
+                              let maxByIngredients = Infinity
+                              for (const [ingName, ingQty] of Object.entries(ings)) {
+                                const leftover = mergedLeftovers.find(l => l.name === ingName)
+                                if (!leftover || leftover.quantity <= 0) {
+                                  maxByIngredients = 0
+                                  break
+                                }
+                                const adjustedRequired = resourceSaverPercent > 0
+                                  ? (ingQty / (1 + resourceSaverPercent))
+                                  : ingQty
+                                const craftable = Math.floor(leftover.quantity / adjustedRequired)
+                                if (craftable < maxByIngredients) {
+                                  maxByIngredients = craftable
+                                }
+                              }
+                              return maxByIngredients === Infinity ? 0 : maxByIngredients
+                            }
 
                             return (
                               <div key={recipe.name} style={{
@@ -487,6 +537,25 @@ export default function EconomyAdvancedView({
                                   type="button"
                                   className="chip"
                                   style={{ fontSize: '0.75rem', padding: '2px 8px' }}
+                                  onClick={() => {
+                                    const maxQty = computeMaxCraft()
+                                    if (maxQty > 0) {
+                                      setCraftInputs(prev => ({
+                                        ...prev,
+                                        [item.name]: {
+                                          ...(prev[item.name] || {}),
+                                          [recipe.name]: maxQty,
+                                        }
+                                      }))
+                                    }
+                                  }}
+                                >
+                                  Max
+                                </button>
+                                <button
+                                  type="button"
+                                  className="chip"
+                                  style={{ fontSize: '0.75rem', padding: '2px 8px' }}
                                   onClick={() => handleCraftFromUsedIn(item.name, recipe.name, currentCraftQty)}
                                 >
                                   Craft
@@ -494,6 +563,13 @@ export default function EconomyAdvancedView({
                               </div>
                             )
                           })}
+                          {usedInFilter && usedIn.filter(recipe =>
+                            recipe.name.toLowerCase().includes(usedInFilter.toLowerCase())
+                          ).length === 0 && (
+                            <div style={{ padding: '4px 0', fontSize: '0.8rem', opacity: 0.5 }}>
+                              No matching recipes
+                            </div>
+                          )}
                         </div>
                       </motion.div>
                     )}

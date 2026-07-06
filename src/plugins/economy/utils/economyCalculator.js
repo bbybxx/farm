@@ -13,13 +13,13 @@ import { getPerUnitPrice } from './parsePriceString'
  * Общая стоимость всех ресурсов в цепочке.
  * @param {Array<{name: string, amount: number, fixed?: boolean}>} chain — economyChain
  * @param {Object<string, {gold?: {value: number|null, divisor: number}, ap?: ..., oj?: ...}>} prices — объект цен
+ * @param {{apToGold?: number|null, ojToGold?: number|null, ojToAp?: number|null}} exchangeRates — курсы обмена
  * @returns {number}
  */
-export function calculateCost(chain, prices) {
+export function calculateCost(chain, prices, exchangeRates = {}) {
   return chain.reduce((sum, item) => {
-    const price = prices[item.name]
-    const goldPrice = price?.gold ? getPerUnitPrice(price.gold) : 0
-    return sum + (goldPrice ?? 0) * item.amount
+    const perUnitGold = getItemPrice(item.name, 'gold', prices, exchangeRates)
+    return sum + (perUnitGold ?? 0) * item.amount
   }, 0)
 }
 
@@ -27,13 +27,13 @@ export function calculateCost(chain, prices) {
  * Выручка от продажи всех остатков.
  * @param {Array<{name: string, quantity: number, price?: {gold?: {value: number|null, divisor: number}}}>} leftovers
  * @param {Object<string, {gold?: {value: number|null, divisor: number}}>} prices
+ * @param {{apToGold?: number|null, ojToGold?: number|null, ojToAp?: number|null}} exchangeRates — курсы обмена
  * @returns {number}
  */
-export function calculateRevenue(leftovers, prices) {
+export function calculateRevenue(leftovers, prices, exchangeRates = {}) {
   return leftovers.reduce((sum, item) => {
-    const price = prices[item.name]
-    const goldPrice = price?.gold ? getPerUnitPrice(price.gold) : 0
-    return sum + (goldPrice ?? 0) * item.quantity
+    const perUnitGold = getItemPrice(item.name, 'gold', prices, exchangeRates)
+    return sum + (perUnitGold ?? 0) * item.quantity
   }, 0)
 }
 
@@ -122,6 +122,21 @@ export function applyCraft(leftovers, itemName, quantity, craftRecipe) {
 export function convertPrice(value, fromCurrency, toCurrency, exchangeRates) {
   if (fromCurrency === toCurrency) return value
 
+  // Прямая конвертация AP ↔ OJ через ojToAp (без посредничества gold)
+  // ojToAp = сколько AP в 1000 OJ (например 100 AP = 1000 OJ → ojToAp = 100)
+  if (fromCurrency === 'ap' && toCurrency === 'oj') {
+    if (exchangeRates.ojToAp != null && exchangeRates.ojToAp !== 0) {
+      return (value / exchangeRates.ojToAp) * 1000
+    }
+    // fallback: через gold
+  }
+  if (fromCurrency === 'oj' && toCurrency === 'ap') {
+    if (exchangeRates.ojToAp != null && exchangeRates.ojToAp !== 0) {
+      return (value / 1000) * exchangeRates.ojToAp
+    }
+    // fallback: через gold
+  }
+
   let inGold
   switch (fromCurrency) {
     case 'gold':
@@ -165,10 +180,14 @@ export function getItemPrice(itemName, currency, prices, exchangeRates) {
   const price = prices[itemName]
   if (!price) return null
 
+  // Пробуем запрошенную валюту — если значение есть, возвращаем сразу
   if (price[currency] != null) {
-    return getPerUnitPrice(price[currency])
+    const perUnit = getPerUnitPrice(price[currency])
+    if (perUnit != null) return perUnit
+    // value === null — падаем дальше, пробуем другие валюты с конвертацией
   }
 
+  // Fallback: ищем любую не-null цену и конвертируем в запрошенную валюту
   if (price.gold != null) {
     const perUnit = getPerUnitPrice(price.gold)
     if (perUnit != null) return convertPrice(perUnit, 'gold', currency, exchangeRates)
@@ -188,10 +207,10 @@ export function getItemPrice(itemName, currency, prices, exchangeRates) {
 /**
  * Простой расчёт для Simple-режима.
  */
-export function runSimple(chain, prices) {
-  const cost = calculateCost(chain, prices)
+export function runSimple(chain, prices, exchangeRates = {}) {
+  const cost = calculateCost(chain, prices, exchangeRates)
   const leftovers = calculateLeftovers(chain, prices, () => true)
-  const revenue = calculateRevenue(leftovers, prices)
+  const revenue = calculateRevenue(leftovers, prices, exchangeRates)
   const profit = calculateProfit(cost, revenue)
 
   const warnings = chain

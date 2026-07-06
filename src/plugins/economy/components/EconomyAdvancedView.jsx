@@ -112,11 +112,11 @@ export default function EconomyAdvancedView({
   // --- C/R/P расчёт (на расширенной цепочке) ---
   // Всегда считаем в gold, потом конвертируем в выбранную валюту
   const { cost, revenue, profit } = useMemo(() => {
-    const c = calculateCost(extendedChain, prices)
-    const r = calculateRevenue(mergedLeftovers, prices)
+    const c = calculateCost(extendedChain, prices, exchangeRates)
+    const r = calculateRevenue(mergedLeftovers, prices, exchangeRates)
     const p = calculateProfit(c, r)
     return { cost: c, revenue: r, profit: p }
-  }, [extendedChain, prices, mergedLeftovers])
+  }, [extendedChain, prices, mergedLeftovers, exchangeRates])
 
   // Конвертируем cost/revenue/profit из gold в выбранную валюту
   const { costDisplay, revenueDisplay, profitDisplay } = useMemo(() => {
@@ -426,12 +426,13 @@ export default function EconomyAdvancedView({
                     <span className="k">
                       <ItemDisplay itemName={item.name} itemsData={STATIC_ITEMS_MAP} />
                     </span>
-                    <span className="v" style={{ color: '#51cf66' }}>
+                    <span className="v" style={{ color: '#51cf66', minWidth: 60 }}>
                       {formatNumberRounded(item.quantity)}
                     </span>
+                    <span style={{ flex: '0 0 12px' }} />
                     {hasPrice && (
                       <span className="v" style={{ fontSize: '0.85rem', opacity: 0.6, minWidth: 60, textAlign: 'right' }}>
-                        {formatNumberRounded(Math.round(priceInCurrency))} {currencySuffix}
+                        {formatNumberRounded(priceInCurrency * item.quantity)} {currencySuffix}
                       </span>
                     )}
                     {hasUsedIn && (

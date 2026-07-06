@@ -190,18 +190,6 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
   // Breadcrumbs (свой собственный craftChain, не из App.jsx)
   const [craftChain, setCraftChain] = useState([])
 
-  // При переключении в advanced — насильно убираем контент предыдущего режима
-  const setView = useCallback((newView) => {
-    setViewState(newView)
-    if (newView === 'advanced') {
-      setCraftChain([])
-      setSelectedItem(null)
-      setAmount(1)
-      setSelectedLocation(null)
-      setLocationAmount(1)
-    }
-  }, [])
-
   const breadcrumbsRef = useRef(null)
 
   // Используем синглтон из economyData — вычисляется 1 раз при первом обращении
@@ -213,27 +201,93 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
     return recalcChainFromRoot(craftChain, activePerks, exploringMode, combinedRecipes)
   }, [craftChain, activePerks, exploringMode, combinedRecipes])
 
+  // При переключении в advanced — просто переключаем view, не трогаем chain
+  // Chain остаётся как есть и передаётся в EconomyAdvancedView через chain={recalculatedChain}
+  // AdvancedState используется ТОЛЬКО для дополнительных крафтов из Used In
+  const setView = useCallback((newView) => {
+    setViewState(newView)
+  }, [])
+
+  // --- getLocationDrops — колбэк для получения всех дропов локации ---
+  const getLocationDrops = useCallback((locationName, budget) => {
+    if (!locationName || !budget || budget <= 0) return []
+    const locObj = APPLE_CIDER_REAL_DROP_RATES.locations?.[locationName]
+    if (!locObj) return []
+
+    const itemSet = new Set()
+    Object.values(locObj).forEach(variant => {
+      if (variant && typeof variant === 'object') Object.keys(variant).forEach(k => itemSet.add(k))
+    })
+
+    return Array.from(itemSet).map(it => {
+      const display = computeDisplayValue(it, budget, locationName, activePerks, exploringMode)
+      const parsed = typeof display === 'number' && !Number.isNaN(Number(display)) ? Number(display) : 0
+      return { name: it, amount: parsed >= 1 ? Math.floor(parsed) : 0 }
+    }).filter(d => d.amount > 0)
+  }, [activePerks, exploringMode])
+
   // --- Отправка текущей цепочки в advanced-режим ---
   const handleSendToAdvanced = useCallback(() => {
-    if (!recalculatedChain || recalculatedChain.length === 0) return
+    // Если advanced уже не пуст — ничего не делаем (кнопка скрыта, но на всякий случай)
+    if (advancedState.length > 0 || manualAdditions.length > 0) return
 
-    // Конвертируем каждый non-location узел цепочки в advancedState
+    // Строим цепочку из текущего контекста, если craftChain пуст
+    let chainToSend = recalculatedChain
+    if (!chainToSend || chainToSend.length === 0) {
+      const nodes = []
+      if (selectedLocation && locationAmount > 0) {
+        nodes.push({ name: selectedLocation, amount: locationAmount, isLocation: true, savedAmount: locationAmount, editable: true })
+      }
+      if (selectedItem && amount > 0) {
+        nodes.push({ name: selectedItem, amount: Number(amount) || 1, editable: false })
+      }
+      if (nodes.length > 0) {
+        chainToSend = recalcChainFromRoot(nodes, activePerks, exploringMode, combinedRecipes)
+      }
+    }
+
+    if (!chainToSend || chainToSend.length === 0) return
+
+    // Разворачиваем цепочку: location-ноды заменяем на их дропы,
+    // остальные ноды (крафты/предметы) переносим как есть
     const newAdvancedState = []
-    for (const node of recalculatedChain) {
-      if (node.isLocation) continue // локации не нужны в advancedState
-      const qty = Number(node.amount) || 0
-      if (qty <= 0) continue
-      newAdvancedState.push({
-        itemName: node.name,
-        crafts: [{ recipeName: node.name, quantity: qty }],
-      })
+    for (const node of chainToSend) {
+      if (node.isLocation) {
+        // Вместо локации переносим её дропы — то, что реально добыто
+        const budget = Number(node.amount) || 0
+        if (budget <= 0) continue
+        const drops = getLocationDrops(node.name, budget)
+        if (drops && drops.length > 0) {
+          for (const drop of drops) {
+            newAdvancedState.push({
+              itemName: drop.name,
+              crafts: [{ recipeName: drop.name, quantity: drop.amount }],
+              isLocation: false,
+            })
+          }
+        }
+      } else {
+        // Крафт или предмет — переносим как есть
+        const qty = Number(node.amount) || 0
+        if (qty <= 0) continue
+        newAdvancedState.push({
+          itemName: node.name,
+          crafts: [{ recipeName: node.name, quantity: qty }],
+          isLocation: false,
+        })
+      }
     }
 
     if (newAdvancedState.length === 0) return
 
     setAdvancedState(newAdvancedState)
-    setView('advanced')
-  }, [recalculatedChain, setAdvancedState, setView])
+    setViewState('advanced')
+
+  }, [recalculatedChain, advancedState, manualAdditions, selectedLocation, locationAmount, selectedItem, amount, activePerks, exploringMode, combinedRecipes, setAdvancedState, getLocationDrops])
+
+
+
+
 
   // Синхронизируем amount/locationAmount с пересчитанной цепочкой
   // для текущего отображаемого узла
@@ -406,25 +460,8 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
     setCraftChain(prev => [...prev, { name: itemName, amount: quantity, editable: false }])
   }, [setCraftChain])
 
-  // --- getLocationDrops — колбэк для получения всех дропов локации ---
-  const getLocationDrops = useCallback((locationName, budget) => {
-    if (!locationName || !budget || budget <= 0) return []
-    const locObj = APPLE_CIDER_REAL_DROP_RATES.locations?.[locationName]
-    if (!locObj) return []
-
-    const itemSet = new Set()
-    Object.values(locObj).forEach(variant => {
-      if (variant && typeof variant === 'object') Object.keys(variant).forEach(k => itemSet.add(k))
-    })
-
-    return Array.from(itemSet).map(it => {
-      const display = computeDisplayValue(it, budget, locationName, activePerks, exploringMode)
-      const parsed = typeof display === 'number' && !Number.isNaN(Number(display)) ? Number(display) : 0
-      return { name: it, amount: parsed >= 1 ? Math.floor(parsed) : 0 }
-    }).filter(d => d.amount > 0)
-  }, [activePerks, exploringMode])
-
   // Close sidebar when item select modal opens
+
   useEffect(() => {
     if (itemSelectMode !== null && setSidebarOpen) {
       setSidebarOpen(false)
@@ -442,18 +479,26 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
   const advancedCRP = useMemo(() => {
     if (view !== 'advanced') return null
 
-    // Мерджим advancedState в цепочку
+    // Если advancedState не пуст — используем ТОЛЬКО его, игнорируем recalculatedChain
+    // recalculatedChain содержит craft-данные из простого режима, которые не должны
+    // примешиваться к advanced-расчёту
     const extendedChain = (() => {
       if (!advancedState || advancedState.length === 0) return recalculatedChain
-      const extraNodes = []
+      const nodes = []
       for (const entry of advancedState) {
         for (const craft of entry.crafts) {
-          extraNodes.push({ name: entry.itemName, amount: craft.quantity, fixed: true })
+          nodes.push({
+            name: entry.itemName,
+            amount: craft.quantity,
+            fixed: true,
+            isLocation: !!entry.isLocation,
+          })
         }
       }
-      if (extraNodes.length === 0) return recalculatedChain
-      return [...recalculatedChain, ...extraNodes]
+      return nodes
     })()
+
+
 
     // Leftovers
     const { leftovers, deficit } = computeActualLeftovers(
@@ -648,9 +693,11 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
       )}
 
       {/* Кнопка отправки в advanced — показывается в craft/location режимах,
-          когда в advanced пусто и есть что переносить */}
+          только если advanced пуст и есть что переносить */}
       {(view === 'craft' || view === 'location') && (
-        advancedState.length === 0 && manualAdditions.length === 0 && recalculatedChain.length > 0 && (
+        advancedState.length === 0 && manualAdditions.length === 0 && (
+          (recalculatedChain.length > 0) || (selectedItem && amount > 0) || (selectedLocation && locationAmount > 0)
+        ) && (
           <button
             className="economy-send-to-advanced"
             type="button"
@@ -661,6 +708,8 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
           </button>
         )
       )}
+
+
 
       {/* Location mode — controls + drops */}
       {view === 'location' && (

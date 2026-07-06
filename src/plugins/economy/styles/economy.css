@@ -68,7 +68,7 @@
   transform: translateY(0);
 }
 
-/* Кнопка отправки цепочки в advanced-режим */
+/* Кнопка отправки цепочки в advanced-режим — стеклянная, как весь калькулятор */
 .economy-send-to-advanced {
   position: fixed;
   bottom: 20px;
@@ -76,9 +76,11 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 215, 0, 0.5);
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
+  border: 1px solid var(--glass-stroke);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur)) saturate(1.1);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(1.1);
+  box-shadow: var(--shadow);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -90,8 +92,8 @@
 
 .economy-send-to-advanced:hover {
   transform: scale(1.1);
-  border-color: rgba(255, 215, 0, 0.9);
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
+  border-color: rgba(255,255,255,0.15);
+  box-shadow: 0 0 16px rgba(255,255,255,0.08);
 }
 
 .economy-send-to-advanced:active {

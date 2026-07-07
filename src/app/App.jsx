@@ -228,32 +228,6 @@ export default function App() {
 
   const { economyEnabled, setEconomyEnabled } = useEconomyContext()
 
-  // Создаём папку "eco" в pinned при включении экономики
-  useEffect(() => {
-    if (!economyEnabled) return
-    const ecoExists = pinnedFolders.some(f => f.id === 'eco')
-    if (!ecoExists) {
-      const ecoFolder = {
-        id: 'eco',
-        name: 'eco',
-        createdAt: Date.now(),
-        isSystemFolder: true,
-      }
-      setPinnedFolders(prev => {
-        // Вставляем после 'quests' или в конец
-        const questsIdx = prev.findIndex(f => f.id === 'quests')
-        if (questsIdx !== -1) {
-          return [
-            ...prev.slice(0, questsIdx + 1),
-            ecoFolder,
-            ...prev.slice(questsIdx + 1),
-          ]
-        }
-        return [...prev, ecoFolder]
-      })
-    }
-  }, [economyEnabled, pinnedFolders, setPinnedFolders])
-
   // Pinned resources system (replaces cart)
 
   const {
@@ -295,6 +269,32 @@ export default function App() {
     questsMode,
     locationsMode
   })
+
+  // Создаём папку "eco" в pinned при включении экономики
+  useEffect(() => {
+    if (!economyEnabled) return
+    const ecoExists = pinnedFolders.some(f => f.id === 'eco')
+    if (!ecoExists) {
+      const ecoFolder = {
+        id: 'eco',
+        name: 'eco',
+        createdAt: Date.now(),
+        isSystemFolder: true,
+      }
+      setPinnedFolders(prev => {
+        // Вставляем после 'quests' или в конец
+        const questsIdx = prev.findIndex(f => f.id === 'quests')
+        if (questsIdx !== -1) {
+          return [
+            ...prev.slice(0, questsIdx + 1),
+            ecoFolder,
+            ...prev.slice(questsIdx + 1),
+          ]
+        }
+        return [...prev, ecoFolder]
+      })
+    }
+  }, [economyEnabled, pinnedFolders, setPinnedFolders])
 
   const [isBugReportOpen, setIsBugReportOpen] = useState(false)
   const [isDevLogsOpen, setIsDevLogsOpen] = useState(false)

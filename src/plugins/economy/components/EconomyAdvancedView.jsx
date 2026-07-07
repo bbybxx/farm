@@ -3,7 +3,7 @@
  * Advanced-режим: список остатков с C/R/P хедером, таблицей трат,
  * кликабельными остатками с инлайн Used In, и кнопкой Add.
  */
-import React, { useMemo, useCallback, useState } from 'react'
+import React, { useMemo, useCallback, useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import ItemDisplay from '../../../components/ItemDisplay'
 import { formatNumberRounded } from '../../../utils/formatters'
@@ -52,6 +52,7 @@ export default function EconomyAdvancedView({
   exchangeRates = {},
   advancedState = [],
   setAdvancedState,
+  removeAdvancedCraftsRange,
   manualAdditions = [],
   addManualAddition,
   removeManualAddition,
@@ -126,6 +127,69 @@ export default function EconomyAdvancedView({
 
   // currencySuffix для отображения валюты в leftovers
   const currencySuffix = currency === 'gold' ? 'G' : currency === 'ap' ? 'AP' : 'OJ'
+
+  // --- Отслеживание новых предметов в leftovers после крафта ---
+  // newLeftoverItems — Set имён предметов, которые только что появились в leftovers
+  const [newLeftoverItems, setNewLeftoverItems] = useState(new Set())
+  // prevLeftoverNamesRef — ref с предыдущим списком имён предметов в leftovers
+  const prevLeftoverNamesRef = useRef(new Set())
+  // leftoversContainerRef — ref на контейнер списка leftovers для scrollIntoView
+  const leftoversContainerRef = useRef(null)
+  // hasMountedRef — true после первого рендера (чтобы не подсвечивать всё при монтировании)
+  const hasMountedRef = useRef(false)
+
+  // Сравниваем текущие mergedLeftovers с предыдущими, чтобы найти новые предметы
+  useEffect(() => {
+    const currentNames = new Set(mergedLeftovers.map(item => item.name))
+
+    // Первый рендер — просто запоминаем имена, не подсвечиваем
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true
+      prevLeftoverNamesRef.current = currentNames
+      return
+    }
+
+    const prevNames = prevLeftoverNamesRef.current
+
+    // Новые предметы — те, что есть в current, но не было в prev
+    const newItems = new Set()
+    for (const name of currentNames) {
+      if (!prevNames.has(name)) {
+        newItems.add(name)
+      }
+    }
+
+    if (newItems.size > 0) {
+      setNewLeftoverItems(prev => new Set([...prev, ...newItems]))
+
+      // Авто-скролл к первому новому предмету
+      setTimeout(() => {
+        if (leftoversContainerRef.current) {
+          const container = leftoversContainerRef.current
+          const firstNewItem = container.querySelector(`[data-leftover-name="${Array.from(newItems)[0]}"]`)
+          if (firstNewItem) {
+            firstNewItem.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          }
+        }
+      }, 100)
+
+      // Через 4 секунды убираем подсветку
+      const timer = setTimeout(() => {
+        setNewLeftoverItems(prev => {
+          const next = new Set(prev)
+          for (const name of newItems) {
+            next.delete(name)
+          }
+          return next
+        })
+      }, 4000)
+
+      prevLeftoverNamesRef.current = currentNames
+      return () => clearTimeout(timer)
+    }
+
+    prevLeftoverNamesRef.current = currentNames
+  }, [mergedLeftovers])
 
 
   // --- Toggle раскрытия Used In ---
@@ -242,6 +306,19 @@ export default function EconomyAdvancedView({
     }
   }, [removeManualAddition])
 
+  // --- Удалить шаг цепочки (и все последующие) ---
+  const handleRemoveChainStep = useCallback((chainIdx, stepIdx) => {
+    if (!removeAdvancedCraftsRange) return
+    // Вычисляем глобальный индекс в spentByCraft для этого шага
+    let globalIdx = 0
+    for (let i = 0; i < chainIdx; i++) {
+      globalIdx += spentChains[i].chain.length
+    }
+    globalIdx += stepIdx
+    const removeCount = spentChains[chainIdx].chain.length - stepIdx
+    removeAdvancedCraftsRange(globalIdx, removeCount)
+  }, [removeAdvancedCraftsRange, spentChains])
+
   return (
     <>
       {/* Таблица трат (Spent) — сгруппирована по цепочкам */}
@@ -294,41 +371,82 @@ export default function EconomyAdvancedView({
                         transition={{ duration: 0.2, ease: 'easeInOut' }}
                         style={{ overflow: 'hidden' }}
                       >
-                        {chainGroup.chain.map((craft, idx) => (
-                          <div key={idx} style={{
-                            padding: '6px 0 6px 20px',
-                            borderLeft: '1px solid rgba(255,255,255,0.08)',
-                            marginLeft: 8,
-                          }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                              <span style={{ fontSize: '0.75rem', opacity: 0.4 }}>Step {idx + 1}:</span>
-                              <ItemDisplay itemName={craft.craftName} itemsData={STATIC_ITEMS_MAP} />
-                              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#e9ecf1' }}>
-                                ×{formatNumberRounded(craft.craftQty)}
-                              </span>
-                            </div>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 12px', paddingLeft: 8 }}>
-                              {craft.ingredients.map((ing, iIdx) => (
-                                <div key={iIdx} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.85rem' }}>
-                                  <ItemDisplay itemName={ing.name} itemsData={STATIC_ITEMS_MAP} />
-                                  <span style={{ color: '#ff6b6b', fontWeight: 600 }}>
-                                    -{formatNumberRounded(ing.needed)}
-                                  </span>
-                                  {ing.compensated > 0 && (
-                                    <span style={{ color: '#51cf66', fontSize: '0.75rem' }}>
-                                      +{formatNumberRounded(ing.compensated)}
+                        <AnimatePresence initial={false}>
+                          {chainGroup.chain.map((craft, idx) => (
+                            <motion.div
+                              key={`${craft.craftName}-${idx}`}
+                              layout
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: -20, height: 0 }}
+                              transition={{ duration: 0.2, ease: 'easeInOut' }}
+                              style={{
+                                padding: '6px 0 6px 20px',
+                                borderLeft: '1px solid rgba(255,255,255,0.08)',
+                                marginLeft: 8,
+                                overflow: 'hidden',
+                              }}
+                            >
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleRemoveChainStep(chainIdx, idx)
+                                  }}
+                                  style={{
+                                    background: 'rgba(255,107,107,0.15)',
+                                    border: 'none',
+                                    color: '#ff6b6b',
+                                    cursor: 'pointer',
+                                    fontSize: '0.85rem',
+                                    fontWeight: 700,
+                                    width: 20,
+                                    height: 20,
+                                    borderRadius: '50%',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    padding: 0,
+                                    lineHeight: 1,
+                                    flexShrink: 0,
+                                    transition: 'background 0.15s, transform 0.15s',
+                                  }}
+                                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,107,107,0.3)'}
+                                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,107,107,0.15)'}
+                                  title="Remove this step and all following steps"
+                                >
+                                  −
+                                </button>
+                                <span style={{ fontSize: '0.75rem', opacity: 0.4 }}>Step {idx + 1}:</span>
+                                <ItemDisplay itemName={craft.craftName} itemsData={STATIC_ITEMS_MAP} />
+                                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#e9ecf1' }}>
+                                  ×{formatNumberRounded(craft.craftQty)}
+                                </span>
+                              </div>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 12px', paddingLeft: 8 }}>
+                                {craft.ingredients.map((ing, iIdx) => (
+                                  <div key={iIdx} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.85rem' }}>
+                                    <ItemDisplay itemName={ing.name} itemsData={STATIC_ITEMS_MAP} />
+                                    <span style={{ color: '#ff6b6b', fontWeight: 600 }}>
+                                      -{formatNumberRounded(ing.needed)}
                                     </span>
-                                  )}
-                                  {ing.deficit > 0 && (
-                                    <span style={{ color: '#ff6b6b', fontSize: '0.75rem', opacity: 0.7 }}>
-                                      -{formatNumberRounded(ing.deficit)}
-                                    </span>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
+                                    {ing.compensated > 0 && (
+                                      <span style={{ color: '#51cf66', fontSize: '0.75rem' }}>
+                                        +{formatNumberRounded(ing.compensated)}
+                                      </span>
+                                    )}
+                                    {ing.deficit > 0 && (
+                                      <span style={{ color: '#ff6b6b', fontSize: '0.75rem', opacity: 0.7 }}>
+                                        -{formatNumberRounded(ing.deficit)}
+                                      </span>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </motion.div>
+                          ))}
+                        </AnimatePresence>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -369,7 +487,7 @@ export default function EconomyAdvancedView({
           </div>
 
         ) : (
-          <ul className="list">
+          <ul className="list" ref={leftoversContainerRef}>
             {mergedLeftovers.map((item) => {
               const itemPrice = prices[item.name]
               const priceInCurrency = itemPrice
@@ -379,9 +497,20 @@ export default function EconomyAdvancedView({
               const usedIn = getUsedIn(item.name)
               const isExpanded = expandedItems.has(item.name)
               const hasUsedIn = usedIn.length > 0
+              const isNew = newLeftoverItems.has(item.name)
 
               return (
-                <li key={item.name} className="resource-item" style={{ flexDirection: 'column' }}>
+                <li
+                  key={item.name}
+                  className="resource-item"
+                  data-leftover-name={item.name}
+                  style={{
+                    flexDirection: 'column',
+                    borderLeft: isNew ? '3px solid #51cf66' : '3px solid transparent',
+                    paddingLeft: isNew ? 0 : 3,
+                    transition: 'border-color 0.3s ease',
+                  }}
+                >
                   <div
                     className="resource-content"
                     style={{

@@ -168,6 +168,7 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
     advancedState,
     setAdvancedState,
     clearAdvancedData,
+    removeAdvancedCraftsRange,
     manualAdditions,
     addManualAddition,
     removeManualAddition,
@@ -809,6 +810,7 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
             exchangeRates={exchangeRates}
             advancedState={advancedState}
             setAdvancedState={setAdvancedState}
+            removeAdvancedCraftsRange={removeAdvancedCraftsRange}
             manualAdditions={manualAdditions}
             addManualAddition={addManualAddition}
             removeManualAddition={removeManualAddition}

@@ -174,6 +174,56 @@ export function useEconomy() {
     setAdvancedStateState(prev => prev.filter((_, i) => i !== itemIndex))
   }, [])
 
+  /**
+   * Удаляет диапазон крафтов из advancedState по индексам в spentByCraft.
+   * spentByCraft — это все non-gathered крафты, собранные последовательно.
+   * @param {number} removeStartSpentIdx — начальный индекс в spentByCraft (inclusive)
+   * @param {number} removeCount — количество крафтов для удаления
+   */
+  const removeAdvancedCraftsRange = useCallback((removeStartSpentIdx, removeCount) => {
+    if (removeCount <= 0) return
+    setAdvancedStateState(prev => {
+      // Собираем все non-gathered crafts в плоский массив с ссылками на entry
+      const flatCrafts = [] // { entryIndex, craftIndex, craft }
+      for (let ei = 0; ei < prev.length; ei++) {
+        const entry = prev[ei]
+        if (entry.gathered) continue
+        for (let ci = 0; ci < entry.crafts.length; ci++) {
+          flatCrafts.push({ entryIndex: ei, craftIndex: ci, craft: entry.crafts[ci] })
+        }
+      }
+
+      // Определяем, какие flat-индексы удаляем
+      const removeEnd = removeStartSpentIdx + removeCount
+      const toRemove = new Set()
+      for (let i = removeStartSpentIdx; i < removeEnd && i < flatCrafts.length; i++) {
+        toRemove.add(i)
+      }
+
+      // Строим новый advancedState
+      const newState = []
+      for (let ei = 0; ei < prev.length; ei++) {
+        const entry = prev[ei]
+        if (entry.gathered) {
+          // gathered записи не трогаем
+          newState.push(entry)
+          continue
+        }
+        const newCrafts = entry.crafts.filter((_, ci) => {
+          // Находим flat-индекс для этого craft
+          const flatIdx = flatCrafts.findIndex(fc => fc.entryIndex === ei && fc.craftIndex === ci)
+          return !toRemove.has(flatIdx)
+        })
+        if (newCrafts.length > 0) {
+          newState.push({ ...entry, crafts: newCrafts })
+        }
+        // Если crafts пуст — entry не добавляем (удаляется)
+      }
+
+      return newState
+    })
+  }, [])
+
   const setStaminaSource = useCallback((source) => {
     setStaminaSourceState(source)
     saveToStorage('economy_staminaSource', source)
@@ -266,6 +316,7 @@ export function useEconomy() {
     clearAdvancedData,
     updateAdvancedCraft,
     removeFromAdvancedState,
+    removeAdvancedCraftsRange,
     manualAdditions,
     addManualAddition,
     removeManualAddition,

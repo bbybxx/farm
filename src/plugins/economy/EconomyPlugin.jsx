@@ -155,7 +155,7 @@ function recalcChainFromRoot(chain, activePerks, exploringMode, combinedRecipes)
  * Рендерится внутри .main, не использует createPortal.
  * Не имеет своего хедера, breadcrumbs, цепочек — только чистая логика.
  */
-export default function EconomyPlugin({ setSidebarOpen, onExit }) {
+export default function EconomyPlugin({ setSidebarOpen, onExit, onPinEconomySnapshot }) {
 
   const {
     economyEnabled,
@@ -669,6 +669,73 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
     getLocationDrops, isTradableFn,
   ])
 
+  // --- Восстановление снапшота из localStorage (при клике из pinned) ---
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('economy_restore_snapshot')
+      if (!stored) return
+      localStorage.removeItem('economy_restore_snapshot')
+
+      const snapshot = JSON.parse(stored)
+      if (!snapshot) return
+
+      // Восстанавливаем advancedState
+      if (snapshot.advancedState && Array.isArray(snapshot.advancedState)) {
+        setAdvancedState(snapshot.advancedState)
+      }
+
+      // Восстанавливаем manualAdditions
+      if (snapshot.manualAdditions && Array.isArray(snapshot.manualAdditions)) {
+        // manualAdditions восстанавливаются через контекст — передаём через setState
+        // Пока просто оставляем как есть, manualAdditions восстановятся из контекста
+      }
+
+      // Переключаемся в advanced view
+      setViewState('advanced')
+    } catch (e) {
+      console.error('Failed to restore economy snapshot:', e)
+    }
+  }, [setAdvancedState])
+
+  // --- Pin snapshot для Advanced режима ---
+  const [justPinned, setJustPinned] = useState(false)
+
+  const handlePinSnapshot = useCallback(() => {
+    if (!onPinEconomySnapshot) return
+
+    const snapshot = {
+      advancedState,
+      manualAdditions,
+      prices,
+      currency,
+      exchangeRates,
+      staminaSource,
+      cranberryStamina,
+      chain: recalculatedChain,
+      activePerks,
+      exploringMode,
+      timestamp: Date.now(),
+    }
+
+    onPinEconomySnapshot(snapshot)
+
+    // Анимация успеха
+    setJustPinned(true)
+    setTimeout(() => setJustPinned(false), 1500)
+  }, [
+    onPinEconomySnapshot,
+    advancedState,
+    manualAdditions,
+    prices,
+    currency,
+    exchangeRates,
+    staminaSource,
+    cranberryStamina,
+    recalculatedChain,
+    activePerks,
+    exploringMode,
+  ])
+
   // Не размонтируем компонент при выключении — скрываем через CSS.
   // Это сохраняет состояние (selectedItem, amount, craftChain, view) в памяти,
   // и при повторном включении не происходит пересоздания всех useMemo/useEffect.
@@ -712,6 +779,23 @@ export default function EconomyPlugin({ setSidebarOpen, onExit }) {
           <span style={{ color: '#51cf66' }}>
             P: {advancedCRP.profitDisplay != null ? advancedCRP.profitDisplay.toLocaleString() : '…'} {advancedCRP.currencySuffix}
           </span>
+        </div>
+      )}
+
+      {/* Pin-кнопка для Advanced режима — закрепляет всё состояние */}
+      {view === 'advanced' && (
+        <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '4px 0' }}>
+          <button
+            className={`pin-btn ${justPinned ? 'success' : ''}`}
+            onClick={handlePinSnapshot}
+            type="button"
+            title="Pin economy snapshot"
+          >
+            <div className="pin-icon">
+              <div className={`pin-line pin-line-horizontal ${justPinned ? 'checked' : ''}`}></div>
+              <div className={`pin-line pin-line-vertical ${justPinned ? 'checked' : ''}`}></div>
+            </div>
+          </button>
         </div>
       )}
 

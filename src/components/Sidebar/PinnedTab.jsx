@@ -109,7 +109,8 @@ export default function PinnedTab({
   buddyFarmLinksEnabled,
   activePerks,
   exploringMode,
-  setLastPinnedLocation
+  setLastPinnedLocation,
+  onRestoreEconomySnapshot
 }) {
   return (
     <div className="pinned-section">
@@ -404,9 +405,54 @@ export default function PinnedTab({
             </div>
           ))}
           
-          {/* Show pinned resources */}
+          {/* Show economy snapshots */}
           {pinnedResources.map((pinnedItem, index) => {
             if ((pinnedItem.folderId || 'default') !== activePinnedFolder) return null
+
+            // Economy snapshot
+            if (pinnedItem.type === 'economy-snapshot') {
+              const ts = pinnedItem.timestamp
+              const dateStr = ts ? new Date(ts).toLocaleString() : ''
+              return (
+                <div key={index} className="pinned-card">
+                  <button
+                    className="pinned-close-btn"
+                    onClick={() => removeFromPinned(index)}
+                    type="button"
+                    title="Remove from pinned"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                  <div
+                    className="pinned-card-content"
+                    onClick={() => {
+                      if (onRestoreEconomySnapshot) {
+                        onRestoreEconomySnapshot(pinnedItem.snapshotId)
+                      }
+                      if (window.innerWidth <= 768) setSidebarOpen(false)
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className="pinned-item-name">
+                      <span style={{ fontWeight: 600 }}>Eco Snapshot</span>
+                    </div>
+                    <div className="pinned-item-details">
+                      {dateStr && (
+                        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{dateStr}</span>
+                      )}
+                      {pinnedItem.itemCount != null && (
+                        <span style={{ fontSize: 12, color: '#99a', marginTop: 4 }}>
+                          {pinnedItem.itemCount} items
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )
+            }
             
             let est = null
             try {

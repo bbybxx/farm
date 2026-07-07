@@ -228,7 +228,34 @@ export default function App() {
 
   const { economyEnabled, setEconomyEnabled } = useEconomyContext()
 
+  // Создаём папку "eco" в pinned при включении экономики
+  useEffect(() => {
+    if (!economyEnabled) return
+    const ecoExists = pinnedFolders.some(f => f.id === 'eco')
+    if (!ecoExists) {
+      const ecoFolder = {
+        id: 'eco',
+        name: 'eco',
+        createdAt: Date.now(),
+        isSystemFolder: true,
+      }
+      setPinnedFolders(prev => {
+        // Вставляем после 'quests' или в конец
+        const questsIdx = prev.findIndex(f => f.id === 'quests')
+        if (questsIdx !== -1) {
+          return [
+            ...prev.slice(0, questsIdx + 1),
+            ecoFolder,
+            ...prev.slice(questsIdx + 1),
+          ]
+        }
+        return [...prev, ecoFolder]
+      })
+    }
+  }, [economyEnabled, pinnedFolders, setPinnedFolders])
+
   // Pinned resources system (replaces cart)
+
   const {
     pinnedResources, setPinnedResources,
     pinnedQuests, setPinnedQuests,
@@ -759,6 +786,56 @@ export default function App() {
     setActiveMode('economy')
   }, [])
 
+  // --- Economy snapshots (pin/restore) ---
+  const [economySnapshots, setEconomySnapshots] = useState(() => {
+    try {
+      const stored = loadFromStorage('economy_snapshots', null)
+      return Array.isArray(stored) ? stored : []
+    } catch { return [] }
+  })
+
+  // Сохраняем снапшоты в localStorage при изменении
+  useEffect(() => {
+    saveToStorage('economy_snapshots', economySnapshots)
+  }, [economySnapshots])
+
+  // Pin economy snapshot — сохраняем в pinned + в economySnapshots
+  const handlePinEconomySnapshot = useCallback((snapshot) => {
+    const snapshotId = `eco_${Date.now()}`
+    const snapshotWithId = { ...snapshot, snapshotId }
+
+    setEconomySnapshots(prev => [...prev, snapshotWithId])
+
+    // Добавляем в pinned в папку "eco"
+    const itemCount = snapshot.advancedState ? snapshot.advancedState.length : 0
+    addToPinned({
+      type: 'economy-snapshot',
+      snapshotId,
+      name: 'Eco Snapshot',
+      folderId: 'eco',
+      timestamp: snapshot.timestamp || Date.now(),
+      itemCount,
+    })
+  }, [addToPinned])
+
+  // Restore economy snapshot — переключаемся в economy и восстанавливаем состояние
+  const handleRestoreEconomySnapshot = useCallback((snapshotId) => {
+    const snapshot = economySnapshots.find(s => s.snapshotId === snapshotId)
+    if (!snapshot) return
+
+    // Сохраняем снапшот в localStorage для EconomyPlugin
+    try {
+      localStorage.setItem('economy_restore_snapshot', JSON.stringify(snapshot))
+    } catch (e) {
+      console.error('Failed to save restore snapshot:', e)
+      return
+    }
+
+    // Переключаемся в economy режим
+    setEconomyEnabled(true)
+    setActiveMode('economy')
+  }, [economySnapshots, setEconomyEnabled])
+
   // Close inline inputs on ESC
   useEffect(() => {
     function onKey(e) {
@@ -1186,6 +1263,7 @@ export default function App() {
               activePerks={activePerks}
               exploringMode={exploringMode}
               setLastPinnedLocation={setLastPinnedLocation}
+              onRestoreEconomySnapshot={handleRestoreEconomySnapshot}
             />
           )}
           
@@ -1220,7 +1298,7 @@ export default function App() {
       <div className="main">
         {activeMode === 'economy' ? (
           <Suspense fallback={<div className="glass card" style={{ padding: '1rem', textAlign: 'center', opacity: 0.6 }}>Loading Economy...</div>}>
-            <EconomyPlugin setSidebarOpen={setSidebarOpen} onExit={exitEconomy} />
+            <EconomyPlugin setSidebarOpen={setSidebarOpen} onExit={exitEconomy} onPinEconomySnapshot={handlePinEconomySnapshot} />
           </Suspense>
 
         ) : (

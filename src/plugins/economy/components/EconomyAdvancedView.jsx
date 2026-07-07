@@ -459,7 +459,7 @@ export default function EconomyAdvancedView({
 
       {/* Дефицит (если есть) — с учётом manualAdditions */}
       {mergedDeficit.length > 0 && (
-        <section className="glass card" style={{ border: '1px solid #ff6b6b' }}>
+        <section className="glass card" style={{ border: '1px solid #ff6b6b', marginBottom: 6 }}>
           <h2 style={{ color: '#ff6b6b' }}>Deficit ({mergedDeficit.length})</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', padding: '8px 0' }}>
             {mergedDeficit.map(item => (

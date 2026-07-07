@@ -10295,5 +10295,12 @@
     "image": "/img/items/afk_8798.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Rocket Trophy": {
+    "name": "Rocket Trophy",
+    "type": "item",
+    "image": "/img/items/Bottlerockettrophy.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

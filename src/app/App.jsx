@@ -806,17 +806,18 @@ export default function App() {
 
     setEconomySnapshots(prev => [...prev, snapshotWithId])
 
-    // Добавляем в pinned в папку "eco"
+    // Добавляем в pinned в папку "eco" напрямую через setPinnedResources,
+    // т.к. addToPinned ожидает строку (имя предмета), а не объект
     const itemCount = snapshot.advancedState ? snapshot.advancedState.length : 0
-    addToPinned({
+    setPinnedResources(prev => [...prev, {
       type: 'economy-snapshot',
       snapshotId,
       name: 'Eco Snapshot',
       folderId: 'eco',
       timestamp: snapshot.timestamp || Date.now(),
       itemCount,
-    })
-  }, [addToPinned])
+    }])
+  }, [setPinnedResources])
 
   // Restore economy snapshot — переключаемся в economy и восстанавливаем состояние
   const handleRestoreEconomySnapshot = useCallback((snapshotId) => {

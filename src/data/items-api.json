@@ -10302,5 +10302,19 @@
     "image": "/img/items/Bottlerockettrophy.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Robot Chicken": {
+    "name": "Robot Chicken",
+    "type": "item",
+    "image": "/img/items/Robot_chicken.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Roomba’s Locket": {
+    "name": "Roomba’s Locket",
+    "type": "item",
+    "image": "/img/items/Locket_real_chick.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

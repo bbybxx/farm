@@ -7,7 +7,7 @@ import RecipeUpdateService from '../services/RecipeUpdateService'
 import perks from '../data/perks.json'
 import { useTelegram } from '../hooks/useTelegram'
 import BugReportModal from '../components/BugReportModal'
-import DevLogs from '../components/DevLogs'
+
 import QuestsPanel from '../components/QuestsPanel'
 import LocationConfigPanel from '../components/LocationConfigPanel'
 import { APPLE_CIDER_REAL_DROP_RATES } from '../data/apple-cider-real-drop-rates.js'
@@ -297,7 +297,6 @@ export default function App() {
   }, [economyEnabled, pinnedFolders, setPinnedFolders])
 
   const [isBugReportOpen, setIsBugReportOpen] = useState(false)
-  const [isDevLogsOpen, setIsDevLogsOpen] = useState(false)
   const [isQuestsPanelOpen, setIsQuestsPanelOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [apiLoadStatus, setApiLoadStatus] = useState({ loading: false, error: null, lastUpdate: null })
@@ -1286,7 +1285,6 @@ export default function App() {
               setHistoryLimit={setHistoryLimit}
               handleBugReport={handleBugReport}
               handleClearData={handleClearData}
-              setIsDevLogsOpen={setIsDevLogsOpen}
             />
 
           )}
@@ -1667,15 +1665,6 @@ export default function App() {
           onSubmit={handleBugReportSubmit}
         />
         
-        {/* Dev Logs Modal */}
-        <AnimatePresence>
-          {isDevLogsOpen && (
-            <DevLogs
-              isOpen={isDevLogsOpen}
-              onClose={() => setIsDevLogsOpen(false)}
-            />
-          )}
-        </AnimatePresence>
   {/* Vercel Web Analytics */}
   <Analytics />
   {/* debug overlay removed */}

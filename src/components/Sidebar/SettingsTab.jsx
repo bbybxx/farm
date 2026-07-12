@@ -24,7 +24,6 @@ export default function SettingsTab({
   setHistoryLimit,
   handleBugReport,
   handleClearData,
-  setIsDevLogsOpen,
 }) {
   const {
     economyEnabled, setEconomyEnabled,
@@ -432,23 +431,17 @@ export default function SettingsTab({
       {/* Social links */}
       <div className="social-links">
         <div className="social-link-wrapper">
-          <span className="social-label">Updates</span>
-          <button
-            onClick={() => setIsDevLogsOpen(true)}
+          <span className="social-label">Credits</span>
+          <a
+            href="https://farmrpg-pricecheck.free.nf"
+            target="_blank"
+            rel="noopener noreferrer"
             className="social-link"
-            title="Development Logs"
-            type="button"
-            style={{ cursor: 'pointer' }}
+            title="More Calculators"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="social-icon">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="16" y1="13" x2="8" y2="13"></line>
-              <line x1="16" y1="17" x2="8" y2="17"></line>
-              <polyline points="10 9 9 9 8 9"></polyline>
-            </svg>
-            Dev Logs
-          </button>
+            
+            More Calcs
+          </a>
         </div>
         <div className="social-link-wrapper">
           <span className="social-label">My Profile</span>
@@ -464,16 +457,16 @@ export default function SettingsTab({
           </a>
         </div>
         <div className="social-link-wrapper">
-          <span className="social-label">Tip</span>
-          <a 
-            href="https://boosty.to/bbybxx/donate?forPost=9850758" 
-            target="_blank" 
+          <span className="social-label">Last Update</span>
+          <a
+            href="https://www.reddit.com/r/FarmRPG/s/CftqGE7dU6"
+            target="_blank"
             rel="noopener noreferrer"
             className="social-link"
-            title="Support on Boosty"
+            title="Reddit"
           >
-            <img src="/boosty-sign-logo.png" alt="Boosty" className="social-icon" />
-            Boosty
+            <img src="/reddit.png" alt="Reddit" className="social-icon" />
+            Reddit
           </a>
         </div>
         <div className="social-link-wrapper">

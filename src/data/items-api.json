@@ -10316,5 +10316,12 @@
     "image": "/img/items/Locket_real_chick.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Koala's Corgi": {
+    "name": "Koala's Corgi",
+    "type": "item",
+    "image": "/img/items/Koalascorgi.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

@@ -10323,5 +10323,12 @@
     "image": "/img/items/Koalascorgi.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Temple Voucher": {
+    "name": "Temple Voucher",
+    "type": "item",
+    "image": "/img/items/7901.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

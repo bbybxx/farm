@@ -5393,7 +5393,7 @@
     "name": "Milk Carton",
     "type": "item",
     "image": "/img/items/packaging_t_01.PNG",
-    "canCraft": false,
+    "canCraft": true,
     "craftingLevel": 74
   },
   "Mini Time Egg": {
@@ -8263,7 +8263,7 @@
     "name": "Toilet Paper",
     "type": "item",
     "image": "/img/items/bandages_t_01.png",
-    "canCraft": false,
+    "canCraft": true,
     "craftingLevel": 3
   },
   "Tomato": {
@@ -10328,6 +10328,27 @@
     "name": "Temple Voucher",
     "type": "item",
     "image": "/img/items/7901.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Blitz Buddy Doll": {
+    "name": "Blitz Buddy Doll",
+    "type": "item",
+    "image": "/img/items/Tidusbuddydoll.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Glyph Sphere": {
+    "name": "Glyph Sphere",
+    "type": "item",
+    "image": "/img/items/glyphsphere.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Lorn's Expedition Kit": {
+    "name": "Lorn's Expedition Kit",
+    "type": "item",
+    "image": "/img/items/Bag_with_strap.png",
     "canCraft": false,
     "craftingLevel": 0
   }

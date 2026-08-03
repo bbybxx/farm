@@ -21,12 +21,12 @@
   },
   "Amber Cane": {
     "ingredients": {
-      "Mushroom Paste": 1,
-      "Iron Ring": 2,
       "Bone": 1,
       "Amber": 1,
       "Oak": 1,
-      "Sand": 3
+      "Sand": 3,
+      "Mushroom Paste": 1,
+      "Iron Ring": 2
     },
     "craftingLevel": 98,
     "category": "item"
@@ -42,8 +42,8 @@
   "Apple Cider": {
     "ingredients": {
       "Apple": 40,
-      "Glass Bottle": 1,
-      "Orange": 1
+      "Orange": 1,
+      "Glass Bottle": 1
     },
     "craftingLevel": 30,
     "category": "item"
@@ -57,8 +57,8 @@
   },
   "Aquamarine Ring": {
     "ingredients": {
-      "Aquamarine": 1,
       "Mushroom Paste": 1,
+      "Aquamarine": 1,
       "Iron Ring": 1
     },
     "craftingLevel": 5,
@@ -161,8 +161,8 @@
   },
   "Blue Purse": {
     "ingredients": {
-      "Blue Dye": 1,
-      "Coin Purse": 1
+      "Coin Purse": 1,
+      "Blue Dye": 1
     },
     "craftingLevel": 95,
     "category": "item"
@@ -215,25 +215,25 @@
   },
   "Broom": {
     "ingredients": {
-      "Straw": 1,
-      "Board": 1
+      "Board": 1,
+      "Straw": 1
     },
     "craftingLevel": 3,
     "category": "item"
   },
   "Bucket": {
     "ingredients": {
-      "Board": 5,
-      "Iron": 1
+      "Iron": 1,
+      "Board": 5
     },
     "craftingLevel": 1,
     "category": "item"
   },
   "Butter": {
     "ingredients": {
-      "Salt": 1,
       "Butter Churn": 1,
-      "Milk": 25
+      "Milk": 25,
+      "Salt": 1
     },
     "craftingLevel": 82,
     "category": "item"
@@ -261,11 +261,11 @@
   },
   "Canoe": {
     "ingredients": {
+      "Blue Gel": 10,
+      "Nails": 10,
       "Mushroom Paste": 5,
       "Board": 4,
       "Rope": 2,
-      "Nails": 10,
-      "Blue Gel": 10,
       "Oak": 100
     },
     "craftingLevel": 99,
@@ -273,8 +273,8 @@
   },
   "Chum": {
     "ingredients": {
-      "Worms": 10,
       "Minnows": 4,
+      "Worms": 10,
       "Bucket": 1,
       "Grubs": 7
     },
@@ -292,24 +292,24 @@
   "Compass": {
     "ingredients": {
       "Ruby": 1,
-      "Twine": 1,
       "Aquamarine": 1,
       "Iron Ring": 1,
-      "Glass Orb": 1,
+      "Twine": 1,
+      "Wood": 2,
       "Small Screw": 4,
-      "Magna Core": 1,
-      "Wood": 2
+      "Glass Orb": 1,
+      "Magna Core": 1
     },
     "craftingLevel": 70,
     "category": "item"
   },
   "Control Box": {
     "ingredients": {
-      "Steel Plate": 2,
       "Small Screw": 2,
+      "Steel Plate": 2,
+      "Small Spring": 3,
       "Broken Pipe": 3,
       "Machine Part": 10,
-      "Small Spring": 3,
       "Moonstone": 3
     },
     "craftingLevel": 84,
@@ -335,8 +335,8 @@
   },
   "Corn Oil": {
     "ingredients": {
-      "Corn": 8,
       "Machine Press": 1,
+      "Corn": 8,
       "Glass Bottle": 1
     },
     "craftingLevel": 81,
@@ -344,9 +344,9 @@
   },
   "Crossbow": {
     "ingredients": {
+      "Iron Ring": 2,
       "Arrowhead": 1,
       "Iron": 2,
-      "Iron Ring": 2,
       "Steel Wire": 2,
       "Oak": 3
     },
@@ -355,11 +355,11 @@
   },
   "Crystal Pickaxe": {
     "ingredients": {
+      "Fairy Crystal": 1,
+      "Lapis Lazuli": 1,
       "Stone": 1,
       "Mushroom Paste": 1,
-      "Pickaxe": 1,
-      "Fairy Crystal": 1,
-      "Lapis Lazuli": 1
+      "Pickaxe": 1
     },
     "craftingLevel": 25,
     "category": "item"
@@ -384,11 +384,11 @@
   "Energy Coil": {
     "ingredients": {
       "Transistor": 25,
-      "Wrench": 1,
       "Steel": 2,
-      "Scrap Wire": 8,
       "Spool of Copper": 1,
-      "Glass Orb": 1
+      "Wrench": 1,
+      "Glass Orb": 1,
+      "Scrap Wire": 8
     },
     "craftingLevel": 84,
     "category": "item"
@@ -400,11 +400,11 @@
       "Control Box": 1,
       "Steel": 20,
       "Magicite": 1,
+      "Kill Switch": 1,
+      "Pear Grease": 1,
       "Steel Plate": 1,
       "Transistor": 12,
       "Belt Drive": 1,
-      "Pear Grease": 1,
-      "Kill Switch": 1,
       "Energy Coil": 1,
       "Power Monitor": 1
     },
@@ -424,9 +424,9 @@
   "Explosive": {
     "ingredients": {
       "Board": 3,
-      "Feathers": 1,
+      "Nails": 6,
       "Black Powder": 2,
-      "Nails": 6
+      "Feathers": 1
     },
     "craftingLevel": 14,
     "category": "item"
@@ -435,10 +435,10 @@
     "ingredients": {
       "Leather": 4,
       "Red Dye": 1,
-      "Nails": 8,
-      "Twine": 8,
       "Green Dye": 1,
       "Oak": 50,
+      "Nails": 8,
+      "Twine": 8,
       "Cotton": 6
     },
     "craftingLevel": 96,
@@ -470,9 +470,9 @@
   "Fancy Guitar": {
     "ingredients": {
       "Oak": 5,
-      "Steel Wire": 6,
       "Iron": 4,
-      "Mushroom Paste": 3
+      "Mushroom Paste": 3,
+      "Steel Wire": 6
     },
     "craftingLevel": 80,
     "category": "item"
@@ -498,8 +498,8 @@
   },
   "Fancy Table": {
     "ingredients": {
-      "Nails": 32,
       "Glass Orb": 8,
+      "Nails": 32,
       "Oak": 80,
       "Corn Oil": 1,
       "Steel Vise": 1
@@ -522,11 +522,11 @@
   },
   "Fire Ant Farm": {
     "ingredients": {
-      "Nails": 4,
       "Board": 4,
+      "Nails": 4,
+      "Fire Ant": 25,
       "Sand": 5,
-      "Glass Orb": 3,
-      "Fire Ant": 25
+      "Glass Orb": 3
     },
     "craftingLevel": 40,
     "category": "item"
@@ -550,9 +550,9 @@
   "Flying Machine": {
     "ingredients": {
       "Steel Buckle": 2,
+      "Power Monitor": 1,
       "Rope": 10,
       "Magna Quartz": 4,
-      "Power Monitor": 1,
       "Leather": 10,
       "Small Spring": 6,
       "Small Gear": 4,
@@ -575,10 +575,10 @@
   "Frost Shield": {
     "ingredients": {
       "Hammer": 1,
-      "Nails": 3,
-      "Red Shield": 1,
       "Frost Snapper Shell": 1,
-      "Blue Gel": 3
+      "Nails": 3,
+      "Blue Gel": 3,
+      "Red Shield": 1
     },
     "craftingLevel": 99,
     "category": "item"
@@ -617,16 +617,16 @@
   "Garnet Ring": {
     "ingredients": {
       "Garnet": 1,
-      "Iron Ring": 1,
-      "Mushroom Paste": 1
+      "Mushroom Paste": 1,
+      "Iron Ring": 1
     },
     "craftingLevel": 51,
     "category": "item"
   },
   "Glass Bottle": {
     "ingredients": {
-      "Glass Orb": 1,
-      "Stone": 1
+      "Stone": 1,
+      "Glass Orb": 1
     },
     "craftingLevel": 5,
     "category": "item"
@@ -655,11 +655,11 @@
       "Green Dye": 5,
       "Wood": 88,
       "White Parchment": 10,
+      "Handsaw": 1,
       "Hammer": 1,
       "Steel Wire": 88,
       "Fancy Chair": 1,
       "Block of Wood": 8,
-      "Handsaw": 1,
       "Wooden Plank": 11
     },
     "craftingLevel": 99,
@@ -685,10 +685,10 @@
   },
   "Green Cloak": {
     "ingredients": {
-      "Twine": 10,
-      "Green Dye": 10,
       "Cotton": 1,
-      "Leather": 5
+      "Leather": 5,
+      "Twine": 10,
+      "Green Dye": 10
     },
     "craftingLevel": 55,
     "category": "item"
@@ -745,17 +745,17 @@
   "Hammer": {
     "ingredients": {
       "Iron": 1,
-      "Board": 1,
-      "Mushroom Paste": 1
+      "Mushroom Paste": 1,
+      "Board": 1
     },
     "craftingLevel": 2,
     "category": "item"
   },
   "Handsaw": {
     "ingredients": {
+      "Wooden Plank": 1,
       "Mushroom Paste": 2,
       "Steel": 2,
-      "Wooden Plank": 1,
       "Hammer": 1,
       "Awl": 1
     },
@@ -790,9 +790,9 @@
   },
   "Hourglass": {
     "ingredients": {
+      "Glass Bottle": 2,
       "Sand": 1,
       "Wood": 6,
-      "Glass Bottle": 2,
       "Mushroom Paste": 2
     },
     "craftingLevel": 59,
@@ -809,9 +809,9 @@
   "Inferno Sphere": {
     "ingredients": {
       "Runestone 01": 1,
-      "Runestone 06": 1,
       "Runestone 04": 1,
       "Runestone 05": 1,
+      "Runestone 06": 1,
       "Runestone 07": 1,
       "Runestone 02": 1,
       "Runestone 03": 1,
@@ -850,8 +850,8 @@
     "ingredients": {
       "Stone": 6,
       "Jade": 1,
-      "Iron Ring": 1,
-      "Steel": 2
+      "Steel": 2,
+      "Iron Ring": 1
     },
     "craftingLevel": 42,
     "category": "item"
@@ -880,8 +880,8 @@
       "Coal": 1,
       "Twine": 2,
       "Glass Bottle": 1,
-      "Iron": 3,
-      "Iron Ring": 1
+      "Iron Ring": 1,
+      "Iron": 3
     },
     "craftingLevel": 70,
     "category": "item"
@@ -899,13 +899,13 @@
       "Runestone 13": 1,
       "Runestone 20": 1,
       "Runestone 17": 1,
-      "Runestone 12": 1,
       "Runestone 14": 1,
       "Runestone 15": 1,
       "Runestone 16": 1,
-      "Runestone 19": 1,
+      "Runestone 18": 1,
       "Runestone 11": 1,
-      "Runestone 18": 1
+      "Runestone 12": 1,
+      "Runestone 19": 1
     },
     "craftingLevel": 35,
     "category": "item"
@@ -946,9 +946,9 @@
   },
   "Leather Waterskin": {
     "ingredients": {
+      "Twine": 2,
       "Iron Ring": 1,
-      "Leather": 2,
-      "Twine": 2
+      "Leather": 2
     },
     "craftingLevel": 18,
     "category": "item"
@@ -956,8 +956,8 @@
   "Lemon Quartz Ring": {
     "ingredients": {
       "Mushroom Paste": 1,
-      "Lemon Quartz": 1,
-      "Iron Ring": 1
+      "Iron Ring": 1,
+      "Lemon Quartz": 1
     },
     "craftingLevel": 7,
     "category": "item"
@@ -992,11 +992,11 @@
   },
   "Machine Press": {
     "ingredients": {
-      "Steel Plate": 1,
       "Machine Part": 6,
       "Board": 10,
-      "Bucket": 1,
-      "Nails": 5
+      "Steel Plate": 1,
+      "Nails": 5,
+      "Bucket": 1
     },
     "craftingLevel": 81,
     "category": "item"
@@ -1010,10 +1010,10 @@
   },
   "Magna Core": {
     "ingredients": {
+      "Flywheel": 2,
+      "Cogwheel": 3,
       "Small Spring": 5,
       "Magna Quartz": 25,
-      "Cogwheel": 3,
-      "Flywheel": 2,
       "Small Screw": 10,
       "Seeing Stone": 1,
       "Steel": 40
@@ -1024,8 +1024,8 @@
   "Magnifying Glass": {
     "ingredients": {
       "Iron Ring": 1,
-      "Board": 1,
       "Iron": 3,
+      "Board": 1,
       "Glass Orb": 1
     },
     "craftingLevel": 25,
@@ -1033,10 +1033,10 @@
   },
   "Magus Hat": {
     "ingredients": {
+      "Gold Leaf": 1,
       "Leather": 2,
       "Twine": 3,
-      "Blue Feathers": 10,
-      "Gold Leaf": 1
+      "Blue Feathers": 10
     },
     "craftingLevel": 90,
     "category": "item"
@@ -1054,9 +1054,9 @@
   "Metal Spool": {
     "ingredients": {
       "Nails": 2,
-      "Coal": 5,
       "Broken Pipe": 1,
-      "Scrap Metal": 12
+      "Scrap Metal": 12,
+      "Coal": 5
     },
     "craftingLevel": 83,
     "category": "item"
@@ -1072,9 +1072,9 @@
     "ingredients": {
       "Stone": 1,
       "Mushroom Paste": 3,
+      "Emerald": 2,
       "Aquamarine": 1,
-      "Iron Ring": 1,
-      "Emerald": 2
+      "Iron Ring": 1
     },
     "craftingLevel": 23,
     "category": "item"
@@ -1111,8 +1111,8 @@
   },
   "Peach Juice": {
     "ingredients": {
-      "Glass Bottle": 1,
-      "Peach": 10
+      "Peach": 10,
+      "Glass Bottle": 1
     },
     "craftingLevel": 61,
     "category": "item"
@@ -1148,8 +1148,8 @@
   "Pie Pan": {
     "ingredients": {
       "Steel": 10,
-      "Emberstone": 25,
-      "Moonstone": 2
+      "Moonstone": 2,
+      "Emberstone": 25
     },
     "craftingLevel": 77,
     "category": "item"
@@ -1195,9 +1195,9 @@
   },
   "Power Monitor": {
     "ingredients": {
-      "Copper Wire": 1,
-      "Broken Pipe": 1,
       "Pocket Watch": 1,
+      "Broken Pipe": 1,
+      "Copper Wire": 1,
       "Iron": 10,
       "Transistor": 5
     },
@@ -1223,19 +1223,19 @@
   },
   "Purple Butterfly": {
     "ingredients": {
-      "Wood": 1,
-      "Caterpillar": 1,
       "Purple Dye": 1,
-      "Silk": 3
+      "Silk": 3,
+      "Wood": 1,
+      "Caterpillar": 1
     },
     "craftingLevel": 85,
     "category": "item"
   },
   "Purple Diary": {
     "ingredients": {
-      "Purple Parchment": 1,
       "Mushroom Paste": 1,
-      "White Parchment": 1
+      "White Parchment": 1,
+      "Purple Parchment": 1
     },
     "craftingLevel": 6,
     "category": "item"
@@ -1257,8 +1257,8 @@
   },
   "Purple Twine": {
     "ingredients": {
-      "Purple Dye": 1,
-      "Twine": 1
+      "Twine": 1,
+      "Purple Dye": 1
     },
     "craftingLevel": 74,
     "category": "item"
@@ -1275,17 +1275,17 @@
       "Straw": 50,
       "Sand": 50,
       "Red Dye": 5,
-      "Bucket": 5,
-      "Mushroom Paste": 3
+      "Mushroom Paste": 3,
+      "Bucket": 5
     },
     "craftingLevel": 77,
     "category": "item"
   },
   "Red Butterfly": {
     "ingredients": {
-      "Caterpillar": 1,
       "Red Dye": 1,
       "Silk": 3,
+      "Caterpillar": 1,
       "Wood": 1
     },
     "craftingLevel": 85,
@@ -1302,8 +1302,8 @@
   },
   "Red Dye": {
     "ingredients": {
-      "Striped Feather": 2,
-      "Glass Bottle": 1
+      "Glass Bottle": 1,
+      "Striped Feather": 2
     },
     "craftingLevel": 73,
     "category": "item"
@@ -1317,8 +1317,8 @@
   },
   "Red Shield": {
     "ingredients": {
-      "Red Dye": 1,
       "Steel": 3,
+      "Red Dye": 1,
       "Wooden Shield": 1
     },
     "craftingLevel": 95,
@@ -1369,12 +1369,12 @@
   },
   "Rucksack": {
     "ingredients": {
-      "Wooden Button": 4,
-      "Leather": 8,
-      "Horn Canteen": 2,
       "Scissors": 1,
       "Red Twine": 4,
+      "Leather": 8,
+      "Horn Canteen": 2,
       "Awl": 2,
+      "Wooden Button": 4,
       "Green Twine": 4,
       "Glass Jar": 3,
       "Blue Twine": 4,
@@ -1385,8 +1385,8 @@
   },
   "Sail Cloth": {
     "ingredients": {
-      "Cotton": 5,
-      "Sewing Needle": 3
+      "Sewing Needle": 3,
+      "Cotton": 5
     },
     "craftingLevel": 71,
     "category": "item"
@@ -1410,8 +1410,8 @@
   "Scissors": {
     "ingredients": {
       "Iron Ring": 1,
-      "Wood": 2,
       "Stone": 1,
+      "Wood": 2,
       "Nails": 1,
       "Steel": 2
     },
@@ -1420,8 +1420,8 @@
   },
   "Sewing Needle": {
     "ingredients": {
-      "Bone": 1,
       "Twine": 1,
+      "Bone": 1,
       "Awl": 1
     },
     "craftingLevel": 29,
@@ -1430,8 +1430,8 @@
   "Shimmer Ring": {
     "ingredients": {
       "Mushroom Paste": 1,
-      "Shimmer Topaz": 1,
-      "Iron Ring": 1
+      "Iron Ring": 1,
+      "Shimmer Topaz": 1
     },
     "craftingLevel": 26,
     "category": "item"
@@ -1465,16 +1465,16 @@
     "ingredients": {
       "Stone": 1,
       "Board": 1,
-      "Mushroom Paste": 1,
-      "Iron": 2
+      "Iron": 2,
+      "Mushroom Paste": 1
     },
     "craftingLevel": 4,
     "category": "item"
   },
   "Silk": {
     "ingredients": {
-      "Caterpillar": 3,
       "Spider": 2,
+      "Caterpillar": 3,
       "Machine Press": 1
     },
     "craftingLevel": 82,
@@ -1515,9 +1515,9 @@
   },
   "Spoon": {
     "ingredients": {
-      "Bone": 1,
       "Twine": 1,
-      "Axe": 1
+      "Axe": 1,
+      "Bone": 1
     },
     "craftingLevel": 76,
     "category": "item"
@@ -1561,12 +1561,12 @@
   },
   "Steel Vise": {
     "ingredients": {
+      "Blue Dye": 2,
       "Small Bolt": 2,
       "Wooden Plank": 1,
-      "Blue Dye": 2,
-      "Broken Pipe": 1,
       "Glass Orb": 2,
-      "Steel": 50
+      "Steel": 50,
+      "Broken Pipe": 1
     },
     "craftingLevel": 97,
     "category": "item"
@@ -1583,8 +1583,8 @@
   "Step Ladder": {
     "ingredients": {
       "Ladder": 2,
-      "Steel Plate": 2,
-      "Small Bolt": 2
+      "Small Bolt": 2,
+      "Steel Plate": 2
     },
     "craftingLevel": 78,
     "category": "item"
@@ -1611,19 +1611,19 @@
   },
   "Sturdy Pickaxe": {
     "ingredients": {
-      "Pickaxe": 1,
-      "Stone Shell": 1,
       "Oak": 1,
-      "Small Bolt": 1
+      "Small Bolt": 1,
+      "Pickaxe": 1,
+      "Stone Shell": 1
     },
     "craftingLevel": 35,
     "category": "item"
   },
   "Sturdy Shield": {
     "ingredients": {
-      "Wooden Plank": 1,
+      "Nails": 6,
       "Iron": 6,
-      "Nails": 6
+      "Wooden Plank": 1
     },
     "craftingLevel": 20,
     "category": "item"
@@ -1649,9 +1649,9 @@
   },
   "Treasure Chest": {
     "ingredients": {
-      "Wooden Plank": 6,
       "Iron": 12,
-      "Nails": 22
+      "Nails": 22,
+      "Wooden Plank": 6
     },
     "craftingLevel": 32,
     "category": "item"
@@ -1698,8 +1698,8 @@
   "Wizard Hat": {
     "ingredients": {
       "Purple Flower": 10,
-      "Twine": 3,
-      "Leather": 2
+      "Leather": 2,
+      "Twine": 3
     },
     "craftingLevel": 17,
     "category": "item"
@@ -1715,8 +1715,8 @@
   },
   "Wooden Bow": {
     "ingredients": {
-      "Iron": 2,
       "Fern Leaf": 1,
+      "Iron": 2,
       "Twine": 2,
       "Wood": 4
     },
@@ -1725,8 +1725,8 @@
   },
   "Wooden Box": {
     "ingredients": {
-      "Wooden Plank": 6,
-      "Nails": 6
+      "Nails": 6,
+      "Wooden Plank": 6
     },
     "craftingLevel": 1,
     "category": "item"
@@ -1758,9 +1758,9 @@
   },
   "Wooden Spear": {
     "ingredients": {
+      "Twine": 2,
       "Wood": 1,
-      "Arrowhead": 1,
-      "Twine": 2
+      "Arrowhead": 1
     },
     "craftingLevel": 28,
     "category": "item"
@@ -1776,8 +1776,8 @@
   },
   "Wooden Table": {
     "ingredients": {
-      "Board": 8,
       "Wooden Plank": 1,
+      "Board": 8,
       "Nails": 12
     },
     "craftingLevel": 8,
@@ -1785,8 +1785,8 @@
   },
   "Wrench": {
     "ingredients": {
-      "Emberstone": 5,
-      "Steel": 1
+      "Steel": 1,
+      "Emberstone": 5
     },
     "craftingLevel": 75,
     "category": "item"
@@ -1794,9 +1794,9 @@
   "Y73841 Detector": {
     "ingredients": {
       "Scrap Wire": 50,
+      "Runestone 17": 1,
       "Compass": 1,
       "Pocket Watch": 1,
-      "Runestone 17": 1,
       "Y73841 Blueprint": 1,
       "Transistor": 50,
       "Small Gear": 3
@@ -1844,8 +1844,8 @@
   },
   "Red Scarf": {
     "ingredients": {
-      "Red Dye": 1,
-      "Yarn": 2
+      "Yarn": 2,
+      "Red Dye": 1
     },
     "craftingLevel": 74,
     "category": "item"
@@ -1853,8 +1853,8 @@
   "Reinforced Helmet": {
     "ingredients": {
       "Hide": 4,
-      "Steel": 4,
-      "Leather Helmet": 1
+      "Leather Helmet": 1,
+      "Steel": 4
     },
     "craftingLevel": 65,
     "category": "item"
@@ -1875,16 +1875,16 @@
   },
   "Ship Mast": {
     "ingredients": {
+      "Board": 24,
       "Bucket": 1,
       "Looking Glass": 1,
-      "Ladder": 1,
-      "Pulley": 4,
       "Sail Cloth": 4,
-      "Oak": 20,
-      "Board": 24,
       "Wooden Plank": 12,
       "Nails": 120,
       "Rope": 12,
+      "Ladder": 1,
+      "Oak": 20,
+      "Pulley": 4,
       "Red Scarf": 4
     },
     "craftingLevel": 85,
@@ -1892,10 +1892,10 @@
   },
   "Spiky Bracelet": {
     "ingredients": {
-      "Mushroom Paste": 4,
       "Onyx Scorpion": 12,
-      "Leather": 4,
       "Monster Skull": 6,
+      "Mushroom Paste": 4,
+      "Leather": 4,
       "Sewing Needle": 1
     },
     "craftingLevel": 70,
@@ -1980,14 +1980,14 @@
       "Piece 09": 1,
       "Piece 26": 1,
       "Piece 18": 1,
-      "Piece 01": 1,
-      "Piece 03": 1,
       "Piece 22": 1,
       "Piece 24": 1,
       "Piece 15": 1,
+      "Piece 01": 1,
+      "Piece 03": 1,
+      "Piece 12": 1,
       "Piece 07": 1,
       "Piece 31": 1,
-      "Piece 12": 1,
       "Piece 11": 1,
       "Piece 30": 1
     },
@@ -1997,13 +1997,13 @@
   "Veggie Juice": {
     "ingredients": {
       "Tomato": 2,
-      "Peas": 7,
+      "Watermelon": 2,
       "Horn": 2,
       "Peppers": 7,
+      "Peas": 7,
       "Cucumber": 7,
       "Glass Bottle": 1,
       "Twine": 2,
-      "Watermelon": 2,
       "Carrot": 7,
       "Eggplant": 7,
       "Beet": 15
@@ -2032,8 +2032,8 @@
   },
   "Sugar Cube": {
     "ingredients": {
-      "Wooden Box": 1,
       "White Sugar": 1,
+      "Wooden Box": 1,
       "Re'taw": 1
     },
     "craftingLevel": 99,
@@ -2050,18 +2050,18 @@
   },
   "Bamboo Fence": {
     "ingredients": {
+      "Board": 10,
       "Twine": 10,
-      "Bamboo": 35,
-      "Board": 10
+      "Bamboo": 35
     },
     "craftingLevel": 99,
     "category": "item"
   },
   "Bamboo Flute": {
     "ingredients": {
-      "Steel Wire": 1,
       "Awl": 1,
-      "Bamboo": 2
+      "Bamboo": 2,
+      "Steel Wire": 1
     },
     "craftingLevel": 99,
     "category": "item"
@@ -2083,9 +2083,9 @@
   },
   "Basic Pillow": {
     "ingredients": {
-      "Cloth": 2,
       "Feathers": 25,
-      "Twine": 2
+      "Twine": 2,
+      "Cloth": 2
     },
     "craftingLevel": 99,
     "category": "item"
@@ -2100,9 +2100,9 @@
   },
   "Black Cloak": {
     "ingredients": {
+      "Leather": 5,
       "Cotton": 1,
       "Black Twine": 10,
-      "Leather": 5,
       "Black Dye": 10
     },
     "craftingLevel": 99,
@@ -2126,25 +2126,25 @@
   },
   "Black Scarf": {
     "ingredients": {
-      "Yarn": 2,
-      "Black Dye": 1
+      "Black Dye": 1,
+      "Yarn": 2
     },
     "craftingLevel": 99,
     "category": "item"
   },
   "Black Shield": {
     "ingredients": {
-      "Steel": 3,
       "Sturdy Shield": 1,
-      "Black Dye": 1
+      "Black Dye": 1,
+      "Steel": 3
     },
     "craftingLevel": 99,
     "category": "item"
   },
   "Black Shirt": {
     "ingredients": {
-      "Sewing Needle": 1,
       "Black Dye": 1,
+      "Sewing Needle": 1,
       "Cloth": 10
     },
     "craftingLevel": 99,
@@ -2152,8 +2152,8 @@
   },
   "Black Twine": {
     "ingredients": {
-      "Black Dye": 1,
-      "Twine": 1
+      "Twine": 1,
+      "Black Dye": 1
     },
     "craftingLevel": 99,
     "category": "item"
@@ -2161,8 +2161,8 @@
   "Blue Shirt": {
     "ingredients": {
       "Blue Dye": 1,
-      "Sewing Needle": 1,
-      "Cloth": 10
+      "Cloth": 10,
+      "Sewing Needle": 1
     },
     "craftingLevel": 99,
     "category": "item"
@@ -2178,17 +2178,17 @@
   "Brown Cloak": {
     "ingredients": {
       "Twine": 10,
+      "Leather": 5,
       "Cotton": 1,
-      "Brown Dye": 10,
-      "Leather": 5
+      "Brown Dye": 10
     },
     "craftingLevel": 99,
     "category": "item"
   },
   "Brown Dye": {
     "ingredients": {
-      "Glass Bottle": 1,
-      "Mudcap": 3
+      "Mudcap": 3,
+      "Glass Bottle": 1
     },
     "craftingLevel": 99,
     "category": "item"
@@ -2210,9 +2210,9 @@
   },
   "Crown of Clover": {
     "ingredients": {
-      "3-leaf Clover": 20,
       "4-leaf Clover": 2,
-      "Steel Wire": 1
+      "Steel Wire": 1,
+      "3-leaf Clover": 20
     },
     "craftingLevel": 55,
     "category": "item"
@@ -2238,18 +2238,18 @@
   "Glowing Lantern": {
     "ingredients": {
       "Iron Ring": 2,
+      "Iron": 3,
       "Glass Bottle": 1,
       "Green Twine": 2,
-      "Glowshroom": 4,
-      "Iron": 3
+      "Glowshroom": 4
     },
     "craftingLevel": 99,
     "category": "item"
   },
   "Gold Aquamarine Ring": {
     "ingredients": {
-      "Strong Paste": 1,
       "Aquamarine": 1,
+      "Strong Paste": 1,
       "Gold Ring": 1
     },
     "craftingLevel": 99,
@@ -2266,9 +2266,9 @@
   },
   "Gold Emerald Ring": {
     "ingredients": {
-      "Strong Paste": 1,
       "Emerald": 1,
-      "Gold Ring": 1
+      "Gold Ring": 1,
+      "Strong Paste": 1
     },
     "craftingLevel": 99,
     "category": "item"
@@ -2276,8 +2276,8 @@
   "Gold Garnet Ring": {
     "ingredients": {
       "Garnet": 1,
-      "Strong Paste": 1,
-      "Gold Ring": 1
+      "Gold Ring": 1,
+      "Strong Paste": 1
     },
     "craftingLevel": 99,
     "category": "item"
@@ -2303,8 +2303,8 @@
   "Gold Ruby Ring": {
     "ingredients": {
       "Ruby": 1,
-      "Strong Paste": 1,
-      "Gold Ring": 1
+      "Gold Ring": 1,
+      "Strong Paste": 1
     },
     "craftingLevel": 99,
     "category": "item"
@@ -2329,10 +2329,10 @@
   },
   "Orange Butterfly": {
     "ingredients": {
-      "Silk": 3,
-      "Orange Dye": 1,
       "Wood": 1,
-      "Caterpillar": 1
+      "Caterpillar": 1,
+      "Silk": 3,
+      "Orange Dye": 1
     },
     "craftingLevel": 99,
     "category": "item"
@@ -2355,8 +2355,8 @@
   },
   "Orange Shirt": {
     "ingredients": {
-      "Orange Dye": 1,
       "Sewing Needle": 1,
+      "Orange Dye": 1,
       "Cloth": 10
     },
     "craftingLevel": 99,
@@ -2373,12 +2373,12 @@
   "Propeller Hat": {
     "ingredients": {
       "Green Dye": 2,
+      "Blue Dye": 2,
+      "Cloth": 25,
       "Hammer": 1,
       "Red Dye": 2,
       "Yellow Dye": 2,
-      "Cloth": 25,
-      "Tin Scraps": 2,
-      "Blue Dye": 2
+      "Tin Scraps": 2
     },
     "craftingLevel": 99,
     "category": "item"
@@ -2394,17 +2394,17 @@
   },
   "Red Shirt": {
     "ingredients": {
-      "Sewing Needle": 1,
+      "Cloth": 10,
       "Red Dye": 1,
-      "Cloth": 10
+      "Sewing Needle": 1
     },
     "craftingLevel": 99,
     "category": "item"
   },
   "Strong Paste": {
     "ingredients": {
-      "Mushroom Paste": 2,
       "Glowshroom": 2,
+      "Mushroom Paste": 2,
       "Mudcap": 1
     },
     "craftingLevel": 99,
@@ -2412,12 +2412,12 @@
   },
   "Tie Dye Scarf": {
     "ingredients": {
-      "Red Dye": 1,
-      "Purple Dye": 1,
       "Green Dye": 1,
       "Blue Dye": 1,
-      "Yellow Dye": 1,
+      "Red Dye": 1,
       "Yarn": 6,
+      "Purple Dye": 1,
+      "Yellow Dye": 1,
       "Orange Dye": 1
     },
     "craftingLevel": 99,
@@ -2435,8 +2435,8 @@
     "ingredients": {
       "Leather": 5,
       "Twine": 10,
-      "Cotton": 1,
-      "White Dye": 10
+      "White Dye": 10,
+      "Cotton": 1
     },
     "craftingLevel": 99,
     "category": "item"
@@ -2510,16 +2510,16 @@
   },
   "Yellow Purse": {
     "ingredients": {
-      "Yellow Dye": 1,
-      "Coin Purse": 1
+      "Coin Purse": 1,
+      "Yellow Dye": 1
     },
     "craftingLevel": 99,
     "category": "item"
   },
   "Yellow Scarf": {
     "ingredients": {
-      "Yellow Dye": 1,
-      "Yarn": 2
+      "Yarn": 2,
+      "Yellow Dye": 1
     },
     "craftingLevel": 99,
     "category": "item"
@@ -2535,8 +2535,8 @@
   },
   "Yellow Twine": {
     "ingredients": {
-      "Yellow Dye": 1,
-      "Twine": 1
+      "Twine": 1,
+      "Yellow Dye": 1
     },
     "craftingLevel": 99,
     "category": "item"
@@ -2604,20 +2604,20 @@
   },
   "Valve": {
     "ingredients": {
-      "Broken Pipe": 1,
-      "Hammer": 1,
-      "Red Dye": 1,
       "Steel": 1,
-      "Cogwheel": 1
+      "Cogwheel": 1,
+      "Red Dye": 1,
+      "Broken Pipe": 1,
+      "Hammer": 1
     },
     "craftingLevel": 80,
     "category": "item"
   },
   "Small Bolt": {
     "ingredients": {
-      "Hammer": 1,
       "Coal": 5,
       "Emberstone": 1,
+      "Hammer": 1,
       "Scrap Metal": 3
     },
     "craftingLevel": 80,
@@ -2625,8 +2625,8 @@
   },
   "Pine Shavings": {
     "ingredients": {
-      "Emberstone": 1,
       "Wood Planer": 1,
+      "Emberstone": 1,
       "Pine Board": 1
     },
     "craftingLevel": 81,
@@ -2636,9 +2636,9 @@
     "ingredients": {
       "Iron": 1,
       "Moonstone": 1,
+      "Small Bolt": 3,
       "Wood": 2,
-      "Steel": 1,
-      "Small Bolt": 3
+      "Steel": 1
     },
     "craftingLevel": 81,
     "category": "item"

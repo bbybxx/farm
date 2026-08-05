@@ -10351,5 +10351,12 @@
     "image": "/img/items/Bag_with_strap.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Croissant": {
+    "name": "Croissant",
+    "type": "item",
+    "image": "/img/items/4757.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

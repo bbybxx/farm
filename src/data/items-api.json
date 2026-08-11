@@ -10358,5 +10358,33 @@
     "image": "/img/items/4757.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Highland Hollow Charm": {
+    "name": "Highland Hollow Charm",
+    "type": "item",
+    "image": "/img/items/Fairy_crystal_charm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mariya's Wheelbarrow": {
+    "name": "Mariya's Wheelbarrow",
+    "type": "item",
+    "image": "/img/items/viri_4734-b.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Spring Cave Charm": {
+    "name": "Spring Cave Charm",
+    "type": "item",
+    "image": "/img/items/Spring_cave_Charm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Veggie Juice Instruction Sheet": {
+    "name": "Veggie Juice Instruction Sheet",
+    "type": "item",
+    "image": "/img/items/6978.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

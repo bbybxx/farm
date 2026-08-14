@@ -9711,7 +9711,7 @@
   "Swamp Algae": {
     "name": "Swamp Algae",
     "type": "item",
-    "image": "/img/items/3342.png",
+    "image": "/img/items/swampalgae.png",
     "canCraft": false,
     "craftingLevel": 0
   },

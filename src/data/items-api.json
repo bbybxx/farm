@@ -10386,5 +10386,12 @@
     "image": "/img/items/6978.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Monarch Butterfly": {
+    "name": "Monarch Butterfly",
+    "type": "item",
+    "image": "/img/items/mbutterfly.png",
+    "canCraft": true,
+    "craftingLevel": 99
   }
 }

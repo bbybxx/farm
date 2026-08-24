@@ -10,7 +10,7 @@ export const APPLE_CIDER_REAL_DROP_RATES = {
     version: "2.0.0",
     description: "Drop rates for explore locations from buddy.farm API",
     dataSource: "buddy.farm GraphQL API",
-    lastUpdated: "2026-08-23T04:08:33.937Z",
+    lastUpdated: "2026-08-24T04:20:37.541Z",
     variants: {
       rq0cs0: "Without Runecube, Without Cinnamon Sticks",
       rq0cs1: "Without Runecube, With Cinnamon Sticks (+25% drops)",

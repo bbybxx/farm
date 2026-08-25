@@ -10393,5 +10393,89 @@
     "image": "/img/items/mbutterfly.png",
     "canCraft": true,
     "craftingLevel": 99
+  },
+  "Cid's Spare Pickaxe": {
+    "name": "Cid's Spare Pickaxe",
+    "type": "item",
+    "image": "/img/items/cidpickaxe.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Ember Caverns Charm": {
+    "name": "Ember Caverns Charm",
+    "type": "item",
+    "image": "/img/items/Ancient_snail_charm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Fenrir's Den Charm": {
+    "name": "Fenrir's Den Charm",
+    "type": "item",
+    "image": "/img/items/Jadeite_fenrir.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Heavy Pickaxe": {
+    "name": "Heavy Pickaxe",
+    "type": "item",
+    "image": "/img/items/heavypickaxe.png",
+    "canCraft": false,
+    "craftingLevel": 55
+  },
+  "Mega Pine Seeds": {
+    "name": "Mega Pine Seeds",
+    "type": "seeds",
+    "image": "/img/items/seeds_mpine.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mining Bag 01": {
+    "name": "Mining Bag 01",
+    "type": "item",
+    "image": "/img/items/miningbag01.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mining Bag 02": {
+    "name": "Mining Bag 02",
+    "type": "item",
+    "image": "/img/items/miningbag02.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mining Bag 03": {
+    "name": "Mining Bag 03",
+    "type": "item",
+    "image": "/img/items/miningbag03.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mining Bag 04": {
+    "name": "Mining Bag 04",
+    "type": "item",
+    "image": "/img/items/miningbag04.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mining Bag 05": {
+    "name": "Mining Bag 05",
+    "type": "item",
+    "image": "/img/items/miningbag05.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Sol Grotto Charm": {
+    "name": "Sol Grotto Charm",
+    "type": "item",
+    "image": "/img/items/Stone_shell_charm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Wooden Footstool": {
+    "name": "Wooden Footstool",
+    "type": "item",
+    "image": "/img/items/321.png",
+    "canCraft": true,
+    "craftingLevel": 85
   }
 }

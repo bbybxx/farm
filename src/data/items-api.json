@@ -5393,7 +5393,7 @@
     "name": "Milk Carton",
     "type": "item",
     "image": "/img/items/packaging_t_01.PNG",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 74
   },
   "Mini Time Egg": {
@@ -8263,7 +8263,7 @@
     "name": "Toilet Paper",
     "type": "item",
     "image": "/img/items/bandages_t_01.png",
-    "canCraft": true,
+    "canCraft": false,
     "craftingLevel": 3
   },
   "Tomato": {
@@ -10419,7 +10419,7 @@
     "name": "Heavy Pickaxe",
     "type": "item",
     "image": "/img/items/heavypickaxe.png",
-    "canCraft": false,
+    "canCraft": true,
     "craftingLevel": 55
   },
   "Mega Pine Seeds": {
@@ -10477,5 +10477,425 @@
     "image": "/img/items/321.png",
     "canCraft": true,
     "craftingLevel": 85
+  },
+  "Acid Extract": {
+    "name": "Acid Extract",
+    "type": "item",
+    "image": "/img/items/acid.png",
+    "canCraft": true,
+    "craftingLevel": 82
+  },
+  "Ancient Bird Fossil": {
+    "name": "Ancient Bird Fossil",
+    "type": "item",
+    "image": "/img/items/ancientbirdfossil.png",
+    "canCraft": true,
+    "craftingLevel": 77
+  },
+  "Ancient Pickaxe": {
+    "name": "Ancient Pickaxe",
+    "type": "item",
+    "image": "/img/items/ancient_pickaxe.png?2",
+    "canCraft": true,
+    "craftingLevel": 65
+  },
+  "Ancient Ram Fossil": {
+    "name": "Ancient Ram Fossil",
+    "type": "item",
+    "image": "/img/items/ancientramfossil.png",
+    "canCraft": true,
+    "craftingLevel": 77
+  },
+  "Ancient Rune": {
+    "name": "Ancient Rune",
+    "type": "item",
+    "image": "/img/items/Mossy_rune.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Aquacite Ring": {
+    "name": "Aquacite Ring",
+    "type": "item",
+    "image": "/img/items/aquacitering.png",
+    "canCraft": true,
+    "craftingLevel": 48
+  },
+  "Bright Lantern": {
+    "name": "Bright Lantern",
+    "type": "item",
+    "image": "/img/items/brightlantern.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Calmine Composite": {
+    "name": "Calmine Composite",
+    "type": "item",
+    "image": "/img/items/calaminecomposite.png",
+    "canCraft": true,
+    "craftingLevel": 45
+  },
+  "Calmine Lotion": {
+    "name": "Calmine Lotion",
+    "type": "item",
+    "image": "/img/items/caliminelotion.png",
+    "canCraft": true,
+    "craftingLevel": 84
+  },
+  "Calmine Statue": {
+    "name": "Calmine Statue",
+    "type": "item",
+    "image": "/img/items/calminestatue.png",
+    "canCraft": true,
+    "craftingLevel": 67
+  },
+  "Cave Paste": {
+    "name": "Cave Paste",
+    "type": "item",
+    "image": "/img/items/cavepaste.png",
+    "canCraft": true,
+    "craftingLevel": 50
+  },
+  "Chisel": {
+    "name": "Chisel",
+    "type": "item",
+    "image": "/img/items/chisel.png",
+    "canCraft": true,
+    "craftingLevel": 37
+  },
+  "Cid Buddy Doll": {
+    "name": "Cid Buddy Doll",
+    "type": "item",
+    "image": "/img/items/Cid_buddy_doll.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Cid’s Minecart 01": {
+    "name": "Cid’s Minecart 01",
+    "type": "item",
+    "image": "/img/items/cidsminecart.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Condensed Gravicite": {
+    "name": "Condensed Gravicite",
+    "type": "item",
+    "image": "/img/items/greenstone2.png",
+    "canCraft": true,
+    "craftingLevel": 51
+  },
+  "Deep Ocean Ring": {
+    "name": "Deep Ocean Ring",
+    "type": "item",
+    "image": "/img/items/deepoceanring.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Detonator": {
+    "name": "Detonator",
+    "type": "item",
+    "image": "/img/items/viri_4128.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Embershard Ring": {
+    "name": "Embershard Ring",
+    "type": "item",
+    "image": "/img/items/embershardring.png",
+    "canCraft": true,
+    "craftingLevel": 79
+  },
+  "Embershard Staff": {
+    "name": "Embershard Staff",
+    "type": "item",
+    "image": "/img/items/embershardstaff.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Esperium Band": {
+    "name": "Esperium Band",
+    "type": "item",
+    "image": "/img/items/esperiumband.png",
+    "canCraft": true,
+    "craftingLevel": 45
+  },
+  "Fairy Ring": {
+    "name": "Fairy Ring",
+    "type": "item",
+    "image": "/img/items/fairyring.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Flarite Ring": {
+    "name": "Flarite Ring",
+    "type": "item",
+    "image": "/img/items/flaritering.png",
+    "canCraft": true,
+    "craftingLevel": 54
+  },
+  "Fossilized Viper": {
+    "name": "Fossilized Viper",
+    "type": "item",
+    "image": "/img/items/Mossy_fossil.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Garnet Walking Stick": {
+    "name": "Garnet Walking Stick",
+    "type": "item",
+    "image": "/img/items/garnetwalkingstick.png",
+    "canCraft": true,
+    "craftingLevel": 72
+  },
+  "Gravicite": {
+    "name": "Gravicite",
+    "type": "item",
+    "image": "/img/items/Mossy_jade.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gravity Orb": {
+    "name": "Gravity Orb",
+    "type": "item",
+    "image": "/img/items/Mossy_orb.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Green Gel": {
+    "name": "Green Gel",
+    "type": "item",
+    "image": "/img/items/greengel.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Green Halite Earrings": {
+    "name": "Green Halite Earrings",
+    "type": "item",
+    "image": "/img/items/greenhaliteearrings.png",
+    "canCraft": true,
+    "craftingLevel": 56
+  },
+  "Green Halite Ring": {
+    "name": "Green Halite Ring",
+    "type": "item",
+    "image": "/img/items/greenhalitering.png",
+    "canCraft": true,
+    "craftingLevel": 52
+  },
+  "Horn Powder": {
+    "name": "Horn Powder",
+    "type": "item",
+    "image": "/img/items/extractofhorn.png",
+    "canCraft": true,
+    "craftingLevel": 57
+  },
+  "Joyful Ring": {
+    "name": "Joyful Ring",
+    "type": "item",
+    "image": "/img/items/joyfulring.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Mining Bag 06": {
+    "name": "Mining Bag 06",
+    "type": "item",
+    "image": "/img/items/miningbag06.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mossrock Mine Charm": {
+    "name": "Mossrock Mine Charm",
+    "type": "item",
+    "image": "/img/items/Marimo_charm.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mossroom": {
+    "name": "Mossroom",
+    "type": "item",
+    "image": "/img/items/Mossy_shroom.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mossy Bone": {
+    "name": "Mossy Bone",
+    "type": "item",
+    "image": "/img/items/Mossy_bone.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mossy Cog": {
+    "name": "Mossy Cog",
+    "type": "item",
+    "image": "/img/items/Mossy_gear_.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Ocean Stone": {
+    "name": "Ocean Stone",
+    "type": "item",
+    "image": "/img/items/oceanstone.png",
+    "canCraft": true,
+    "craftingLevel": 82
+  },
+  "Ornate Anvil": {
+    "name": "Ornate Anvil",
+    "type": "item",
+    "image": "/img/items/ornateanvil.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Ornate Flarite Ring": {
+    "name": "Ornate Flarite Ring",
+    "type": "item",
+    "image": "/img/items/ornateflaritering.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Peridot": {
+    "name": "Peridot",
+    "type": "item",
+    "image": "/img/items/peridot.png",
+    "canCraft": true,
+    "craftingLevel": 50
+  },
+  "Pestle and Mortar": {
+    "name": "Pestle and Mortar",
+    "type": "item",
+    "image": "/img/items/pestleandmortar.png",
+    "canCraft": true,
+    "craftingLevel": 52
+  },
+  "Pinecone Bird Feeder": {
+    "name": "Pinecone Bird Feeder",
+    "type": "item",
+    "image": "/img/items/pineconebirdfeeder.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Plum Goblet": {
+    "name": "Plum Goblet",
+    "type": "item",
+    "image": "/img/items/plumgoblet.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Plum Iron": {
+    "name": "Plum Iron",
+    "type": "item",
+    "image": "/img/items/plumiron.png",
+    "canCraft": true,
+    "craftingLevel": 89
+  },
+  "Potion of Clarity": {
+    "name": "Potion of Clarity",
+    "type": "item",
+    "image": "/img/items/potionofclarity.png",
+    "canCraft": true,
+    "craftingLevel": 75
+  },
+  "Quench": {
+    "name": "Quench",
+    "type": "item",
+    "image": "/img/items/quench.png",
+    "canCraft": true,
+    "craftingLevel": 71
+  },
+  "Redbrook Patch": {
+    "name": "Redbrook Patch",
+    "type": "item",
+    "image": "/img/items/redbrookpatch.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Refined Esperium": {
+    "name": "Refined Esperium",
+    "type": "item",
+    "image": "/img/items/esperiumore.png",
+    "canCraft": true,
+    "craftingLevel": 50
+  },
+  "Refined Plum Ore": {
+    "name": "Refined Plum Ore",
+    "type": "item",
+    "image": "/img/items/plumirondeposit.png",
+    "canCraft": true,
+    "craftingLevel": 55
+  },
+  "Reforged Sword": {
+    "name": "Reforged Sword",
+    "type": "item",
+    "image": "/img/items/reforgedsword.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Ruined Ether Drill": {
+    "name": "Ruined Ether Drill",
+    "type": "item",
+    "image": "/img/items/Mossy_drill.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Ruined Ether Hammer": {
+    "name": "Ruined Ether Hammer",
+    "type": "item",
+    "image": "/img/items/Mossy_jackhammer.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Shining Earrings": {
+    "name": "Shining Earrings",
+    "type": "item",
+    "image": "/img/items/shiningearrings.png",
+    "canCraft": true,
+    "craftingLevel": 68
+  },
+  "Sparkle Dust": {
+    "name": "Sparkle Dust",
+    "type": "item",
+    "image": "/img/items/Sparkle_dust.png",
+    "canCraft": true,
+    "craftingLevel": 46
+  },
+  "Stained Glass Art": {
+    "name": "Stained Glass Art",
+    "type": "item",
+    "image": "/img/items/stainedglassart.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Strong Wire": {
+    "name": "Strong Wire",
+    "type": "item",
+    "image": "/img/items/strongwire.png",
+    "canCraft": true,
+    "craftingLevel": 60
+  },
+  "Sunstone Ring": {
+    "name": "Sunstone Ring",
+    "type": "item",
+    "image": "/img/items/sunstonering.png",
+    "canCraft": true,
+    "craftingLevel": 62
+  },
+  "Tin Goblet": {
+    "name": "Tin Goblet",
+    "type": "item",
+    "image": "/img/items/tingoblet.png",
+    "canCraft": true,
+    "craftingLevel": 99
+  },
+  "Unpolished Peridot": {
+    "name": "Unpolished Peridot",
+    "type": "item",
+    "image": "/img/items/unperidot.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Veinshard": {
+    "name": "Veinshard",
+    "type": "item",
+    "image": "/img/items/Mossy_shard.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

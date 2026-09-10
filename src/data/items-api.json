@@ -10897,5 +10897,33 @@
     "image": "/img/items/Mossy_shard.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Bag of Re'taw": {
+    "name": "Bag of Re'taw",
+    "type": "item",
+    "image": "/img/items/Water_bag.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Gold Mega Trout": {
+    "name": "Gold Mega Trout",
+    "type": "fish",
+    "image": "/img/items/gmegatrout.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Mega Trout": {
+    "name": "Mega Trout",
+    "type": "fish",
+    "image": "/img/items/megatrout.png",
+    "canCraft": false,
+    "craftingLevel": 0
+  },
+  "Tree of Life Statue": {
+    "name": "Tree of Life Statue",
+    "type": "item",
+    "image": "/img/items/treeoflife.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }

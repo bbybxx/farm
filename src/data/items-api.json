@@ -10925,5 +10925,12 @@
     "image": "/img/items/treeoflife.png",
     "canCraft": false,
     "craftingLevel": 0
+  },
+  "Pie Machine": {
+    "name": "Pie Machine",
+    "type": "item",
+    "image": "/img/items/piemachine.png",
+    "canCraft": false,
+    "craftingLevel": 0
   }
 }
